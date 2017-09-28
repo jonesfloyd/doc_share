@@ -1,0 +1,636 @@
+<h1> Develop custom plugins </h1>
+<p style="text-align: right;"><em>Edge Microgateway v. 2.0.x</em></p>
+<h2>Audience</h2>
+<p>This topic is intended for developers who wish extend Edge Microgateway features by writing custom plugins. If you wish to write a new plugin, experience with JavaScript and Node.js is required.</p>
+<h2>What is an Edge Microgateway plugin?</h2>
+<p>A plugin is a Node.js module that adds functionality to Edge Microgateway. Plugin modules follow a consistent pattern and are stored in a location known to Edge Microgateway, enabling the microgateway to discover and load them automatically.</p>
+<p>By default, Edge Microgateway is essentially a secure pass-through proxy that passes requests unchanged to a target. Through plugins, you can add features to the microgateway, such as support for Apigee Edge analytics, OAuth authentication, and rate limiting features like quotas and spike arrest.</p>
+<h2>Where to put custom plugin code</h2>
+<p>A plugins folder is included as part of the Edge Microgateway installation. By default, plugins are located here, where&nbsp;<code>[prefix]</code> is the <code>npm</code> prefix directory. See <a href="http://docs.apigee.com/microgateway/v2.0.x/edge-microgateway-installation-v2.0.x#whereisedgemicrogatewayinstalled">Where is Edge Microgateway installed</a>:</p>
+<pre>
+[prefix]/lib/node_modules/edgemicro/plugins</pre>
+<p>You can change this default plugin directory. See <a href="http://docs.apigee.com/microgateway/v2.0.x/using-plugins-v2.0.x#wheretofindplugins">Where to find plugins</a>.&nbsp;</p>
+<h2>Reviewing the predefined plugins</h2>
+<p>Before you try to develop your own plugin, it's good to check that none of the predefined plugins meet your requirements. Existing plugins bundled with Edge Microgateway are located here, where <code>[prefix]</code> is the <code>npm</code> prefix directory. See&nbsp;<a href="http://docs.apigee.com/microgateway/v2.0.x/edge-microgateway-installation-v2.0.x#whereisedgemicrogatewayinstalled">Where is Edge Microgateway installed</a>.</p>
+<pre style="font-size: 12px;">
+[prefix]/lib/node_modules/edgemicro/node_modules/microgateway-plugins</pre>
+<p style="font-size: 12px;">This folder includes a set of default plugins, and examples to help you build your own plugins.</p>
+<h2>Adding and configuring plugins</h2>
+<p>Follow the same pattern to add both predefined and custom plugins to Edge Microgateway. For details, see <a href="http://docs.apigee.com/microgateway/v2.0.x/using-plugins-v2.0.x#addingandconfiguringaplugin">Adding and configuring a plugin</a>.&nbsp;<span style="font-size: 12px;">You can also create a plugin-specific configuration file. See </span><a href="#Plugin-specific configuration">Plugin-specific configuration</a>. For details on the spike arrest plugin, see <a href="#Using the spike arrest plugin">Using the spike arrest plugin</a>.</p>
+<h2><a id="Starting a new plugin project" name="Starting a new plugin project"></a>Starting a new plugin project</h2>
+<p>A good way to get started is to copy the contents of a sample plugin, such as <strong>header-uppercase</strong>, into your new project directory.</p>
+<pre>
+cd &lt;microgateway-plugin-dir&gt;/plugins/my-custom-plugin
+cp  ../header-uppercase/* .
+npm install
+</pre>
+<div class="tipstricks">
+	<p>As a convenience, you can also execute <strong>npm install</strong> in the <code>plugins</code> directory. The command executes a script in the <code>plugins/bin</code> directory that descends into each plugin subdirectory and executes <strong>npm install</strong> in each one.</p>
+</div>
+<h2>Write a simple plugin</h2>
+<p>In this section, we'll walk through the steps required to create a simple plugin. This plugin overrides the response data (whatever it is) and prints "Hello World!" to the server console.</p>
+<p>The response (which in this example is call to the Usergrid service for status information) is overridden by<code> Hello, World!</code></p>
+<ol>
+	<li>Create a new plugin project called <strong>response-override</strong>, as explained previously in Starting a new plugin project.<br />
+		<br />
+		<pre>
+  cd &lt;microgateway-root-dir&gt;/plugins
+
+  mkdir response-override
+
+  cd response-override</pre>
+	</li>
+	<li>Create a new Node.js project:<br />
+		<br />
+		<pre>
+npm init</pre>
+		Hit Return multiple times to accept the defaults.</li>
+	<li>Create an index.js file:<br />
+		<br />
+		<pre>
+touch index.js</pre>
+	</li>
+	<li>Open <code>index.js</code> in a text editor.</li>
+	<li>Copy the following code into <code>index.js</code>, and save the file.<br />
+		<br />
+		<pre>
+'use strict';
+  
+var debug = require('debug')('plugin:response-override);
+
+module.exports.init = function(config, logger, stats) {
+
+  return {
+   
+    ondata_response: function(req, res, data, next) {
+      debug('***** plugin ondata_response');
+      next(null, null);
+    },
+    
+    onend_response: function(req, res, data, next) {
+      debug('***** plugin onend_response');
+      next(null, "Hello, World!\n\n");
+    }
+  };
+}
+</pre>
+		<p><strong>Note:</strong> The plugin functions (<code>*_response</code>) are event handlers. The <strong>ondata_response</strong> function is called whenever a chunk of data is received by Edge Microgateway. The pattern is the same The <strong>onend_reponse</strong> function is called when the last byte of response data is received.</p>
+		<p><strong>Note:</strong> The <strong>next()</strong> function is required by all plugin functions. This function passes <strong>error</strong> (first argument) and <strong>data</strong> (second argument) to the next plugin function that is called. Note that in this example, the data argument in <strong>ondata_response</strong> is <strong>null</strong>. Setting this argument to <strong>null</strong> allows us to override the response data in <strong>onend_response</strong>. If we did not set the argument to <strong>null</strong>, then, by default, the data would be passed through to the response whether or not we override it in <strong>onend_response</strong>.</p>
+	</li>
+	<li>Open <code>package.json</code> and add the the debug module as a dependency:<br />
+		<br />
+		<pre>
+{
+  "name": "response-override",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1"
+  },
+  <strong>"dependencies": {
+    "debug": "^2.2.0"
+  }</strong>,
+  "author": "",
+  "license": "ISC"
+}</pre>
+	</li>
+	<li>Install dependencies:<br />
+		<br />
+		<pre>
+npm install</pre>
+	</li>
+	<li>Add the <code>response-override</code> plugin to the <code>plugins:sequence</code> element in <code>~/.edgemicro/config.yam</code>l:<br />
+		<br />
+		<pre>
+      ...
+      
+      plugins:
+        dir: ../plugins
+        sequence:
+          - oauth
+          - response-override
+          
+      ...
+    </pre>
+		<p><strong>Note:</strong> Follow this pattern to add any plugin to the Edge Microgatway configuration. Plugins are executed in the order in which they appear in the <code>plugins:sequence</code> list.</p>
+	</li>
+	<li>Restart the agent. In this example, we are starting the agent in debug mode, which prints <strong>debug()</strong> statements in the plugin to <strong>stdout</strong> in the agent's terminal.<br />
+		<br />
+		<pre>
+    cd &lt;microgateway-root-dir&gt;/agent
+
+    DEBUG=* npm start</pre>
+	</li>
+	<li>Restart Edge Microgateway with the key/secret values that you obtained when you first configured Edge Microgateway.
+		<pre>
+    cd &lt;microgateway-root-dir&gt;/cli/bin
+
+    ./edgemicro agent proc -c start -k &lt;your edge microgateway key&gt; -s &lt;your edge microgateway secret&gt;</pre>
+	</li>
+	<li>Call an API through Edge Microgateway. For example:<br />
+		<br />
+		<pre>
+curl -H 'x-api-key: uAM4gBSb6YoMvTHfx5lXJizYIpr5Jd' http://localhost:8000/usergrid/status
+Hello, World!
+</pre>
+	</li>
+</ol>
+<p>&nbsp;</p>
+<h2><a id="Anatomy of a plugin" name="Anatomy of a plugin"></a>Anatomy of a plugin</h2>
+<p>The following Edge Microgateway sample plugin illustrates the pattern to follow when developing your own plugins. The source code for the sample plugin discussed in this section is in the <code>plugins/header-uppercase/index.js. </code></p>
+<ul>
+	<li>Plugins are standard NPM modules with a <code>package.json</code> and <code>index.js</code> in the root folder.</li>
+	<li>A plugin must export an <strong>init()</strong> function.</li>
+	<li>The <strong>init()</strong> function takes three arguments: <strong>config</strong>, <strong>logger</strong>, and <strong>stats</strong>. These arguments are described in Plugin <strong>init()</strong> function arguments.</li>
+	<li><strong>init()</strong> returns an object with named function handlers that are called when certain events occur during the lifetime of a request.</li>
+</ul>
+<h2>Event handler function reference</h2>
+<p>A plugin must implement some or all of these event handler functions. Implementation of these functions is up to you. Any given function is optional, and a typical plugin will implement at least a subset of these functions.</p>
+<div class="note">
+	<p>The order in which event handlers fire depends on the order in which the plugins appear in the agent config file.&nbsp;Request handlers fire in ascending order, while response handlers fire in decending order. See&nbsp;<a href="#plugin_order">About plugin handler execution order</a>.&nbsp;</p>
+</div>
+<h3>Request flow event handlers</h3>
+<p>These functions are called on request events in Edge Microgateway.</p>
+<ul>
+	<li>onrequest</li>
+	<li>ondata_request</li>
+	<li>onend_request</li>
+	<li>onclose_request</li>
+	<li>onerror_request</li>
+</ul>
+<p><strong>onrequest</strong> <strong>function</strong></p>
+<p>Called at the start of the client request. This function fires when the first byte of the request is received by Edge Microgateway. This function gives you access to the request headers, URL, query parameters, and HTTP method. If you call next with a truthy first argument (such as an instance of Error), then request processing stops and a target request is not initiated.</p>
+<p>Example:</p>
+<pre>
+onrequest: function(req, res, next) {
+      debug('plugin onrequest');
+      req.headers['x-foo-request-start'] = Date.now();
+      next();
+    }</pre>
+<p><strong>ondata_request</strong> <strong>function</strong></p>
+<p>Called when a chunk of data is received from the client. Passes request data to the next plugin in the plugin sequence. The returned value from the last plugin in the sequence is sent to the target. A typical use case, shown below, is to transform the request data before sending it to the target.</p>
+<p>Example:</p>
+<pre>
+ondata_request: function(req, res, data, next) {
+      debug('plugin ondata_request ' + data.length);
+      var transformed = data.toString().toUpperCase();
+      next(null, transformed);
+    }</pre>
+<p>&nbsp;</p>
+<p><strong>onend_request</strong> <strong>function</strong></p>
+<p>Called when all of the request data has been received from the client.</p>
+<p>Example:</p>
+<pre>
+onend_request: function(req, res, data, next) {
+      debug('plugin onend_request');
+      next(null, data);
+    }</pre>
+<p><strong>onclose_request function</strong></p>
+<p>Indicates the client connection has closed. You might use this function in cases where the client connection is unreliable. It is called when the socket connection to the client is closed.</p>
+<p>Example:</p>
+<pre>
+onclose_request: function(req, res, next) {
+      debug('plugin onclose_request');
+      next();
+    }</pre>
+<p><strong>onerror_request function</strong></p>
+<p>Called if there is an error receiving the client request.</p>
+<p>Example:</p>
+<pre>
+onerror_request: function(req, res, err, next) {
+      debug('plugin onerror_request ' + err);
+      next();
+    }
+</pre>
+<h3>&nbsp;</h3>
+<h3>Response flow event handlers</h3>
+<p>These functions are called on response events in Edge Microgateway.</p>
+<ul>
+	<li>onresponse</li>
+	<li>ondata_response</li>
+	<li>onend_response</li>
+	<li>onclose_response</li>
+	<li>onerror_response</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>onresponse function</strong></p>
+<p>Called at the start of the target response. This function fires when the first byte of the response is received by Edge Microgateway. This function gives you access to the response headers and status code.</p>
+<p>Example:</p>
+<pre>
+onresponse: function(req, res, next) {      
+    debug('plugin onresponse');     
+    res.setHeader('x-foo-response-time', Date.now() - req.headers['x-foo-request-start'])    
+    next();    
+}</pre>
+<p><br />
+	<strong>ondata_response function</strong></p>
+<p>Called when a chunk of data is received from the target.</p>
+<p>Example:</p>
+<pre>
+ondata_response: function(req, res, data, next) {
+      debug('plugin ondata_response ' + data.length);
+      var transformed = data.toString().toUpperCase();
+      next(null, transformed);
+    }</pre>
+<p><br />
+	<strong>onend_response function</strong></p>
+<p>Called when all of the response data has been received from the target.</p>
+<p>Example:</p>
+<pre>
+onend_response: function(req, res, data, next) {
+      debug('plugin onend_response');
+      next(null, data);
+    }</pre>
+<p><strong>onclose_response function</strong></p>
+<p>Indicates the target connection has closed. You might use this function in cases where the target connection is unreliable. It is called when the socket connection to the target is closed.</p>
+<p>Example:</p>
+<pre>
+onclose_response: function(req, res, next) {
+      debug('plugin onclose_response');
+      next();
+    }</pre>
+<p><br />
+	<strong>onerror_response function</strong></p>
+<p>Called if there is an error receiving the target response.</p>
+<p>Example:</p>
+<pre>
+onerror_response: function(req, res, err, next) {
+      debug('plugin onerror_response ' + err);
+      next();
+    }</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>What you need to know about the plugin event handler functions</h2>
+<p>Plugin event handler functions are are called in response to specific events that occur while Edge Microgateway processes a given API request.</p>
+<ul>
+	<li>Each of the <strong>init()</strong> function handlers (<strong>ondata_request</strong>, <strong>ondata_response</strong>, etc) must call the <strong>next()</strong> callback when done processing. If you don't call <strong>next()</strong>, processing will stop and the request will hang.</li>
+	<li>The first argument to <strong>next()</strong> may be an error which will cause request processing to terminate.</li>
+	<li>The <strong>ondata_</strong> and <strong>onend_ </strong>handlers must call <strong>next()</strong> with a second argument containing the data to be passed to the target or the client. This argument can be null if the plugin is buffering and has not enough data to transform at the moment.</li>
+	<li>Note that one single instance of the plugin is used to service all requests and responses. If a plugin wishes to retain per-request state between calls, it can save that state in a property added to the supplied <strong>request</strong> object (<strong>req</strong>), whose lifetime is the duration of the API call.</li>
+	<li>Be careful to catch all errors and call <strong>next()</strong> with the error. Failure to call <strong>next()</strong> will result in the API call hanging.</li>
+	<li>Be careful not to introduce memory leaks as that can affect the overall performance of Edge Microgateway and cause it to crash if it runs out of memory.</li>
+	<li>Be careful to follow the Node.js model by not doing compute-intensive tasks in the main thread as this can adversely affect performance of Edge Microgateway.</li>
+</ul>
+<h2>About the plugin init() function</h2>
+<p>This section describes the arguments passed to the <strong>init()</strong> function: <strong>config</strong>, <strong>logger</strong>, and <strong>stats</strong>.</p>
+<div class="note">
+	<p>The interfaces described in this section are subject to change in future releases. If you use them in your code, please keep this caveat in mind.</p>
+</div>
+<h3>config</h3>
+<p>A configuration object obtained after merging the agent config file&nbsp;with information that is downloaded from Apigee Edge, such as products and quotas. You can find plugin-specific configuration in this object: <code>config.&lt;plugin-name&gt;</code>.</p>
+<p>To add a config parameter called <strong>param</strong> with a value of <strong>foo</strong> to a plugin called <strong>response-override</strong>, put this in the<code> default.yaml</code> file:</p>
+<pre>
+response-override:
+    param: foo</pre>
+<p>Then, you can access the parameter in your plugin code, like this:</p>
+<pre>
+// Called when response data is received
+    ondata_response: function(req, res, data, next) {
+      debug('***** plugin ondata_response');
+      debug('***** plugin ondata_response: config.param: ' + config.param);
+      next(null, data);
+    },</pre>
+<p>In this case, you will see foo printed in the plugin debug output:</p>
+<pre>
+Sun, 13 Dec 2015 21:25:08 GMT plugin:response-override ***** plugin ondata_response: config.param: foo</pre>
+<h3>logger</h3>
+<p>The system logger. The currently employed logger exports these functions, where object can be a string, HTTP request, HTTP response, or an Error instance.</p>
+<ul>
+	<li>info(object, message)</li>
+	<li>warn(object, message)</li>
+	<li>error(object, message)</li>
+</ul>
+<h3>stats</h3>
+<p>An object that holds counts of requests, responses, errors, and other aggregated statistics related to the requests and responses flowing through a microgateway instance.</p>
+<ul>
+	<li><strong>treqErrors</strong> - The number of target requests with errors.</li>
+	<li><strong>treqErrors</strong> - The number of target responses with errors.</li>
+	<li><strong>statusCodes</strong> - An object containing response code counts:</li>
+</ul>
+<pre style="margin-left: 40px;">
+{
+  1: number of target responses with 1xx response codes
+  2: number of target responses with 2xx response codes
+  3: number of target responses with 3xx response codes
+  4: number of target responses with 4xx response codes
+  5: number of target responses with 5xx response codes
+  }
+  </pre>
+<ul>
+	<li><strong>requests</strong> - The total number of requests.</li>
+	<li><strong>responses</strong> - The total number of responses.</li>
+	<li><strong>connections</strong> - The number of active target connections.</li>
+</ul>
+<h2>About the next() function</h2>
+<p>All plugin methods must call <code>next()</code> to continue processing the next method in the series (or the plugin process will hang). In the request life cycle, the first method called is onrequest(). The next method to be called is the <code>ondata_request()</code> method; however, <code>ondata_request</code> is <strong>only</strong> called if the request includes data, as in the case, for example, of a POST request. The next method called will be <code>onend_request()</code>, which is called when the request processing is completed. The <code>onerror_*</code> functions are only called in the event of an error, and they allow you to handle the errors with custom code if you wish.</p>
+<p>Let's say data is sent in the request, and <code>ondata_request()</code> is called. Notice that the function calls <code>next()</code> with two parameters:</p>
+<pre>
+next(null, data);</pre>
+<p>By convention, the first parameter is used to convey error information, which you can then handle in a subsequent function in the chain. By setting it to <code>null</code>, a falsy argument, we are saying there are no errors, and request processing should procede normally. If this argument is truthy (such as an Error object), then request processing stops and request is sent to the target.</p>
+<p>The second parameter passes the request data to the next function in the chain. If you do no additional processing, then the request data is passed unchanged to the target of the API. However, you have a chance to modify the request data within this method, and pass the modified request on to the target. For example, if the request data is XML, and the target expects JSON, then you can add code to the <code>ondata_request()</code> method that (a) changes the Content-Type of the request header to <code>application/json</code> and converts the request data to JSON using whatever means you wish (for example, you could use a Node.js <strong>xml2json</strong> converter obtained from NPM).</p>
+<p>Let's see how that might look:</p>
+<pre>
+ondata_request: function(req, res, data, next) {
+  debug('****** plugin ondata_request);
+  var translated_data = parser.toJson(data);
+  next(null, translated_data);
+},</pre>
+<p>In this case, the request data (which is assumed to be XML) is converted to JSON, and the transformed data is passed via <code>next()</code> to the next function in the request chain, before being passed to the backend target.</p>
+<div class="note">
+	<p>In a real situation, you'd want to check to be sure the incoming data is in XML format before executing the tranlator. We omit that step here to keep the example as simple as possible.</p>
+</div>
+<p>Note that you could add another debug statement to print the transformed data for debugging purposes. For example:</p>
+<pre>
+ondata_request: function(req, res, data, next) {
+  debug('****** plugin ondata_request);
+  var translated_data = parser.toJson(data);
+  debug('****** plugin ondata_response: translated_json: ' + translated_json);
+  next(null, translated_data);
+},</pre>
+<h2><a id="plugin_order" name="plugin_order"></a>About plugin handler execution order</h2>
+<p>If you write plugins for Edge Microgateway, you need to understand the order in which plugin event handlers are executed.</p>
+<p>The important point to remember is that when you specify a plugin sequence in the agent config&nbsp;file, the request handlers execute in <strong>ascending</strong> order, while the response handlers execute in <strong>descending</strong> order.</p>
+<p>The following example is designed to help you understand this execution sequence.</p>
+<h3>1. Create three simple plugins</h3>
+<p>Consider the following plugin. All it does is print console output when its event handlers are called:</p>
+<p><strong>plugins/plugin-1/index.js</strong></p>
+<pre>
+module.exports.init = function(config, logger, stats) {
+
+  return {
+
+    onrequest: function(req, res, next) {
+      console.log('plugin-1: onrequest');
+      next();
+    },
+
+    onend_request: function(req, res, data, next) {
+      console.log('plugin-1: onend_request');
+      next(null, data);
+    },
+
+    ondata_response: function(req, res, data, next) {
+      console.log('plugin-1: ondata_response ' + data.length);
+      next(null, data);
+    },
+
+    onend_response: function(req, res, data, next) {
+      console.log('plugin-1: onend_response');
+      next(null, data);
+    }
+  };
+}</pre>
+<p>Now, consider creating two more plugins, <code>plugin-2</code> and <code>plugin-3</code>, with the same code (except, change the <code>console.log()</code> statements to <code>plugin-2</code> and <code>plugin-3</code> respectively).</p>
+<h3>2. Review the plugin code</h3>
+<p>The exported plugin functions in <code>&lt;microgateway-root-dir&gt;/plugins/plugin-1/index.js</code> are event handlers that execute at specific times during request and response processing. For example, <code>onrequest</code> executes the first byte of the request headers is received. While, <code>onend_response</code> executes after the last byte of response data is received.</p>
+<p>Take a look at the handler ondata_response -- it is called whenever a chunk of response data is received. The important thing to know is that response data is not necessarily received all at once. Rather, the data may be received in chunks of arbitrary length.</p>
+<p>3. Add the plugins to the plugin sequence</p>
+<p>Continuing with this example, we'll add the plugins to the plugin sequence in the agent config file (~./edgemicro/config.yaml) as follows. The sequence is important. It defines the order in which the plugin handlers execute.</p>
+<pre>
+  plugins:
+    dir: ../plugins
+    sequence:
+      - plugin-1
+      - plugin-2
+      - plugin-3
+  </pre>
+<h3>3. Examine the debug output</h3>
+<p>Now, let's look at the output that would be produced when these plugins are called. There are a few important points to notice:</p>
+<ul>
+	<li>The plugin sequence&nbsp;<span style="font-size: 12px;">the agent config&nbsp;</span><span style="font-size: 12px;">file (~./edgemicro/config.yaml)&nbsp;</span>specifies the order in which event handlers are called.</li>
+	<li>Request handlers are called in <strong>ascending</strong> order (the order in which they appear in the plugin sequence -- 1, 2, 3).</li>
+	<li>Response handlers are called in <strong>descending</strong> order -- 3, 2, 1.</li>
+	<li>The <code>ondata_response</code> handler is called once for each chunk of data that arrives. In this example (output shown below), two chunks are received.</li>
+</ul>
+<p>Here is sample debug output produced when these three plugins are in use and a request is sent through Edge Microgateway. Just notice the order in which the handlers are called:</p>
+<pre>
+  plugin-1: onrequest
+  plugin-2: onrequest
+  plugin-3: onrequest
+
+  plugin-1: onend_request
+  plugin-2: onend_request
+  plugin-3: onend_request
+
+  plugin-3: ondata_response 931
+  plugin-2: ondata_response 931
+  plugin-1: ondata_response 931
+
+  plugin-3: ondata_response 1808
+  plugin-3: onend_response
+
+  plugin-2: ondata_response 1808
+  plugin-2: onend_response
+
+  plugin-1: ondata_response 1808
+  plugin-1: onend_response</pre>
+<h3>Summary</h3>
+<p>Understanding the order in which plugin handlers are called is very important when you try to implement custom plugin functionality, such as accumulating and transforming request or response data.</p>
+<p>Just remember that request handlers are executed in the order in which the plugins are specified in the agent config file,&nbsp;and response handlers are executed in the opposite order.</p>
+<h2>About using global variables in plugins</h2>
+<p>Every request to Edge Microgateway is sent to the same instance of a plugin; therefore, a second request’s state from another client will overwrite the first. The only safe place to save plugin state is by storing the state in a property on the request or response object (whose lifetime is limited to that of the request).</p>
+<h2>Sample plugins</h2>
+<p>These plugins are provided with your Edge Microgateway installation.</p>
+<h3>accumulate-request</h3>
+<p>This plugin accumulates data chunks from the client into an array property attached to the request object. When all the request data is received, the array is concatenated into a Buffer which is then passed to the next plugin in the sequence. This plugin should be the first plugin in the sequence so that subsequent plugins receive the accumulated request data.</p>
+<div class="warning">
+	<p>Buffering large requests or responses in memory my cause Edge Microgateway to run out of memory under high load or with a large number of concurrent requests. Only use this plugin when you know that request bodies are small.</p>
+</div>
+<pre>
+module.exports.init = function(config, logger, stats) {
+
+  function accumulate(req, data) {
+    if (!req._chunks) req._chunks = [];
+    req._chunks.push(data);
+  }
+
+  return {
+
+    ondata_response: function(req, res, data, next) {
+      if (data &amp;&amp; data.length &gt; 0) accumulate(req, data);
+      next(null, null);
+    },
+
+    onend_response: function(req, res, data, next) {
+      if (data &amp;&amp; data.length &gt; 0) accumulate(req, data);
+      var content = Buffer.concat(req._chunks);
+      delete req._chunks;
+      next(null, content);
+    }
+
+  };
+
+}</pre>
+<h3>accumulate-response</h3>
+<p>This plugin accumulates data chunks from the target into an array property attached to the response object. When all the response data is received, the array is concatenated into a Buffer which is then passed to the next plugin in the sequence. Because this plugin operates on responses, which are processed in reverse order, you should place position it as the last plugin in the sequence.</p>
+<div class="warning">
+	<p>Buffering large requests or responses in memory my cause Edge Microgateway to run out of memory under high load or with a large number of concurrent requests. Only use this plugin when you know that response bodies are small.</p>
+</div>
+<pre>
+module.exports.init = function(config, logger, stats) {
+
+  function accumulate(res, data) {
+    if (!res._chunks) res._chunks = [];
+    res._chunks.push(data);
+  }
+
+  return {
+
+    ondata_response: function(req, res, data, next) {
+      if (data &amp;&amp; data.length &gt; 0) accumulate(res, data);
+      next(null, null);
+    },
+
+    onend_response: function(req, res, data, next) {
+      if (data &amp;&amp; data.length &gt; 0) accumulate(res, data);
+      var content = Buffer.concat(res._chunks);
+      delete res._chunks;
+      next(null, content);
+    }
+
+  };
+
+}</pre>
+<h3><a id="Edge Microgateway sample plugin2" name="Edge Microgateway sample plugin"></a>header-uppercase plugin</h3>
+<p>Edge Microgateway distributions include a sample plugin called <code>&lt;microgateway-root-dir&gt;/plugins/header-uppercase</code>. The sample includes comments describing each of the function handlers. This sample does some simple data transformation of the target response and adds custom headers to the client request and target response.</p>
+<p>Here's the source code for <code>&lt;microgateway-root-dir&gt;/plugins/header-uppercase/index.js</code>:</p>
+<pre>
+'use strict';
+
+var debug = require('debug')('plugin:header-uppercase');
+
+// required
+module.exports.init = function(config, logger, stats) {
+
+  var counter = 0;
+
+  return {
+
+    // indicates start of client request
+    // request headers, url, query params, method should be available at this time
+    // request processing stops (and a target request is not initiated) if
+    // next is called with a truthy first argument (an instance of Error, for example)
+    onrequest: function(req, res, next) {
+      debug('plugin onrequest');
+      req.headers['x-foo-request-id'] = counter++;
+      req.headers['x-foo-request-start'] = Date.now();
+      next();
+    },
+
+    // indicates start of target response
+    // response headers and status code should be available at this time
+    onresponse: function(req, res, next) {
+      debug('plugin onresponse');
+      res.setHeader('x-foo-response-id', req.headers['x-foo-request-id']);
+      res.setHeader('x-foo-response-time', Date.now() - req.headers['x-foo-request-start']);
+      next();
+    },
+
+    // chunk of request body data received from client
+    // should return (potentially) transformed data for next plugin in chain
+    // the returned value from the last plugin in the chain is written to the target
+    ondata_request: function(req, res, data, next) {
+      debug('plugin ondata_request ' + data.length);
+      var transformed = data.toString().toUpperCase();
+      next(null, transformed);
+    },
+
+    // chunk of response body data received from target
+    // should return (potentially) transformed data for next plugin in chain
+    // the returned value from the last plugin in the chain is written to the client
+    ondata_response: function(req, res, data, next) {
+      debug('plugin ondata_response ' + data.length);
+      var transformed = data.toString().toUpperCase();
+      next(null, transformed);
+    },
+
+    // indicates end of client request
+    onend_request: function(req, res, data, next) {
+      debug('plugin onend_request');
+      next(null, data);
+    },
+
+    // indicates end of target response
+    onend_response: function(req, res, data, next) {
+      debug('plugin onend_response');
+      next(null, data);
+    },
+
+    // error receiving client request
+    onerror_request: function(req, res, err, next) {
+      debug('plugin onerror_request ' + err);
+      next();
+    },
+
+    // error receiving target response
+    onerror_response: function(req, res, err, next) {
+      debug('plugin onerror_response ' + err);
+      next();
+    },
+
+    // indicates client connection closed
+    onclose_request: function(req, res, next) {
+      debug('plugin onclose_request');
+      next();
+    },
+
+    // indicates target connection closed
+    onclose_response: function(req, res, next) {
+      debug('plugin onclose_response');
+      next();
+    }
+
+  };
+
+}
+
+
+</pre>
+<h3>transform-uppercase</h3>
+<p>This is a general transformation plugin that you can modify to do whatever kind of transformation you wish. This example simply transforms the response and request data to uppercase.</p>
+<div class="tipstricks">
+	<p>It's a good practice to precede any transformation plugin that operates on the request with the request-accumulate plugin. Likewise, if you're transforming a response, precede the transformation plugin with the response-accumulate plugin. By doing this, you ensure that the entire request or response data will be concatenated into one chunk before being sent to the onend handler.</p>
+</div>
+<p>&nbsp;</p>
+<pre>
+ */
+module.exports.init = function(config, logger, stats) {
+
+  // perform content transformation here
+  // the result of the transformation must be another Buffer
+  function transform(data) {
+    return new Buffer(data.toString().toUpperCase());
+  }
+
+  return {
+
+    ondata_response: function(req, res, data, next) {
+      // transform each chunk as it is received
+      next(null, data ? transform(data) : null);
+    },
+
+    onend_response: function(req, res, data, next) {
+      // transform accumulated data, if any
+      next(null, data ? transform(data) : null);
+    },
+
+    ondata_request: function(req, res, data, next) {
+      // transform each chunk as it is received
+      next(null, data ? transform(data) : null);
+    },
+
+    onend_request: function(req, res, data, next) {
+      // transform accumulated data, if any
+      next(null, data ? transform(data) : null);
+    }
+
+  };
+
+}</pre>
+<h2>Additional plugin tutorials</h2>
+<p>See also these tutorials on the Apigee Blog:</p>
+<ul>
+	<li><a href="http://apigee.com/about/blog/developer/tutorial-adding-logger-plugin-apigee-edge-microgateway">Tutorial: Adding a Logger Plugin to Apigee Edge Microgateway</a></li>
+	<li><a href="http://apigee.com/about/blog/developer/tutorial-writing-custom-transform-plugin-apigee-edge-microgateway">Tutorial: Writing a Custom Transform Plugin for Apigee Edge Microgateway</a></li>
+</ul>

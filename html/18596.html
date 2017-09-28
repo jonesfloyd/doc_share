@@ -1,0 +1,106 @@
+<h1> Caching in Edge </h1>
+<p>Apigee Edge provides caching for runtime persistence of data across requests. You access the cache with policies, such as <a href="http://docs.apigee.com/node/15596">http://docs.apigee.com/node/15596</a>, <a href="http://docs.apigee.com/node/15581">http://docs.apigee.com/node/15581</a>, <a href="http://docs.apigee.com/node/15586">http://docs.apigee.com/node/15586</a>, and <a href="http://docs.apigee.com/node/26">http://docs.apigee.com/node/26</a>.</p>
+<p>Your organization includes access to a shared cache that is useful for most cases. You can also configure your own cache if you want finer control of performance.</p>
+<p>You might want to use a cache to:</p>
+<ul>
+	<li><strong>Reduce latency and traffic.</strong> Requests are satisfied in a shorter time and with reused representations.</li>
+	<li><strong>Persist data across transactions.</strong> You can store session data for reuse across HTTP transactions.</li>
+	<li><strong>Support security.</strong> Scope access to cache entries so they can be accessed only in a particular environment or by a specific API proxy.</li>
+</ul>
+<div class="home-docs-container">
+	<h2 class="landing">Using persistence</h2>
+	<p>Get background and examples on the persistence features provided by Edge.</p>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/18586">Policy support for persistence</a></h3>
+		<p>Find out how policies support general purpose caching, backend response caching, and key-value maps.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/259">Example: General purpose caching</a></h3>
+		<p>View code that shows how <a href="http://docs.apigee.com/node/15596">http://docs.apigee.com/node/15596</a>, <a href="http://docs.apigee.com/node/15581">http://docs.apigee.com/node/15581</a>, and <a href="http://docs.apigee.com/node/15586">http://docs.apigee.com/node/15586</a> are used together.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/15591">Working with cache keys</a></h3>
+		<p>Understand the options for creating unique identifiers for cache entries.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/10170">Creating and editing an environment cache</a></h3>
+		<p>Create your own caches when the included shared cache won't meet your needs.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/18281">Cache internals</a></h3>
+		<p>Find out how the cache system is structured and how cache defaults interact with policies.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="http://docs.apigee.com/node/22746">http://docs.apigee.com/node/22746</a></h3>
+		<p>Create and manage collections of encrypted or unencrypted, non-expiring key/value pairs.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/15206">Support for HTTP response headers</a></h3>
+		<p>Learn how HTTP response headers are handled when you're using the ResponseCache policy.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3>&nbsp;</h3>
+		<p>&nbsp;</p>
+	</div>
+</div>
+<div class="home-docs-container">
+	<h2 class="landing">Policy references</h2>
+	<p>Use these policies for persistence.</p>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/15596">PopulateCache policy</a></h3>
+		<p>Put data into the general purpose cache.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/15581">LookupCache policy</a></h3>
+		<p>Get data from the general purpose cache.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/15586">InvalidateCache policy</a></h3>
+		<p>Remove a general purpose cache entry.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/26">ResponseCache policy</a></h3>
+		<p>Get and put data from a backend resource.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/26">Key Value Map Operations policy</a></h3>
+		<p>Use a key/value map store for long-term persistence.</p>
+	</div>
+</div>
+<div class="home-docs-container">
+	<h2 class="landing">API references</h2>
+	<p>Use these APIs to work with caches.</p>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/16316">Clear a cache entry</a></h3>
+		<p>Clears a cache entry using the cache key.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/16311">Create a cache in an environment</a></h3>
+		<p>Creates a cache in an environment.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/16296">Get information about a cache</a></h3>
+		<p>Gets information about a cache.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/16306">Clear all cache entries</a></h3>
+		<p>Clears cache entries. Can be scoped by cache key prefix.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/16301">List caches in an environment</a></h3>
+		<p>Lists the caches in an environment.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/16321">Update a cache in an environment</a></h3>
+		<p>Updates a cache in an environment.</p>
+	</div>
+	<div class="home-docs-left-column">
+		<h3><a href="/node/17286">Delete a cache</a></h3>
+		<p>Deletes a cache.</p>
+	</div>
+	<div class="home-docs-right-column">
+		<h3><a href="/node/19266">Key/value maps</a></h3>
+		<p>Create and manage collections (maps) of persisted key/value pairs at multiple scopes.</p>
+	</div>
+</div>
+<p>&nbsp;</p>

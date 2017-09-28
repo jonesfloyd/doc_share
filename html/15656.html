@@ -1,0 +1,261 @@
+<h1> Analytics dashboards </h1>
+<style type="text/css">
+<!-- CSS for JQuery tooltip -->
+
+.ui-widget-content {
+	border: 1px solid #aaaaaa;
+	background: #ffffff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;
+	color: #222222;
+}
+
+
+.ui-tooltip {
+	padding: 8px;
+	position: absolute;
+
+        font: 12px;
+	max-width: 300px;
+	-webkit-box-shadow: 0 0 4px #aaa;
+	box-shadow: 0 0 5px #aaa;
+}
+
+body .ui-tooltip {
+	border-width: 1px;</style>
+<style type="text/css">
+<!-- CSS for AX dashboard page -->
+.ax-dashboard-category-container {
+    padding: 50px 50px 50px 50px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#969696;
+    overflow:hidden;
+}
+
+.ax-title-container {
+    width:700px;
+    overflow:hidden;
+    text-align:left;
+}
+
+.ax-dashboard-category-title {
+    width:700px;
+    overflow:hidden;
+	text-align:left;
+	margin-top:5px;
+    color:#000000;
+    padding-top:10px;
+    padding-bottom:5px;
+}
+
+.ax-subtitle {
+    margin-top:5px;
+    color:#686868;
+}
+
+.ax-dashboard-icon-container {
+	
+	width:315px;
+   height:220px;
+ 
+	margin-top:5px;
+	margin-right:20px;
+	display: inline-block;  
+    vertical-align: bottom;  
+	
+}
+.ax-dashboard-icon {
+    center;
+    margin-top:5px;
+	margin-right:20px;
+    width:315px;
+    height:185px;
+	
+}
+
+.ax-icon-title {
+    margin-top:1px;
+    color:#686868;
+    text-align:center;
+}
+
+
+.ax-banner-see-more {
+    float:right; padding:0px 0px 8px 0px;
+}
+
+
+
+h3 {
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+
+div.docs-container > h2, div.getting-started-container > h2 {
+    margin-bottom:0px
+}
+
+div.docs-container > h3, div.getting-started-container > h3 {
+    margin-top:0px
+}</style>
+<div class="ax-title-container">
+	<h2>Apigee Edge Dashboards</h2>
+	<p class="ax-subtitle">Monitor the health and performance of your API program<br />
+		&nbsp;</p>
+</div>
+<div class="ax-dashboard-container">
+	<div class="ax-dashboard-category-container">
+		<ul class="nav nav-tabs" id="myTab">
+			<li class="active"><a data-toggle="tab" href="#apigee_dashboard">Apigee Dashboard</a></li>
+			<li><a data-toggle="tab" href="#api_dashboards">API</a></li>
+			<li><a data-toggle="tab" href="#developer_dashboards">Developer</a></li>
+			<li><a data-toggle="tab" href="#end_user_dashboards">End User</a></li>
+			<li><a data-toggle="tab" href="#exploration_dashboards">Exploration</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="apigee_dashboard">
+				<div class="ax-dashboard-category-title">
+					<h3>Apigee Dashboard</h3>
+					<p><a href="http://apigee.com/docs/api-services/content/api-program-view-dashboard#APIProgramView"><img alt="" src="sites/docs/files/ax-overview-1.png" style="width: 310px; height: 207px; border-width: 1px; border-style: solid;" /></a></p>
+				</div>
+				<div class="ax-dashboard-icon-container">
+					<div class="ax-dashboard-icon-title">
+						<p><a data-toggle="tooltip" href="/api-services/content/api-program-view-dashboard#APIProgramView">A</a><a href="http://apigee.com/docs/api-services/content/api-program-view-dashboard#APIProgramView">pigee Dashboard</a></p>
+					</div>
+				</div>
+				<div class="ax-dashboard-icon-container">
+					<div class="ax-dashboard-icon-title">&nbsp;</div>
+				</div>
+				<hr /></div>
+			<div class="tab-pane" id="api_dashboards">
+				<div class="ax-dashboard-category-container">
+					<div class="ax-dashboard-category-title">
+						<h3>API dashboards</h3>
+						<p>These dashboards highlight invaluable information about your API's health and performance.</p>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Endpoint Performance shows you metrics related to target endpoints including traffic, response time, errors, and request/response payload size.">
+							<p><a href="http://apigee.com/docs/analytics-services/content/api-proxy-performance-dashboard"><img alt="" src="sites/docs/files/ax-overview-2_1.png" style="width: 310px; height: 180px; border-width: 1px; border-style: solid;" /></a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/endpoint-performance-dashboard">P</a><a href="http://apigee.com/docs/analytics-services/content/api-proxy-performance-dashboard">roxy Performance</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="API Proxy Performance tracks metrics like latency, API proxy errors, transactions per second, and cache errors.">
+							<p><img alt="" src="sites/docs/files/ax-target-performance.png" style="width: 310px; height: 180px; border-width: 1px; border-style: solid;" /></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="http://apigee.com/docs/analytics-services/content/endpoint-performance-dashboard">Target Performance</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Cache Performance shows you metrics like cache hit rate, cache hits by API, cache hits by apps, total response time, and others.">
+							<p><a href="/api-services/content/cache-performance-dashboard">[[{"type":"media","view_mode":"media_original","fid":"3741","attributes":{"alt":"","class":"media-image","height":"519","style":"font-size: 12px; width: 310px; height: 180px; border-width: 1px; border-style: solid;","typeof":"foaf:Image","width":"885"}}]]</a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/cache-performance-dashboard">Cache Performance</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="The Error Code Analysis dashboard tells you about error rates for API proxies and developer apps.">
+							<p><a href="/analytics-services/content/error-analysis-dashboard"><img alt="" src="sites/docs/files/error-code-analysis.png" style="width: 310px; border-width: 1px; border-style: solid;" /></a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/error-analysis-dashboard">Error Code Analysis</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="developer_dashboards">
+				<div class="ax-dashboard-category-container">
+					<div class="ax-dashboard-category-title">
+						<h3>Developer dashboards</h3>
+						<p>These dashboards help you understand your API traffic patterns and adoption from multiple perspectives.</p>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Partner Engagement shows the ratio among traffic levels for high, medium, low, and inactive developers using your APIs. Also shows the total number of developers who have signed up to use your APIs, and the percentage change of developer signups between this week and last week.">
+							<p><img alt="" src="sites/docs/files/ax-developer-engagement-1.png" style="width: 322px; height: 180px; border-width: 1px; border-style: solid;" /></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="http://apigee.com/docs/analytics-services/content/partner-engagement-dashboard">Developer&nbsp;</a><a href="/api-services/content/partner-engagement-dashboard">Engagement</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Traffic Composition plots contribution over time of your most valuable apps, developers, APIs, and products to your API program.">
+							<p><img alt="" src="sites/docs/files/ax-traffic-composition-1.png" style="width: 307px; height: 180px; border-width: 1px; border-style: solid;" /></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/traffic-composition-dashboard">Traffic Composition</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Business Transactions tracks specific patterns in your API traffic and shows correlations between patterns from different API proxies.">
+							<p><a href="/api-services/content/business-transaction-dashboard">[[{"type":"media","view_mode":"media_original","fid":"3756","attributes":{"alt":"","class":"media-image","height":"455","style":"font-size: 12px; width: 310px; height: 180px; border-width: 1px; border-style: solid;","typeof":"foaf:Image","width":"800"}}]]</a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/business-transaction-dashboard">Business Transactions</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="end_user_dashboards">
+				<div class="ax-dashboard-category-container">
+					<div class="ax-dashboard-category-title">
+						<h3>End User dashboards</h3>
+						<p>These dashboards help you understand where your users are located and what devices they use to access your APIs.</p>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Shows you on a map where your APIs are being used.">
+							<p><a href="http://apigee.com/docs/analytics-services/content/geomap-dashboard"><img alt="" src="sites/docs/files/ax-geomap-1.png" style="width: 279px; height: 180px; border-width: 1px; border-style: solid;" /></a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="http://apigee.com/docs/api-services/content/geomap-dashboard">GeoMap</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Devices shows you where your API traffic is coming from, including platforms such as Chrome or from Python requests, traffic by agent, such as browser, library, or robot, and traffic categories, such as PC or mobile. ">
+							<p><a href="http://apigee.com/docs/analytics-services/content/devices-dashboard"><img alt="" src="sites/docs/files/ax-devices-1.png" style="width: 322px; height: 180px; border-width: 1px; border-style: solid;" /></a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/devices-dashboard">Devices</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="exploration_dashboards">
+				<div class="ax-dashboard-category-container">
+					<div class="ax-dashboard-category-title">
+						<h3>Exploration dashboards</h3>
+						<p>The Custom Reports tool and related dashboards let you generate and view reports based on metrics and dimensions you choose.</p>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Custom Reports allows you to generate plots and charts from a broad range of API metrics including total response time, traffic flow, errors, cache hits, and many others.">
+							<p><a href="/api-services/content/create-custom-reports">[[{"type":"media","view_mode":"media_original","fid":"3746","attributes":{"alt":"","class":"media-image","height":"510","style":"font-size: 12px; width: 310px; height: 180px; border-width: 1px; border-style: solid;","typeof":"foaf:Image","width":"961"}}]]</a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/create-custom-reports">Create Custom&nbsp;Reports</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Custom Report Dashboard lets you see the results of any custom report you defined.">
+							<p><a href="/api-services/content/custom-report-dashboard">[[{"type":"media","view_mode":"media_original","fid":"3801","attributes":{"alt":"","class":"media-image","height":"636","style":"font-size: 12px; width: 310px; height: 180px; border-width: 1px; border-style: solid;","typeof":"foaf:Image","width":"1070"}}]]</a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/custom-report-dashboard">Reports Dashboard</a></p>
+						</div>
+					</div>
+					<div class="ax-dashboard-icon-container">
+						<div class="ax-dashboard-icon" title="Custom Reports Dashboard lets you place up to four custom report dashboards on one page. ">
+							<p><a href="/api-services/content/custom-reports-dashboard">[[{"type":"media","view_mode":"media_original","fid":"3806","attributes":{"alt":"","class":"media-image","height":"653","style":"font-size: 12px; width: 310px; height: 180px; border-width: 1px; border-style: solid;","typeof":"foaf:Image","width":"1240"}}]]</a></p>
+						</div>
+						<div class="ax-dashboard-icon-title">
+							<p><a href="/api-services/content/custom-reports-dashboard">Reports</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p>&nbsp;</p>
+	</div>
+</div>
+<p>&nbsp;</p>

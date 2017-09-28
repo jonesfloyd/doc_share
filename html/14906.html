@@ -1,0 +1,238 @@
+<h1> Set OAuth V2 Info policy </h1>
+<img src="sites/docs/files/icon_policy_security.jpg" />
+<h3>What</h3>
+<p>Lets you add or update custom attributes associated with an access token. Custom attributes might include things like department name, a customer ID, or a session identifier. See also <a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a>.</p>
+<p>You can only add or modify custom attributes. You cannot use this policy to change fields like scope, status, expires_in, developer_email, client_id, org_name, or refresh_count. If an attribute already exists, this policy updates it. If it does not exist, the policy adds it. The access token referenced must be valid and in an approved state.</p>
+<p>&nbsp;</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations. See the <a href="#Samples">Samples</a> for specific attachment guidance in different situations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="samples">Samples</h2>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Basic example</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<p>Below is an example policy used to update an OAuth 2.0 access token. The example below locates the access token on the request message by looking for a query parameter called <code>access_token</code>. When an access token is presented by a client app, the policy below will locate the access token in the query parameter. It will then update the access token's profile. It adds a custom property called <code>department.id</code> to the profile.&nbsp;</p>
+		<pre>
+&lt;SetOAuthV2Info name="SetOAuthV2Info"&gt; 
+  &lt;AccessToken ref="request.queryparam.access_token"&gt;&lt;/AccessToken&gt;
+  &lt;Attributes&gt;
+    &lt;Attribute name="department.id" ref="request.queryparam.department_id"&gt;&lt;/Attribute&gt;
+  &lt;/Attributes&gt;
+&lt;/SetOAuthV2Info&gt;</pre>
+		<div class="note">
+			<p>If an attribute already exists in the access token profile, then it will be updated with the new value in the policy. If an attribute does not exist, then the attribute will be added to the access token's profile.</p>
+		</div>
+	</div>
+	<!-- Tab 1 end. --><!--Tab 2 begin. --></div>
+<!-- End tabbed region. -->
+<hr />
+<h2 id="elementreference">Element Reference</h2>
+<p>The element reference describes the elements and attributes of the SetOAuthV2 policy.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;SetOAuthV2Info async="false" continueOnError="false" enabled="true" name="SetOAuthV2Info-1"&gt;    
+    &lt;DisplayName&gt;Set OAuth v2.0 Info 1&lt;/DisplayName&gt;
+    &lt;AccessToken ref={some-variable}&gt;&lt;/AccessToken&gt;
+    &lt;Attributes/&gt;
+&lt;/SetOAuthV2Info&gt;
+&lt;/xml&gt;</pre>
+<h2>&lt;SetOAuthV2Info&gt; attributes</h2>
+<pre class="prettyprint prettyprinted" style="margin-top: 0px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 12.727272033691406px; color: rgb(72, 72, 72); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+&lt;SetOAuthV2Info async="false" continueOnError="false" enabled="true" name="Set-OAuth-v20-Info-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2>&lt;AccessToken&gt; element</h2>
+<p>Identifies the variable where the access token is located. For example, if the access token is attached to request message as a query parameter, specify <code>request.queryparam.access_token</code>. You can use any valid variable that references the token. Or, could pass in the literal token string (rare case).</p>
+<pre>
+ &lt;AccessToken ref="request.queryparam.access_token"&gt;&lt;/AccessToken&gt;</pre>
+<table class="pd-table" width="237">
+	<tbody>
+		<tr>
+			<td class="pd-td-left" width="61">Default:</td>
+			<td class="pd-td-right" width="138">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>An access token variable. Typically, retrieved from a flow variable.</p>
+			</td>
+			<td>N/A</td>
+			<td>Optional</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;Attributes&gt; element</h2>
+<p>A set of attributes in the access token profile that will be modified or augmented.</p>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left" width="61">Default:</td>
+			<td class="pd-td-right" width="159">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;Attributes&gt;/&lt;Attribute&gt; element</h2>
+<p>An individual attribute to update.</p>
+<p>The&nbsp;name&nbsp;attribute identifies the custom property of the access token profile to be updated. This example shows how to use a referenced variable value and a static value.&nbsp;</p>
+<pre>
+  &lt;Attributes&gt;
+    &lt;Attribute name="department.id" ref="request.queryparam.department_id"&gt;&lt;/Attribute&gt;
+    &lt;Attribute name="foo"&gt;bar&lt;/Attribute&gt;
+  &lt;/Attributes&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left" width="61">Default:</td>
+			<td class="pd-td-right" width="159">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>The name of the profile attribute to add or change.</td>
+			<td>N/A</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>The value to assign to the profile attribute.</p>
+			</td>
+			<td>N/A</td>
+			<td>Optional</td>
+		</tr>
+	</tbody>
+</table>
+<p>&nbsp;</p>
+<h2 id="flowvariables">Flow variables</h2>
+<p>On success, the following flow variables will be set:</p>
+<ul>
+	<li><code>oauthv2accesstoken.{policyName}.access_token</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.client_id</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.refresh_count</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.organization_name</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.expires_in</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.refresh_token_expires_in</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.issued_at</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.status</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.api_product_list</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.token_type</code></li>
+	<li><code>oauthv2accesstoken.{policyName}.{custom_attribute_name}</code></li>
+</ul>
+<h2 id="schema">Schema</h2>
+<p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
+<h2>Error reference</h2>
+<p><a href="http://docs.apigee.com/node/21351">Content to be inserted here</a></p>
+<h2 id="relatedtopics">Related topics</h2>
+<ul>
+	<li><a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a></li>
+	<li><a href="http://docs.apigee.com/node/17786">http://docs.apigee.com/node/17786</a></li>
+	<li><a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a></li>
+</ul>

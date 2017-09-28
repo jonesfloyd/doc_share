@@ -1,0 +1,367 @@
+<h1> Spike Arrest policy </h1>
+<img src="sites/docs/files/icon_policy_spike-arrest.jpg" />
+<h3>What</h3>
+<p>The Spike Arrest policy protects against traffic spikes. It throttles the number of requests processed by an API proxy and sent to a backend, protecting against performance lags and downtime. See the <code><a href="#rate">&lt;Rate&gt;</a></code> element for a more detailed behavior description. See also "<a href="#Howitworks">How spike arrest works</a>", below.&nbsp;</p>
+<div class="tipstricks">
+	<p>Need help deciding which rate limiting policy to use? See <a href="http://docs.apigee.com/node/17896">http://docs.apigee.com/node/17896</a>.</p>
+</div>
+<div class="video">
+	<p>Watch this video for an introduction to the Spike Arrest policy.</p>
+	<div class="collapse" id="demo">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/3Gi-GGTqllg" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
+</div>
+<h3>Where</h3>
+<p>While you can attach this policy anywhere in the flow, we recommend that you attach it in the following location so that it can provide spike protection at the immediate entry point of your API proxy. For more guidance on Spike Arrest policy placement, see&nbsp;<a href="https://community.apigee.com/articles/8285/spike-arrest-tip.html">https://community.apigee.com/articles/8285/spike-arrest-tip.html</a>.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h3 id="samples">Samples</h3>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_a">Video</a></li>
+	<li><a data-toggle="tab" href="#tab_1">Per second</a></li>
+	<li><a data-toggle="tab" href="#tab_2">Per minute</a></li>
+	<li><a data-toggle="tab" href="#tab_3">With message weight</a></li>
+	<li><a data-toggle="tab" href="#tab_4">Rate from variable</a></li>
+	<li><a data-toggle="tab" href="#tab_5">Rate from product</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab a begin. -->
+	<div class="tab-pane active" id="tab_a"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/XlB3S5hJyWY" width="640"></iframe></div>
+	<!-- Tab a end. --><!-- Tab 1 begin. -->
+	<div class="tab-pane" id="tab_1">
+		<pre>
+&lt;SpikeArrest name="SpikeArrest"&gt;
+  &lt;Rate&gt;5ps&lt;/Rate&gt;
+&lt;/SpikeArrest&gt;
+</pre>
+		<p>5 per second. The policy smoothes the rate to 1 request allowed every 200 <strong>milliseconds</strong> (1000 / 5).</p>
+	</div>
+	<!-- Tab 1 end. --><!-- Tab 2 begin. -->
+	<div class="tab-pane" id="tab_2">
+		<pre>
+&lt;SpikeArrest name="SpikeArrest"&gt;
+  &lt;Rate&gt;12pm&lt;/Rate&gt;
+&lt;/SpikeArrest&gt;
+</pre>
+		<p>12 per minute. The policy smoothes the rate to 1 request allowed every 5 <strong>seconds</strong> (60 / 12).</p>
+	</div>
+	<!-- Tab 2 end. --><!-- Tab 3 begin. -->
+	<div class="tab-pane" id="tab_3">
+		<pre>
+&lt;SpikeArrest name="SpikeArrest"&gt;
+  &lt;Rate&gt;12pm&lt;/Rate&gt;
+  &lt;Identifier ref="client_id" /&gt;
+  &lt;MessageWeight ref="request.header.weight" /&gt;
+&lt;/SpikeArrest&gt;
+</pre>
+		<p>12 per minute (1 request allowed every 5 seconds, 60 / 12), with message weight that provides additional throttling on specific clients or apps (captured by the Identifier).</p>
+	</div>
+	<!-- Tab 3 end. --><!-- Tab 4 begin. -->
+	<div class="tab-pane" id="tab_4">
+		<pre>
+&lt;SpikeArrest name="SpikeArrest"&gt;
+  &lt;Rate ref="request.header.rate" /&gt;
+&lt;/SpikeArrest&gt;
+</pre>
+		<p>Setting rate with a <code>variable</code> in the request. The variable value must be in the form of {int}pm or {int}ps.</p>
+	</div>
+	<!-- Tab 4 end. --><!-- Tab 3 end. --><!-- Tab 5 begin. -->
+	<div class="tab-pane" id="tab_5">
+		<p>Check out <a href="https://community.apigee.com/questions/39835/how-can-i-use-api-products-to-set-spike-arrest-lim.html">this Apigee Community post</a> that explains how to set the spike arrest rate using custom variables set in an API product.</p>
+	</div>
+	<!-- Tab 4 end. --></div>
+<!-- End tabbed region. -->
+<hr />
+<h2 id="elements">Element reference</h2>
+<p>Following are elements and attributes you can configure on this policy.</p>
+<pre>
+&lt;SpikeArrest async="false" continueOnError="false" enabled="true" name="Spike-Arrest-1"&gt;
+    &lt;<a href="#displayname">DisplayName</a>&gt;Custom label used in UI&lt;/DisplayName&gt;
+    &lt;<a href="#rate">Rate</a>&gt;30ps&lt;/Rate&gt;
+    &lt;<a href="#identifier">Identifier</a> ref="request.header.some-header-name"/&gt;
+    &lt;<a href="#messageweight">MessageWeight</a> ref="request.header.weight"/&gt;
+&lt;/SpikeArrest&gt;</pre>
+<h2>&lt;SpikeArrest&gt; attributes</h2>
+<pre>
+&lt;SpikeArrest async="false" continueOnError="false" enabled="true" name="Spike-Arrest-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2 id="rate">&lt;Rate&gt; element</h2>
+<p>Specifies the rate at which to limit traffic spikes (or bursts). Specify a number of requests that are allowed in per minute or per second intervals. However, keep reading for a description of how the policy behaves at runtime to smoothly throttle traffic. See also "<a href="#Howitworks">How spike arrest works</a>", below.&nbsp;</p>
+<pre>
+&lt;Rate&gt;10ps&lt;/Rate&gt;</pre>
+<pre>
+&lt;Rate&gt;30pm&lt;/Rate&gt;</pre>
+<pre>
+&lt;Rate ref="request.header.rate" /&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Valid values</td>
+			<td class="pd-td-right">
+				<ul>
+					<li>{int}ps (number of requests per second, smoothed into intervals of milliseconds)</li>
+					<li>{int}pm (number of requests per minute, smoothed into intervals of seconds)
+						<div class="note">
+							<p>In rate smoothing, the number of requests is always a whole number greater than zero. Smoothing never involves calculating fractions of requests.</p>
+						</div>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>A reference to the variable containing the rate setting, in the form of {int}pm or {int}ps.</p>
+			</td>
+			<td>N/A</td>
+			<td>Optional</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="identifier">&lt;Identifier&gt; element</h2>
+<p>Use the&nbsp;<code>&lt;Identifier&gt;</code>&nbsp;element to uniquely identify and apply spike arrest against individual apps or developers. You can use a variety of variables to indicate a unique developer or app, whether you're using custom variables or predefined variables, such as those available with the <a href="http://docs.apigee.com/node/3977">http://docs.apigee.com/node/3977</a>. See also the <a href="http://docs.apigee.com/node/243">http://docs.apigee.com/node/243</a>.</p>
+<p>Use in conjunction with&nbsp;<code>&lt;MessageWeight&gt;</code>&nbsp;for more fine-grained control over request throttling.</p>
+<p>If you don't use this element,&nbsp;all&nbsp;calls made to the API proxy are counted for spike arrest.</p>
+<p>This element is also discussed in the following Apigee Community post:&nbsp;<a href="http://community.apigee.com/questions/2807/how-does-the-edge-quota-policy-work-when-no-identi.html">http://community.apigee.com/questions/2807/how-does-the-edge-quota-policy-work-when-no-identi.html</a>.</p>
+<pre>
+&lt;Identifier ref="client_id"/&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>A reference to the variable containing the data that identifies the app or developer.</p>
+			</td>
+			<td>N/A</td>
+			<td>Required</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="messageweight">&lt;MessageWeight&gt; element</h2>
+<p>Use in conjunction with <code>&lt;Identifier&gt;</code> to further throttle requests by specific clients or apps.</p>
+<p>Specifies the weighting defined for each message. Message weight is used to modify the impact of a single request on the calculation of the Spike Arrest limit. Message weight can be set by variables based on HTTP headers, query parameters, or message body content. For example, if the Spike Arrest Rate is 10pm, and an app submits requests with weight 2, then only 5 messages per minute are permitted from that app.</p>
+<pre>
+&lt;MessageWeight ref="request.header.weight"/&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>A reference to the variable containing the message weight for the specific app or client.</p>
+			</td>
+			<td>N/A</td>
+			<td>Required</td>
+		</tr>
+	</tbody>
+</table>
+<hr />
+<h2><a id="Howitworks" name="Howitworks"></a>How spike arrest works</h2>
+<p>Think of Spike Arrest as a way to generally protect against traffic spikes rather than as a way to limit traffic to a specific number of requests. Your APIs and backend can handle a certain amount of traffic, and the Spike Arrest policy helps you smooth traffic to the general amounts you want.</p>
+<p>The runtime Spike Arrest behavior differs from what you might expect to see from the literal per-minute or per-second values you enter.</p>
+<p>For example, say you enter a rate of 30pm (30 requests per minute). In testing, you might think you could send 30 requests in 1 second, as long as they came within a minute. But that's not how the policy enforces the setting. If you think about it, 30 requests inside a 1-second period could be considered a mini spike in some environments.</p>
+<p>What actually happens, then? To prevent spike-like behavior, Spike Arrest smooths the number of full requests allowed by dividing your settings into smaller intervals:</p>
+<ul>
+	<li><strong>Per-minute</strong>&nbsp;rates get smoothed into full requests allowed in intervals of&nbsp;<strong>seconds</strong>.<br />
+		For example, 30pm gets smoothed like this:<br />
+		60 seconds (1 minute) / 30pm = 2-second intervals, or 1 request allowed every 2 seconds. A second request inside of 2 seconds will fail. Also, a 31st request within a minute will fail.</li>
+	<li><strong>Per-second</strong>&nbsp;rates get smoothed into full requests allowed in intervals of&nbsp;<strong>milliseconds</strong>.<br />
+		For example, 10ps gets smoothed like this:<br />
+		1000 milliseconds (1 second) / 10ps = 100-millisecond intervals, or 1 request allowed every 100 milliseconds. A second request inside of 100ms will fail. Also, an 11th request within a second will fail.</li>
+</ul>
+<div class="note">
+	<p>In rate smoothing, the number of requests is always a whole number greater than zero. Smoothing never involves calculating fractions of requests.</p>
+</div>
+<h3>There's more: 1 request * number of message processors</h3>
+<p>Spike Arrest is not distributed, so request counts are not synchronized across message processors. With more than one message processor, especially those with a round-robin configuration, each handles its own Spike Arrest throttling independently. With one message processor, a 30pm rate smooths traffic to 1 request every 2 seconds (60 / 30). With two message processors (the default for Edge cloud), that number doubles to 2 requests every 2 seconds. So multiply your calculated number of full requests per interval by the number of message processors to get your overall arrest rate.</p>
+<h2>What is the difference between spike arrest and quota</h2>
+<p>Quota policies configure the number of request messages that a client app is allowed to submit to an API over the course of an hour, day, week, or month. The quota policy enforces consumption limits on client apps by maintaining a distributed counter that tallies incoming requests.</p>
+<p>Use a quota policy to enforce business contracts or SLAs with developers and partners, rather than for operational traffic management. Use spike arrest to protect against sudden spikes in API traffic. See also <a href="http://docs.apigee.com/node/17896">http://docs.apigee.com/node/17896</a>.</p>
+<h2 id="usage">Usage notes</h2>
+<ul>
+	<li>In general, you should use Spike Arrest to set a limit that throttles traffic to what your backend services can handle.</li>
+	<li>See also "<a href="#Howitworks">How spike arrest works</a>".&nbsp;</li>
+</ul>
+<hr />
+<h2>Schemas</h2>
+<div class="sample-github">
+	<p>See our <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">Github repository</a>&nbsp;samples for the most recent schemas.</p>
+</div>
+<h2 id="variables">Flow variables</h2>
+<p>When a Spike Arrest policy executes, the following Flow variable is populated.</p>
+<p>For more information about Flow variables, see <a href="http://docs.apigee.com/node/243">http://docs.apigee.com/node/243</a>.</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
+	<thead>
+		<tr>
+			<th>Variable</th>
+			<th>Type</th>
+			<th>Permission</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>ratelimit.{policy_name}.failed</code></td>
+			<td>Boolean</td>
+			<td>Read-Only</td>
+			<td>
+				<p>Indicates whether or not the policy failed (true or false).</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<hr />
+<h2 id="errors">Error reference</h2>
+<p><span style="font-size: 12px;"><a href="http://docs.apigee.com/node/21416">Content to be inserted here</a></span></p>
+<p><span style="color:#ff0000;">The current HTTP status code for exceeding the rate limit is 500, but it will soon be changed to 429. Until the change occurs, if you are want the status code to be 429, a property needs to be set on your organization (<code>features.isHTTPStatusTooManyRequestEnabled</code>). If you're a cloud customer, contact </span><a href="https://community.apigee.com/content/apigee-customer-support" target="_blank"><span style="color:#ff0000;">Apigee Support</span></a><span style="color:#ff0000;"> to have the property enabled.&nbsp;</span><span style="color: rgb(255, 0, 0);">See&nbsp;</span><a href="https://community.apigee.com/content/kbentry/23852/http-429-as-default-status-code-for-quota-policy-v.html">this community article</a><span style="color: rgb(255, 0, 0);">&nbsp;for guidance on the upcoming change.</span></p>
+<div class="opdk">
+	<p>If you're an Edge for Private Cloud customer, set this property with the following API call:</p>
+	<pre>
+curl -u email:password -X POST -H "Content-type:application/xml" http://host:8080/v1/o/myorg -d \
+"&lt;Organization type="trial" name="MyOrganization"&gt;
+    &lt;DisplayName&gt;MyOrganization&lt;/DisplayName&gt;
+    &lt;Environments/&gt;
+    &lt;Properties&gt;
+        &lt;Property name="features.isHTTPStatusTooManyRequestEnabled"&gt;true&lt;/Property&gt;
+    &lt;/Properties&gt;
+&lt;/Organization&gt;"</pre>
+</div>
+<h2 id="relatedtopics">Related topics</h2>
+<div class="sample-github">
+	<p>For working samples of API proxies, see the <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a>.</p>
+</div>
+<ul>
+	<li><a href="http://docs.apigee.com/node/56">http://docs.apigee.com/node/56</a>: Quota policy, to limit traffic on individual clients</li>
+	<li><a href="http://docs.apigee.com/node/12566">http://docs.apigee.com/node/12566</a> for a rate limiting overview</li>
+	<li><a href="http://docs.apigee.com/node/11646">http://docs.apigee.com/node/11646</a> to generally keep from overtaxing your backend</li>
+	<li><a href="http://docs.apigee.com/node/17896">http://docs.apigee.com/node/17896</a></li>
+</ul>
+<p>&nbsp;</p>

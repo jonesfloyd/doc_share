@@ -1,0 +1,18 @@
+<h1> Content-based security </h1>
+[toc]
+<p>Message content is a significant attack vector used by malicious API consumers. API Services provides a set of Policy types to mitigate the potential for your backend services to be compromised by attackers or by malformed request payloads.</p>
+<p>The following video provides an overview and focuses on protecting against SQL injection attacks.</p>
+<p><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/rC8kZJgwBFM" width="640"></iframe></p>
+<h2>JSON threat protection</h2>
+<p>JSON attacks attempt to use structures that overwhelm JSON parsers to crash a service and induce application-level denial-of-service attacks.</p>
+<p>Such attacks can be mitigated using the JSONThreatProtection Policy type.</p>
+<p>See <a href="http://docs.apigee.com/node/365">http://docs.apigee.com/node/365</a>.</p>
+<h2>XML threat protection</h2>
+<p>XML attacks attempt to use structures that overwhelm XML parsers to crash a service and induce application-level denial-of-service attacks.</p>
+<p>Such attacks can be mitigated using the XMLThreatProtection Policy type.</p>
+<p>See <a href="http://docs.apigee.com/node/30">http://docs.apigee.com/node/30</a>.</p>
+<h2>General content protection</h2>
+<p>Some content-based attacks use specific constructs in HTTP headers, query parameters, or payload content to attempt to execute code. An example is SQL-injection attacks. Such attacks can be mitigated using the RegularExpressionProtection Policy type.</p>
+<p>See <a href="http://docs.apigee.com/node/261">http://docs.apigee.com/node/261</a>.</p>
+<h2>Get help</h2>
+<p>For help, see <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Customer Support</a>.</p>

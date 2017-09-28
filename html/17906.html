@@ -1,0 +1,12 @@
+<h1> Sending an access token </h1>
+[toc]
+<p>As an app developer, you need to include an access token in any request to Apigee Edge for a protected resource (an API that is protected with a VerifyAccessToken policy). Note that access tokens are also called "bearer tokens."&nbsp;</p>
+<h2>Sending an access token in a request</h2>
+<p>When you put a VerifyAccessToken policy at the front of your API proxy flow, apps must present a verifiable&nbsp;<strong>access token</strong>&nbsp;(also called a "bearer token") to consume your API. To do this, the app sends the access token in the request as an&nbsp;<strong>"Authorization" HTTP header</strong>.</p>
+<p>For example:</p>
+<pre class="terminal">
+$ curl -H "Authorization: Bearer ylSkZIjbdWybfs4fUQe9BqP0LH5Z" http://{org_name}-test.apigee.net/weather/forecastrss?w=12797282</pre>
+<p>Apigee Edge will verify that the access token presented is valid, and then grant access to the API, returning the response to the app that made the request.</p>
+<h2>Related information</h2>
+<p>For information on obtaining an access token, see "<a href="http://apigee.com/docs/api-services/content/asking-tokens">Requesting tokens and auth codes</a>".&nbsp;</p>
+<p>For information on verifying access tokens, see "<a href="http://apigee.com/docs/api-services/content/using-access-tokens">Verifying access tokens</a>".&nbsp;</p>

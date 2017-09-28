@@ -1,0 +1,253 @@
+<h1> Java Callout policy </h1>
+<p><img src="sites/docs/files/icon_policy_java-callout.jpg" /></p>
+<h3>What</h3>
+<p>Enables you to use Java to implement custom behavior that is not included out-of-the-box by Apigee policies.</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#E5E5E5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#F4F4F4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#F4F4F4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="http://docs.apigee.com/node/23811">Content to be inserted here</a></p>
+<h2 id="samples">Samples</h2>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Simple example</a></li>
+	<li><a data-toggle="tab" href="#properties">Retrieve property value from Java</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<pre>
+&lt;JavaCallout name="cityLookUp"&gt;
+   &lt;ClassName&gt;com.apigeesample.CityLookup&lt;/ClassName&gt;
+   &lt;ResourceURL&gt;java://CityLookup.jar&lt;/ResourceURL&gt;
+&lt;/JavaCallout&gt;
+</pre>
+		<div class="sample-github">
+			<p>The cityLookUp JavaCallout policy is delivered in the <a href="https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cookbook">java-cookbook repository</a>, along with other samples that support using Java to customize an API.</p>
+		</div>
+		<p>For java-cookbook sample usage details, see <a href="http://docs.apigee.com/node/222">http://docs.apigee.com/node/222</a>.</p>
+	</div>
+	<!-- Tab 1 end. --><!--Tab 2 begin. -->
+	<div class="tab-pane" id="properties">
+		<p>You can add a <code>&lt;Property&gt;</code> element in configuration, then retrieve the element's value with Java at runtime.</p>
+		<p>Use the element's <code>name</code> attribute to specify the name with which to access the property from Java code. The <code>&lt;Property&gt;</code> element's value (the value between the opening and closing tags) is the value that will be received by the Java code.</p>
+		<p>In Java, you retrieve the policy property value by accessing it as a property of the <code>Properties</code> object, as in the following:</p>
+		<ul>
+			<li>Configure the property. Here, the property value is the variable name <code>response.status.code</code>.
+				<pre>
+&lt;JavaCallout async="false" continueOnError="false" enabled="true" name="JavaCallout"&gt;
+    &lt;DisplayName&gt;JavaCallout&lt;/DisplayName&gt;
+    &lt;ClassName&gt;com.example.mypolicy.MyJavaCallout&lt;/ClassName&gt;
+    &lt;ResourceURL&gt;java://MyJavaCallout.jar&lt;/ResourceURL&gt;
+    &lt;Properties&gt;
+        &lt;Property name="source"&gt;response.status.code&lt;/Property&gt;
+    &lt;/Properties&gt;
+&lt;/Javascript&gt;</pre>
+			</li>
+			<li>Retrieve the property with Java.
+				<pre>
+public class MyJavaCallout implements Execution{
+    public MyJavaCallout(Map&lt;string, string&gt; props){
+        
+	    // Extract property values from map.
+    }
+    ...
+}</pre>
+			</li>
+		</ul>
+	</div>
+	<!-- Tab 2 end. --></div>
+<!-- End tabbed region. -->
+<hr />
+<h2 id="elementreference">Element reference</h2>
+<p>The element reference describes the elements and attributes of the JavaCallout policy.</p>
+<pre>
+&lt;JavaCallout name="MyJavaCalloutPolicy"&gt;
+   &lt;ClassName&gt;com.example.mypolicy.MyJavaCallout&lt;/ClassName&gt;
+   &lt;ResourceURL&gt;java://MyJavaCallout.jar&lt;/ResourceURL&gt;
+&lt;/JavaCallout&gt;
+</pre>
+<h2>&lt;JavaCallout&gt; attributes</h2>
+<pre>
+&lt;JavaCallout name="MyJavaCalloutPolicy" enabled="true" continueOnError="false" async="false" &gt;
+</pre>
+<p><a href="http://docs.apigee.com/node/18471">Content to be inserted here</a></p>
+<h2>&lt;ClassName&gt; element</h2>
+<p>Specifies the name of the Java class that executes the callout.</p>
+<pre>
+&lt;JavaCallout name="MyJavaCalloutPolicy"&gt;
+   &lt;ResourceURL&gt;java://MyJavaCallout.jar&lt;/ResourceURL&gt;
+   &lt;ClassName&gt;com.example.mypolicy.MyJavaCallout&lt;/ClassName&gt;
+&lt;/JavaCallout&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="Property">&lt;Property&gt; element</h2>
+<p>Specifies a property you can access from Java code at runtime.</p>
+<pre>
+&lt;Properties&gt;
+    &lt;Property name="propName"&gt;propertyValue&lt;/Property&gt;
+&lt;/Properties&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">None</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h3 id="Property_attributes">Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<thead>
+		<tr>
+			<th width="118">Attribute</th>
+			<th width="343">Description</th>
+			<th width="92">Default</th>
+			<th width="192">Presence</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>name</td>
+			<td>
+				<p>Specifies the name of the property.</p>
+			</td>
+			<td>N/A</td>
+			<td>Required.</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Example</h3>
+<p>&nbsp;</p>
+<h2><a id="ResourceURL" name="ResourceURL"></a>&lt;ResourceURL&gt; element</h2>
+<p>This element specifies the Java JAR file that will execute in the API flow. You can store this file at the API proxy scope (under <code>/apiproxy/resources/java</code>&nbsp;in the API proxy bundle or in the Scripts section of the API proxy editor's Navigator pane), or at the organization or environment scopes for reuse across multiple API proxies, as described in <a href="http://docs.apigee.com/node/11972">http://docs.apigee.com/node/11972</a>. Your code can use the objects, methods, and properties of the <a href="http://docs.apigee.com/node/3976">http://docs.apigee.com/node/3976</a>.</p>
+<pre>
+&lt;JavaCallout name="MyJavaCalloutPolicy"&gt;
+   &lt;ResourceURL&gt;java://MyJavaCallout.jar&lt;/ResourceURL&gt;
+   &lt;ClassName&gt;com.example.mypolicy.MyJavaCallout&lt;/ClassName&gt;
+&lt;/JavaCallout&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">None</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="errorcodes">Error reference</h2>
+<p><span style="font-size: 12px;"><a href="http://docs.apigee.com/node/21286">Content to be inserted here</a></span></p>
+<h2 id="schemas">Schemas</h2>
+<div class="sample-github">
+	<p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
+</div>
+<h2 id="usagenotes">Usage notes</h2>
+<div class="warning">
+<ul>
+	<li>Most system calls are disallowed. For example, you cannot perform local network I/O, or filesystem reads or writes. The callout cannot get information about the current process, the process list, or CPU/memory utilization on the machine. Although some such calls may be functional, they are unsupported and liable to be actively disabled at any time. For forward compatibility, you should avoid making such calls in your code.</li>
+
+	<li>Reliance on Java libraries that are included with Apigee Edge is not supported. Those libraries are for Edge product functionality only, and there's no guarantee that a library will be available from release to release.</li>
+</ul>
+</div>
+<ul>
+	<li>A Java Callout policy contains no actual code. Instead, a Java Callout policy references a Java 'resource' and defines the Step in the API flow where the Java code executes. You can upload your Java JAR through the Management UI proxy editor, or you can include it in the <code>/resources/java</code> directory in API proxies that you develop locally.</li>
+	<li>Place the JAR in an API proxy under <code>/resources/java</code>. If your Java Callout relies on additional third-party libraries packaged as independent JAR files, then place those JAR files in the <code>/resources/java</code> directory as well to ensure that they are loaded correctly at runtime. If you are using the management UI to create or modify the proxy, add a new resource and specify an additional dependent JAR file. If there are multiple JARs, simply add them as additional resources. You do not need to modify the policy configuration to refer to additional JAR files. Putting them in <code>/resources/java</code> is sufficient.<br />
+		For information on uploading Java JARs, see&nbsp;<a href="http://docs.apigee.com/node/11972">http://docs.apigee.com/node/11972</a>.</li>
+	<li>Package names:&nbsp;Don't use 'io.apigee' or 'com.apigee' as package names in Java Callouts. Those are reserved and used by other Apigee modules.</li>
+	<li>For lightweight operations, such as API calls to remote services, we recommend using the ServiceCallout policy. See <a href="http://docs.apigee.com/node/156">http://docs.apigee.com/node/156</a>.</li>
+	<li>For relatively simple interactions with message content, such as modifying or extracting HTTP headers, parameters, or message content, you can use JavaScript or Python languages.</li>
+</ul>
+<!--<p>For a detailed code example, see <a href="http://docs.apigee.com/node/3975">http://docs.apigee.com/node/3975</a>.</p>-->
+<h2 id="relatedtopics">Related topics</h2>
+<p>For samples that support using Java to customize an API, see our <a href="https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cookbook">java-cookbook repository</a>.</p>
+<p>For java-cookbook sample usage details, see <a href="http://docs.apigee.com/node/222">http://docs.apigee.com/node/222</a>.</p>
+<p>To start writing Java for Apigee Edge, see our <a href="https://github.com/apigee/api-platform-samples/wiki/Apigee-API-Platform-Samples-Wiki">JavaCallout Javadocs</a>.</p>
+<p>&nbsp;</p>

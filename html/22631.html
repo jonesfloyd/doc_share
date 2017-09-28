@@ -1,0 +1,45 @@
+<h1> Edge Microgateway Installation </h1>
+<p style="text-align: right;"><em>Edge Microgateway v. 2.0.x</em></p>
+<h2>Audience</h2>
+<p>This guide is intended for operators who need to install or uninstall Edge Microgateway.</p>
+<h2>Getting started</h2>
+<p>If you're new to Edge Microgateway, the <a href="http://docs.apigee.com/node/22636">http://docs.apigee.com/node/22636</a>&nbsp;&nbsp;is the best place to start after you complete the install. The setup and configuration guide covers all the steps you need to do to install, configure, start, and use an instance of Edge Microgateway.</p>
+<h2>Prerequisites</h2>
+<ul>
+	<li>You must have Node.js version&nbsp;4.x LTS or 5.x LTS installed&nbsp;on your system. See additional Node.js instructions below.</li>
+	<li>Windows requires <a href="https://www.openssl.org/">OpenSSL</a> to be installed and added to the PATH.</li>
+</ul>
+<h2>Installing Edge Microgateway</h2>
+<p><strong>Important: </strong>The 2.0.4 and earlier versions of Edge Microgateway are no longer available for download and installation. If you want to create a new Edge Microgateway installation using the <strong>latest</strong> version, use:</p>
+<pre>
+ npm install edgemicro -g
+</pre>
+<h3>Installing version 2.0.11</h3>
+<p>Install Edge Microgateway with <code>npm</code> using the global install option. To install a specific version of Edge Microgateway, you need to specify the <strong>version number</strong> in the installation command. <strong>If you do not specify the version number, the latest version will be installed.</strong> For example, to install version 2.0.11, use the following command. This command installs the software and puts the <code>edgemicro</code> executable in your path:</p>
+<blockquote>
+	<pre>
+npm install edgemicro@2.0.11 -g</pre>
+</blockquote>
+<div class="note">To verify the version you can look in the <code>package.json</code> file in the directory where Edge Microgateway is installed, as explained below.</div>
+<h2>Where is Edge Microgateway installed?</h2>
+<p>When you use&nbsp;<code>npm</code>&nbsp;with the global option (<code>npm install -g edgemicro</code>), the software is installed in&nbsp;<code>[prefix]/lib/node_modules/edgemicro</code>. You can find the value of<code>&nbsp;[prefix]</code>&nbsp;with this command:</p>
+<pre>
+<strong>npm config get prefix</strong></pre>
+<p>The value of&nbsp;<code>[prefix]</code>&nbsp;is configurable. See&nbsp;<a href="https://docs.npmjs.com/files/folders">npm-folders</a>&nbsp;for more information.&nbsp;</p>
+<h2>Uninstalling&nbsp;Edge Microgateway</h2>
+<p>If you need to remove Edge Microgateway:</p>
+<ol>
+	<li>Delete or archive the installation directory containing the Edge Microgateway folders.</li>
+	<li>Delete or archive the log files:
+		<blockquote>
+			<pre>
+/var/tmp/edgemicro-*.log</pre>
+		</blockquote>
+	</li>
+	<li>Delete or archive the runtime config and cache config files:
+		<blockquote>
+			<pre>
+~/.edgemicro/*.yaml</pre>
+		</blockquote>
+	</li>
+</ol>

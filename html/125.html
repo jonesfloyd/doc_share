@@ -1,0 +1,266 @@
+<h1> SOAP Message Validation policy </h1>
+<img src="sites/docs/files/icon_policy_mediation.jpg" />
+<h3>What</h3>
+<p>Validates a message and rejects it if it does not conform to the specified requirements. Use this policy to:&nbsp;</p>
+<ul>
+	<li>Validate any XML message against an XSD schema.</li>
+	<li>Validate SOAP messages against a WSDL definition.</li>
+	<li>Confirm JSON or XML is well-formed, based on content-type (if <code>&lt;ResourceURL&gt;</code> element is omitted)</li>
+</ul>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations.&nbsp;</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h3 id="samples">Samples</h3>
+<pre>
+&lt;MessageValidation name="myPolicy"&gt;
+   &lt;Source&gt;mymessage&lt;/Source&gt;
+   &lt;ResourceURL&gt;xsd://sample&lt;/ResourceURL&gt;
+   &lt;SOAPMessage version="1.1/1.2"/&gt;
+   &lt;Element namespace="http://finance.com/1999"&gt;PurchaseOrder&lt;/Element&gt;
+   &lt;Element namespace="http://finance.com/2000"&gt;PurchaseOrder&lt;/Element&gt;
+&lt;/MessageValidation&gt;</pre>
+<h2 id="elementreference">Element reference</h2>
+<p>The element reference describes the elements and attributes of the MessageValidation policy.</p>
+<pre>
+&lt;MessageValidation async="false" continueOnError="false" enabled="true" name="SOAP-Message-Validation-1"&gt;
+   &lt;DisplayName&gt;SOAP Message Validation 1&lt;/DisplayName&gt;
+   &lt;Element namespace="http://sample.com"&gt;SampleObject&lt;/Element&gt;     
+   &lt;SOAPMessage/&gt;     
+   &lt;Source&gt;request&lt;/Source&gt;     
+   &lt;ResourceURL&gt;wsdl://SOAP-Message-Validation-1&lt;/ResourceURL&gt;
+&lt;/MessageValidation&gt;</pre>
+<h2>&lt;MessageValidation&gt; attributes</h2>
+<pre>
+&lt;MessageValidation async="false" continueOnError="false" enabled="true" name="SOAP-Message-Validation-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2>&lt;Source&gt; element</h2>
+<p>Identifies the source message to be validated.</p>
+<ul>
+	<li>If you do not provide a <code>&lt;Source&gt;</code> value, a value of <code>message</code> is used.</li>
+	<li>If the <code>&lt;Source&gt;</code> variable cannot be resolved, or resolves to a non-message type, then one of the following occurs:
+		<ul>
+			<li>If the source variable resolves to a null value in the message flow, a <code>steps.messagevalidation.SourceMessageNotAvailable</code> error code is thrown.</li>
+			<li>If the source variable resolves to a non-message value, a <code>steps.messagevalidation.NonMessageVariable</code>&nbsp;error code is thrown.</li>
+		</ul>
+	</li>
+</ul>
+<pre>
+&lt;Source&gt;mymessage&lt;/Source&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">request</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;ResourceURL&gt; element</h2>
+<p>Identifies the XSD schema or WSDL definition to be used to validate the source message.</p>
+<p>If the WSDL does not have schemas or if the maximum import depth exceeds 10, message validation will fail.</p>
+<p>If a&nbsp;<code>&lt;ResourceURL&gt;</code>&nbsp;value is not specified, the message is checked for well-formed JSON or XML if the content-type is <code>application/json</code> or <code>application/xml</code>, respectively.</p>
+<pre>
+&lt;ResourceURL&gt;xsd://sample&lt;/ResourceURL&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right"><code>wsdl://<em>&lt;name&gt;</em></code></td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;SOAPMessage&gt; element</h2>
+<p>Provides the SOAP version against which to validate SOAP messages.</p>
+<pre>
+&lt;SOAPMessage version="1.1/1.2"/&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Valid values</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>version</td>
+			<td>
+				<p>Identifies the SOAP version against which to validate SOAP messages.</p>
+			</td>
+			<td>None</td>
+			<td>
+				<ul>
+					<li><code>1.1</code></li>
+					<li><code>1.2</code></li>
+					<li><code>1.1/1.2</code></li>
+				</ul>
+			</td>
+			<td style="width: 50px;">Optional</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;Element&gt; element</h2>
+<p>Specifies the root, or parent, element of the messages to be validated.</p>
+<pre>
+&lt;Element namespace="http://finance.com/1999"&gt;PurchaseOrder&lt;/Element&gt;
+&lt;Element namespace="http://finance.com/2000"&gt;PurchaseOrder&lt;/Element&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right"><code>sampleObject</code></td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>namespace</td>
+			<td>
+				<p>Provides the namespace of the root, or parent, element of the messages to be validated.</p>
+			</td>
+			<td><code>"http://sample.com"</code></td>
+			<td style="width: 50px;">Optional</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="errorcodes">Error codes</h2>
+<p>Errors returned from Edge policies follow a consistent format as described in the <a href="http://docs.apigee.com/api-services/content/error-code-reference">Error code reference</a>.</p>
+<p><a href="http://docs.apigee.com/node/21401">Content to be inserted here</a></p>
+<h2 id="schemas">Schemas</h2>
+<div class="sample-github">
+	<p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
+</div>
+<h2 id="usagenotes">Usage notes</h2>
+<p>The SOAPMessageValidation Policy type enables you to configure API proxies to:&nbsp;</p>
+<ul>
+	<li>Validate any XML message against an XSD schema.</li>
+	<li>Validate SOAP messages against a WSDL definition.</li>
+	<li>Confirm JSON or XML is well-formed, based on content type (if <code>&lt;ResourceURL&gt;</code> element is omitted)</li>
+</ul>
+<p>When an XML file to be validated contains references to external schemas, you must use the <code>xsd</code> prefix when specifying the schema location. For example:</p>
+<pre>
+&lt;xs:include schemaLocation="<strong>xsd</strong>://mySchema.xsd"/&gt;</pre>
+<p>Messages that do not conform to the specified requirements are rejected. Message validation provides the following benefits:</p>
+<ul>
+	<li>Immediately notifies app developers that are consuming your API if their requests are non-conformant or incomplete.</li>
+	<li>Provides information to help developers pinpoint issues in their requests, such as XML tags that are not properly closed.</li>
+	<li>Blocks XML or SOAP messages with structures that might cause unpredictable behavior, protecting backend services.</li>
+	<li>Minimizes time spent troubleshooting, searching forums, or consulting with tech support.</li>
+	<li>Encourages developers to familiarize themselves with the XML schema WSDL definition to eliminate validation errors, making well-understood XML schemas a key component of your API documentation.</li>
+</ul>
+<h2 id="relatedtopics">Related topics</h2>
+<p><a href="http://docs.apigee.com/node/30">http://docs.apigee.com/node/30</a></p>
+<p><a href="http://docs.apigee.com/node/31">http://docs.apigee.com/node/31</a></p>
+<p><a href="http://docs.apigee.com/node/61">http://docs.apigee.com/node/61</a></p>
+<p><a href="http://docs.apigee.com/node/365">http://docs.apigee.com/node/365</a></p>
+<p>&nbsp;</p>

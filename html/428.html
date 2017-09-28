@@ -1,0 +1,339 @@
+<h1> Use the analytics API to measure API program performance </h1>
+<p>[toc]</p>
+<p>This topic covers the Apigee Analytics Services API. Apigee Edge records a wide variety of operational and business data that flows across APIs. The metrics derived from this data are useful for operational monitoring and business monitoring. Using Analytics Services, you can, for example, determine which APIs are performing well or poorly, which developers are delivering the highest value traffic, and which apps are causing the most issues for your backend services.</p>
+<p>To help access this data easily, Apigee Edge Analytics Services exposes a RESTful API. You can use this API when you need to automate certain Analytics functions, such as retrieving metrics periodically using an automation client or script. You can also use the API to build your own visualizations in the form of custom widgets that you can embed in portals or custom apps.</p>
+<div class="counterpart">
+	<p>This topic demonstrates the RESTful Analytics API. To learn how to use Analytics in the API Edge management UI&nbsp;see <a href="http://docs.apigee.com/node/94">http://docs.apigee.com/node/94</a>.</p>
+</div>
+<p><a href="http://docs.apigee.com/node/22041">Content to be inserted here</a></p>
+<h2>Getting the number of API calls per month</h2>
+<p>If you want to see the total number of calls made to your APIs per month, see the <a href="http://docs.apigee.com/node/19676">http://docs.apigee.com/node/19676</a> SmartDocs management API.</p>
+<p>The API must be run for each organization and each envronment. Here's the call in cURL:</p>
+<pre>
+curl -v "https://api.enterprise.apigee.com/v1/organizations/{org}/environments/{environment}/stats/?select=sum(message_count)&amp;timeRange=03/01/2016%2000:00~03/31/2016%2024:00" -u email</pre>
+<p>Dates/times are in UTC and use the following format: MM/DD/YYYY HH:MM, with the range separated by a tilde (~).&nbsp;For cURL, the %20 URL encoding is required for the space between the date and time.</p>
+<p>This is an abbreviated version of the /stats API, which provides additional query parameters and dimension resource paths for more granular analytics reporting. For more information, see <a href="http://docs.apigee.com/node/18961">http://docs.apigee.com/node/18961</a>, as well as the information that follows.</p>
+<h2>Retrieving statistics: dimensions, metrics, and functions</h2>
+<p>Apigee Edge Analytics Services is based on the concept of 'dimensions'. A dimension is an entity that Apigee Edge automatically monitors and measures. The measurements that Analytics collects are called 'statistics'. In the API, this is abbreviated as <code>/stats</code>.</p>
+<p>For this reason the base URL that you invoke to retrieve statistics for dimensions is the following:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/stats</pre>
+<p>To create a working request, substitute your organization name for the variable <code>{org_name}</code>. Substitute the environment name ('test' or 'prod') for the variable <code>{env_name}</code>.</p>
+<p>For example:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/o/apimakers/environments/prod/stats</pre>
+<p>This is the base URL that you invoke get statistics. To identify the dimension, you need to add the name of the dimension as a URI variable to this base URL.</p>
+<p>The following dimensions are supported:</p>
+<ul>
+	<li><code>/apis</code></li>
+	<li><code>/apiproducts</code></li>
+	<li><code>/apps</code></li>
+	<li><code>/devs</code></li>
+</ul>
+<p>For example, to get statistics for APIs:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/stats/apis</pre>
+<p>To get statistics for developers:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/stats/devs</pre>
+<p>To get statistics for developer apps:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/stats/apps</pre>
+<div class="note">In this topic, you will get metrics for the set of built-in dimensions. The next topic, <a href="http://docs.apigee.com/node/4554">http://docs.apigee.com/node/4554</a>, shows you how to define and work with custom dimensions.</div>
+<p>You will find that if you submit one of these requests, you will get the following error:</p>
+<pre>
+{
+  "code" : "Missing select parameter",
+  "message" : "Missing select parameter",
+  "contexts" : [ ]
+}</pre>
+<p>Now you need to add a select statement to the base URL for the chosen dimension. You create the select statement using query parameters.</p>
+<p>Query parameters define:</p>
+<ul>
+	<li>Metrics: The attribute of the chosen dimension used to calculate statistics. For more information about metrics, see <a href="http://docs.apigee.com/node/8409">http://docs.apigee.com/node/8409</a>.</li>
+	<li>Functions: The optional aggregate function run against the metric defined for the dimension. The possible values are:&nbsp;<span style="font-family:courier new,courier,monospace;">avg</span>, <span style="font-family:courier new,courier,monospace;">min</span>, <span style="font-family:courier new,courier,monospace;">max</span>, <span style="font-family:courier new,courier,monospace;">sum</span>.</li>
+	<li>TimeRange: The time interval over which data should be analyzed, in the form MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM.<br />
+		<br />
+		Notice the "%20" before "HH:MM". The&nbsp;TimeRange requires an URL-encoded space character before HH:MM, or a "+" character, as in: MM/DD/YYYY+HH:MM~MM/DD/YYYY+HH:MM.&nbsp;
+		<div class="note">
+			<p>Data older than six months from the current date is not accessible by default. If you want to access data older than six months, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>.</p>
+		</div>
+	</li>
+	<li>Filters: The attribute used to drill-down into or sort across results.</li>
+</ul>
+<div class="tipstricks">
+	<p>For complete reference on these parameters, see <a href="http://docs.apigee.com/node/338">http://docs.apigee.com/node/338</a>.</p>
+</div>
+<p>Let's suppose that you want to get statistics across your API proxies that are deployed in the test environment. You want to find out how many request messages were received by all API proxies between 8/24/2013 and 9/25/2013. You want to find out a daily count for messages that were received. To do so, you create a select statement on the <code>/stats/apis</code> resource.</p>
+<p>The example below demonstrates who you would construct a request for these statistics. The select statement defines the aggregate function&nbsp;<code>sum</code> for the metric <code>message_count</code> on the dimension <code>apis</code> deployed in the <code>test</code> environment. The report provides a snapshot of the request message throughput to all APIs for traffic received between 8/24/2013 and 9/25/2013:</p>
+<pre class="terminal">
+$ curl  https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/apis?"select=sum(message_count)&amp;timeRange=8/24/2013%2000:00~9/25/2013%2000:00&amp;timeUnit=day" \
+-u email:password</pre>
+<p>Sample Response:</p>
+<pre>
+{
+  "environments" : [ {
+    "dimensions" : [ {
+      "metrics" : [ {
+        "name" : "sum(message_count)",
+        "values" : [ {
+          "timestamp" : 1379548800000,
+          "value" : "1100.0"
+        } ]
+      } ],
+      "name" : "target-reroute"
+    } ],
+    "name" : "test"
+  } ],
+  "metaData" : {
+    "errors" : [ ],
+    "failedEnvs" : "[]",
+    "notices" : [ ],
+    "samplingRate" : "100"
+  }</pre>
+<p>This response indicates that 1100 message were received by one API proxy called 'target-reroute' running in the test environment between 8/24/2013 and 9/25/2013, on Thursday, 19 Sep 2013 00:00:00 GMT.</p>
+<div class="tipstricks">Note that the timestamp, <code>1379548800000</code>, is in Unix timestamp format. There are many Unix timestamp conversion tools available on the Internet that you can use to decode these timestamps.</div>
+<p>To get statistics for other dimensions, specify a different dimension as the URI parameter. For example, you can specify the <code>apps</code> dimensions to retrieve statistics for consumer apps. The following report shows the total throughput (messages received) from any apps for the specified time interval:</p>
+<pre class="terminal">
+$ curl  https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/apps?"select=sum(message_count)&amp;timeRange=01/24/2013%2000:00~09/25/2013%2000:00&amp;timeUnit=day" \
+-u email:password</pre>
+<pre>
+{
+  "environments" : [ {
+    "dimensions" : [ {
+      "metrics" : [ {
+        "name" : "sum(message_count)",
+        "values" : [ {
+          "timestamp" : 1365379200000,
+          "value" : "1.0"
+        }, {
+          "timestamp" : 1363046400000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1362441600000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1362355200000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1362096000000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1362009600000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1361404800000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1360022400000,
+          "value" : "0"
+        } ]
+      } ],
+      "name" : "weatherapp"
+    }, {
+      "metrics" : [ {
+        "name" : "sum(message_count)",
+        "values" : [ {
+          "timestamp" : 1365379200000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1365033600000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1363305600000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1363046400000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1362441600000,
+          "value" : "1.0"
+        }, {
+          "timestamp" : 1362355200000,
+          "value" : "1.0"
+        }, {
+          "timestamp" : 1362096000000,
+          "value" : "2.0"
+        }, {
+          "timestamp" : 1362009600000,
+          "value" : "5.0"
+        }, {
+          "timestamp" : 1361404800000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1360022400000,
+          "value" : "0"
+        } ]
+      } ],
+      "name" : "thomas-app"
+    } ],
+    "name" : "test"
+  } ],
+  "metaData" : {
+    "errors" : [ ],
+    "failedEnvs" : "[]",
+    "notices" : [ ],
+    "samplingRate" : "100"
+  }
+}</pre>
+<div class="note">Statistics can be retrieved for apps only when apps can be individually identified by an API key (also called a 'consumer key') or by an OAuth access token. Therefore, only use the <code>/apps</code> dimension for APIs that enforce security policies (API Key or OAuth).</div>
+<h2>Using metrics</h2>
+<p>For each dimension, Analytics Services records pre-defined statistics for a set of relevant metrics. Metrics are attributes of dimensions that can be measured, such as <code>total_response_time</code> and <code>request_size</code>. In the examples above, you used the metric <code>message_count</code>, which is one of a set of metrics supported by the <code>/apis</code> dimension.</p>
+<p>Because these metrics are available out-of-the-box, they are referred to as "computed metrics" or "pre-aggregated metrics". Analytics Services provides you with a 'menu' of pre-computed metrics for each dimension. Since the metrics are already computed, you can retrieve large data sets very quickly.</p>
+<p>Analytics Services also defines a set of dimensions that have no associated pre-computed metrics--for those dimensions, metrics are calculated on demand, when you make a request to Analytics Services.</p>
+<p>Examples of dimensions whose statistics are computed on-demand are:</p>
+<ul>
+	<li><code>/stats/access_token</code>: Statistics based on OAuth access tokens presented by client apps.</li>
+	<li><code>/stats/client_id</code>: Statistics based on API keys presented by client apps.</li>
+	<li><code>/stats/client_ip</code>: Statistics based on the IP addresses of client apps.</li>
+	<li><code>/stats/target_url</code>: Statistics based on the URL of the target backend service.</li>
+	<li><code>/stats/request_verb</code>: Statistics based on the HTTP verb of the request message.</li>
+</ul>
+<p>In this example, you use a dynamic dimension: <code>target_url</code>. Your goal is to determine how many requests to backend services result in errors. The report that you generate would be useful when communicating with the team responsible for backend services or when performing root-case analysis when an app developer reports issues when calling your APIs, and you suspect that the issue is related to failing backend services.</p>
+<p>The <code>is_error</code> metric defines any message that results in an HTTP <code>4xx</code> or <code>5xx</code> HTTP status code. The sample request below defines the dimension <code>target_url</code>, the function <code>sum</code>, and the metric <code>is_error</code>. The response will detail how many errors were returned by all target URLs called by API proxies deployed in the 'test' environment:</p>
+<pre class="terminal">
+$ curl  https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/target_url?"select=sum(is_error)&amp;timeRange=8/08/2013%2000:00~9/15/2013%2000:00&amp;timeUnit=week" \
+-u email:password</pre>
+<pre>
+{
+  "environments" : [ {
+    "dimensions" : [ {
+      "metrics" : [ {
+        "name" : "sum(is_error)",
+        "values" : [ {
+          "timestamp" : 1344211200000,
+          "value" : "44.0"
+        }, {
+          "timestamp" : 1344816000000,
+          "value" : "1.0"
+        } ]
+      } ],
+      "name" : "https://api.company.com"
+    }, {
+      "metrics" : [ {
+        "name" : "sum(is_error)",
+        "values" : [ {
+          "timestamp" : 1344211200000,
+          "value" : "0"
+        }, {
+          "timestamp" : 1344816000000,
+          "value" : "12.0"
+        } ]
+      } ],
+      "name" : "http://weather.yahooapis.com"
+    } ],
+    "name" : "test"
+  } ],
+  "metaData" : {
+    "samplingRate" : "100"
+  }</pre>
+<p>Based on the statistics, you can see that the target URL <code>https://api.company.com</code> has a total of 45 errors during the period, while <code>http://weather.yahooapis.com</code> returned 12 errors during the period.</p>
+<h2>Sorting results by relative ranking</h2>
+<p>Many times when getting statistics, you only want to get results for a subset of the total set of metrics. Usually, you need to get the results for the "top 10", for example, the "top 10 slowest APIs", the "top 10 most active apps". You can do this using the <code>topk</code> query parameter as part of the request.</p>
+<p>For example you may be interested to know who your top developers are, measured by throughput, or what your worst performers (i.e., 'top slowest') target APIs are by latency.</p>
+<p>The <code>topk</code> (meaning 'top k' entities) enables reporting on the entities associated with the highest value for a given metric. This enables you to filter statistics for a list of entities that exemplify a particular condition. For example, to find which target URL was the most error prone over the last week, the <code>topk</code> parameter is appended to the request, with a value of <code>1</code>.</p>
+<p>In the example below</p>
+<pre class="terminal">
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/target_url?"select=sum(is_error)&amp;timeRange=8/08/2013%2000:00~8/15/2013%2000:00&amp;timeUnit=week&amp;sortby=sum(is_error)&amp;topk=1" -u email:password</pre>
+<pre>
+{
+  "environments" : [ {
+    "dimensions" : [ {
+      "metrics" : [ {
+        "name" : "sum(is_error)",
+        "values" : [ {
+          "timestamp" : 1344816000000,
+          "value" : "1.0"
+        }, {
+          "timestamp" : 1344211200000,
+          "value" : "44.0"
+        } ]
+      } ],
+      "name" : "https://api.company.com"
+    } ],
+    "name" : "test"
+  } ],
+  "metaData" : {
+    "samplingRate" : "100"
+  }
+}</pre>
+<p>The result of this request is a set of statistics that show that the buggiest target URL is <code>http://api.company.com</code>.</p>
+<p>You can also use the <code>topk</code> parameter to sort for the APIs experiencing the highest throughput. The following example retrieves statistics on the top ranked API, defined by highest throughput in the last week:</p>
+<pre class="terminal">
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/apis?"select=sum(message_count)&amp;timeRange=7/24/2012%2000:00~8/25/2012%2000:00&amp;timeUnit=week&amp;sortby=sum(message_count)&amp;sort=DESC&amp;topk=1" \
+-u email:password</pre>
+<p>Sample Response</p>
+<pre>
+{
+  "environments" : [ {
+    "dimensions" : [ {
+      "metrics" : [ {
+        "name" : "sum(message_count)",
+        "values" : [ {
+          "timestamp" : 1345420800000,
+          "value" : "14.0"
+        }, {
+          "timestamp" : 1344816000000,
+          "value" : "8.0"
+        }, {
+          "timestamp" : 1344211200000,
+          "value" : "111.0"
+        }, {
+          "timestamp" : 1343606400000,
+          "value" : "405.0"
+        } ]
+      } ],
+      "name" : "weatherAPI"
+    } ],
+    "name" : "test"
+  } ],
+  "metaData" : {
+  }
+}</pre>
+<h2>Filtering results</h2>
+<p>For greater granularity, you can filter results to enable 'drill-down' on a dimension of interest. When using filters, you must use dynamic dimensions as filter properties. Computer metrics (<code>/apis</code>, <code>/devs</code>, <code>/apps</code>, etc.) cannot be used as filters.</p>
+<p>For example, let's suppose that you need to retrieve a count of errors from backend services filtered by the HTTP verb of the request. Your goal is find out how many POST and PUT requests are generating errors per backend service. To do so, you use the dimension <code>target_url</code> along with the filter <code>request_verb</code>.</p>
+<pre>
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/target_url?"select=sum(is_error)&amp;timeRange=8/08/2013%2000:00~8/15/2013%2000:00&amp;timeUnit=week&amp;filter=(request_verb%20in%20'POST','PUT')" \
+-u email:password</pre>
+<b><sample response=""></sample></b>
+<h2>Paginating results</h2>
+<p>In production environments, some request to the Analytics Services API return very large data sets. To make it easy to display large data sets in the context of a UI-based application, the API natively supports pagination.</p>
+<p>To paginate results, use the <code>offset</code> and <code>limit</code> query parameters, along with the&nbsp;<code>sortby</code>&nbsp;sorting parameter to ensure a consistent ordering of items.</p>
+<div class="note">
+	<p>When paginating results, it's important to sort results in a predictable way using the <code>sortby</code> query parameter. Without sorting, results are returned in an unpredictable order, which defeats the purpose of pagination.</p>
+	<p>The <code>sortby</code> value must be the same as one used in the <code>select</code> query parameter. For example, if <code>select=sum(message_count)</code>, then <code>sortby=sum(message_count)</code>.</p>
+</div>
+<p>For example, the following request would be likely to return a large data set, since it retrieves metrics for all errors on all APIs in the product environment for the last week.</p>
+<pre>
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/prod/stats/apis?"select=sum(is_error)&amp;timeRange=8/08/2013%2000:00~8/15/2013%2000:00&amp;timeUnit=week&amp;sortby=sum(is_error)" \
+-u email:password</pre>
+<p>If your UI-based application can reasonably display 50 results per page, you can set the limit to 50. Since 0 counts as the first item, the following call returns items 0-49 in descending order (<code>sort=DESC</code> is the default).</p>
+<pre>
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/prod/stats/apis?"select=sum(is_error)&amp;timeRange=8/08/2013%2000:00~8/15/2013%2000:00&amp;timeUnit=week&amp;<strong>sortby=sum(is_error)&amp;limit=50&amp;offset=0</strong>" \
+-u email:password</pre>
+<p>For the second 'page' of results, use the offset query parameter, as follows. Note that the limit and offset are identical. That's because 0 counts as the first item. With a limit of 50 and an offset of 0, items 0-49 are returned. With an offset of 50, items 50-99 are returned.</p>
+<pre>
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/prod/stats/apis?"select=sum(is_error)&amp;timeRange=8/08/2013%2000:00~8/15/2013%2000:00&amp;timeUnit=week&amp;<strong>sortby=sum(is_error)&amp;limit=50&amp;offset=50</strong>" \
+-u email:password</pre>
+<h2>Opt in or out of daily analytics reports</h2>
+<p>In addition to the analytics available online through Apigee Edge, all organization administrators are automatically subscribed to receive daily analytics summary reports through email.&nbsp;You can unsubscribe (opt out) of receiving daily analytics reports through an opt out link in the actual report that is emailed to you. You can also opt in or opt out of daily summary reports using these API calls:</p>
+<p>Opt out of receiving a daily summary report:</p>
+<div id="well">
+	<pre class="terminal">
+$ curl -u email:password https://api.enterprise.apigee.com/v1/o/{myorg}/stats/preferences/reports/dailysummaryreport?optin=false</pre>
+</div>
+<p>Opt in to receiving a daily summary report:</p>
+<div id="well">
+	<pre class="terminal">
+$ curl -u email:password 
+https://api.enterprise.apigee.com/v1/o/{myorg}/stats/preferences/reports/dailysummaryreport?optin=true</pre>
+</div>
+<p>Retrieve list of users who have opted in or opted out:</p>
+<div id="well">
+	<pre class="terminal">
+$ curl -u email:password 
+https://api.enterprise.apigee.com/v1/o/{myorg}/stats/preferences/reports/dailysummaryreport/users</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

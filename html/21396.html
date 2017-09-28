@@ -1,0 +1,77 @@
+<h1> Regular Expression Protection policy error codes </h1>
+<p>The RegularExpressionProtection policy type defines the following error codes. If you want to capture an error and raise your own custom error, set the&nbsp;<code>continueOnError="true"</code>&nbsp;attribute on the policy root element, and see <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a> for more information.</p>
+<table border="0" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
+	<thead>
+		<tr>
+			<th scope="col">Error Code</th>
+			<th scope="col">Message</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr></tr>
+		<tr>
+			<td>NothingToEnforce</td>
+			<td>RegularExpressionProtection {0}: at least one of URIPath, QueryParam, Header, FormParam, XMLPayload, JSONPayload is mandatory</td>
+		</tr>
+		<tr>
+			<td>NoPatternsToEnforce</td>
+			<td>RegularExpressionProtection {0}: No patterns to enforce in {1}</td>
+		</tr>
+		<tr>
+			<td>EmptyXPathExpression</td>
+			<td>RegularExpressionProtection {0}: Empty XPath expression</td>
+		</tr>
+		<tr>
+			<td>EmptyJSONPathExpression</td>
+			<td>RegularExpressionProtection {0}: Empty JSONPath expression</td>
+		</tr>
+		<tr>
+			<td>DuplicatePrefix</td>
+			<td>RegularExpressionProtection {0}: Duplicate prefix {1}</td>
+		</tr>
+		<tr>
+			<td>NONEmptyPrefixMappedToEmptyURI</td>
+			<td>RegularExpressionProtection {0}: Non-empty prefix {1} cannot be mapped to empty uri</td>
+		</tr>
+		<tr>
+			<td>ThreatDetected</td>
+			<td>Regular Expression Threat Detected in {0}: regex: {1} input: {2}</td>
+		</tr>
+		<tr>
+			<td>ExecutionFailed</td>
+			<td>Failed to execute the RegularExpressionProtection StepDefinition {0}. Reason: {1}</td>
+		</tr>
+		<tr>
+			<td>VariableResolutionFailed</td>
+			<td>Failed to resolve variable {0}</td>
+		</tr>
+		<tr>
+			<td>NonMessageVariable</td>
+			<td>Variable {0} does not resolve to a Message</td>
+		</tr>
+		<tr>
+			<td>SourceMessageNotAvailable</td>
+			<td>{0} message is not available for RegularExpressionProtection StepDefinition {1}</td>
+		</tr>
+		<tr>
+			<td>InvalidRegularExpression</td>
+			<td>RegularExpressionProtection {0}: Invalid Regular Expression {1}, Context {2}</td>
+		</tr>
+		<tr>
+			<td>InstantiationFailed</td>
+			<td>Failed to instantiate the RegularExpressionProtection StepDefinition {0}</td>
+		</tr>
+		<tr>
+			<td>CannotBeConvertedToNodeset</td>
+			<td>RegularExpressionProtection {0}: Result of xpath {1} cannot be converted to nodeset. Context {2}</td>
+		</tr>
+		<tr>
+			<td>XPathCompilationFailed</td>
+			<td>RegularExpressionProtection {0}: Failed to compile xpath {1}. Context {2}</td>
+		</tr>
+		<tr>
+			<td>JSONPathCompilationFailed</td>
+			<td>RegularExpressionProtection {0}: Failed to compile jsonpath {1}. Context {2}</td>
+		</tr>
+	</tbody>
+</table>

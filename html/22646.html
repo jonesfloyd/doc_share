@@ -1,0 +1,495 @@
+<h1> CLI reference for Edge Microgateway </h1>
+<p style="text-align: right;"><em>Edge Microgateway v. 2.0.x</em></p>
+<h2>Audience</h2>
+<p>This guide is for Edge Microgateway operators. It is a reference that describes all of the Edge Microgateway command-line commands in detail. Use this guide when you need more detailed information on configuration options and commands than are included in&nbsp;<a href="http://docs.apigee.com/node/22636">http://docs.apigee.com/node/22636</a>.</p>
+<h2>Getting started</h2>
+<p>If you're new to Edge Microgateway, the <a href="http://docs.apigee.com/node/22636">http://docs.apigee.com/node/22636</a>&nbsp;&nbsp;is the best place to start. The setup and configuration guide covers all the steps you need to do to install, configure, start, and use an instance of Edge Microgateway.</p>
+<p>This administrator's guide is primarily a reference. Use it to find details about Edge Microgateway features, commands, config options, logging, and plugins.&nbsp;</p>
+<h2>Edge Microgateway command-line reference</h2>
+<p>The Edge Microgateway CLI lets you control and manage all aspects of an Edge Microgateway instance. The following is a comprehensive list with usage and examples for each command.</p>
+<div class="note">
+	<p>The <a href="http://docs.apigee.com/node/22636">http://docs.apigee.com/node/22636</a> provides a good overview of the most commonly used commands.</p>
+</div>
+<h3>Command summary</h3>
+<ul>
+	<li><strong>cert commands</strong>&nbsp;- Install and manage a public/private key pair on Apigee Edge.</li>
+	<li><strong>configure command</strong>&nbsp;- Performs installation and setup of Edge Microgateway in an Apigee Edge Cloud instance.</li>
+	<li><strong>genkeys command</strong>&nbsp;- Generates public/secret key pair used by Edge Microgateway to authenticate itself when asynchronously posting analytics data to Apigee Edge.</li>
+	<li><strong>private configure command</strong>&nbsp;- Performs installation and setup of Edge Microgateway in an Apigee Edge Private Cloud instance.</li>
+	<li><strong>start command</strong> - Starts an instance of Edge Microgateway</li>
+	<li><strong>token commands&nbsp;</strong>- Generates, decodes, and verifies signed bearer tokens that are required for clients to make authenticated API calls to Edge Microgateway.</li>
+	<li><strong>verify command</strong> - Verifies that Edge Microgateway is properly configured.</li>
+</ul>
+<h3>Getting help on commands</h3>
+<p>The best way to learn how to use the Edge Microgateway CLI is to use the built-in help utility. For example, assuming the edgemicro executable file is in your PATH, as described in Installing Edge Microgateway:</p>
+<pre>
+edgemicro -h
+</pre>
+<pre>
+Usage: edgemicro [options] [command]
+
+
+  Commands:
+
+    token [action]        JWT token commands, see: "edgemicro token -h"
+    cert [action]         ssh cert commands to store on Apigee Vault, see: "edgemicro cert -h"
+    private [action]      Automated, one-time configuration with Edge On-Premises, see: "edgemicro private -h"
+    configure [options]   Automated, one-time configuration with Edge Cloud
+    verify [options]      verify Edge Micro configuration by testing config endpoints
+    start [options]       start the gateway based on configuration
+    genkeys [options]     generate authentication keys for runtime auth between Microgateway and Edge
+    help [cmd]            display help for [cmd]
+
+  Options:
+
+    -h, --help  output usage information
+</pre>
+<p>&nbsp;</p>
+<p>To get help on any command action, just use <strong>-h</strong>. For example:</p>
+<pre>
+edgemicro token get -h&nbsp;</pre>
+<h2>cert commands</h2>
+<p>The cert&nbsp;commands let you install and manage the public/private key pair that is used to sign bearer tokens that clients use to make secure calls through Edge Microgateway. The keys are stored on Apigee Edge in a secure vault. Edge Microgateway uses the public key to validate signed bearer tokens.</p>
+<h3>cert install</h3>
+<p>Installs the keys in a vault using the Apigee Edge secure store service&nbsp;and returns the public key as output. Key pairs are scoped to a specified organization.</p>
+<p><strong>Usage:</strong></p>
+<pre>
+Usage: install [options]
+
+  install a certificate for your organization
+
+  Options:
+
+    -h, --help            output usage information
+    -o, --org <org>            the organization
+    -e, --env <env>            the environment
+    -u, --username <user>       username of the organization admin
+    -p, --password <password>       password of the organization admin
+    -f, --force           replace any existing keys
+</password></user></env></org></pre>
+<p>&nbsp;</p>
+<h4>Example:</h4>
+<pre>
+edgemicro cert install -o docs -e test -u jdoe@example.com 
+
+  org admin password: &lt;Enter your password&gt;
+</pre>
+<h4>Sample output:</h4>
+<pre>
+creating vault
+adding private_key
+adding public_key
+Success!
+
+Public Key:
+
+-----BEGIN CERTIFICATE-----
+
+&lt;Long string of numbers and letters&gt;
+
+-----END CERTIFICATE-----</pre>
+<h3>cert delete</h3>
+<p>Deletes the key pair for an organization.</p>
+<h4>Example:</h4>
+<pre>
+edgemicro cert delete -o docs -e test -u jdoe@example.com 
+
+   org admin password: &lt;Enter your password&gt;</pre>
+<h4>Output:</h4>
+<pre>
+deleting vault
+Vault deleted</pre>
+<h3>cert check</h3>
+<p>Checks that your organization has a certificate installed.</p>
+<h4>Example:</h4>
+<pre>
+edgemicro cert check -o docs -e test -u jdoe@example.com
+
+  org admin password: &lt;Enter your password&gt;
+</pre>
+<h4>Output:</h4>
+<pre>
+deleting vault
+Vault deleted!
+</pre>
+<h3>cert public-key</h3>
+<p>Returns the public key for the specified organization. Does not require authentication.</p>
+<h4>Example:</h4>
+<pre>
+edgemicro cert public-key -o docs -e test </pre>
+<h4>Sample output:</h4>
+<pre>
+</pre>
+<pre>
+-----BEGIN CERTIFICATE----- &lt;Long string of numbers and letters&gt; ​ -----END CERTIFICATE-----</pre>
+<h2>configure command</h2>
+<p>Enables Edge Microgateway to operate with an Apigee Edge Cloud instance. It wraps and performs a sequence of commands to deploy a required authentication proxy to Edge, generate authentication tokens, and update config files. The steps performed by this command are described step by step in Manual setup and configuration of Edge Microgateway. For a complete working example, see the&nbsp;<a href="http://docs.apigee.com/node/22636">http://docs.apigee.com/node/22636</a>.</p>
+<div class="note">
+	<p>Apigee recommends that you use the configure command to configure Edge Microgateway. This command is the only command needed to configure Edge Microgateway. It automates commands such as genkeys, deploy, update config, verify config, and so on.</p>
+</div>
+<p><strong>Usage</strong></p>
+<pre>
+edgemicro configure [options]
+</pre>
+<h4>Options</h4>
+<pre>
+Usage: configure [options]
+
+  automated, one-time setup for a new edgemicro instance
+
+  Options:
+
+    -h, --help                         output usage information
+    -o, --org <org>                    the organization
+    -e, --env <env>                    the environment
+    -v, --virtualHosts <virtualhosts>  override virtualHosts (default: "default,secure")
+    -u, --username <user>              username of the organization admin
+    -p, --password <password>          password of the organization admin
+    -r, --url <url>                    organization's custom API URL (https://api.example.com)
+    -d, --debug                        execute with debug output
+</url></password></user></virtualhosts></env></org>
+</pre>
+<h4>Examples</h4>
+<pre>
+edgemicro configure -o docs -e test -u jdoe@example.com</pre>
+<p>&nbsp;</p>
+<h2>genkeys command</h2>
+<p>The genkeys command generates a key and secret pair used by Edge Microgateway to authenticate itself when asynchronously posting analytics data to Apigee Edge.</p>
+<p>Upon success, the command returns three items. The first is a URL that you need to place in the configuration file. The other two are a key pair that are required when you start an Edge Microgateway instance.</p>
+<ul>
+	<li><strong>bootstrap URL</strong>: This URL points to an Apigee Edge service that enables an Edge Microgateway instance to send analytics data to Apigee Edge. You need to copy that URL into the agent config file. If you edit the default config file &nbsp;(<code>./agent/config/default.yaml</code>) you will need to run the "edgemicro configure" command before restarting Edge Microgateway. If you edit the runtime config file (<code>~/.edgemicro/config.yaml</code>) you only need to restart Edge Microgateway for the change to take effect.</li>
+	<li><strong>key</strong>: The key. This key, and the secret, are required as input to the CLI command used to start an instance of Edge Microgateway.&nbsp;</li>
+	<li><strong>secret</strong>: The secret.</li>
+</ul>
+<h4>Usage:</h4>
+<pre>
+edgemicro genkeys [options]</pre>
+<h4>Options:</h4>
+<pre>
+Usage: genkeys [options]
+
+  generate authentication keys
+
+  Options:
+
+    -h, --help            output usage information
+    -o, --org <org>            the organization
+    -e, --env <env>            the environment
+    -u, --username <user>       username of the organization admin
+    -p, --password <password>       password of the organization admin
+</password></user></env></org></pre>
+<h4>Example:</h4>
+<pre>
+edgemicro genkeys -o docs -e test -u jdoe@example.com
+
+   org admin password: &lt;Enter your password&gt;</pre>
+<h4>Sample output:</h4>
+<pre>
+Please copy the following bootstrap property to your edgemicro config&nbsp; 
+
+bootstrap: https://edgemicroservices.apigee.net/edgemicro/bootstrap/...
+
+You need key and secret while starting edgemicro instance
+
+key: &lt;string of numbers and letters&gt;
+secret: &lt;string of numbers and letters&gt;</pre>
+<h2>private configure command</h2>
+<p>Configures Edge Microgateway to work with an Apigee Edge Private Cloud installation.</p>
+<h4>Usage:</h4>
+<pre>
+edgemicro private configure [options]</pre>
+<h4>Options:</h4>
+<pre>
+Usage: edgemicro private configure [options] 
+
+
+  Options:
+
+    -h, --help                          output usage information
+    -o, --org <org>                     the organization
+    -r, --runtime-url <runtimeurl>      the URL of the runtime server
+    -m, --mgmt-url <mgmturl>            the URL of the management server
+    -e, --env <env>                     the environment
+    -u, --username <user>               username of the organization admin
+    -p, --password <password>           password of the organization admin
+    -v, --virtual-hosts <virtualhosts>  comma separated virtual hosts to deploy with
+</virtualhosts></password></user></env></mgmturl></runtimeurl></org>
+</pre>
+<h4>Example:</h4>
+<pre>
+edgemicro private configure -o docs -e test -u jdoe@example.com -r http://192.162.55.100:9002 -m http://192.162.55.100:8080</pre>
+<h4>Sample output:</h4>
+<pre>
+edgemicro configure -o docs -e test -u jdoe@example.com
+
+org admin password:
+delete cache config
+deleted /Users/ApigeeCorporation/.edgemicro/cache-config.yaml
+
+checking for previously deployed proxies
+App  edgemicro-auth  is already deployed!
+checking org for existing vault
+vault already exists in your org
+configuring host edgemicroservices-us-east-1.apigee.net for region us-east-1
+updating agent configuration
+
+
+saving configuration information to: /Users/ApigeeCorporation/.edgemicro/config.yaml
+
+vault info:
+
+</pre>
+<pre>
+-----BEGIN CERTIFICATE----- &lt;Long string of numbers and letters&gt; ​ -----END CERTIFICATE-----</pre>
+The following credentials are required to start edge micro key: &lt;string of numbers and letters&gt; secret: &lt;string of numbers and letters&gt; edgemicro configuration complete!
+<p>&nbsp;</p>
+<h2>start command</h2>
+<p>Starts Edge Microgateway. Before running this command, you must first run the <strong>edgemicro configure</strong> (Public Cloud) or <strong>edgemicro private configure</strong> (Private Cloud). The configure command returns the key and secret values that are required to start Edge Microgateway.</p>
+<h4>Usage:</h4>
+<pre>
+edgemicro start [options]</pre>
+<h4>Options:</h4>
+<pre>
+Usage: start [options]
+
+  create a client_credentials oauth token
+
+  Options:
+
+    -h, --help                output usage information
+    -o, --org <org>           the organization
+    -e, --env <env>           the environment
+    -k, --key <key>           key <span style="font-family: Arial, Verdana, sans-serif;">returned by the </span><strong style="font-family: Arial, Verdana, sans-serif;">edgemicro configure</strong><span style="font-family: Arial, Verdana, sans-serif;"> command</span>
+
+    -s, --secret <secret>     secret returned by the <strong>edgemicro configure</strong> command
+    -i, --cluster  will cluster the server
+    -f, --processes &lt;processes&gt;             number of processes to start, defaults to # of cores
+</secret></key></env></org>
+</pre>
+<h4>About clustering</h4>
+<p><span style="font-size: 12px;">To take best advantage of multi-core systems, you can start Edge Microgateway in cluster mode.&nbsp;</span><span style="font-size: 12px;">Edge Microgateway employs the&nbsp;<a href="https://nodejs.org/api/cluster.html">Node.js cluster module</a>&nbsp;to enable this feature. For details, see the <a href="https://nodejs.org/api/cluster.html">Node.js documentation</a>.&nbsp;</span></p>
+<p><span style="font-size: 12px;">To enable cluster mode, specify the <strong>--cluster</strong> option for the <strong>edgemicro start</strong> command. Then, you can specify the number of cluster processes to start with the <strong>--processes</strong> option. For example:</span></p>
+<pre style="font-size: 12px;">
+edgemicro start -o docs -e test \
+-k &lt;string of numbers and letters&gt; \
+-s &lt;string of numbers and letters&gt; \
+--cluster --processes 5
+</pre>
+<h4>Example:</h4>
+<pre>
+edgemicro start -o docs -e test 
+-k &lt;string of numbers and letters&gt; 
+-s &lt;string of numbers and letters&gt;</pre>
+<h4>Sample output:</h4>
+<pre>
+installed plugin from analytics
+installed plugin from oauth
+578dc8a0-f2aa-11e5-9078-47057a418de6 edge micro listening on port 8000
+edge micro started</pre>
+<p>&nbsp;</p>
+<h2>token commands</h2>
+<p>The token commands let you obtain, decode, and verify signed bearer tokens. By default, Edge Microgateway requires that all client requests include a valid token.</p>
+<ul>
+	<li>token get</li>
+	<li>token decode</li>
+	<li>token verify</li>
+</ul>
+<h3>token get</h3>
+<p>Generates a signed bearer token. The token allows client apps to make authenticated API calls to Edge Microgateway. The token is an OAuth 2.0-compliant JSON Web Token (JWT). It requires as input the Consumer Key (client id) and Consumer Secret (client secret) values from a registered developer app on Apigee Edge.</p>
+<h4>Usage:</h4>
+<pre>
+edgemicro token get [options]</pre>
+<h4>Options:</h4>
+<pre>
+Usage: get [options]
+
+  create a client_credentials oauth token
+
+  Options:
+
+    -h, --help             output usage information
+    -o, --org <org>        the organization
+    -e, --env <env>        the environment
+    -i, --id <id>          the client id
+    -s, --secret <secret>  the client secret
+</secret></id></env></org></pre>
+<h4>Example:</h4>
+<pre>
+edgemicro token get -o docs -e test -i O9ZQRZKnn1NrdgKQgsAZUBkQSMdOsKS -s Wwxk3pacGTnKZLi
+</pre>
+<h4>Sample output:</h4>
+<pre>
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.cHBsaWbl9uYW1lIjoiYjQzMzQyZWYtODZm
+Ni00NjY2LWExMjEtYjlhYkMjE3IiwiY2xpZW50X2lkIjoiTzlaUVJaS25uMU5yZGdjS1Fnc
+0FaVUJrUVNNZE9zSzY29wZXMiOltdLCJhcGlfcHJvZHVjdF9saXN0IjpbIk1pY3JvVGVzdC
+JdLCJiOjE0MzYzOTU3NjcsImV4cCI6NjMn0.qfiCo4prOWSMaAIH6Gvb0bRjjzHJr98dv_9b
+3dELnxqXfscqQgYJsxlLL9Y3bp0FmTEg-ulODitdwgAyiaE867-DhyIEdIs3kJCMegJ1wID2
+YLjaDd_6bFfC0dfED76FZUeXv0gk6GxhZTKTbOGK8EuPZb4Hnt0xK3DoD0RM1QDqJs6hvcCS
+Toq45KNRUTCOxs-tYIZoEqHOUMh587qculiBsDNZ-qKiG59QNlR5krA5_dZlPez2LSV5_h_q
+3O3Sa_fjvWv60sRdKNiOFxMXzCSgupSckAtM6C8bemllyOqbdNqcsoQWtgaBcF6LDA</pre>
+<p>&nbsp;</p>
+<h4>Make an HTTP request to get a token</h4>
+<p>You can also make a raw HTTP request to get the token. Here's a curl example. Just substitute your org and environment names in the URL, and substitute the Consumer Id and Consumer Secret values for the client_id&nbsp;and client_secret&nbsp;params:</p>
+<pre>
+curl -i -X POST "http://&lt;org&gt;-&lt;test&gt;.apigee.net/edgemicro-auth/token" -d '{"grant_type": "client_credentials", "client_id": "4t8X137pOUUtMR7wag3M1yZTcRxeK", "client_secret": "RAcOFVOvO0jns"}' -H "Content-Type: application/json"
+</pre>
+<h3>token decode</h3>
+<p>Decodes a signed, encoded bearer token into its plain-text JSON JWT (Java Web Token) representation. A token conveys information about the Apigee Edge developer app that provided the keys used to create the token, including application name, client_id, product list, and more.</p>
+<h4>Usage:</h4>
+<pre>
+edgemicro token get [options]</pre>
+<h4>Options:</h4>
+<pre>
+&nbsp; &nbsp; -h, --help &nbsp; &nbsp; &nbsp; &nbsp; output usage information
+    -f, --file &lt;file&gt; &nbsp;file containing jwt</pre>
+<h4>Example:</h4>
+<p>Save a previously generated bearer token in a file.</p>
+<p>Execute this command, where <code>token.jwt</code>&nbsp;is the file you saved:</p>
+<pre>
+edgemicro token decode -f token.jwt</pre>
+<h4>Sample output:</h4>
+<pre>
+{ header: { typ: 'JWT', alg: 'RS256' },
+
+
+&nbsp; payload:
+
+&nbsp; &nbsp;{ application_name: 'b43342ef-86f6-4666-a121-b9ac2025d217',
+
+&nbsp; &nbsp; &nbsp;client_id: 'O9ZQRZKnn1rdgcKQgsABSMdOsKS',
+
+&nbsp; &nbsp; &nbsp;scopes: [],
+
+&nbsp; &nbsp; &nbsp;api_product_list: [ 'MicroTest' ],
+
+&nbsp; &nbsp; &nbsp;iat: 1436280566,
+
+&nbsp; &nbsp; &nbsp;exp: 1436282365 },
+
+&nbsp; signature: '&lt;Long string of numbers and letters&gt;' }</pre>
+<h3>token verify</h3>
+<p>Verifies a signed bearer token against the public key stored on Apigee Edge for the specified organization and environment.</p>
+<h4>Usage:</h4>
+<pre>
+edgemicro token verify [options]
+</pre>
+<h4>Options:</h4>
+<pre>
+Usage: verify [options]
+
+  verify a jwt token against the public key
+
+  Options:
+
+    -h, --help         output usage information
+    -f, --file <file>        file containing jwt
+    -o, --org <org>         the organization
+    -e, --env <env>         the environment
+</env></org></file></pre>
+<h4>Example:</h4>
+<pre>
+edgemicro token get -o docs -e test -i O9ZQRZKnn1NrdgKQgsAZUBkQSMdOsKS -s Wwxk3pacGTnKZLi
+</pre>
+<h4>Sample output for valid token:</h4>
+<pre>
+{ application_name: 'b43342ef-86f6-4666-a121-b9ac2025d217',
+
+&nbsp; client_id: 'O9ZQRZKnn1rdgcKQsAZUBkQSMdOsKS',
+
+&nbsp; scopes: [],
+
+&nbsp; api_product_list: [ 'MicroTest' ],
+
+&nbsp; iat: 1436396155,
+
+&nbsp; exp: 1436397954 }</pre>
+<h4>Sample output for invalid token:</h4>
+<pre>
+{ [JsonWebTokenError: invalid token] name: 'JsonWebTokenError', message: 'invalid token' }
+</pre>
+<h4>Sample output for expired token:</h4>
+<pre>
+{ [TokenExpiredError: jwt expired]
+
+&nbsp; name: 'TokenExpiredError',
+
+&nbsp; message: 'jwt expired',
+
+&nbsp; expiredAt: Tue Jul 07 2015 09:19:25 GMT-0600 (MDT) }</pre>
+<h3><a id="Obtaining bearer tokens directly" name="Obtaining bearer tokens directly"></a>Obtaining bearer tokens directly</h3>
+<p>You may prefer to obtain bearer tokens directly, by making an HTTP request to the token endpoint on Apigee Edge. The actual token endpoint is implemented in the proxy that is deployed with the deploy-edge-service&nbsp;CLI command.</p>
+<p>Here's a curl example. Just substitute your org and environment names in the URL, and substitute the Consumer Id and Consumer Secret values obtained from a developer app on Apigee Edge for the <strong>client_id</strong>&nbsp;and <strong>client_secret</strong>&nbsp;params:</p>
+<pre>
+curl -i -X POST "http://&lt;org&gt;-&lt;test&gt;.apigee.net/edgemicro-auth/token" -d '{"grant_type": "client_credentials", "client_id": "4t8X137pOUUtMR7wag3M1yZTcRxeK", "client_secret": "RAcOFVOvO0jns"}' -H "Content-Type: application/json"</pre>
+<h4>Sample output:</h4>
+<pre>
+HTTP/1.1 200 OK
+
+X-Powered-By: Express
+
+Cache-Control: no-store
+
+Pragma: no-cache
+
+Content-Type: application/json; charset=utf-8
+
+Content-Length: 640
+
+ETag: W/"280-ze/g/k+c9taqp110vjYQ"
+
+Date: Fri, 17 07 2015 15:49:24 GMT
+
+Connection: keep-alive
+
+"&lt;long string of numbers and letters&gt;"</pre>
+<h2>private configure command</h2>
+<p>Enables Edge Microgateway to operate with an Apigee Edge Private Cloud instance. It wraps and performs a sequence of commands to deploy required proxies to Edge, generate authentication tokens, and update config files.</p>
+<p>The URLs you must provide are the Runtime URL (also referred to as the router IP) for your Private Cloud installation. Usually, this IP has a port 9001 or 9002, corresponding to the virtual host ports. The Management Server URL is usually an IP with an 8080 port number. If you don't know these URLs, see your Apigee Edge Administrator. &nbsp;</p>
+<h4>Usage:</h4>
+<pre>
+edgemicro private configure [options]</pre>
+<h4>Options:</h4>
+<pre>
+Usage: private configure [options]
+
+  Automated, one-time setup of edgemicro with Apigee Private Cloud
+
+  Options:
+
+    -h, --help              output usage information
+    -o, --org <org>              the organization
+    -r, --runtime-url <runtimeurl>      the URL of the runtime server
+    -m, --mgmt-url <mgmturl>         the URL of the management server
+    -e, --env <env>              the environment
+    -u, --username <user>         username of the organization admin
+    -p, --password <password>         password of the organization admin
+    -v, --virtual-hosts <virtualhosts>    comma separated virtual hosts to deploy with
+</virtualhosts></password></user></env></mgmturl></runtimeurl></org></pre>
+<h4>Example:</h4>
+<pre>
+edgemicro private configure -o docs -e test -u jdoe@example.com -r http://192.162.50.109:9002 -m http://192.162.50.109:8080
+</pre>
+<h2>verify command</h2>
+<p>Verifies that Edge Microgateway is properly configured.</p>
+<p><strong>Usage</strong></p>
+<pre>
+edgemicro verify -o &lt;orgname&gt; -e &lt;envname&gt; -k &lt;key&gt; -s &lt;secret&gt;</pre>
+<h4>Options</h4>
+<pre>
+Usage: verify [options]
+
+  verify Edge Micro configuration by testing config endpoints
+
+  Options:
+
+    -h, --help        output usage information
+    -o, --org <org>        the organization
+    -e, --env <env>        the environment
+    -k, --key <key>        key returned by the <strong>edgemicro configure</strong> command
+    -s, --secret <secret>     secret returned by <strong>the edgemicro configure</strong> command</secret></key></env></org>
+</pre>
+<h4>Example:</h4>
+<pre>
+edgemicro verify -o myorg -e test \
+-k &lt;string of numbers and letters&gt; \
+-s &lt;string of numbers and letters&gt;</pre>

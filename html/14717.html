@@ -1,0 +1,131 @@
+<h1> Configuring flows </h1>
+<p>[toc]</p>
+<p>Flows are the basic building blocks of API proxies. Flows enable you to program the behavior of an API by letting you configure the sequence in which policies and code are executed by an API proxy.</p>
+<p>For a conceptual overview of flows, see <a href="http://docs.apigee.com/node/18261">http://docs.apigee.com/node/18261</a>.</p>
+<p>This topic describes how to create conditional flows and add logic (policies) to flows at a high level. The art of creating conditions involves more detail than what's covered in this topic. For that detail, see&nbsp;<a href="http://docs.apigee.com/node/15211">http://docs.apigee.com/node/15211</a> and <a href="http://docs.apigee.com/node/14723">http://docs.apigee.com/node/14723</a>.</p>
+<h2>Attaching policies to flows</h2>
+<p>Edge comes with many different types of predefined policies to implement security, manage traffic, and manipulate messages. In addition, policies let you add your own custom code to completely customize message processing.</p>
+<p>For example:</p>
+<ul>
+	<li>Attach an&nbsp;<strong>OAuth security&nbsp;</strong>policy to the&nbsp;<strong>request&nbsp;PreFlow of the ProxyEndpoint</strong>. Because the ProxyEndpoint's request&nbsp;PreFlow is the first flow in the pipeline, you can immediately reject a request if it violates your security policies.</li>
+	<li>Attach a&nbsp;<strong>JSON to XML conversion&nbsp;</strong>policy to the&nbsp;<strong>response&nbsp;PostFlow&nbsp;of the TargetEndpoint</strong>&nbsp;to convert a response from JSON to XML.</li>
+	<li>Attach a&nbsp;<strong>JavaScript&nbsp;</strong>policy to a&nbsp;<strong>Conditional Flow&nbsp;of the ProxyEndpoint&nbsp;</strong>to execute JavaScript code to process the request</li>
+</ul>
+<p>Once you have created a conditional flow, it is available for policy attachment. With the flow selected,&nbsp;click the <strong>+ Step</strong> icon in the request or response diagram to add a new or existing policy to the flow.</p>
+<p><img alt="" src="sites/docs/files/add_policy_to_flow.png" style="width: 700px; height: 195px; border-width: 1px; border-style: solid;" /></p>
+<p><img alt="" src="sites/docs/files/add_quota_policy_to_flow.png" style="width: 501px; height: 345px; border-width: 1px; border-style: solid;" /></p>
+<p>By attaching the policy to the selected flow, you are configuring the API proxy to enforce the Quota policy only for requests made to that flow URI and verb combination. For example, if you attach the policy to the <strong>learn</strong> flow in the request, the following XML is generated in the code view of the proxy editor:</p>
+<pre>
+&lt;ProxyEndpoint name="default"&gt;
+...
+&nbsp; &nbsp;&lt;Flow name="<strong>issue</strong>"&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Description/&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Request&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Step&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Name&gt;<strong>Quota-2</strong>&lt;/Name&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/Step&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Request&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Response/&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; <strong>&lt;Condition&gt;(proxy.pathsuffix MatchesPath "/issue/**") and (request.verb = "GET")&lt;/Condition&gt;</strong>
+&nbsp; &nbsp; &lt;/Flow&gt;
+... 
+&lt;/ProxyEndpoint&gt;
+</pre>
+<p>In this configuration, if a <strong>GET</strong> request comes in on the API proxy with a URI pattern of ...<strong>/issue/**</strong> (/issue/ with anything in the URI after the last forward slash), quota is enforced on that API call.</p>
+<h2>About conditional flows</h2>
+<p>Any policies attached to the PreFlow or PostFlow&nbsp;are always executed. However, the policies in a conditional flow are executed only if the flow's condition evaluates to true.</p>
+<p>During the processing of a request and response, only one conditional flow is executed per segment--the first flow whose condition evaluates to true. That means you can have one conditional flow executed as part of each of the:</p>
+<ul>
+	<li>ProxyEndpoint's request pipeline</li>
+	<li>TargetEndpoint's request pipeline</li>
+	<li>ProxyEndpoint's response pipeline</li>
+	<li>TargetEndpoint's response pipeline</li>
+</ul>
+<p>For example, the following ProxyEndpoint definition shows a conditional flow that is executed by the ProxyEndpoint on any HTTP GET request to the API proxy:</p>
+<pre>
+&lt;ProxyEndpoint name="default"&gt;
+  &lt;PreFlow&gt;
+    &lt;Request/&gt;
+    &lt;Response/&gt;
+  &lt;/PreFlow&gt;   
+<strong>  &lt;Flows&gt;
+    &lt;Flow name="Flow-1"&gt;
+&nbsp; &nbsp; &nbsp; &lt;Condition&gt;request.verb="GET"&lt;/Condition&gt;
+      &lt;Request/&gt;
+      &lt;Response/&gt;
+    &lt;/Flow&gt;
+  &lt;/Flows&gt;</strong>
+  &lt;PostFlow&gt;
+    &lt;Request/&gt;
+    &lt;Response/&gt;
+  &lt;/PostFlow&gt;
+  ...
+&lt;/ProxyEndpoint&gt;</pre>
+<p>Notice that the condition references the&nbsp;<span style="font-family: 'courier new', courier, monospace;">request.verb</span>&nbsp;<em>flow variable</em>.&nbsp;A flow variable is named references that hold state information associated with an API transaction processed by Edge. Edge defines many state variables that you can reference.</p>
+<p>RESTful services are collections of&nbsp;API resources. An API resource is a URI path fragment that identifies some entity that developers can access by calling your API. For example, if your service backend provides weather reports and weather forecasts, your API might define two conditional flows that map to those API resources:&nbsp;<code>/reports</code>&nbsp;and&nbsp;<code>/forecasts</code>. When an API call includes one of those resources in the URL, the condition evaluates to true and the logic attached to the conditional flow is executed.</p>
+<p>App developers then access your resources by making requests to a URL in the form:</p>
+<pre>
+http://myAPIs.myCo.com/weather/reports</pre>
+<p>or:</p>
+<pre>
+http://myAPIs.myCo.com/weather/forecasts</pre>
+<p>In an API proxy, you can define a conditional flow that corresponds to a specific resource:</p>
+<pre>
+&lt;ProxyEndpoint name="default"&gt;
+  &lt;PreFlow&gt;
+    &lt;Request/&gt;
+    &lt;Response/&gt;
+  &lt;/PreFlow&gt;   
+<strong>  &lt;Flows&gt;
+    &lt;Flow name="Flow-1"&gt;
+&nbsp; &nbsp; &nbsp; &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/reports")&lt;/Condition&gt;</strong>
+<strong>      &lt;Request/&gt;
+      &lt;Response/&gt;
+    &lt;/Flow&gt;
+    &lt;Flow name="Flow-2"&gt;
+&nbsp; &nbsp; &nbsp; &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/forecasts")&lt;/Condition&gt;</strong>
+<strong>      &lt;Request/&gt;
+      &lt;Response/&gt;
+    &lt;/Flow&gt;
+  &lt;/Flows&gt;
+</strong>  &lt;PostFlow&gt;
+    &lt;Request/&gt;
+    &lt;Response/&gt;
+  &lt;/PostFlow&gt;
+  ...
+&lt;/ProxyEndpoint&gt;</pre>
+<p>In this example, you reference the&nbsp;<code>proxy.pathsuffix</code>&nbsp;flow variable, which contains the suffix portion of the URL used to access the API proxy. You can then attach different policies to the conditional flow for each resource.</p>
+<h2>Adding a conditional flow</h2>
+<p>In this brief example, you set up a flow that executes only when the request message is an HTTP GET.</p>
+<p>To add a conditional flow, select the <b>Develop</b> view in the API proxy builder. Click the <strong>+ icon</strong>&nbsp;in the desired endpoint.</p>
+<p><img alt="" src="sites/docs/files/add_conditional_flow.png" style="width: 283px; height: 240px; border-width: 1px; border-style: solid;" /></p>
+<p>The New Conditional Flow form lets you name the flow and configure a condition. In the following example, you add a simple condition that evaluates the HTTP of the request message for a GET verb (as opposed to PUT, POST, etc.) on any URI after the base path.</p>
+<p><img alt="" src="sites/docs/files/add_conditional_flow_get2.png" style="width: 700px; height: 372px; border-width: 1px; border-style: solid;" /></p>
+<p>(Learn how to construct conditional statements in <a href="http://docs.apigee.com/node/14723">http://docs.apigee.com/node/14723</a>.)</p>
+<p>The new flow, called <code>Flow-1</code>, now appears in the Navigator menu.</p>
+<p><img alt="" src="sites/docs/files/add_conditional_flow_navigator.png" style="width: 281px; height: 164px; border-width: 1px; border-style: solid;" /></p>
+<p>Now observe the XML configuration for the ProxyEndpoint. Select <b>Flow-1</b> in the <b>Navigator</b> menu.</p>
+<p>You will see the following configuration.</p>
+<pre>
+&lt;PreFlow name="PreFlow"&gt;
+    &lt;Request/&gt;
+    &lt;Response/&gt;
+&lt;/PreFlow&gt;   
+&lt;Flows&gt;
+    &lt;Flow name="Flow-1"&gt;
+      &lt;Request/&gt;
+      &lt;Response/&gt;
+      &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/**") and (request.verb = "GET")&lt;/Condition&gt;
+    &lt;/Flow&gt;
+&lt;/Flows&gt;
+&lt;PostFlow name="PostFlow"&gt;
+    &lt;Request/&gt;
+    &lt;Response/&gt;
+&lt;/PostFlow&gt;</pre>
+<h2>Next steps</h2>
+<p>The following topics provide more detail about constructing conditions and using variables:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/15211">http://docs.apigee.com/node/15211</a></li>
+	<li><a href="http://docs.apigee.com/node/14723">http://docs.apigee.com/node/14723</a></li>
+	<li><a href="http://docs.apigee.com/node/14716">http://docs.apigee.com/node/14716</a></li>
+</ul>

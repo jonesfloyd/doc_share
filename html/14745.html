@@ -1,0 +1,100 @@
+<h1> Troubleshooting </h1>
+<p>[toc]</p>
+<h2>Using the trace tool</h2>
+<p>Trace is a tool for troubleshooting and monitoring API proxies running on Apigee Edge. Trace lets you probe the details of each step through an API proxy flow.</p>
+<p>When tracing API calls sent to a target server, Trace also lets you view the call as a cURL command, which lets you see the HTTP headers and message payload in a single place. Great for debugging.</p>
+<p>For details, see <a href="http://docs.apigee.com/node/14782">http://docs.apigee.com/node/14782</a>.</p>
+<h2>Downloading trace results</h2>
+<p>You can download an XML file of the trace results for viewing offline. The file shows the complete details of the listening session including the contents of all headers, variables and policies.&nbsp;For details, see <a href="http://docs.apigee.com/node/14782">http://docs.apigee.com/node/14782</a>.</p>
+<h2><a class="jumplink" name="make_trace"></a>Refining message capture using filters</h2>
+<p>To enable root-case analysis, filters enable you to target specific calls that may be causing problems. For example, you may need to zero in on requests that have specific content or requests coming from specific partners or apps.</p>
+<ul>
+	<li>HTTP headers - limits the trace to only calls that contain a specific header. This is a good way of helping you troubleshoot issues. You can send a header to your app developer and ask them to include it in the call that is causing issues. Then Apigee Edge will only record calls with that specific header so you can examine the results. &nbsp;</li>
+	<li>Query parameters - only calls with a &nbsp;specific value of a parameter will be recorded.</li>
+</ul>
+<h4>To add a filter:</h4>
+<ol>
+	<li>Open the Filter section of the Trace page.<br />
+		<p><img alt="" src="sites/docs/files/filter-3.png" style="width: 600px; height: 266px;" /></p>
+	</li>
+	<li>Enter a name and value into either the HTTP Header or Query Parameter fields. Blank fields are not evaluated.<br />
+		You can delete filters by clicking the (X) button next to the filter.&nbsp;</li>
+</ol>
+<h2>HTTP status &nbsp;codes</h2>
+<p>Because the management API is RESTful, response messages can be interpreted as a combination of an HTTP status code and an Edge-specific error message.</p>
+<p>For example, if you try to create a company entity with the same name as an existing company, the response is:</p>
+<pre>
+404
+{
+  "code": "messaging.config.beans.ApplicationDoesNotExist",
+  "message": "APIProxy named WeatherApi does not exist in organization mycompany",
+  "contexts": []
+}</pre>
+<p>Here are some important HTTP status codes and what they mean in Apigee Edge:</p>
+<p><strong>HTTP 2xx:</strong> Any status code in the 200 range means 'success'. In some cases only a 204 HTTP status code is issued when an operation succeeds. 204 means that the response is submitted with no content, usually because a DELETE operation succeeded.</p>
+<p><strong>HTTP 401:</strong> This an authorization failure. It means that the credentials that you used to make a request map to a user who lacks permission to perform the operation. Verify the roles for the account you are using.</p>
+<p><strong>HTTP 403:</strong> This an authorization failure. It means that the username and password combination you are using is not valid for the organization you specified. To test your credentials, login to <a href="http://enterprise.apigee.com/login">enterprise.apigee.com/login</a>. Once logged in check your account settings to see the organization name. In some situations, you may belong to multiple organizations. Make sure that you are using the correct credentials for you organization. Check your spelling. &nbsp;If you need an account, <a href="https://accounts.apigee.com/accounts/sign_up?callback=https://enterprise.apigee.com">sign up</a>.</p>
+<p><strong>HTTP 404: </strong>The object wasn't found. This is usually happens because of misspelling in your request URL, but it may also happen if you try to update an object that doesn't exist (for example, the wrong revision of an API).</p>
+<p><strong>HTTP 405: </strong>This means 'Method not allowed'. This status code simply means that you, for example, used the GET verb for an API call that requires the POST verb.</p>
+<p><strong>HTTP 415:</strong> Unsupported media type. This error usually occurs on POST or PUT requests when the <code>Content-type</code> HTTP header is set to the wrong value. For example, imagine that you POST the following to an API that only supports JSON:</p>
+<pre>
+$ curl -X POST -H "Content-type:text/xml" -d '&lt;SomeXML&gt;' https://api.company.com/v1/json_service</pre>
+<p>The result would be an HTTP 415 error.</p>
+<p>For GET requests,remember to use the <code>Accept</code> header instead of the <code>Content-type</code> header.</p>
+<p><span style="color:#ff0000;"><strong>HTTP 429</strong>: Too many requests. The rate limit was exceeded on Quota or Spike Arrest policies. The current default status code for exceeding the rate limit is 500, but the default will soon change to 429. See <a href="http://docs.apigee.com/node/53">http://docs.apigee.com/node/53</a> and <a href="http://docs.apigee.com/node/56">http://docs.apigee.com/node/56</a> for information on how to temporarily change the 500 to a 429 until 429 becomes the default status code.</span></p>
+<p><strong>HTTP 500: </strong>This is an internal server error. It means that you should contact <a href="http://apigee.com/about/support/portal" target="_blank">Apigee Support</a> to resolve the issue.</p>
+<div class="note">
+	<p><span style="color:#ff0000;">Apigee Edge organizations can be configured to return an HTTP status code of 429 (Too Many Requests) instead of 500 for all requests that exceed a rate limit set by some rate-limiting policies. For more information, see <a href="http://docs.apigee.com/node/53">http://docs.apigee.com/node/53</a> and <a href="http://docs.apigee.com/node/56">http://docs.apigee.com/node/56</a>.</span></p>
+</div>
+<h2>Common client issues</h2>
+<h3>Using cURL on Windows</h3>
+<p>The following sections provide considerations for using cURL on Windows.</p>
+<p><b>Command-line syntax</b></p>
+<p>All of the example commands in the documentation use Linux/Unix command-line syntax. Consider the following when you are using cURL from a Windows command prompt:</p>
+<ul>
+	<li>On Linux/Unix, when quoting arguments, a single quote can be used as a wrapper for double-quote characters inside a pair of single quotes. Windows does not provide such multi-layered quoting. On Windows, the outermost quotes must be the double-quote character and quotes within that string must be doubled (that is, two double-quote characters), where the existing examples have one.</li>
+	<li>On Linux/Unix, to break a cURL call across multiple lines, you can use the \ (backslash) character. On Windows, replace this character with ^ (caret). Be sure that there is no white-space following the character that denotes the end of line.</li>
+</ul>
+<p><strong>curl and HTTPS</strong></p>
+<p>The management API requires TLS/SSL (HTTPS). If you encounter TLS/SSL Certificate problems in response to your cURL commands, you can:</p>
+<ul>
+	<li>Update your certs file.</li>
+	<li>Use a command line option to specify an alternate certs file.</li>
+	<li>Manually decide that you can trust the api.enterprise.apigee.com site and use either the -k or --insecure options in the curl command to override the TLS/SSL certificate requirement.</li>
+</ul>
+<p><b>Protocol https not supported or disabled in libcurl</b></p>
+<p>Usually seen on machines running Windows. This means that you downloaded and installed a version of curl that did not include the libcurl package. Download a different package from http://curl.haxx.se/download.html, and make sure it includes libcurl for TLS/SSL.</p>
+<h3>CLASSIFICATION_FAILURE</h3>
+<p>You may see this error when you submit a request to your API proxy after you deploy it to API Services. This error means that API Services, while attempting to route the request to the appropriate API proxy, cannot find an API proxy that matches the request URI path. This usually happens because your request URL does not match the base path for any API proxies currently deployed in the environment. (Note that API Services validates that all base paths are unique when a new API proxy is imported or generated.)</p>
+<ul>
+	<li>Verify the URI for your API by logging in to the management UI at <a href="http://enterprise.apigee.com">enterprise.apigee.com</a>. Select the link to your API. The URI for you API, including the base path, is displayed at the top of the page.</li>
+	<li>Make sure your API proxy is deployed. Your API proxy may be imported to Apigee Edge, but may not be deployed to an environment. API proxies can only be invoked after they have been successfully deployed to an environment. (Note that the deploy tool used in the quick start both imports and deploys your API proxy to the environment you specify.)</li>
+	<li>Make sure your request is being sent to the correct environment:&nbsp;<span style="font-family: 'courier new', courier, monospace; ">http://{myorg}-test.apigee.net/weather</span>&nbsp;versus&nbsp;<span style="font-family: 'courier new', courier, monospace; ">http://{myorg}-prod.apigee.net/weather</span>, for example.&nbsp;</li>
+</ul>
+<h2>Deploy tool errors</h2>
+<div><code>python: can't open file 'tools/deploy.py': [Errno 2] No such file or directory</code></div>
+<div>The path you have provided to <code>deploy.py</code> is incorrect.&nbsp;</div>
+<div>
+	<p>If you see the following result on import, it indicates that you are running the deploy tool from the wrong directory.&nbsp;</p>
+	<pre>
+Import failed to /v1/organizations/myorg/apis?action=import&amp;name=weatherapi with status 500:
+{
+  "code" : "messaging.config.beans.ImportFailed",
+  "message" : "Failed to import the bundle : java.util.zip.ZipException: ZIP file must have at least one entry",
+  "contexts" : [ ]
+}</pre>
+</div>
+<p>To fix this issue, run <code>deploy.py</code> from the base directory of the API Services. In the deploy tool command, specify the directory that <em>contains</em> the <span style="font-family:courier new,courier,monospace;">./apiproxy</span> directory.</p>
+<h3 id="cygwin">Windows/Cygwin Troubleshooting</h3>
+<p>In Cygwin on Windows, if you get an error saying <code>'\r': command not found</code> when trying to deploy the sample proxies, you'll need to run the <strong>dos2unix</strong> utility to convert line breaks in the shell (.sh) files. You may need to install the utility if the <code>which dos2unix</code> command can't find it. The Cygwin installer should let you install it.</p>
+<p>To run dos2unix recursively on the samples:</p>
+<ol>
+	<li>cd to the <code>/api-platform-samples</code> directory (the samples root directory).</li>
+	<li>Run the following command:<br />
+		<code>find . -name *.sh |xargs dos2unix</code></li>
+	<li>If the command runs successfully, you can re-run the deploy script for the samples.</li>
+</ol>
+<h2>Output JavaScript print statements</h2>
+<p>If you're using the JavaScript policy to execute custom JavaScript code, note that you can use the print() function to output debug information to the&nbsp;<a href="http://apigee.com/docs/api-services/content/using-trace-tool-0">Trace tool</a>. This function is available directly through the JavaScript object model. For details, see "<a href="http://apigee.com/docs/node/3976#debug">Debug JavaScript with print() statements</a>".</p>
+<h2>API proxy import and deployment</h2>
+<p>API proxy bundles cannot exceed 15MB in size. Bundles larger than that cause API proxy import to hang or fail. To work around this in Edge for Private Cloud, see <a href="http://docs.apigee.com/node/12868">http://docs.apigee.com/node/12868</a>.</p>

@@ -1,0 +1,113 @@
+<h1> Using the Apigee Edge development environment </h1>
+<p>[toc]</p>
+<p>You develop on Apigee Edge by using:</p>
+<ul>
+	<li><strong>The Edge management UI: </strong>A browser-based management user interface</li>
+	<li><strong>The Edge management API: </strong>A RESTful API that supports XML and JSON</li>
+</ul>
+<div class="tipstricks">
+	<p>After you become familiar with the Edge development environment, download and try the samples. For more information, see <a href="http://docs.apigee.com/node/14730">http://docs.apigee.com/node/14730</a>.</p>
+</div>
+<h2>Using the Edge management UI</h2>
+<p>The Edge management UI (<a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a> in the Edge cloud) simplifies many interactions with Edge in the context of a browser-based tool. In the Edge management UI, you can:</p>
+<ul>
+	<li>Create API proxies</li>
+	<li>Create API products</li>
+	<li>Manage developers, apps, and other parts of your organization</li>
+	<li>Configure your test and production environments</li>
+	<li>Access the console</li>
+	<li>Access app services</li>
+	<li>Implement JavaScript and Node.js applications</li>
+	<li>and much more</li>
+</ul>
+<!-- The video needs to be updated
+<div class="video">
+	<p><strong>Video:</strong> Check out this short video for a quick tour of the Edge management UI.</p>
+	<div class="collapse" id="demo1">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="396" mozallowfullscreen="" src="//player.vimeo.com/video/83868890?title=0&amp;byline=0&amp;portrait=0" webkitallowfullscreen="" width="500"></iframe>
+			<p><a href="http://vimeo.com/83868890">Quick Tour of Apigee Edge UI</a> from <a href="http://vimeo.com/apigee">Apigee</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+		</div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo1">Show/Hide Video</a></div>
+</div>
+-->
+<h2>Using the Edge management API</h2>
+<p>Use the Edge management API to perform Edge management tasks using any HTTP client, including from your command prompt or from a script.</p>
+<p>For example, <a href="http://docs.apigee.com/node/16166">http://docs.apigee.com/node/16166</a> lists the names of API proxies in a organization, as in this example:</p>
+<pre>
+curl https://api.enterprise.apigee.com/v1/organizations/myorg/apis</pre>
+<p>For a complete list of resources and methods, see the <a href="/api-platform/content/api-reference-getting-started">API reference.</a></p>
+<p>With the management API, you can manipulate the components of your Edge applications, including its API proxies, products, policies, caches, and so on. The management API also provides access to low-level capabilities that are not exposed by the management UI for reasons of usability.</p>
+<p>As in other <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> APIs, the Edge management API exposes capabilities as API resources. Each resource defines a set of methods that act on it.</p>
+<p>Following RESTful principles, you can call HTTP <code>GET</code>, <code>POST</code>, <code>PUT</code>, and <code>DELETE</code> methods on any of the API resources.</p>
+<ul>
+	<li><strong>GET</strong>: Retrieves a list of resources, or the profile of a specific resource.</li>
+	<li><strong>POST</strong>: Creates a resource, or passed in a parameter, performed an action on resource. For example, when you revoke OAuth access tokens, you use the POST method along with the parameter <code>action=revoke</code>.</li>
+	<li><strong>PUT</strong>: Updates an existing resource.</li>
+	<li><strong>DELETE</strong>: Deletes an existing resource.</li>
+</ul>
+<h3>Understanding the base path</h3>
+<p>The path you'll use in management API requests concatenates the following:</p>
+<ul>
+	<li>A <strong>base path</strong> that includes your organization name. (You can locate your organization name under <b>User Settings</b> in the <a href="http://enterprise.apigee.com">Edge management UI</a>.)</li>
+	<li>An <strong>endpoint</strong> that points to the Edge resource you're accessing.</li>
+</ul>
+<p>For example, if your organization name is "apibuilders", then every call you make to the API will use the following base path:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/organizations/apibuilders
+</pre>
+<p>To retrieve a list of API proxies in your organization, you would call GET on:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/organizations/apibuilders/apis</pre>
+<p>Many resources are scoped by environment. Two environments are provided by default: test and prod. An example of a resource that is scoped by environment is cache. A default cache, called "mycache" is set up in every environment. You can list caches by calling GET on the cache resource as follows:</p>
+<pre>
+https://api.enterprise.apigee.com/v1/organizations/apibuilders/environments/test/caches
+https://api.enterprise.apigee.com/v1/organizations/apibuilders/environments/prod</pre>
+<h3>Passing credentials</h3>
+<p>The API enforces HTTP Basic Authentication. You always need to pass in your username and password for your account. These can be passed in as a Base64 encoded header, or as parameters (as demonstrated below)&nbsp;in an HTTP client. The following is an example of an HTTP Basic Authentication header:</p>
+<pre>
+Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</pre>
+<h3>Running cURL commands</h3>
+<p>Use an HTTP client to make requests to the Edge management API. Many examples in the documentation provide sample API requests using cURL, a widely-used HTTP client. If you need to install cURL, you can download it from <a href="http://curl.haxx.se">http://curl.haxx.se</a>.</p>
+<p>If you cut and paste a cURL command from the doc to your terminal, you must replace the following variables in the command with information for your Apigee account:</p>
+<ul>
+	<li><code>email</code>: The email for your Apigee account</li>
+	<li><code>password</code>: The password for your Apigee account</li>
+	<li><code>myorg</code>: The name of your Apigee organization</li>
+</ul>
+<div class="note">On Windows, make sure to download a version of cURL that includes the libcurl library. Also on Windows, you might need to use a flag to disable the trust check that cURL performs against the TLS/SSL certificate presented by the API Platform. You can do this by adding <code>-k</code> to each request you submit via cURL on the command line. This only disables the trust check and does not disable encryption. For example:
+	<pre class="terminal">
+$ curl -k https://api.enterprise.apigee.com/v1/organizations/{org_name}/apis -u email:password</pre>
+</div>
+<p>If you are using the Edge samples, set the values for your organization, username, and password in the file <code>/setup/setenv.sh</code>. Once you have done so, you can run the simplified deploy and invoke scripts provided for each sample API proxy. See <a href="http://docs.apigee.com/node/14730">http://docs.apigee.com/node/14730</a> for more information.</p>
+<div class="note">
+	<p>Calls to the management API support gzip compression on responses. If you set&nbsp;<code>'Accept-Encoding: gzip, deflate'</code> in your API calls, any response greater than 1024 bytes gets returned in gzip format.</p>
+</div>
+<h3>Example: making requests of the management API</h3>
+<p>In this example, you make an API call to Edge. The API call in this example returns a list of the names of all API proxies in your organization. Copy and paste the following command into the terminal window on your computer.</p>
+<pre class="terminal">
+$ curl https://api.enterprise.apigee.com/v1/organizations/{org_name}/apis -u email:password</pre>
+<p>For brevity, you can abbreviate <code>/organizations</code> as <code>/o</code>. For example, if your username is <code>me@mycompany.com</code>, your password is <code>secret</code>, and your account in the organization called <code>apifactory</code>, then the request looks like this:</p>
+<pre class="terminal">
+$ curl https://api.enterprise.apigee.com/v1/o/apifactory/apis -u me@mycompany.com:secret</pre>
+<p>The response should should contain a JSON array with two API proxies, which are created by default for all new users:</p>
+<pre class="terminal">
+[ "oauth", "weatherapi" ]
+</pre>
+<p>cURL has a few tools that can make you life easier. For example, you often need to see the HTTP headers associated with a request. To obtain this detail about an HTTP request, you can use the <code>-v</code> flag provided by curl. For example:</p>
+<pre class="terminal">
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/apis -u email:password -v</pre>
+<p>If you only want to see the HTTP headers on the response from the API Platform (and not the content), then you can use the <code>-I</code> flag.</p>
+<pre class="terminal">
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/apis -u email:password -I</pre>
+<h3>Example: returning XML</h3>
+<p>JSON is the default format for response messages. If you require XML, you can add an HTTP <code>Accept</code> header to get an XML response instead of JSON:</p>
+<pre class="terminal">
+$ curl -H "Accept:text/xml" https://api.enterprise.apigee.com/v1/organizations/apifactory/apis -u me@mycompany.com:secret</pre>
+<p>When POSTing or PUTting payloads in XML, use the <code>Content-type</code> HTTP header:</p>
+<pre class="terminal">
+$ curl -H "Content-type:text/xml" -X POST -d \
+'&lt;XMLPayload&gt;
+ &lt;/XMLPayload&gt; ' \
+https://api.enterprise.apigee.com/v1/organizations/apifactory/apis \
+-u me@mycompany.com:secret</pre>

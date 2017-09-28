@@ -1,0 +1,113 @@
+<h1> Proxy Performance </h1>
+<p>[toc]</p>
+<h2>What does this dashboard tell me?</h2>
+<p>The Proxy Performance dashboard helps you see API proxy traffic patterns and processing times. You can easily visualize how much traffic your APIs generate and how long it takes for API calls to be processed, from the time they are received by Apigee Edge until they are returned to the client app.</p>
+<p><strong>The Proxy Performance dashboard</strong></p>
+<h2><img alt="" src="sites/docs/files/proxy-perf-3.png" style="width: 700px; height: 414px; border-width: 1px; border-style: solid;" /></h2>
+<p><a href="http://docs.apigee.com/node/22041">Content to be inserted here</a></p>
+<h2>What does this dashboard measure?</h2>
+<p>This dashboard includes these charts:</p>
+<ul>
+	<li><a href="#traffic">Traffic</a></li>
+	<li><a href="#averageresponsetime">Average Response Time</a></li>
+	<li><a href="#trafficbyproxy">Traffic by Proxy</a></li>
+	<li><a href="#averagebyproxy">Average Response Time by Proxy</a></li>
+</ul>
+<h3><a id="traffic" name="traffic"></a>Traffic</h3>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td width="159"><strong>Metric</strong></td>
+			<td width="429"><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td><strong>Total Traffic</strong></td>
+			<td>The total number of API requests received by Apigee Edge for an API environment in an organization.</td>
+		</tr>
+		<tr>
+			<td><strong>Traffic Success</strong></td>
+			<td>The total number of requests that resulted in a successful response. Error responses do not count.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>Traffic Errors</strong></td>
+			<td>The total number of all API requests that are unsuccessful, that is, the request does not deliver a response as desired by the end user.</td>
+		</tr>
+		<tr>
+			<td><strong>Average TPS</strong></td>
+			<td>The average number of API requests and resulting responses per second.</td>
+		</tr>
+	</tbody>
+</table>
+<h3><a id="averageresponsetime" name="averageresponsetime"></a>Average Response Time</h3>
+<p>See also this interesting article on the Apigee Community site:&nbsp;<a href="http://community.apigee.com/articles/2695/when-can-the-average-total-response-time-be-less-t.html">When can the Average Total Response Time be less than the Average Target Response Time?</a></p>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td width="159"><strong>Metric</strong></td>
+			<td width="429"><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td><strong>Average Response Time</strong></td>
+			<td>
+				<p>The average of the Total Response Time measured for all API calls made to an Apigee Edge organization environment. The Total Response Time is the amount of time it takes for an API call to Edge to return (in milliseconds).</p>
+				<p>Or, put another way, total response time is the time measured from when an entire API call is received on Apigee Edge to the time Edge begins sending a response back to the client app.&nbsp;</p>
+				<p>This chart measures the average for all proxies. For individual proxies, see the Average Response Time by Proxy chart below.&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Average Proxy Response Time</strong></td>
+			<td>
+				<p>This value is calculated as the average of the Total Response Time minus the Target Response Time for all API calls made to an Apigee Edge organization environment.&nbsp;</p>
+				<p>It's basically a measure of how much time the API calls spend flowing through Apigee Edge itself (in milliseconds).&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Average Target Response Time</strong></td>
+			<td>
+				<p>The average number of milliseconds that it takes from the point the last byte of a request is sent from Apigee Edge to a backend target to the time Edge receives the last byte of the response.</p>
+				<p>It's basically measuring how much time the API call spends on the target system.&nbsp;</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3><a id="trafficbyproxy" name="trafficbyproxy"></a>Traffic by Proxy</h3>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td width="159"><strong>Metric</strong></td>
+			<td width="429"><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td><strong>&lt;<em>Proxy name</em>&gt;</strong></td>
+			<td>For the specified API proxy, the number of recorded API requests and responses.</td>
+		</tr>
+	</tbody>
+</table>
+<h3><a id="averagebyproxy" name="averagebyproxy"></a>Average Response Time by Proxy</h3>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td width="159"><strong>Metric</strong></td>
+			<td width="429"><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td><strong>&lt;<em>Proxy name</em>&gt;</strong></td>
+			<td>
+				<p>For the specified API proxy, the average of the Total Response Time measured for all API calls made to an Apigee Edge environment. The Total Response Time is the amount of time it takes for an API call to Edge to return (in milliseconds).</p>
+				<div>Hover over the graph to see the total amount of time spent on the proxy side and the target side, as well as the average.&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>&nbsp;</p>
+<h2>What else do I need to know about this dashboard?</h2>
+<p>You can view metrics for all proxies or drill into specific proxies using the <strong>Proxy</strong> dimension dropdown menu at the top of the dashboard.</p>
+<p>Click this icon to sort the selected metric:</p>
+<p><img alt="" src="sites/docs/files/ax-sort-button.png" style="width: 275px; height: 64px; border-width: 1px; border-style: solid;" /></p>
+<ul>
+	<li>A light gray icon means means you can sort it; if you mouse over a light gray icon, it turns blue.</li>
+	<li>A dark gray means it is currently sorted.</li>
+</ul>
+<p>This dashboard uses standard controls, like the date and data aggregation selectors, hovering over graphs for more context, click and drag to zoom, and so on. To learn more, see <a href="http://docs.apigee.com/node/15971">http://docs.apigee.com/node/15971</a>.</p>
+<p>See also this interesting article on the Apigee Community site:&nbsp;<a href="http://community.apigee.com/articles/2695/when-can-the-average-total-response-time-be-less-t.html">When can the Average Total Response Time be less than the Average Target Response Time?</a></p>
+<p>&nbsp;</p>

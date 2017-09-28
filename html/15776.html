@@ -1,0 +1,92 @@
+<h1> Streaming requests and responses </h1>
+<p>[toc]</p>
+<h2>What you'll learn in this topic</h2>
+<p>After reading this topic you will know:</p>
+<ul>
+	<li>What request and response streaming on Apigee Edge is</li>
+	<li>When to use request and response streaming</li>
+	<li>How to enable request and response streaming</li>
+</ul>
+<div class="sample-github">
+	<p>If you'd like to jump directly to a code sample, see "<a href="#RelatedCodeSamples">Related code samples</a>" for details.</p>
+</div>
+<h2>What is request and response streaming?</h2>
+<p>By default, HTTP streaming is disabled and HTTP request and response payloads are written to a buffer in memory before they are processed by the API proxy pipeline. You can change this behavior by enabling streaming. With streaming enabled, request and response payloads are streamed without modification to the client app (for responses) and the target endpoint (for requests).&nbsp;</p>
+<h2>When should I enable streaming?</h2>
+<p>If your API proxy handles very large requests and/or responses (for size limits, see "What else should I know about streaming" below), you may wish to enable streaming. For example, you may wish to enable a streaming response flow if you have a Node.js application deployed on Edge that returns output over time, such as a Comet-style application. Or, you may wish to enable streaming for any application that accepts or returns a very large amount of data.&nbsp;</p>
+<div class="note">
+	<p>If your API requests or returns a large amount of data, you may see this HTTP error:</p>
+	<pre>
+{"fault":"{\"detail\":{\"errorcode\":\"protocol.http.TooBigBody\"},\"faultstring\":\"Body buffer overflow\"}"}</pre>
+	<p>If you see this error, we recommend that you enable streaming. If you continue to see the error after you enable streaming, consider removing any policies that require access to the request or response payload. For more information, see "Message payload size" in <a href="http://docs.apigee.com/node/12868">http://docs.apigee.com/node/12868</a>.</p>
+</div>
+<h2>What else should I know about streaming?</h2>
+<p>Message payload size is restricted to the following. Exceeding those sizes results in a&nbsp;<code>protocol.http.TooBigBody</code>&nbsp;error.</p>
+<ul>
+	<li>10MB in Edge Cloud</li>
+	<li>10MB in Edge for Private Cloud</li>
+</ul>
+<p>In Edge for Private Cloud deployments, you can modify this value. Be sure to test before deploying the change to production.&nbsp;</p>
+<ul>
+	<li><strong>For Edge for Private Cloud releases previous to 4.16.01:</strong><br />
+		<br />
+		On all Message Processors, edit the&nbsp;<code>http.properties</code>&nbsp;file to increase the limit in the&nbsp;<code>HTTPResponse.body.buffer.limit</code>&nbsp;parameter and then restart the Message Processor.&nbsp;</li>
+	<li><strong>For Edge for Private Cloud release 4.16.01 and later:</strong>
+		<ol>
+			<li>
+				<p>Edit the file <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span>. If that file does not exist, create it.</p>
+			</li>
+			<li>
+				<p>Set the <span style="font-family:courier new,courier,monospace;">conf_http_HTTPResponse.body.buffer.limit</span> property in&nbsp;<span style="font-family:courier new,courier,monospace;">message-processor.properties</span>. For example:<br />
+					<span style="font-family:courier new,courier,monospace;">conf_http_HTTPResponse.body.buffer.limit=5m</span></p>
+			</li>
+			<li>
+				<p>Restart the Message Processor:<br />
+					<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/bin/apigee-service message-processor restart</span></p>
+			</li>
+			<li>
+				<p>Repeat for all Message Processors.</p>
+			</li>
+		</ol>
+	</li>
+</ul>
+<p>We strongly recommend you do <strong>not</strong> attach policies where streaming is enabled (request or response). If policies are attached, buffering can occur that limits payload size to the numbers listed above, which defeats the purpose of enabling streaming to handle large payloads.</p>
+<h2>How to enable response and request streaming</h2>
+<p>To enable request streaming you need to add the <code>request.streaming.enabled</code> property to the ProxyEndpoint and TargetEndpoint definitions in the proxy bundle and set it to <code>true</code>. Similarly, set the&nbsp;<code style="font-size: 12px;">response.streaming.enabled</code> property to enable response streaming.</p>
+<p>You can locate these configuration files in the management UI in the Develop view for your proxy. If you are developing locally, these definition files are in <code>apiproxy/proxies</code> and <code>apiproxy/targets</code>.&nbsp;</p>
+<p>This sample shows how to enable both request and response streaming in the TargetEndpoint definition.</p>
+<pre>
+&lt;TargetEndpoint name="default"&gt;
+  &lt;HTTPTargetConnection&gt;
+    &lt;URL&gt;http://mocktarget.apigee.net&lt;/URL&gt;
+    &lt;Properties&gt;
+      &lt;Property name="<strong>response.streaming.enabled"&gt;true</strong>&lt;/Property&gt;
+      &lt;Property name="<strong>request.streaming.enabled"&gt;true</strong>&lt;/Property&gt;
+      &lt;Property name="supports.http10"&gt;true&lt;/Property&gt;
+      &lt;Property name="request.retain.headers"&gt;User-Agent,Referer,Accept-Language&lt;/Property&gt;
+      &lt;Property name="retain.queryparams"&gt;apikey&lt;/Property&gt;
+    &lt;/Properties&gt;
+  &lt;/HTTPTargetConnection&gt;
+&lt;/TargetEndpoint&gt;
+</pre>
+<p>This example shows how to enable response and request streaming in the ProxyEndpoint definition:</p>
+<pre>
+&lt;ProxyEndpoint name="default"&gt;
+  &lt;HTTPProxyConnection&gt;
+    &lt;URL&gt;http://mocktarget.apigee.net&lt;/URL&gt;
+    &lt;Properties&gt;
+      &lt;Property name="allow.http10"&gt;true&lt;/Property&gt;
+      &lt;Property name="<strong>response.streaming.enabled"&gt;true</strong>&lt;/Property&gt;
+      &lt;Property name="<strong>request.streaming.enabled"&gt;true</strong>&lt;/Property&gt;
+    &lt;/Properties&gt;
+  &lt;/HTTPProxyConnection&gt;
+&lt;/ProxyEndpoint&gt;
+</pre>
+<p>For more information about configuring endpoint definitions, see <a href="http://docs.apigee.com/node/6858">http://docs.apigee.com/node/6858</a>.</p>
+<h2><a id="RelatedCodeSamples" name="RelatedCodeSamples"></a>Related code samples</h2>
+<p>API proxy samples on GitHub are easy to download and use.&nbsp;See <a href="http://docs.apigee.com/node/14921">http://docs.apigee.com/node/14921</a> for information about downloading and using the samples.&nbsp;</p>
+<p>Sample proxies that feature streaming include:</p>
+<ul>
+	<li><a href="https://github.com/apigee/api-platform-samples/tree/master/sample-proxies/streaming">streaming</a> - Demonstrates an API proxy configured for HTTP streaming.&nbsp;</li>
+</ul>
+<p>&nbsp;</p>

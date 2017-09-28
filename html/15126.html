@@ -1,0 +1,180 @@
+<h1> Virtual hosts </h1>
+<p>[toc]</p>
+<p>Virtual hosts are the base URLs of an API proxy. They include the protocol (http or https), along with the hostname of the API proxy, which maps to a router address and port through DNS.</p>
+<p>In Edge, a virtual host is identified by a name. By default, when you first create an Edge organization, you get two virtual hosts in each environment:</p>
+<ul>
+	<li><code>default</code>&nbsp;- <strong>http</strong>://[org]-[environment].apigee.net (port 80)</li>
+	<li><code>secure</code>&nbsp;- <strong>https</strong>://[org]-[environment].apigee.net (port 443)</li>
+</ul>
+<p>You can see your virtual hosts in the Build a Proxy wizard as you create a new API proxy,&nbsp;in the management UI by going to <strong>APIs &gt; Environment Configuration &gt; Virtual Hosts</strong>, and with the <a href="http://docs.apigee.com/node/17056">http://docs.apigee.com/node/17056</a> and <a href="http://docs.apigee.com/node/17061">http://docs.apigee.com/node/17061</a> management APIs.</p>
+<p>In the XML configuration of an API proxy, the virtual host is specified by name. For example, <code>&lt;VirtualHost&gt;secure&lt;/VirtualHost&gt;</code> means a client can call the API proxy using the base URL of the "secure" virtual host; for example, <code>https://myorg-test.apigee.net</code>.</p>
+<p>One of the main uses of virtual hosts is to let you customize the domain name of your APIs hosted on Edge. For example, on a cloud-based version of Edge, the default domain name of an organization called "<span style="font-family:courier new,courier,monospace;">myorg</span>" in the prod environment is "<span style="font-family:courier new,courier,monospace;">myorg-prod.apigee.net</span>". Therefore, to access an API in that organization, a developer uses a URL in the form:</p>
+<pre>
+https://<strong>myorg-prod.apigee.net</strong>/v1/{proxy-base-path}/{resource-path}</pre>
+<p>However, a domain name containing "<span style="font-family:courier new,courier,monospace;">apigee.net</span>" may not be what you want to expose to your customers. A virtual host can map your own domain name to your organization on Edge, letting developers access your API through a domain specific to your company, for example:</p>
+<pre>
+https://<strong>api.myCompany.com</strong>/v1/{proxy-base-path}/{resource-path}</pre>
+<p>Note that creating a virtual host does not also make the domain name accessible. You must still create a DNS record for the domain.</p>
+<p><strong>Learn more:</strong></p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/18061">http://docs.apigee.com/node/18061</a></li>
+	<li><a href="http://docs.apigee.com/node/18066">http://docs.apigee.com/node/18066</a></li>
+	<li><a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a></li>
+</ul>
+<h2>About virtual hosts on a cloud-based Edge installation</h2>
+<p>After you create an API proxy on Edge, you can make that API available for requests. However, the first thing you need to determine is the complete URL of the resources accessed through the API proxy. That URL has the form:</p>
+<pre>
+http://{org-name}-{env-name}.apigee.net/{proxy-base-path}/{resource-path}
+
+https://{org-name}-{env-name}.apigee.net/{proxy-base-path}/{resource-path}</pre>
+<p>where:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">{org-name}</span> is your organization name.</li>
+	<li><span style="font-family:courier new,courier,monospace;">{env-name}</span> is the environment name. By default, all Apigee organizations created in the cloud are provisioned with two environments: '<span style="font-family:courier new,courier,monospace;">test</span>' and '<span style="font-family:courier new,courier,monospace;">prod</span>'. When deploying an API proxy, you can choose to deploy it to one or both environments.</li>
+	<li><span style="font-family:courier new,courier,monospace;">{proxy-base-path}</span>&nbsp;defined when you create an API proxy.</li>
+	<li><span style="font-family: 'courier new', courier, monospace;">{resource-path}</span>&nbsp;the path to a resource accessible through the API proxy.</li>
+</ul>
+<p>The domain name of the URL and the HTTP or HTTPS access protocol is defined by a virtual host on Edge. By default, Apigee creates two virtual hosts for every environment in an organization:</p>
+<ul>
+	<li><strong>default</strong>: Defines HTTP access to your APIs on port 80.</li>
+	<li><strong>secure</strong>: Defines HTTPS access to your APIs on port 443.</li>
+</ul>
+<div class="note">
+	<p>Apigee provides an TLS/SSL certificate and private key to support HTTPS on the secure virtual host so that you can quickly get started developing and testing your APIs. While many customers prefer to use their own certificate and private key at deployment time, you can deploy your APIs using the Apigee cert and key.</p>
+</div>
+<p>Apigee also creates DNS records for each virtual host. Therefore, you can use any or all of the following four URLs to access your API:</p>
+<pre>
+http://{org-name}-<strong>prod</strong>.apigee.net/{proxy-base-path}/{resource-path}
+
+https://{org-name}-<strong>prod</strong>.apigee.net/{proxy-base-path}/{resource-path}
+
+http://{org-name}-<strong>test</strong>.apigee.net/{proxy-base-path}/{resource-path}
+
+https://{org-name}-<strong>test</strong>.apigee.net/{proxy-base-path}/{resource-path}</pre>
+<div class="note">
+	<p>Typically, you work with Apigee to create virtual hosts that use your own domain name, rather than use the default <code>apigee.net</code> domain. You then create your own DNS records to access those virtual hosts, but you can continue to use the ones from Apigee as well.</p>
+</div>
+<h2>About virtual hosts on Edge for Private Cloud (on-premises)</h2>
+<p>When you install Apigee Edge for Private Cloud, there are no default organizations, environments, or virtual hosts created for you. After you complete the Edge installation process, your first action is typically to create an organization, environment, and virtual host through the "onboarding" process.</p>
+<p>To perform onboarding, run the following command on the Edge Management Server node:</p>
+<pre>
+/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-provision setup-org -f <strong><em>configFile</em></strong></pre>
+<p>where <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;</span>&nbsp;is the root directory of your Edge installation, and <span style="font-family:courier new,courier,monospace;"><strong><em>configFile</em></strong></span> contains the information necessary to create a user, organization, environment, and virtual host.</p>
+<p>For example, you create:</p>
+<ul>
+	<li>A user of your choosing to function as the organization administrator</li>
+	<li>An organization named <span style="font-family:courier new,courier,monospace;">example</span></li>
+	<li>An environment in the organization named <span style="font-family:courier new,courier,monospace;">prod</span></li>
+	<li>A virtual host in the environment named <span style="font-family:courier new,courier,monospace;">default</span> that allows HTTP access on port <span style="font-family:courier new,courier,monospace;">9001</span></li>
+	<li>A host alias of the DNS name used to access the Router, or the IP address of the Router and port of the virtual host in the form <span style="font-family:courier new,courier,monospace;">IP:9001</span>.</li>
+</ul>
+<div class="note">
+	<p>As of Edge for Private Cloud version 4.16.01, you must specify a host alias when creating a virtual host. In releases previous to 4.16.01, the host alias was optional.</p>
+	<p>&nbsp;</p>
+	<p>Also, the combination of host alias name and port number for the virtual host must be unique for all virtual hosts in the Edge installation.</p>
+</div>
+<div class="note">
+	<p>When creating a virtual host, you specify the Router port used by the virtual host. For example, port 9001. As of Edge for Private Cloud version 4.16.01, by default, the Router runs as the user "apigee" which does not have access to privileged ports, typically ports 1024 and below. If you want to create a virtual host that binds the Router to a protected port then you have to configure the Router to run as a user with access to those ports. &nbsp;See <a href="http://docs.apigee.com/node/22951">http://docs.apigee.com/node/22951</a> for more. &nbsp;</p>
+</div>
+<p>After running the&nbsp;onboarding&nbsp;script, you can later add any number of organizations, environments, and virtual hosts to your on-premises version of Edge. For more information, see the <em>Apigee Edge for Private Cloud Operations Guide</em>.</p>
+<p>Virtual hosts are opened on the Edge Router node. Therefore, you have to ensure that the port that you specify for the virtual host is open on the Router node. You can use a command in the form below to open a port:</p>
+<pre>
+$ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 9001 -j ACCEPT --verbose </pre>
+<p>After running that script, you can access your APIs by using a URL in the form:</p>
+<pre>
+http://&lt;<strong>router-ip</strong>&gt;:9001/{proxy-base-path}/{resource-path}</pre>
+<p>Note that this URL uses the IP address of the Router and the virtual host port on the Router to access your APIs. Typically, you do not publish your APIs to customers with an IP address and port number. Instead, you define a DNS entry for the router and port. For example:</p>
+<pre>
+http://myAPI.myCo.com/{proxy-base-path}/{resource-path}</pre>
+<p>If you define the DNS entry, then you also must create a <em>host alias</em> for the virtual host that matches the domain name of the DNS entry. From the example above, you would specify a host alias of <span style="font-family:courier new,courier,monospace;">myAPI.myCo.com</span> when you create the virtual&nbsp;host.</p>
+<p>Note also that the URL uses the HTTP protocol. To use the encrypted HTTPS protocol, you must create a virtual host that references a keystore. A keystore contains the certificate and private key required to support HTTPS. For more, see <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a>.</p>
+<h2>Viewing information about a virtual host</h2>
+<p>You can use the Edge management UI to see the virtual hosts defined in an environment:</p>
+<ol>
+	<li>Login to the Edge management UI at <a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a> (cloud) or <span style="font-family:courier new,courier,monospace;">http://&lt;ms-ip&gt;:9000</span> (on-premises), where <span style="font-family:courier new,courier,monospace;">&lt;ms-ip&gt;</span> is the IP address of the Management Server node.</li>
+	<li>In the Edge management UI menu, select <strong>APIs &gt; Environment Configuration</strong>.</li>
+	<li>Select the environment, such as <strong>prod</strong> or <strong>test</strong>. The virtual hosts defined for the environment appear.</li>
+	<li>Go to the <strong>Virtual Hosts</strong> tab.<br />
+		<img alt="" src="sites/docs/files/virtual-host-ui.png" style="width: 700px; height: 226px; border-width: 1px; border-style: solid; margin: 15px;" /><br />
+		If the virtual host is configured to use a keystore or truststore, select the <strong>Show</strong> button to see more information.</li>
+</ol>
+<p>You can also use the Edge APIs to view information about virtual hosts. For example, the <a href="http://docs.apigee.com/node/17056">http://docs.apigee.com/node/17056</a> API returns a list of all virtual hosts:</p>
+<pre>
+$ curl -X GET -H "accept:application/xml" \
+https://api.enterprise.apigee.com/v1/o/{org}/environments/{env}/virtualhosts \
+-u email:password</pre>
+<p>Sample response:</p>
+<pre>
+[
+ "default",
+ "secure"
+]</pre>
+<p>To see information about a specific virtual host, use the <a href="http://docs.apigee.com/node/17061">http://docs.apigee.com/node/17061</a> API:</p>
+<pre>
+$ curl -X GET -H "accept:application/xml" \
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/virtualhosts/default \
+-u email:password</pre>
+<p>Sample response:</p>
+<pre>
+{
+ "hostAliases" : [apigeedocs-prod.apigee.net ],
+ "interfaces" : [ ],
+ "name" : "default",
+ "port" : "9001"
+}</pre>
+<div class="note">
+	<p>In Edge for Private Cloud, replace the <span style="font-family:courier new,courier,monospace;">api.enterprise.apigee.com</span> domain name with <span style="font-family:courier new,courier,monospace;">&lt;ms-ip&gt;:8080</span> where <span style="font-family:courier new,courier,monospace;">&lt;ms-ip&gt;</span> is the IP of the Edge Management Server.</p>
+</div>
+<p>If the virtual host is configured to use TLS/SSL, a lock icon appears next to the name of the virtual host. That means an TLS/SSL certificate, key, and certificate chain has been uploaded to Edge and associated with the virtual host.</p>
+<p>To see information about the available certificates:</p>
+<ol>
+	<li>Login to the Edge management UI.</li>
+	<li>In the Edge management UI menu, select <strong>Admin &gt; SSL Certificates</strong>.</li>
+	<li>Expand the keystores until you see the certificate.<br />
+		<img alt="" src="sites/docs/files/sslCerts.png" style="width: 650px; border-width: 1px; border-style: solid; margin: 15px; height: 425px;" /></li>
+</ol>
+<p>To use the the <a href="http://docs.apigee.com/node/17986">http://docs.apigee.com/node/17986</a> to view a cert:</p>
+<pre>
+$ curl -H 'accept: application/xml' \
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/keystores/freetrial/certs/23-apigee-wildcard.apigee.net.crt \
+-u email:password</pre>
+<h2>Creating a virtual host</h2>
+<p>You can create a virtual host that uses the HTTP protocol or one that uses TLS/SSL and the encrypted HTTPS protocol. The way you create virtual hosts depends on your Edge installation: <strong>cloud</strong> or <strong>Edge for Private Cloud</strong>&nbsp;(on-premises).</p>
+<h3>Creating a virtual host on a cloud-based Edge installation</h3>
+<p>If you have an Apigee Edge paid plan, Apigee creates virtual hosts for you. For technical and security reasons, virtual host creation and manipulation in Edge cloud accounts is not self-service. For assistance with virtual hosts, contact Apigee Customer Support at <a href="http://community.apigee.com/content/apigee-customer-support">http://community.apigee.com/content/apigee-customer-support</a>.</p>
+<p>If you want to create a virtual host that supports TLS/SSL, then you must obtains the necessary TLS/SSL certificate and private key. Apigee then uses the cert and key to configure the virtual host. &nbsp;</p>
+<p>See <a href="http://docs.apigee.com/node/18071">http://docs.apigee.com/node/18071</a> for more on creating virtual hosts for a cloud installation.</p>
+<h3>Creating a virtual host on Edge for Private Cloud</h3>
+<p>In an on-premises installation, you have complete control over virtual hosts. You can create virtual hosts for any org, in any environments, using TLS/SSL or not.</p>
+<p>See <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a> for more on creating virtual hosts for an on-premises installation.</p>
+<h2>Updating an API proxy after creating a virtual host</h2>
+<p>An API proxy references the virtual hosts that it supports in its ProxyEndpoint definition. When you create a new API proxy, Edge automatically configures its ProxyEndpoint to use all available virtual hosts.</p>
+<p>After Apigee notifies you that your new virtual host has been created for a cloud installation, or after you create one directly in an on-premises installation, any new API proxies that you create automatically reference the virtual host.</p>
+<div class="warning">
+	<p>If you create a new API proxy that should not be accessible over a particular virtual host, then you must edit the API proxy to remove that virtual host from its ProxyEndpoint.</p>
+</div>
+<p>If you created any API proxies before requesting the virtual host, then you must edit the API proxy to add the new virtual hosts to its ProxyEndpoint. Otherwise, the API proxy is not accessible by the virtual host.</p>
+<p>If you are developing your API proxies in XML, edit the XML file for the ProxyEndpoint to add or remove a virtual host.</p>
+<p>To use the Edge management UI to edit the ProxyEndpoint:</p>
+<ol>
+	<li>Login to the Edge management UI at <a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a>.</li>
+	<li>In the Edge management UI menu, select <strong>APIs</strong>.</li>
+	<li>Select the name of the API proxy to update.</li>
+	<li>Select the <strong>Development</strong> tab.</li>
+	<li>Under <strong>Proxy Endpoints</strong>, select <strong>default</strong>.</li>
+	<li>In the code area:
+		<ol style="list-style: lower-alpha outside">
+			<li>Remove any <span style="font-family:courier new,courier,monospace;">&lt;VirtualHost&gt;</span> elements for virtual hosts not supported by the API proxy.</li>
+			<li>Add a new <span style="font-family:courier new,courier,monospace;">&lt;VirtualHost&gt;</span> element with the name of the new virtual host. For example, if the new virtual host is named MyVirtualHost, add the following tag:<br />
+				<br />
+				<span style="font-family:courier new,courier,monospace;">&lt;HTTPProxyConnection&gt;<br />
+				&nbsp; &nbsp;&lt;BasePath&gt;/oauth10a/client_credential&lt;/BasePath&gt;<br />
+				&nbsp; &nbsp;&lt;VirtualHost&gt;default&lt;/VirtualHost&gt;<br />
+				&nbsp; &nbsp;&lt;VirtualHost&gt;secure&lt;/VirtualHost&gt;<br />
+				&nbsp; &nbsp;<strong>&lt;VirtualHost&gt;MyVirtualHost&lt;/VirtualHost&gt;</strong><br />
+				&lt;/HTTPProxyConnection&gt;</span></li>
+		</ol>
+	</li>
+	<li>Save the API proxy. If the API proxy has been deployed, saving it redeploys it with the new setting.</li>
+</ol>
+<div>&nbsp;</div>

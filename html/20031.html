@@ -1,0 +1,212 @@
+<h1> Configuring TLS </h1>
+<p>To configure TLS, you have to configure the following on Edge:</p>
+<ul>
+	<li>Repositories for TLS keys and certs:
+		<ul>
+			<li><strong>Keystores</strong>: Contains an TLS certificate and private key used to identify the entity during TLS handshaking. When you create the keystore and upload the TLS cert, you specify an <strong><em>alias</em></strong> name used to reference the cert/key pair.</li>
+			<li><strong>Truststores</strong>: contains certificates used to verify certificates received as part of TLS handshaking. A truststore is usually not required. It is used when you have to validate self-signed certificates received from the TLS server, or certificates that are not signed by a trusted CA. It is also required when performing two-way TLS when Edge acts as the TLS server. &nbsp;</li>
+		</ul>
+	</li>
+	<li>API proxies to use the certs in keystores and truststores:
+		<ul>
+			<li><strong>Virtual Hosts</strong>: defines the domains and ports on which an API proxy is exposed, and, by extension, the URL that apps use to access an API proxy. As part of configuring a virtual host, you optionally specify a keystore and&nbsp;truststore&nbsp;as part of configuring TLS.</li>
+			<li><strong>Target Endpoints/Target Servers</strong>:&nbsp;defines&nbsp;endpoint of the backend system accessed by an API proxy. As part of configuring a target endpoints/target servers, you configure it to support the TLS requirements of the backend system, including ​specifying a&nbsp;keystore&nbsp;and&nbsp;truststore.</li>
+		</ul>
+	</li>
+</ul>
+<p>See also:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a></li>
+	<li><a href="http://docs.apigee.com/node/20036">http://docs.apigee.com/node/20036</a></li>
+	<li><a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a></li>
+	<li><a href="http://docs.apigee.com/node/18091">http://docs.apigee.com/node/18091</a></li>
+	<li><a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a></li>
+</ul>
+<h2>Cloud vs. Private Cloud configuration differences</h2>
+<p>Both Edge cloud and Edge for Private Cloud let you create and configure keystores and truststores.&nbsp;</p>
+<p>The biggest difference between the two is that in a cloud-based installation of Edge, Apigee Support configures virtual hosts for you. For Private Cloud, you create and configuring virtual hosts.</p>
+<p>Both cloud and Private Cloud customers can create and configure target endpoints and target servers.</p>
+<h2>TLS configuration options for virtual hosts and&nbsp;target endpoints/target servers</h2>
+<p>The way you configure TLS for virtual hosts and target endpoints/target servers has an&nbsp;impact on:</p>
+<ul>
+	<li>Flexibility of use</li>
+	<li>Handling of expired certs</li>
+</ul>
+<p>The following table shows the three way to configure TLS for a&nbsp;virtual hosts and target endpoints/target servers, and contains links to detailed information on how to perform the configuration.&nbsp;</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<p>Config&nbsp;<br />
+					type</p>
+			</th>
+			<th>
+				<p>Example</p>
+			</th>
+			<th>
+				<p>Notes</p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>Direct</p>
+			</td>
+			<td>
+				<pre>
+<span style="font-size:13px;">&lt;SSLInfo&gt;
+  &lt;Enabled&gt;true&lt;/Enabled&gt;
+  &lt;ClientAuthEnabled&gt;
+    true
+  &lt;/ClientAuthEnabled&gt;
+<strong>  &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt; </strong>
+<strong>  &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt; </strong>
+<strong>  &lt;TrustStore&gt;freetrial&lt;/TrustStore&gt;</strong>
+&lt;/SSLInfo&gt;</span></pre>
+			</td>
+			<td>
+				<p>Specify static names for the keystore, cert/key pair alias, and truststore.</p>
+				<p><strong>Advantages</strong>: Simplest form of configuration.</p>
+				<p><strong>Disadvantages</strong>: The names of the keystore, cert alias, and truststore are static. If you have to change any of them, you have to edit and redeploy the proxy.&nbsp;</p>
+				<p>For more, see:</p>
+				<ul>
+					<li><a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a></li>
+					<li><a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a></li>
+					<li><a href="http://docs.apigee.com/node/18091">http://docs.apigee.com/node/18091</a></li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Flow vars</p>
+			</td>
+			<td>
+				<pre>
+<span style="font-size:13px;">&lt;SSLInfo&gt;
+  &lt;Enabled&gt;{ssl.enabled}&lt;/Enabled&gt;
+  &lt;ClientAuthEnabled&gt;
+    {ssl.clenabled}
+  &lt;/ClientAuthEnabled&gt;
+<strong>  &lt;KeyStore&gt;{ssl.keystore}&lt;/KeyStore&gt;</strong>
+<strong>  &lt;KeyAlias&gt;{ssl.keyAlias}&lt;/KeyAlias&gt;
+</strong><strong>  &lt;TrustStore&gt;{ssl.trustStore}&lt;/TrustStore&gt;</strong>
+&lt;/SSLInfo&gt;</span></pre>
+			</td>
+			<td>
+				<p>Use flow variables to specify some or all of the TLS/SSL information. Lets you pass values as part of the request to specify the TLS/SSL information used in that request.</p>
+				<p>For example, you are connecting to a backend endpoint over TLS/SSL and, depending on whether you are connecting to the test or prod environment of that backend server, you need to use the appropriate keystore and truststore. See <a href="https://community.apigee.com/articles/21424/dynamic-sslinfo-for-targetendpoint-using-variable.html">this article</a> for more examples.</p>
+				<p><strong>Advantages</strong>: Lets you dynamically control the TLS/SSL information per request without having to redeploy the API proxy.&nbsp;</p>
+				<p><strong>Disadvantages</strong>: Works only for target endpoints/target servers. It is not available for use with virtual hosts.</p>
+				<p>For more, see:</p>
+				<ul>
+					<li><a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a></li>
+					<li><a href="http://docs.apigee.com/node/18091">http://docs.apigee.com/node/18091</a></li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Refs</p>
+			</td>
+			<td>
+				<pre>
+<span style="font-size:13px;">&lt;SSLInfo&gt;
+  &lt;Enabled&gt;true&lt;/Enabled&gt;
+  &lt;ClientAuthEnabled&gt;
+    true
+  &lt;/ClientAuthEnabled&gt;
+<strong>  &lt;KeyStore&gt;ref://mykeystore&lt;/KeyStore&gt;
+</strong><strong>  &lt;KeyAlias&gt;freetrial&lt;/KeyAlias&gt;</strong>
+<strong>&nbsp;&nbsp;&lt;TrustStore&gt;ref://mytruststore&lt;/TrustStore&gt;</strong>
+&lt;/SSLInfo&gt;</span></pre>
+			</td>
+			<td>
+				<p>Use a reference to the keystore and/or truststore.</p>
+				<p><strong>Advantages</strong>: Lets you change the reference to the keystore or truststore without having to redeploy the proxy. If the cert expires, you can update the reference to the keystore or truststore without having to restart a Router or Message Processor.</p>
+				<p><strong>Disadvantages</strong>: Can only specify a reference to the keystore and truststore, but not to the alias.</p>
+				<p>For more, see:</p>
+				<ul>
+					<li><a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a></li>
+					<li><a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a></li>
+					<li><a href="http://docs.apigee.com/node/18091">http://docs.apigee.com/node/18091</a></li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Updating a cert or replacing an expired cert</h2>
+<p>At some time, you might have to replace or update a cert. For example, all TLS certs have an expiration date. When you configure a virtual host or target endpoint/target server to use TLS, and the specified cert expires, all API calls through the virtual host or target endpoint/target server will fail.</p>
+<div class="note">
+	<p>You cannot update an existing keystore to add a new certificate. You must create a new keystore when updating a certificate.</p>
+</div>
+<p>The following table list the ways to update a cert based on the three different ways to configure a&nbsp;virtual host or target endpoint/target server:</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Config&nbsp;<br />
+				type</th>
+			<th>
+				<p><strong>How to update/replace a cert</strong></p>
+			</th>
+			<th>
+				<p>Private Cloud</p>
+			</th>
+			<th>
+				<p><strong>Cloud</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Direct and flow vars</td>
+			<td>Create a new keystore/truststore with the new cert.</td>
+			<td>
+				<p>Update the virtual host and restart the Routers.</p>
+				<p>If the keystore and truststore are referenced directly from the TargetEndpoint definition, then you must redeploy the proxy.</p>
+			</td>
+			<td>
+				<p>For virtual hosts, contact Apigee Support.</p>
+				<p>If the keystore and truststore are referenced directly from the TargetEndpoint definition, then you must redeploy the proxy.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Direct and flow vars</p>
+			</td>
+			<td>
+				<p>Delete the keystore/truststore and recreate it with same name.</p>
+			</td>
+			<td>
+				<p>No virtual host update required, no Router restart necessary.</p>
+				<p>If the keystore is used for two-way TLS between Edge and the backend service, restart the Message Processors.</p>
+			</td>
+			<td>
+				<p>For virtual hosts, contact Apigee Support.</p>
+				<p>If the keystore is used for two-way TLS between Edge and the backend service, contact Apigee Support.</p>
+				<div>&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Refs</p>
+			</td>
+			<td>
+				<p>For a keystore, create new keystore with a new name and an alias with same name as the old alias.&nbsp;</p>
+				<p>For a truststore, create a truststore with a new name.&nbsp;</p>
+			</td>
+			<td>
+				<p>Update the reference to the keystore or truststore. No Router or Message Processor restart is necessary.</p>
+			</td>
+			<td>
+				<p>For virtual hosts, contact Apigee Support.</p>
+				<p>Update the reference to the keystore or truststore.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>See also:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a></li>
+	<li><a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a></li>
+</ul>

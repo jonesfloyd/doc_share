@@ -1,0 +1,13 @@
+<h1> Delete OAuth v1.0a Info policy error codes </h1>
+<p>On success, the policy returns a 200 status.</p>
+<p>On failure, the policy returns 404 and output similar to the following (depending on whether you are deleting an access token, request token, or verifier.):</p>
+<pre>
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+Content-Length: 144
+Connection: keep-alive
+
+{"fault":{"faultstring":"Invalid Access Token","detail":{"errorcode":"keymanagement.service.invalid_request-access_token_invalid"}}}
+
+
+</pre>

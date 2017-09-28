@@ -1,0 +1,262 @@
+<h1> Delete OAuthV2 Info policy </h1>
+<img src="sites/docs/files/icon_policy_security.jpg" />&nbsp;&nbsp;
+<h3>What</h3>
+<p>Deletes the specified OAuth V2 authorization code or access token.</p>
+<div class="note">
+	<p>Alternatively, you can revoke and re-approve tokens, as described in <a href="http://docs.apigee.com/node/17891">http://docs.apigee.com/node/17891</a>.</p>
+</div>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations. See the <a href="#Samples">Samples</a> for specific attachment guidance in different situations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="samples">Samples</h2>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Delete Access Token </a></li>
+	<li class="active"><a data-toggle="tab" href="#tab_2">Delete Auth Code </a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<p>Below is an example policy used to delete an OAuth 2.0 access token. The example below locates the access token to delete on the request message by looking for a header called <code>access_token</code>.</p>
+		<pre>
+&lt;DeleteOAuthV2Info name="DeleteAccessToken"&gt;
+     &lt;AccessToken ref="request.header.access_token"&gt;&lt;/AccessToken&gt;
+&lt;/DeleteOAuthV2Info&gt;</pre>
+	</div>
+	<!-- Tab 1 end. --><!--Tab 2 begin. --></div>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_2">
+		<p>Below is an example policy used to delete an OAuth 2.0 authorization code. The example below locates the auth code to delete on the request message by looking for a query parameter called <code>code</code>.</p>
+		<pre>
+&lt;DeleteOAuthV2Info name="DeleteAuthCode"&gt;
+     &lt;AuthorizationCode ref="request.queryparam.code"&gt;&lt;/AuthorizationCode&gt;
+&lt;/DeleteOAuthV2Info&gt;</pre>
+	</div>
+	<!-- Tab 1 end. --><!--Tab 2 begin. --></div>
+<!-- End tabbed region. -->
+<hr />
+<h2 id="elementreference">Element Reference</h2>
+<p>The element reference describes the elements and attributes of the DeleteOAuthV2Info policy.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;DeleteOAuthV2Info async="false" continueOnError="false" enabled="true" name="DeleteOAuthV2Info-1"&gt;    
+    &lt;DisplayName&gt;Delete OAuth v2.0 Info 1&lt;/DisplayName&gt;
+    &lt;AccessToken ref={some-variable}&gt;&lt;/AccessToken&gt;
+    &lt;!--&lt;AuthorizationCode ref={some-variable}&gt;&lt;/AuthorizationCode&gt;--&gt;
+    &lt;Attributes/&gt;
+&lt;/DeleteOAuthV2Info</pre>
+<h2><a id="JavaScript" name="JavaScript"></a>&lt;DeleteOAuthV2Info&gt; attributes</h2>
+<pre class="prettyprint prettyprinted" style="margin-top: 0px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 12.727272033691406px; color: rgb(72, 72, 72); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+&lt;DeleteOAuthV2Info async="false" continueOnError="false" enabled="true" name="Delete-OAuth-v20-Info-1"&gt;</pre>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<thead>
+		<tr>
+			<th width="118">Attribute</th>
+			<th width="343">Description</th>
+			<th width="92">Default</th>
+			<th width="192">Presence</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>async</td>
+			<td>
+				<p>Set to <code>true</code>&nbsp;to specify that the policy should be run in a thread pool different than the pool servicing the request/response flow. Default is&nbsp;<code>false</code>.</p>
+				<p>This setting is only used for for internal optimization.</p>
+			</td>
+			<td>false</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>continueOnError</td>
+			<td>
+				<p>Most policies are expected to return an error when a failure occurs. By setting this attribute to&nbsp;<code>true</code>, Flow execution continues on failure.</p>
+			</td>
+			<td>false</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>enabled</td>
+			<td>Determines whether a policy is enforced or not. If set to&nbsp;<code>false</code>, a policy is 'turned off', and not enforced (even though the policy remains attached to a Flow).</td>
+			<td>true</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>
+				<p>The internal name of the policy. This name is referenced in Step elements to attach the policy to a Flow.</p>
+				<p><strong>Note:</strong> Characters you can use in the name are restricted to: <code>A-Z0-9._\-$ %</code>. The Management UI enforces additional restrictions, such as automatically removing characters that are not alphanumeric.</p>
+			</td>
+			<td>N/A</td>
+			<td>Required</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;AccessToken&gt; element</h2>
+<p>Identifies the variable where the access token to delete is located. For example, if the access token is attached to request message as a query parameter called "access_token", specify <code>request.queryparam.access_token</code>. You can use any valid variable that references the token. Or, could pass in the literal token string (rare case).</p>
+<pre>
+ &lt;AccessToken ref="request.queryparam.access_token"&gt;&lt;/AccessToken&gt;</pre>
+<table class="pd-table" width="515">
+	<tbody>
+		<tr>
+			<td class="pd-td-left" width="62">Default:</td>
+			<td class="pd-td-right" width="275">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Either <code>&lt;AccessToken&gt;</code> or <code>&lt;AuthorizationCode&gt;</code> is required.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>An access token variable. Typically, retrieved from a flow variable. For example:&nbsp;<code>request.header.token</code>&nbsp;or&nbsp;<code>request.queryparam.token</code>.</p>
+			</td>
+			<td>N/A</td>
+			<td>Optional</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;AuthorizationCode&gt; element</h2>
+<p>Identifies the variable where the authorization code to delete is located. For example, if the auth code is attached to request message as a query parameter called "code", specify <code>request.queryparam.code</code>. You can use any valid variable that references the token. Or, could pass in the literal token string (rare case).</p>
+<pre>
+ &lt;AccessToken ref="request.queryparam.access_token"&gt;&lt;/AccessToken&gt;</pre>
+<table class="pd-table" width="532">
+	<tbody>
+		<tr>
+			<td class="pd-td-left" width="112">Default:</td>
+			<td class="pd-td-right" width="408">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Either <code>&lt;AccessToken&gt;</code> or <code>&lt;AuthorizationCode&gt;</code> is required.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>An access token variable. Typically, retrieved from a flow variable. For example:&nbsp;<code>request.header.code</code>&nbsp;or&nbsp;<code>request.queryparam.code</code>.</p>
+			</td>
+			<td>N/A</td>
+			<td>Optional</td>
+		</tr>
+	</tbody>
+</table>
+<h2><a id="DisplayName" name="DisplayName"></a>&lt;DisplayName&gt; element</h2>
+<p>A natural-language name that labels the policy in the management UI proxy editor. If omitted, the policy&nbsp;name&nbsp;attribute is used.</p>
+<pre>
+&lt;DisplayName&gt;DeleteOAuthV2Info 1&lt;/DisplayName&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left" width="97">Default:</td>
+			<td class="pd-td-right" width="366">The value of the policy's&nbsp;<code>name</code>&nbsp;attribute.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="flowvariables">Error reference</h2>
+<p><a href="http://docs.apigee.com/node/21356">Content to be inserted here</a></p>
+<h2 id="schema">Schema</h2>
+<p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
+<h2 id="relatedtopics">Related topics</h2>
+<ul>
+	<li><a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a></li>
+	<li><a href="http://docs.apigee.com/node/17786">http://docs.apigee.com/node/17786</a></li>
+	<li><a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a></li>
+</ul>

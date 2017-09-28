@@ -1,0 +1,354 @@
+<h1> Understanding Edge support for Node.js modules </h1>
+<p>[toc]</p>
+<h2>What version of Node.js is supported on Apigee Edge?</h2>
+<p>Edge currently supports Node.js 0.10.32.</p>
+<h2>Which standard Node.js modules are supported on Edge?</h2>
+Use the following table to determine which standard Node.js modules are included on Edge. In some cases, included modules are only partially supported. These are modules that are built-in to Node.js.&nbsp;<br />
+<br />
+<table class="table" style="width: 690px;" width="690">
+	<thead>
+		<tr>
+			<th>Module</th>
+			<th>Status</th>
+			<th>Notes</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>assert</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>buffer</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>child_process</code></td>
+			<td>Restricted</td>
+			<td>An exception will be thrown if an attempt is made to spawn a sub-process. However, "fork" is supported for spawning sub-scripts.</td>
+		</tr>
+		<tr>
+			<td><code>cluster</code></td>
+			<td>Disabled</td>
+			<td>The method cluster.isMaster always returns true, and other methods are not implemented. One copy of each Node.js script is deployed to each Edge message processor.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>crypto</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>dns</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>domain</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>dgram</code></td>
+			<td>Restricted</td>
+			<td>Node.js applications in the Apigee environment will not be able to access services on the Internet via UDP due to our network architecture.</td>
+		</tr>
+		<tr>
+			<td><code>events</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>fs</code></td>
+			<td>Restricted</td>
+			<td>Filesystem access is restricted to the directory where the script was launched: the <code>/resources/node</code> directory. Node.js scripts may read and write files within this directory, for instance as a temporary scratch area, but there are no guarantees as to how long the files will persist.</td>
+		</tr>
+		<tr>
+			<td><code>http</code></td>
+			<td>Supported</td>
+			<td>The virtual host and path for incoming requests is specified in the API Proxy, not by the HTTP module. See "<a href="#HTTPandHTTPS">Understanding support for the http and https modules</a>" for more information.</td>
+		</tr>
+		<tr>
+			<td><code>https</code></td>
+			<td>Supported</td>
+			<td>Creating an "https" server behaves identically to an "http" server. See&nbsp;"<a href="#HTTPandHTTPS">Understanding support for the http and https modules</a>"&nbsp;for more information.</td>
+		</tr>
+		<tr>
+			<td><code>module</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>net</code></td>
+			<td>Restricted</td>
+			<td>Attempts to listen for incoming TCP connections will generate an exception.</td>
+		</tr>
+		<tr>
+			<td><code>path</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>module</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>process</code></td>
+			<td>Partial support</td>
+			<td>Functionality to manipulate user ID, group membership, and working directory is not supported.</td>
+		</tr>
+		<tr>
+			<td><code>punycode</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>querystring</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>readline</code></td>
+			<td>Disabled</td>
+			<td>There is no standard input for scripts running on Apigee Edge.</td>
+		</tr>
+		<tr>
+			<td><code>repl</code></td>
+			<td>Disabled</td>
+			<td>There is no standard input for scripts running on Apigee Edge.</td>
+		</tr>
+		<tr>
+			<td><code>module</code></td>
+			<td>Included</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>STDIO</code></td>
+			<td>Supported</td>
+			<td>
+				<p>Standard output and error are routed to a log file within the Apigee Edge infrastructure. You can view these logs by clicking the <strong>Node.js Logs</strong> button in and Apigee Edge management UI for your API proxy.</p>
+				<p>There is no standard input for scripts running on Apigee Edge. However, you can pass arguments using the ScriptTarget element of TargetEndpoint. See <a href="#Advanced_ScriptTarget_Configuration">Advanced ScriptTarget configuration</a>&nbsp; for more information.</p>
+			</td>
+		</tr>
+		<tr>
+			<td><code>stream</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>string_decoder</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>timers</code></td>
+			<td>Included</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>tls</code></td>
+			<td>Supported</td>
+			<td>Transport Layer Security (TLS) parameters work basically the same way they work in regular Node.js. See <a href="#TLS">Using the TLS (SSL) Node.js module on Apigee Edge</a> for details.</td>
+		</tr>
+		<tr>
+			<td><code>tty</code></td>
+			<td>Disabled</td>
+			<td>There is no standard input for scripts running on Apigee Edge.</td>
+		</tr>
+		<tr>
+			<td><code>url</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>util</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>vm</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>zlib</code></td>
+			<td>Supported</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Additional supported modules</h2>
+<p>This section lists additional modules that are not supported in standard Node.js, but are supported by Trireme and Trireme running on Apigee Edge. <a href="https://github.com/apigee/trireme">Trireme</a> is the open-source Node.js container that runs on Apigee Edge. It is designed to run Node.js scripts inside a Java Virtual Machine (JVM). All of these modules are available on NPM.</p>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="col" width="179">Module</th>
+			<th scope="col" width="612">Description</th>
+		</tr>
+		<tr>
+			<td><a href="https://www.npmjs.com/package/apigee-access">apigee-access</a></td>
+			<td>Allows Node.js applications running on the Apigee Edge platform a way to access Apigee-specific functionality. You can use this module to: access and modify flow variables, retrieve data from the secure store, and use Edge cache, quota, and OAuth services. See also <a href="http://docs.apigee.com/node/15651">http://docs.apigee.com/node/15651</a>.</td>
+		</tr>
+		<tr>
+			<td><a href="https://www.npmjs.com/package/trireme-support">trireme-support</a></td>
+			<td>Lets Node.js applications take advantage of features specific to Trireme. Currently there is only one feature supported -- loading Node.js modules built in Java. Note: loadJars is not supported in Edge Cloud.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><a href="https://www.npmjs.com/package/trireme-xslt">trireme-xslt</a></td>
+			<td>Presents an abstraction of XLST processing. It is specifically designed for the Trireme platform to allow efficient processing of XSLT when Node.js applications are run on Java.</td>
+		</tr>
+		<tr>
+			<td><a href="https://www.npmjs.com/package/trireme-jdbc">trireme-jdbc</a></td>
+			<td>Provides access to JDBC from Node.js. Note: Unsupported in Edge Cloud. For Edge Private Cloud, you can put JDPC JAR files in the class path and use this module.</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Support for commonly used Node.js modules</h2>
+<div class="warning">
+	<p>Node.js on Apigee Edge includes some pre-installed Node.js modules, such as Express, that you can use without uploading them with your Node.js project. However, using these pre-installed modules is not recommended as they are not guaranteed to be up to date, and for this reason, they are no longer documented.&nbsp;</p>
+</div>
+<h2>Restrictions on Node.js scripts</h2>
+<p>Note, however, that Edge imposes certain restrictions on Node.js scripts, such as the following:</p>
+<ul>
+	<li>Node.js applications in the Apigee Edge environment cannot access services on the Internet via UDP because of the Edge network architecture.</li>
+</ul>
+<ul>
+	<li>Filesystem access is restricted to the directory where the Node.js script was launched: the /resources/node directory. Node.js scripts can read and write files within this directory, for instance as a temporary scratch area, but there are no guarantees as to how long the files will persist.</li>
+</ul>
+<ul>
+	<li>Attempts to listen for incoming TCP connections generate an exception.</li>
+</ul>
+<ul>
+	<li>Functionality to manipulate user ID, group membership, and working directory is not supported.</li>
+</ul>
+<ul>
+	<li>For standard input, you are limited to&nbsp;passing arguments using the ScriptTarget element of TargetEndpoint. See&nbsp;<a href="#Advanced_ScriptTarget_Configuration">Advanced ScriptTarget configuration</a>&nbsp; for more information.<br />
+		&nbsp;</li>
+	<li>For standard output, you are limited to using the Node.js Logs button in the Edge management UI for your proxy. You can also use the "apigeetool getlogs" command. For more information, see <a href="http://docs.apigee.com/node/14936">http://docs.apigee.com/node/14936</a>.<br />
+		&nbsp;</li>
+	<li>Modules that depend on native code are not supported.<br />
+		&nbsp;</li>
+	<li>Modules that depend on EcmaScript 6 features, such as Promises and Generators, are not supported.<br />
+		&nbsp;</li>
+	<li>The Node.js runtime flags such as "harmony-proxies" are not supported.&nbsp;</li>
+</ul>
+<h2>Setting IP connection restrictions on Edge for Private Cloud</h2>
+<p>By default, Edge for Private Cloud restricts Node.js code from accessing IP addresses&nbsp;starting with “10.", "192.168", and localhost. If you attempt to access these IP addresses, you will see an error in the form:</p>
+<pre>
+{ [Error: connect EINVAL] message: 'connect EINVAL', code: 'EINVAL', errno: 'EINVAL', syscall: 'connect' }</pre>
+<p>You can modify these restrictions&nbsp;by setting the&nbsp;<span style="font-family:courier new,courier,monospace;">conf_nodejs_connect.ranges.denied</span> property in the <span style="font-family:courier new,courier,monospace;">message-processors.properties</span> file for each Message Processor. By default, this property has the value:</p>
+<pre>
+conf_nodejs_connect.ranges.denied=10.0.0.0/8,192.168.0.0/16,127.0.0.1/32</pre>
+<p>To set this property:</p>
+<ol>
+	<li>Open the&nbsp;<span style="font-family:courier new,courier,monospace;">message-processor.properties</span> file in an editor. If the file does not exist, create it:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; vi /&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span></li>
+	<li>Set the property as desired. For example, to deny access to only localhost:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_nodejs_connect.ranges.denied=127.0.0.1/32</span></li>
+	<li>Save your changes.</li>
+	<li>Make sure the properties file is owned by the 'apigee' user:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span></li>
+	<li>Restart the Message Processor:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-message-processor restart</span></li>
+</ol>
+<h2><a name="HTTPandHTTPS"></a>Understanding support for the http and https modules&nbsp;</h2>
+<p>All Node.js applications running in Apigee Edge must use the <code>http</code> or <code>https</code> module to listen for incoming requests. If you were to deploy a script that doesn't listen for incoming requests, it would simply execute and exit.</p>
+<p>The <code>listen</code> method of the <code>http</code> and <code>https</code> modules in Node.js takes a port number as a parameter. For example:</p>
+<pre>
+svr.listen(process.env.PORT || 9000, function() {
+   console.log('The server is running.');
+});</pre>
+<p>This "port" argument is required in Node.js, but Apigee Edge ignores this parameter. Instead, the API proxy in which the Node.js script runs specifies the "virtual host" that it listens on, and the Node.js application uses those same virtual hosts, just like any other Apigee Edge proxy.</p>
+<div class="tipstricks">
+	<p>Coding the port number to be retrieved from an environment variable conditionally, as shown in the example above, is considered a best practice by Apigee.&nbsp;</p>
+</div>
+<p>Every environment in Apigee has at least one virtual host. The virtual host defines the HTTP settings for connection with the Apigee organization. All API proxies in an environment share the same virtual hosts. By default, two virtual hosts are available for each environment: <code>default</code> and <code>secure</code>. For more information, see <a href="http://docs.apigee.com/node/17061">http://docs.apigee.com/node/17061</a> and <a href="http://docs.apigee.com/node/14713">http://docs.apigee.com/node/14713</a>.</p>
+<p>The <code>apigeetool deploynodeapp</code> command generates an Apigee Edge proxy wrapper around the Node.js application. When deployed, the Node.js application listens on the default virtual host defined for the environment. The URL for a Node.js application will always be <code>http://{org_name}-{env_name}.apigee.net</code>.</p>
+<h3>Handling incoming requests</h3>
+<p>Like other Apigee Edge applications, if the proxy application is set up to listen on the <code>secure</code> virtual host, then it will accept incoming requests using HTTPS.</p>
+<div class="note">
+	<p>Currently, more advanced setup, including custom CNAME support and custom TLS/SSL certificates, requires assistance from Apigee. For more on the secure virtual host, see <a href="http://docs.apigee.com/node/14713">http://docs.apigee.com/node/14713</a>. See also <a href="#TLS">Understanding support for the tls module</a>.&nbsp;</p>
+</div>
+<h3>Handling outgoing requests</h3>
+<p>In addition to receiving incoming traffic, Node.js applications inside Apigee Edge may use the <code>http</code> and <code>https</code> modules to make outbound requests like any other Node.js application. These modules work just as they always do inside Node.js.</p>
+<div class="note">
+	<p>If you use custom TLS/SSL certificates or trust stores, the Apigee Edge support for outbound requests works differently. Contact Apigee Support if you have questions.</p>
+</div>
+<h2><a id="TLS" name="TLS"></a>Understanding support for the tls module</h2>
+<p>Apigee Edge supports the <a href="http://nodejs.org/api/tls.html">Node.js tls module</a>. This module uses OpenSSL to provide Transport Layer Security (TLS) and/or Secure Socket Layer (SSL) encrypted stream communication. You can use the <code>tls</code> module to create secure connections to backend services from Node.js applications running on Edge.</p>
+<p>To understand how the <code>tls</code> module works on Apigee Edge, it's important to understand how <code>virtual hosts</code> are used on Apigee Edge. Every environment in Apigee has at least one virtual host. The virtual host defines the HTTP settings for connection with the Apigee organization. All API proxies in an environment share the same virtual hosts. By default, two virtual hosts are available for each environment: <code>default</code> and <code>secure</code>. For more information on virtual hosts, see <a href="http://docs.apigee.com/node/17061">http://docs.apigee.com/node/17061</a> and <a href="http://docs.apigee.com/node/14713">http://docs.apigee.com/node/14713</a>.</p>
+<p>Now, let's look at how Apigee Edge handles TLS (SSL) communication for incoming and outgoing requests on Node.js applications:</p>
+<h3>Handling incoming requests</h3>
+<p>Depending on how virtual hosts are configured for your organization, Edge provides these options:</p>
+<ul>
+	<li>If the API proxy is configured to listen on the <code>default</code> virtual host, then it accepts requests over HTTP.</li>
+	<li>If the API proxy is configured to listen on the <code>secure</code> virtual host, then it accepts requests over HTTPS. The URL will be under the <code>apigee.net</code> domain, and a wildcard SSL certificate for <code>*.apigee.net</code> will be used. As long as apps make requests to the <code>apigee.net</code> domain, then the SSL certificate will validate normally.</li>
+</ul>
+<div class="note">
+	<p>To use custom TLS/SSL certificates for inbound traffic, see Apigee Support at the <a href="http://apigee.com/about/support/portal" target="_blank">Support Portal</a><b>.</b></p>
+</div>
+<h3>Handling outgoing requests</h3>
+<p>You can make outgoing requests with the <code>tls</code> module the same way you would normally in Node.js. Basically, you need to add client-side keys and certificates (<code>.pem</code> files) to the <code>resources/node</code> directory and load them inside your script. For information on using the&nbsp;<code>tls</code> module and its methods, see the <a href="http://nodejs.org/api/tls.html">Node.js tls module</a> documentation.</p>
+<h2><a name="Advanced_ScriptTarget_Configuration"></a>Advanced ScriptTarget Configuration</h2>
+<div>In the &lt;TargetEndpoint&gt; definition, the &lt;ScriptTarget&gt; element takes additional optional parameters besides &lt;ResourceURL&gt;. You can also pass command-line arguments and environment variables to a Node.js script using the &lt;EnvironmentVariables&gt; and &lt;Arguments&gt; parameters:</div>
+<pre>
+&lt;TargetEndpoint name="default"&gt;
+  &lt;ScriptTarget&gt;
+     &lt;ResourceURL&gt;node://hello.js&lt;/ResourceURL&gt;
+     <strong>&lt;EnvironmentVariables&gt;</strong>
+         &lt;EnvironmentVariable name="NAME"&gt;VALUE&lt;/EnvironmentVariable&gt; 
+     &lt;/EnvironmentVariables&gt;
+ <strong>    &lt;Arguments&gt;</strong>
+         &lt;Argument&gt;ARG&lt;/Argument&gt;
+     &lt;/Arguments&gt;
+  &lt;/ScriptTarget&gt;
+&lt;/TargetEndpoint&gt;</pre>
+<br />
+<div class="tipstricks">
+	<p>You can get a listing of all environment variables that are set when a Node.js app starts up on Edge by executing this line of code in your Node.js server:<br />
+		<code>console.log('environment variables: ' + JSON.stringify(process.env));</code></p>
+	<p>Variables set include <code>APIGEE_ORGANIZATION</code> and <code>APIGEE_ENVIRONMENT</code>. For example (actual values are omitted):</p>
+	<pre>
+{
+  "TERM": "",
+  "JAVA_HOME": "",
+  "SHLVL": "",
+  "XFILESEARCHPATH": "",
+  "APIGEE_HOME": "",
+  "microkernel_overrideTokenFolder": "",
+  "working_dir": "",
+  "microkernel_host": "",
+  "PWD": "",
+  "microkernel_overrideTokenDirs": "",
+  "LOGNAME": "",
+  "_APIGEE_APP_ID": "",
+  "_": "",
+  "microkernel_defaultTokenFolder": "",
+  "NLSPATH": "",
+  "microkernel_timeout": "",
+  "SHELL": "",
+  "TMPDIR": ""
+  "microkernel_hasMonetization": "",
+  "USE_TOKENIZED_CONFIG": "",
+  "microkernel_org": "",
+  "PATH": "",
+  "microkernel_application": "",
+  "microkernel_installType": "",
+  "microkernel_instanceType": "",
+  "USER": "",
+  "HOME": "",
+  "APIGEE_ORGANIZATION": "",
+  "CONFIG_UTIL_HOME": "",
+  "microkernel_pod": "",
+  "APIGEE_ENVIRONMENT": "",
+  "microkernel_defaultTokenDirs": "",
+  "microkernel_region": "",
+  "LANG": ""
+}
+
+</pre>
+</div>
+<h2>Get help</h2>
+<p>For help, see <b><a href="http://community.apigee.com/content/apigee-customer-support">Apigee Customer Support</a></b>.</p>

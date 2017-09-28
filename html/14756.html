@@ -1,0 +1,47 @@
+<h1> Deploying proxies in the UI </h1>
+[toc]
+<p>All organizations in Apigee Edge, by default, have two environments:&nbsp;<span style="font-family: 'courier new', courier, monospace;">test</span>&nbsp;and&nbsp;<span style="font-family: 'courier new', courier, monospace;">prod</span>. The naming is arbitrary. These environments are merely designed to provide you with one area to work on and test API changes, and another area where APIs are exposed to apps.</p>
+<div class="note">
+	<p>Depending on your role, you may not be able to deploy to all environments. Users can only deploy to the&nbsp;<span style="font-family: 'courier new', courier, monospace;">test</span>&nbsp;environment. If you're an administrator you can deploy to any environment.</p>
+</div>
+<h2><a class="jumplink" name="system"></a>Deployment options</h2>
+<p>You can deploy proxies as revisions or versions. These are distinct concepts, as explained next.</p>
+<h3>About revisions</h3>
+<p>Each environment in an organization can only have one deployed revision of an API proxy. It is common to have a proxy revision in&nbsp;<code>prod</code>&nbsp;while another revision is in&nbsp;<code>test</code>&nbsp;as it's being tested or developed. For example, you could have revision 1 deployed in&nbsp;<span style="font-family: 'courier new', courier, monospace;">test</span>&nbsp;and revision 20 deployed in&nbsp;<span style="font-family: 'courier new', courier, monospace;">prod</span>. You can view deployment of all revisions on the Overview page of the API proxy editor.</p>
+<p><img src="sites/docs/files/proxy_revisions.png" style="border-width: 1px; border-style: solid; margin: 15px;"></p>
+<p>When you create a new revision of an API proxy without changing its base path, then deploy it to an environment in which it's already deployed, the previous version is undeployed and the new revision is deployed in its place. Note that deployment through the management UI might impact inbound calls. To handle and transition inbound calls more gracefully during deployment, use the management API. See the section on seamless deployment in <a href="http://docs.apigee.com/node/8405">http://docs.apigee.com/node/8405</a>.</p>
+<h3>About versions</h3>
+<p>Edge supports multiple version deployments of a proxy in a single environment. Each version must have a different base path (for example <code>/v1</code> and <code>/v2</code>).&nbsp;</p>
+<h2 id="deploying">Deploying and undeploying an API Proxy</h2>
+<p><a href="http://docs.apigee.com/node/23886">Content to be inserted here</a></p>
+<p>To deploy (or undeploy) an API proxy in the management UI:</p>
+<ol>
+	<li>In the API proxy editor, select the revision you want to deploy (or undeploy).</li>
+	<li>Click <strong>Deployment &gt; {environment}</strong> and respond to the confirmation dialog.
+		<p><img src="sites/docs/files/proxy_deploy.png" style="border-width: 1px; border-style: solid; margin: 15px;"></p>
+		If the API proxy base path is the same as another deployed revision in that environment, the former revision is undeployed and the new revision is deployed in its place.<br>
+		For deploying multiple versions in the same environment, see the next section.</li>
+</ol>
+<div class="note">
+	<p>You can also undeploy a revision by performing the previous steps on an already deployed revision, indicated by a green dot next to the environment name.</p>
+</div>
+<h2>Deploying multiple versions of an API proxy to the same environment</h2>
+<p><a href="http://docs.apigee.com/node/23886">Content to be inserted here</a></p>
+<p>You can deploy multiple versions of an API proxy to the same environment (such as&nbsp;<code>test</code>) by performing the following steps:</p>
+<ol>
+	<li>Changing the base path in your API proxy to specify the new version. For example: <code>/v1</code>, <code>/v2</code>, <code>/v3</code>, and so on.</li>
+	<li>Saving the API proxy as a new revision.</li>
+	<li>Deploying the new revision. For example, to the <code>test</code> environment.</li>
+</ol>
+<p>In this scenario, each API proxy can be defined uniquely, with different flows, policies, and configurations, and you can make API calls to each proxy in the&nbsp;<code>test</code>&nbsp;environment.</p>
+<p><strong>To deploy multiple versions of an API proxy to the same environment:</strong></p>
+<ol>
+	<li>Go to the <strong>Develop</strong> page. In the Navigator, select one of the Proxy Endpoint flows (such as the default item or PreFlow).</li>
+	<li>Change the value of the <code>&lt;BasePath&gt;</code> element to reflect the new API proxy version. For example, change <code>v1</code> to <code>v2</code>.</li>
+	<li>Select <strong>Project &gt; Save as New Revision</strong> to save your changes in a new revision.
+		<p><img src="sites/docs/files/proxy_save_new_revision4.png" style="border-width: 1px; border-style: solid; margin: 15px;"></p>
+		At this point, you can make any flow, policy, or other configuration changes you want to the API proxy and click <strong>Save</strong>.</li>
+	<li>Deploy the API proxy revision, which defines new API proxy version, by selecting <strong>Deployment &gt; {environment}</strong>.</li>
+</ol>
+<p>On the Overview page, you can see the multiple API proxy versions, all with different base paths, deployed to the same environment.</p>
+<p><img src="sites/docs/files/proxy_multiple_revisions2.png" style="border-width: 1px; border-style: solid; margin: 15px;"></p>

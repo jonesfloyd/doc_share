@@ -1,0 +1,251 @@
+<h1> JSON Threat Protection policy </h1>
+<img src="sites/docs/files/icon_policy_threat-protection.jpg" />
+<h3>What</h3>
+<p>Minimizes the risk posed by content-level attacks by enabling you to specify limits on various JSON structures, such as arrays and strings.</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Watch a short video on threat protection&nbsp;</h2>
+<div class="video">
+	<p><strong>Video:</strong>&nbsp;Check out this short video about threat protection policies.</p>
+	<div class="collapse" id="demo1">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/rC8kZJgwBFM?list=PLIXjuPlujxxxe3iTmLtgfIBgpMo7iD7fk" width="854"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo1">Show/Hide Video</a></div>
+</div>
+<h2 id="elementreference">Element reference</h2>
+<p>The element reference describes the elements and attributes of the JSONThreatProtection policy.</p>
+<pre>
+&lt;JSONThreatProtection async="false" continueOnError="false" enabled="true" name="JSON-Threat-Protection-1"&gt;
+   &lt;DisplayName&gt;JSON Threat Protection 1&lt;/DisplayName&gt;
+   &lt;ArrayElementCount&gt;20&lt;/ArrayElementCount&gt;
+   &lt;ContainerDepth&gt;10&lt;/ContainerDepth&gt;
+   &lt;ObjectEntryCount&gt;15&lt;/ObjectEntryCount&gt;
+   &lt;ObjectEntryNameLength&gt;50&lt;/ObjectEntryNameLength&gt;
+   &lt;Source&gt;request&lt;/Source&gt;
+   &lt;StringValueLength&gt;500&lt;/StringValueLength&gt;
+&lt;/JSONThreatProtection&gt;</pre>
+<h2>&lt;JSONThreatProtection&gt; attributes</h2>
+<pre>
+&lt;JSONThreatProtection async="false" continueOnError="false" enabled="true" name="JSON-Threat-Protection-1"&gt; </pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2>&lt;ArrayElementCount&gt; element</h2>
+<p>Specifies the maximum number of elements allowed in an array.</p>
+<pre>
+&lt;ArrayElementCount&gt;20&lt;/ArrayElementCount&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">If you do not specify this element, or if you specify a negative integer, the system does not enforce a limit.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;ContainerDepth&gt; element</h2>
+<p>Specifies the maximum allowed containment depth, where the containers are objects or arrays. For example, an array containing an object which contains an object would result in a containment depth of 3.</p>
+<pre>
+&lt;ContainerDepth&gt;10&lt;/ContainerDepth&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">If you do not specify this element, or if you specify a negative integer, the system does not enforce any limit.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;ObjectEntryCount&gt; element</h2>
+<p>Specifies the maximum number of entries allowed in an object.</p>
+<pre>
+&lt;ObjectEntryCount&gt;15&lt;/ObjectEntryCount&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">If you do not specify this element, or if you specify a negative integer, the system does not enforce any limit.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;ObjectEntryNameLength&gt; element</h2>
+<p>Specifies the maximum string length allowed for a property name within an object.</p>
+<pre>
+&lt;ObjectEntryNameLength&gt;50&lt;/ObjectEntryNameLength&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">If you do not specify this element, or if you specify a negative integer, the system does not enforce a limit.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;Source&gt; element</h2>
+<p>Message to be screened for JSON payload attacks. This is most commonly set to <code>request</code>, as you will typically need to validate inbound requests from client apps. When set to <code>message</code>, this element will automatically evaluate the request message when attached to the request flow and the response message when attached to the response flow.</p>
+<pre>
+&lt;Source&gt;request&lt;/Source&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">request</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">
+				<p>String.</p>
+				<p>Valid values: request, response, or message.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;StringValueLength&gt; element</h2>
+<p>Specifies the maximum length allowed for a string value.</p>
+<pre>
+&lt;StringValueLength&gt;500&lt;/StringValueLength&gt;</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">If you do not specify this element, or if you specify a negative integer, the system does not enforce a limit.</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">Integer</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="errorcodes">Error reference</h2>
+<p><a href="http://docs.apigee.com/node/21296">Content to be inserted here</a></p>
+<h2 id="schemas">Schemas</h2>
+<div class="sample-github">
+	<p>See our <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">GitHub repository</a>&nbsp;samples for the most recent schemas.</p>
+</div>
+<h2 id="usagenotes">Usage notes</h2>
+<p>Like XML-based services, APIs that support JavaScript object notation (JSON) are vulnerable to content-level attacks. Simple JSON attacks attempt to use structures that overwhelm JSON parsers to crash a service and induce application-level denial-of-service attacks. All settings are optional and should be tuned to optimize your service requirements against potential vulnerabilities.</p>
+<h3>Threat protection error configuration</h3>
+<p>By default, Edge throws an HTTP 500 Internal Server Error status code and an ExecutionFailed error if a message doesn't make it past a JSON or XML Threat Protection policy. You can change that error behavior with a new organization-level property. When setting org property&nbsp;<code>features.isPolicyHttpStatusEnabled</code>&nbsp;to true, the following behavior occurs:</p>
+<ul>
+	<li>Request: With a threat protection policy attached to any request flow, invalid messages return a 400 status code, along with a corresponding policy error message.</li>
+	<li>Response: With a threat protection policy attached to any response flow, invalid messages still return a 500 status code, and one of the corresponding policy error messages is thrown (rather than just ExecutionFailed).</li>
+</ul>
+<p>Cloud customers must contact&nbsp;<a href="http://community.apigee.com/page/apigee-customer-support">Apigee Support</a>&nbsp;to set the organization property.</p>
+<div class="opdk">
+	<p>Private Cloud customers can set the property with an API call like the following.</p>
+	<div class="warning">
+		<p>When doing a PUT to update organization properties, be sure to include all existing properties in the call to prevent wiping them out.</p>
+	</div>
+	<pre>
+curl -u email:password -X POST -H "Content-type:application/xml" http://host:8080/v1/o/myorg -d \
+"&lt;Organization type="trial" name="MyOrganization"&gt;
+    &lt;Environments/&gt;
+    &lt;Properties&gt;
+        &lt;Property name="features.isPolicyHttpStatusEnabled"&gt;true&lt;/Property&gt;
+        ...
+    &lt;/Properties&gt;
+&lt;/Organization&gt;"
+</pre>
+</div>
+<h2 id="relatedtopics">Related topics</h2>
+<p><a href="http://docs.apigee.com/node/61">http://docs.apigee.com/node/61</a></p>
+<p><a href="http://docs.apigee.com/node/30">http://docs.apigee.com/node/30</a></p>
+<p><a href="http://docs.apigee.com/node/261">http://docs.apigee.com/node/261</a></p>
+<p>&nbsp;</p>

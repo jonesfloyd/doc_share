@@ -1,0 +1,28 @@
+<h1> Import existing consumer keys and secrets </h1>
+<p>Apigee Edge automatically generates consumer keys and consumer secrets when you create developer apps and associate them with API products. (Those procedures are covered in <a href="http://docs.apigee.com/node/158">http://docs.apigee.com/node/158</a>.) However, you may have existing consumer keys and secrets that you want to import into Apigee Edge from another system. Technically, this process isn't an import. It's recreating the existing keys in Edge one at a time.</p>
+<div class="note">
+	<p>Keys and secrets must use alphanumeric characters, and can contain hyphens. Special characters other than hyphens aren't supported.</p>
+</div>
+<ol>
+	<li><strong>Create the consumer keys and secrets</strong>&nbsp;in Edge with the management API, one at a time.<br />
+		See <a href="http://docs.apigee.com/node/19346">http://docs.apigee.com/node/19346</a>. Here's the cURL:<br />
+		<pre>
+curl -H 'Content-type:application/json' -u email:password https://api.enterprise.apigee.com/v1/organizations/{organization}/developers/{developer_email_or_id}/apps/{app_name}/keys/create -X POST -d \
+'{
+  "consumerKey": "key",
+  "consumerSecret": "secret"
+  }'
+</pre>
+	</li>
+	<li><strong>Associate the consumer key/secret with one or more Edge API products</strong>. Doing this allows the imported consumer key (also called the API key) to be used in calls to API proxies where authorization is controlled by products.<br />
+		See&nbsp;<a href="http://docs.apigee.com/node/18876">http://docs.apigee.com/node/18876</a>. Here's the cURL:
+		<pre>
+curl -H 'Content-type:application/json' -u email:password https://api.enterprise.apigee.com/v1/organizations/{organization}/developers/{developer_email_or_id}/apps/{app_name}/keys/{consumer_key_name} -X POST -d \
+'{
+ "apiProducts": ["product_1", "product_2"]
+}'
+</pre>
+	</li>
+	<li>Optionally delete the initial consumer key/secret that Edge auto-generated. However, you can keep the auto-generated key. Both the imported key and the auto-generated key work in API calls, and both are displayed on the Developer App Details page in the management UI.<br />
+		See <a href="http://docs.apigee.com/node/18886">http://docs.apigee.com/node/18886</a>.</li>
+</ol>

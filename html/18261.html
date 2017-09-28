@@ -1,0 +1,40 @@
+<h1> Understanding flows </h1>
+<p>API proxies manage request and response messages using a pipeline processing mode, where the pipeline consists of a sequence of flows. You attach Edge policies to different flows in the pipeline, depending on the type of policy and the action that you want to perform.</p>
+<div class="video">
+	<p>Watch this video for an introduction to API proxy flows.</p>
+	<div class="collapse" id="demo">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/wbNu0g26xPw" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
+</div>
+<h2>What are flows?</h2>
+<p>API proxies define&nbsp;<i>request</i>&nbsp;and&nbsp;<i>response</i>&nbsp;flows that are executed in a specific order. The order allows you to apply logic and behavior at specific points in the API proxy execution. The request and response flows are subdivided into proxy and target segments. Each segment is subdivided into the following flow 'stages':</p>
+<ul>
+	<li><strong>PreFlow</strong>: Always executes before any conditional flows.</li>
+	<li><strong>Conditional flows</strong>: One or more flows, each of which has an associated condition. Conditional flows tell Edge, "When you see this, perform this logic." For example, when an API call is a <code>GET</code> on the <code>/movies</code> resource (the condition), transform the response to JSON (through a policy attached to the conditional flow). Only one flow executes per transaction—the first flow whose condition evaluates to true.<br />
+		<br />
+		In a conditional flow, the condition is evaluated in both the request and response. You cannot have separate conditions for request and response.</li>
+	<li><strong>PostFlow</strong>: Always executes after any conditional flows.&nbsp;</li>
+	<li><strong>PostClientFlow</strong>: An optional flow that executes after the response message has been sent to the requesting client app. (This is a specialized flow, and only MessageLogging policies can be attached to it.)</li>
+</ul>
+<p>The following figure shows a basic request and response exchange between an app and a backend service. In this figure, the&nbsp;ProxyEndpoint and TargetEndpoint&nbsp;have been expanded to show the flows used to process the request and response:&nbsp;</p>
+<p><img alt="" src="sites/docs/files/ProxyToBackendWithFlows_v3.png" style="border-width: 1px; border-style: solid; margin: 15px; height: 487px; width: 700px;" /></p>
+<p>This may look complicated, but it's fairly simple once you understand a few use cases. Flows are executed in the following order in both the Proxy Endpoint and the Target endpoint, first in the request, then in the response.</p>
+<h3>1. PreFlow</h3>
+<p>PreFlows always execute first, and the logic you attach in the PreFlow applies to all calls made to the API proxy. They are useful when you need to make sure that a policy or code executes before anything else happens. For example, you usually don't want an API proxy to waste any resources on an unauthenticated user. Also, you don't want to service an app that has exceeded its quota. To support these requirements, you put security and quota policies in the PreFlow segment. That way, you don't need to worry about a condition failing to evaluate. The policies will always execute before any other processing takes place.&nbsp;</p>
+<h3>2. Conditional Flow</h3>
+<p>API proxy programming starts to get interesting when you implement 'branching' logic for an API. For example, you might want to convert XML to JSON only when the requesting app is running on a mobile device; or create a new HTTP response header when the <code>/foo</code> API resource is called; or you might want to return a targeted ad based on the data in the user's request. You can do this by setting up conditional flows.</p>
+<h3>3. PostFlow</h3>
+<p>As with PreFlow, the logic you attach to the PostFlow applies to all calls made to the API proxy. PostFlow is useful when you need to log some data, send a notification that something happened, transform the message format, and so on.</p>
+<h3>4. PostClientFlow (response only)</h3>
+<p>You can add an optional PostClientFlow to the ProxyEndpoint that executes after the response is returned to the requesting client app. Only MessageLogging policies can be attached to this flow. PostClientFlow reduces API proxy latency and makes information available for logging that is not calculated until after the response is sent, such as the <code>client.send.start.time</code> and <code>client.send.end.time</code>. The flow is used primarily for measuring the time interval between the start and end timestamps for the response message. For more information, see the following:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a></li>
+	<li><a href="https://community.apigee.com/content/kbentry/18196/tutorial-apigee-edge-post-client-flow.html">https://community.apigee.com/content/kbentry/18196/tutorial-apigee-edge-post-client-flow.html</a></li>
+</ul>
+<h2>Learn more</h2>
+<ul>
+	<li><a href="http://docs.apigee.com/node/14717">http://docs.apigee.com/node/14717</a></li>
+	<li><a href="http://docs.apigee.com/node/15211">http://docs.apigee.com/node/15211</a></li>
+	<li><a href="http://docs.apigee.com/node/14723">http://docs.apigee.com/node/14723</a></li>
+</ul>

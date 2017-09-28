@@ -1,0 +1,218 @@
+<h1> Using OAuth2 security with the Apigee Edge management API </h1>
+<p>This topic explains how to make secure management API calls with OAuth2&nbsp;tokens.</p>
+<h2>What is this?</h2>
+<p>The Apigee Edge management server for Edge Cloud now supports OAuth2&nbsp;for user authentication.&nbsp;</p>
+<p>For now, you have the option of using&nbsp;OAuth2 or Basic Authentication.</p>
+<div class="note">
+	<p>In the future, Apigee will deprecate Basic Authentication as a means of authenticating to the management server.</p>
+</div>
+<div class="note">
+	<p>Apigee recommends that you enable 2-factor authentication for your Apigee account. For details, see the article <a href="https://community.apigee.com/articles/26487/two-factor-authentication-using-one-time-passwords.html">Two-Factor Authentication Using One-Time Passwords</a>" on the Apigee Community.</p>
+</div>
+<h2>About OAuth2</h2>
+<p>With OAuth2, you exchange your Edge credentials for an access token and a refresh token that you can then use to make secure calls to the management API. Once you obtain a token, you do not need to exchange your credentials again until the token expires. The refresh token allows you to keep your "session" with the server alive for a longer period without providing your credentials. This scheme is particularly useful when using two-factor authentication.</p>
+<p>You can use&nbsp;OAuth2&nbsp;tokens to access Apigee management server URLs. The default identity provider is at&nbsp;<a href="https://login.apigee.com">https://login.apigee.com</a>.</p>
+<p>If you'd like to read more about OAuth, see <a href="http://docs.apigee.com/api-services/content/oauth-introduction#whatisoauth20">Introduction to OAuth 2.0</a> in the Apigee docs. For a deeper dive, see the <a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0 Authorization Framework specification</a>.</p>
+<h2>How to get OAuth2 tokens</h2>
+<p>To make OAuth2-secure management API calls, you need to obtain OAuth2 access and refresh tokens from Apigee. The UI already does this. If you’re using command line tools against the management API, Apigee provides a set of utility scripts that you can easily install and use to get tokens and make API calls. Installation instructions are provided below in this topic.</p>
+<p>Here is a brief description of the scripts.</p>
+<ul>
+	<li><strong>acurl</strong> - A utility that makes it simpler to use your existing curl-based scripts with OAuth2. The <strong>acurl</strong> script is a wrapper around curl that automatically retrieves an access token from Apigee Edge and then makes a curl call with the proper Authentication header with the token. When the access token expires, <strong>acurl</strong> gets a new one using the refresh token.</li>
+	<li><strong>get_token</strong> - A utility that makes it easy to get an access token. <strong>get_token</strong> exchanges your Apigee credentials for an OAuth2 access and refresh token for accessing the management APIs. The <strong>get_token</strong> script accepts your credentials and prints a valid access token. If a token can be refreshed, it will refresh it and print it out. If the refresh token expires, it will prompt for user credentials. It stores the tokens on disk, ready for use when required. It always prints a valid access token to stdout. From there, you can use Postman or embed it in an environment variable for use in curl.</li>
+</ul>
+<h2>Installing acurl and get_token utilities</h2>
+<p>Apigee provides a ZIP file containing the <strong>acurl</strong> and <strong>get_token</strong> utilities and an install script.</p>
+<ol>
+	<li>Create a directory for the installation ZIP file.</li>
+	<li>Download the ZIP file from Apigee. You can use the following API to download it:<br />
+		<pre>
+curl https://login.apigee.com/resources/scripts/sso-cli/ssocli-bundle.zip -o "ssocli-bundle.zip"</pre>
+	</li>
+	<li>Unzip the file.</li>
+	<li>Run the install script:<br />
+		<pre>
+sudo ./install -b /usr/local/bin</pre>
+	</li>
+</ol>
+<h2>Using acurl</h2>
+<ol>
+	<li>Test the installation by printing command-line help for <strong>acurl</strong><br />
+		<pre>
+acurl -h</pre>
+	</li>
+	<li>Call a management API:<br />
+		<pre>
+acurl https://api.enterprise.apigee.com/v1/o/&lt;orgname&gt; -u &lt;username&gt; -m &lt;Your one-time password if you have two-factor auth enabled&gt;</pre>
+		<br />
+		<strong>Example:</strong><br />
+		<pre>
+acurl https://api.enterprise.apigee.com/v1/o/docs -u jdoe@apigee.com -m 567123</pre>
+	</li>
+</ol>
+<p>A successful call returns information about the organization.</p>
+<h2>How does acurl work?</h2>
+<p><strong>acurl</strong> exchanges your user credentials for OAuth2 access and refresh tokens. It then stores these tokens in your home directory. It uses the refresh token to get new access tokens. When the refresh token expires, <strong>acurl</strong> will fail and prompt you for your Apigee credentials. If you have a valid access token, <strong>acurl</strong> wraps a standard curl command that includes the access token in an Authentication header, like this:</p>
+<pre>
+curl -H "Authentication: Bearer &lt;the access token&gt;" ...</pre>
+<div class="note">
+	<p>When you execute <strong>acurl</strong> the first time, an access token is returned and stored locally in <code>~/.sso-cli</code>, and <strong>acurl</strong> uses it for subsequent calls. Also, you can grab the token and use it to make calls with a REST tool like Postman.</p>
+</div>
+<h2>Using get_token to obtain OAuth2 tokens</h2>
+<p>The <strong>get_token</strong> utility lets you exchange your Apigee credentials for an access and refresh token that you can then use to access Apigee management APIs.</p>
+<p>The <b>get_token</b> utility will put the token files in a directory at ~/.sso-cli. If you don't have such a directory yet, create one before running the utility.</p>
+<ol>
+	<li>Test the installation by printing command-line help for <strong>get_token</strong>:<br />
+		<pre>
+get_token -h</pre>
+	</li>
+	<li>Get a token:<br />
+		<pre>
+get_token</pre>
+	</li>
+</ol>
+<p>If you are getting the token for the first time or if the refresh token has expired the <strong>get_token</strong> will prompt for your username, password and the six digit MFA code (you can press ENTER if you have not enabled MFA). If the username is not entered within 30 seconds, the script times out and exits with a non-zero error. A successful call prints a valid access token to stdout.</p>
+<p>You can also use <strong>get_token</strong> in the following way:</p>
+<pre>
+get_token -u &lt;Apigee email&gt; -m &lt;Your one-time password if you have two-factor auth enabled&gt;</pre>
+<h3>Example:</h3>
+<pre>
+get_token -u &lt;jdoe@apigee.com&gt; -m 567123</pre>
+<p>Here's a way to embed <strong>get_token</strong> directly in a curl call:</p>
+<pre>
+header=`get_token` &amp;&amp; curl -H "Authorization: Bearer $header" -v https://api.enterprise.apigee.com/v1/o/&lt;your organization&gt; </pre>
+<h2>Using get_token to obtain OAuth tokens from SAML assertions</h2>
+<p>Edge supports Security Assertion Markup Language (SAML) 2.0 as the authentication mechanism. SAML provides support for a single sign-on (SSO) environment. By using SAML with Edge, you can support SSO for the Edge UI and API in addition to any other of your services that support SAML.</p>
+<p>After you enable SAML, Basic Auth is disabled for the Edge management API. You must update any API calls and scripts that use Basic Auth to use OAuth2 bearer tokens instead. To do so, use <strong>get_token</strong> to exchange your SAML assertion for an OAuth2 bearer token usable by the Edge management API. You then pass that access token as the <span style="font-family: &quot;courier new&quot;, courier, monospace;">Bearer</span> header to make Edge management API calls. For example:</p>
+<pre>
+&gt; curl -H "Authentication: Bearer &lt;access_token&gt;" https://api.enterprise.apigee.com/v1/organization/orgName</pre>
+<p>See <a href="http://docs.apigee.com/node/23931">http://docs.apigee.com/node/23931</a> for more.</p>
+<h2>Using the API</h2>
+<p>You can get access and refresh tokens using the API, as explained in this section.</p>
+<h3>(POST) Get a new access token</h3>
+<p>Use this API to get a new access token. In the output, you will receive both an access token and a refresh token. If you save the refresh token, you can make subsequent API calls to obtain new access tokens (see "Refresh an access token" below).&nbsp;</p>
+<p><strong>Request URL</strong></p>
+<pre>
+https://login.apigee.com/oauth/token</pre>
+<p><strong>Header parameters</strong></p>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="col" width="164">Parameter</th>
+			<th scope="col" width="695">Value</th>
+		</tr>
+		<tr>
+			<td><code>Content-Type</code></td>
+			<td><code>application/x-www-form-urlencoded</code></td>
+		</tr>
+		<tr>
+			<td><code>Accept</code></td>
+			<td><code>application/json;charset=utf-8</code></td>
+		</tr>
+		<tr>
+			<td><code>Authorization</code></td>
+			<td><code>Basic ZWRnZWNsaTplZGdlY2xpc2VjcmV0</code></td>
+		</tr>
+	</tbody>
+</table>
+<p><strong>Form parameters</strong> <strong>(x-www-form-urlencoded)</strong></p>
+<table class="table" width="882">
+	<tbody>
+		<tr>
+			<th scope="col" width="162">Parameter</th>
+			<th scope="col" width="646">Value</th>
+		</tr>
+		<tr>
+			<td><code>username</code></td>
+			<td><code>&lt;<em>YOUR APIGEE ACCOUNT EMAIL ADDRESS</em>&gt;</code></td>
+		</tr>
+		<tr>
+			<td><code>password</code></td>
+			<td><code>&lt;<em>YOUR APIGEE ACCOUNT PASSWORD</em>&gt;</code></td>
+		</tr>
+		<tr>
+			<td><code>grant_type</code></td>
+			<td><code>password</code></td>
+		</tr>
+		<tr>
+			<td><code>mfa_token</code></td>
+			<td>A valid multi-factor auth token for your account. Required only if you have multi-factor auth (MFA) enabled on your Apigee account. See also <a href="http://docs.apigee.com/node/21036">http://docs.apigee.com/node/21036</a>.</td>
+		</tr>
+	</tbody>
+</table>
+<p><br />
+	<strong>Example using MFA token</strong></p>
+<pre>
+curl -H "Content-Type:application/x-www-form-urlencoded;charset=utf-8" -H "Accept: application/json;charset=utf-8" -H "Authorization: Basic ZWRnZWNsaTplZGdlY2xpc2VjcmV0"  -X POST https://login.apigee.com/oauth/token?mfa_token=&lt;6 Digit token&gt; -d 'username=jdoe@example.com&amp;password=abc123&amp;grant_type=password'</pre>
+<p><strong><strong>Output</strong></strong></p>
+<p>On success, you will get back an access token, refresh token, and related information. For example:</p>
+<pre>
+{
+  "access_token": "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOimYyD8IP2IyYS1jNmNiLTQ4NTgtYjZkMS1mZjkyNGFkYTk1YWUiLCJzdWIiOiI0X0KLSNjZlNjM0ZC0zZjlhLTRiNYmFjNi1kYjE2M2M5OGEzOGYiLCJzY29wZSI6WyJzY2ltLm1lIiwib3BlbmlkIiwicGFzc3dvcmQud3JpdGUiLCJhcHByb3ZhbHMubWUiLCJvYXV0aC5hcHByb3ZhbHMiXSwiY2xpZW50X2lkIjoiZWRnZWNsaSIsImNpZCI6ImVkZ2VjbGkiLCJhenAiOiJlZGdlY2xpIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjQ2NmU2MzRkLTNmOWEtNGI0MS1iYWM2LWRiMTYzYzk4YTM4ZiIsIm9yaWdpbiI6InVzZXJncmlkIiwidXNlcl9uYW1lIjoid3dpdG1hbkBhcGlnZWUuY29tIiwiZW1haWwiOiJ3d2l0bWFuQGFwaWdlZS5jb20iLCJhdXRoX3RpbWUiOjE0NzMyNjU4NzcsImFsIjoyLCJyZXZfc2lnIjoiZTc0ZGY0M2QiLCJpYXQiOjE0NzMyNjU4NzcsImV4cCI6MTQ3MzI2NzY3NywiaXNzIjoiaHR0cHM6Ly9sb2dpbi5hcGlnZWUuY29tL29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXVkIjpbImVkZ2VjbGkiLCJzY2ltIiwib3BlbmlkIiwicGFzc3dvcmQiLCJhcHByb3ZhbHMiLCJvYXV0aCJdfQ.AFuevkeGGUGSPED8leyEKaT-xg1xk_VEiKJLEpipVvQBXIqEc9wqcpm-ZuoatA9DhjASRuFSRaHH8Fasx_vBxEBsUNhRY-GTMw7_8fv4yRMOb2AO3WUl_NWwPkC8XRSI1zCMbAZicojsJ1n3OSP487Mu9dl9ByX5A_QfHV2_cj4l9-SD7u6vOdfdbBxbNMAQkfZLrVIEU8myF2dhKnNeMiuoHSHANsQFcx0_BFA1HnSUnVi4RYj1FlTs9SbcPnS1d7t7eVdxWz_q2OFVXNIBMELAvvM0WhXPYTW3Osve3UvvUs6ekGs-K-RCPSok-4-NJbdCDpZQQTgqHsrf77NTsw",
+  "token_type": "bearer",
+  "refresh_token": "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmZTIIMZWI0ZS00YzFmLTRjOTEtYmY5Mi1mMzZLEMzNjZhMDctciIsInN1YiI6IjQ2NmU2MzRkLTNmOWEtNGI0MS1iY17LLWRiMTYzYzk4YTM4ZiIsInNjb3BlIjpbInNjaW0ubWUiLCJvcGVuaWQiLCJwYXNzd29yZC53cml0ZSIsImFwcHJvdmFscy5tZSIsIm9hdXRoLmFwcHJvdmFscyJdLCJpYXQiOjE0NzMyNjU4NzcsImV4cCI6MTQ3MzM1MDQ3NywiY2lkIjoiZWRnZWNsaSIsImNsaWVudF9pZCI6ImVkZ2VjbGkiLCJpc3MiOiJodHRwczovL2xvZ2luLmFwaWdlZS5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiJ1YWEiLCJncmFudF90eXBlIjoicGFzc3dvcmQiLCJ1c2VyX25hbWUiOiJ3d2l0bWFuQGFwaWdlZS5jb20iLCJvcmlnaW4iOiJ1c2VyZ3JpZCIsInVzZXJfaWQiOiI0NjZlNjM0ZC0zZjlhLTRiNDEtYmFjNi1kYjE2M2M5OGEzOGYiLCJhbCI6MiwicmV2X3NpZyI6ImU3NGRmNDNkIiwiYXVkIjpbImVkZ2VjbGkiLCJzY2ltIiwib3BlbmlkIiwicGFzc3dvcmQiLCJhcHByb3ZhbHMiLCJvYXV0aCJdfQ.kBP5AkbRS7Tnp-5VAfTLVfkUbUer4gFEU6A7g202KTKiXbqTwPSmOIGFTK12XevVPQYmAaSMFAnempWKfY7sjaY7HC7q3mGl53_A18cnkKhtNq15wCnyMom_bX_MYLW1RQPFytJ6akSJ-JkoPFU0x_FQg1JIvub1A8eqQxcR0KP-QRCxYAS4HTjH80vDIxHNt1tg7clmpa3RlHri0dlPVVsSpTXXhkpXRg5QbiWMrpkACSV22c0x0KiNu7GiJ9t5B1S1cxwvx5A520VOCO7hQ7IzmVIcSWcRqI97L7WdCjH_q4105bs2qmW73670MC0UqpUEd-NAuCsY8SVn6eWzbA",
+  "expires_in": 1799,
+  "scope": "scim.me openid password.write approvals.me oauth.approvals",
+  "jti": "9bf2cb2a-c6cb-4858-b6d1-ff924ada95ae"
+}</pre>
+<h3><strong>(POST) Refresh an access token</strong></h3>
+<p>Use this API to get a access token with a refresh token. You'll get back a new access token and refresh token. Save the refresh token to make subequent calls to get a new access token.&nbsp;</p>
+<p><strong><strong>Request URL</strong></strong></p>
+<pre>
+https://login.apigee.com/oauth/token</pre>
+<p><strong><strong>Header parameters</strong></strong></p>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="col" width="164"><strong>Parameter</strong></th>
+			<th scope="col" width="695"><strong>Value</strong></th>
+		</tr>
+		<tr>
+			<td><code>Content-Type</code></td>
+			<td><code>application/x-www-form-urlencoded</code></td>
+		</tr>
+		<tr>
+			<td><code>Accept</code></td>
+			<td><code>application/json;charset=utf-8</code></td>
+		</tr>
+		<tr>
+			<td><code>Authorization</code></td>
+			<td><code>Basic ZWRnZWNsaTplZGdlY2xpc2VjcmV0</code></td>
+		</tr>
+	</tbody>
+</table>
+<p><strong><strong>Form parameters</strong> <strong>(x-www-form-urlencoded)</strong></strong></p>
+<table class="table" width="882">
+	<tbody>
+		<tr>
+			<th scope="col" width="162"><strong>Parameter</strong></th>
+			<th scope="col" width="646"><strong>Value</strong></th>
+		</tr>
+		<tr>
+			<td><code>refresh_token</code></td>
+			<td><code>&lt;<em>YOUR REFRESH TOKEN</em>&gt;</code></td>
+		</tr>
+		<tr>
+			<td><code>grant_type</code></td>
+			<td><code>refresh_token</code></td>
+		</tr>
+	</tbody>
+</table>
+<p><strong><strong>Example</strong></strong></p>
+<pre>
+curl -H "Content-Type:application/x-www-form-urlencoded;charset=utf-8" -H "Accept: application/json;charset=utf-8" -H "Authorization: Basic ZWRnZWNsaTplZGdlY2xpc2VjcmV0" https://login.apigee.com/oauth/token -d 'grant_type=refresh_token&amp;refresh_token=&lt;YOUR REFRESH_TOKEN&gt;'</pre>
+<p><strong><strong>Output</strong></strong></p>
+<p>On success, you will get back a new access token, refresh token, and related information. For example:</p>
+<p><strong>Note:</strong> Save the refresh token to make subsequent calls to get a new access token.&nbsp;</p>
+<pre>
+{
+  "access_token": "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOimYyD8IP2IyYS1jNmNiLTQ4NTgtYjZkMS1mZjkyNGFkYTk1YWUiLCJzdWIiOiI0X0KLSNjZlNjM0ZC0zZjlhLTRiNYmFjNi1kYjE2M2M5OGEzOGYiLCJzY29wZSI6WyJzY2ltLm1lIiwib3BlbmlkIiwicGFzc3dvcmQud3JpdGUiLCJhcHByb3ZhbHMubWUiLCJvYXV0aC5hcHByb3ZhbHMiXSwiY2xpZW50X2lkIjoiZWRnZWNsaSIsImNpZCI6ImVkZ2VjbGkiLCJhenAiOiJlZGdlY2xpIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjQ2NmU2MzRkLTNmOWEtNGI0MS1iYWM2LWRiMTYzYzk4YTM4ZiIsIm9yaWdpbiI6InVzZXJncmlkIiwidXNlcl9uYW1lIjoid3dpdG1hbkBhcGlnZWUuY29tIiwiZW1haWwiOiJ3d2l0bWFuQGFwaWdlZS5jb20iLCJhdXRoX3RpbWUiOjE0NzMyNjU4NzcsImFsIjoyLCJyZXZfc2lnIjoiZTc0ZGY0M2QiLCJpYXQiOjE0NzMyNjU4NzcsImV4cCI6MTQ3MzI2NzY3NywiaXNzIjoiaHR0cHM6Ly9sb2dpbi5hcGlnZWUuY29tL29hdXRoL3Rva2VuIiwiemlkIjoidWFhIiwiYXVkIjpbImVkZ2VjbGkiLCJzY2ltIiwib3BlbmlkIiwicGFzc3dvcmQiLCJhcHByb3ZhbHMiLCJvYXV0aCJdfQ.AFuevkeGGUGSPED8leyEKaT-xg1xk_VEiKJLEpipVvQBXIqEc9wqcpm-ZuoatA9DhjASRuFSRaHH8Fasx_vBxEBsUNhRY-GTMw7_8fv4yRMOb2AO3WUl_NWwPkC8XRSI1zCMbAZicojsJ1n3OSP487Mu9dl9ByX5A_QfHV2_cj4l9-SD7u6vOdfdbBxbNMAQkfZLrVIEU8myF2dhKnNeMiuoHSHANsQFcx0_BFA1HnSUnVi4RYj1FlTs9SbcPnS1d7t7eVdxWz_q2OFVXNIBMELAvvM0WhXPYTW3Osve3UvvUs6ekGs-K-RCPSok-4-NJbdCDpZQQTgqHsrf77NTsw",
+  "token_type": "bearer",
+  "refresh_token": "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJmZTIIMZWI0ZS00YzFmLTRjOTEtYmY5Mi1mMzZLEMzNjZhMDctciIsInN1YiI6IjQ2NmU2MzRkLTNmOWEtNGI0MS1iY17LLWRiMTYzYzk4YTM4ZiIsInNjb3BlIjpbInNjaW0ubWUiLCJvcGVuaWQiLCJwYXNzd29yZC53cml0ZSIsImFwcHJvdmFscy5tZSIsIm9hdXRoLmFwcHJvdmFscyJdLCJpYXQiOjE0NzMyNjU4NzcsImV4cCI6MTQ3MzM1MDQ3NywiY2lkIjoiZWRnZWNsaSIsImNsaWVudF9pZCI6ImVkZ2VjbGkiLCJpc3MiOiJodHRwczovL2xvZ2luLmFwaWdlZS5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiJ1YWEiLCJncmFudF90eXBlIjoicGFzc3dvcmQiLCJ1c2VyX25hbWUiOiJ3d2l0bWFuQGFwaWdlZS5jb20iLCJvcmlnaW4iOiJ1c2VyZ3JpZCIsInVzZXJfaWQiOiI0NjZlNjM0ZC0zZjlhLTRiNDEtYmFjNi1kYjE2M2M5OGEzOGYiLCJhbCI6MiwicmV2X3NpZyI6ImU3NGRmNDNkIiwiYXVkIjpbImVkZ2VjbGkiLCJzY2ltIiwib3BlbmlkIiwicGFzc3dvcmQiLCJhcHByb3ZhbHMiLCJvYXV0aCJdfQ.kBP5AkbRS7Tnp-5VAfTLVfkUbUer4gFEU6A7g202KTKiXbqTwPSmOIGFTK12XevVPQYmAaSMFAnempWKfY7sjaY7HC7q3mGl53_A18cnkKhtNq15wCnyMom_bX_MYLW1RQPFytJ6akSJ-JkoPFU0x_FQg1JIvub1A8eqQxcR0KP-QRCxYAS4HTjH80vDIxHNt1tg7clmpa3RlHri0dlPVVsSpTXXhkpXRg5QbiWMrpkACSV22c0x0KiNu7GiJ9t5B1S1cxwvx5A520VOCO7hQ7IzmVIcSWcRqI97L7WdCjH_q4105bs2qmW73670MC0UqpUEd-NAuCsY8SVn6eWzbA",
+  "expires_in": 1799,
+  "scope": "scim.me openid password.write approvals.me oauth.approvals",
+  "jti": "9bf2cb2a-c6cb-4858-b6d1-ff924ada95ae"
+}</pre>
+<h2><strong>Usage notes</strong></h2>
+<p>Both acurl and get_token scripts hit the SSO endpoint specified in the <code>SSO_LOGIN_URL</code> environment variable. The default endpoint is <code>https://login.apigee.com</code>.</p>
+<h2><strong>Enabling 2-factor security</strong></h2>
+<p>You can optionally enable 2-factor security for your Apigee Edge account. When 2-factor security is enabled, you provide a randomly generated number along with your user credentials when logging into your Apigee account. See also <a href="http://docs.apigee.com/node/21036">http://docs.apigee.com/node/21036</a>. At this time, you can use acurl to make calls whether or not you have 2-factor security enabled.</p>

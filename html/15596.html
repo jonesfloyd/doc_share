@@ -1,0 +1,613 @@
+<h1> Populate Cache policy </h1>
+<style type="text/css">
+.nav-tabs{
+			    border-bottom:1px solid #c3c3c3;
+			}
+			
+			.nav-tabs > li > a{
+			    background:#e8e8e8;
+			    border:1px solid #c3c3c3;
+			    color:#555555;
+			}
+			
+			.nav-tabs > li > a:hover{
+			    border:1px solid #c3c3c3;
+			    color:#555555;
+			}
+			
+			.nav-tabs > .active > a,
+			.nav-tabs > .active > a:hover{
+			    border:1px solid #c3c3c3;
+			    border-bottom-color:transparent;
+			    color:#b03501;
+			    font-weight:500;
+			    outline:1;
+			}
+			h2{
+			    margin-top:30px;
+			}
+			h3{
+			    margin-top:20px;
+			}
+			pre{
+			    margin-top:20px;
+			}</style>
+<img src="sites/docs/files/icon_policy_traffic-management.jpg" />
+<h3>What</h3>
+<p>Configures how cached values should be written at runtime.</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="element_reference">Element reference</h2>
+<p class="summary">The following lists the elements you can configure on this policy.</p>
+<pre class="prettyprint">
+&lt;PopulateCache async="false" continueOnError="false" enabled="true" name="Populate-Cache-1"&gt;
+    &lt;DisplayName&gt;Populate Cache 1&lt;/DisplayName&gt;
+    &lt;Properties/&gt;
+    &lt;CacheKey&gt;
+        &lt;Prefix/&gt;
+        &lt;KeyFragment ref=""/&gt;
+    &lt;/CacheKey&gt;
+    &lt;!-- Omit this element if you're using the included shared cache. --&gt;
+    &lt;CacheResource/&gt;
+    &lt;Scope&gt;Exclusive&lt;/Scope&gt;
+    &lt;ExpirySettings&gt;
+        &lt;TimeoutInSec&gt;300&lt;/TimeoutInSec&gt;
+    &lt;/ExpirySettings&gt;
+    &lt;Source&gt;flowVar&lt;/Source&gt;
+&lt;/PopulateCache&gt;</pre>
+<h2>&lt;PopulateCache&gt; attributes</h2>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2 id="CacheKeyElement">&lt;CacheKey&gt; element</h2>
+<p class="summary">Configures a unique pointer to a piece of data stored in the cache.</p>
+<p class="summary">Cache keys are limited to a size of 2 KB.</p>
+<pre>
+&lt;CacheKey&gt;
+    &lt;Prefix&gt;<i>string</i>&lt;/Prefix&gt;
+    &lt;KeyFragment ref="<i>variable_name</i>" /&gt;
+    &lt;KeyFragment&gt;<em>literal_string</em>&lt;/KeyFragment&gt;
+&lt;/CacheKey&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Required</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p class="description"><code>&lt;CacheKey&gt;</code> constructs the name of each piece of data stored in the cache.</p>
+<p class="description">At runtime, <code>&lt;KeyFragment&gt;</code> values are prepended with either the <code>&lt;Scope&gt;</code> element value or <code>&lt;Prefix&gt;</code> value. For example, the following results in a cache key of <code>UserToken__apiAccessToken__</code>&lt;<i>value_of_client_id&gt;</i>:</p>
+<pre>
+&lt;CacheKey&gt;
+    &lt;Prefix&gt;UserToken&lt;/Prefix&gt;
+    &lt;KeyFragment&gt;apiAccessToken&lt;/KeyFragment&gt;
+    &lt;KeyFragment ref="request.queryparam.client_id" /&gt;
+&lt;/CacheKey&gt;</pre>
+<p>You use the <code>&lt;CacheKey&gt;</code> element in conjunction with <code>&lt;Prefix&gt;</code> and <code>&lt;Scope&gt;</code>. For more information, see <a href="http://docs.apigee.com/node/15591">http://docs.apigee.com/node/15591</a>.</p>
+<h2><a id="CacheResourceElement" name="CacheResourceElement"></a>&lt;CacheResource&gt; element</h2>
+<p class="summary">Specifies the cache where messages should be stored.</p>
+<p>Omit this element completely if this policy (and your corresponding LookupCache and InvalidateCache policies) is using the included shared cache.</p>
+<pre>
+&lt;CacheResource&gt;<i>cache_to_use</i>&lt;/CacheResource&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>For more about configuring caches, see <a href="http://docs.apigee.com/node/10170">http://docs.apigee.com/node/10170</a>.</p>
+<h2 id="ExpiryDateElement">&lt;ExpirySettings&gt;/&lt;ExpiryDate&gt; element</h2>
+<p class="summary">Specifies the date on which a cache entry should expire. Use the form <code> mm-dd-yyyy</code>.</p>
+<pre>
+&lt;ExpirySettings&gt;
+    &lt;ExpiryDate ref="{<i>date_variable</i>}"&gt;<i>expiration_date</i>&lt;/ExpiryDate&gt;
+&lt;/ExpirySettings&gt;
+</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table class="table" width="700">
+	<tbody>
+		<tr>
+			<th scope="col" width="118">Attribute</th>
+			<th scope="col" width="382">Description</th>
+			<th scope="col" width="382">Default</th>
+			<th scope="col" width="92">Presence</th>
+			<th scope="col" width="88">Type</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>The variable from which to get the value. Should not be used if this element contains a literal value.</p>
+			</td>
+			<td>N/A</td>
+			<td>Optional</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="ExpirySettingsElement">&lt;ExpirySettings&gt; element</h2>
+<p class="summary">Specifies when a cache entry should expire. When present,&nbsp;<code>&lt;TimeoutInSec&gt;</code>&nbsp;overrides both&nbsp;<code>&lt;TimeOfDay&gt;</code>&nbsp;and&nbsp;<code>&lt;ExpiryDate&gt;</code>.</p>
+<p class="summary">As described in&nbsp;<a href="http://docs.apigee.com/node/18281">http://docs.apigee.com/node/18281</a>, an entry is first created in in-memory cache (L1)&nbsp;and is moved to persistent database cache (L2) when in-memory limits are hit. The expiration coundown starts when the entry enters L1 cache. When the entry is moved to L2 cache, the expiration countdown restarts.</p>
+<p class="summary">For example, let's say a new entry with a 5-minute expiration is added to L1 cache. After 2 minutes, the message processor in-memory limits are reached, and the entry is moved to L2 cache. The entry's expiration countdown restarts, and it now has 5 minutes until it expires. So in this case, the entry actually remains in cache for 7 minutes.</p>
+<pre>
+&lt;ExpirySettings&gt;
+  &lt;TimeOfDay ref="time_variable"&gt;expiration_time&lt;/TimeOfDay&gt;
+  &lt;TimeoutInSec ref="duration_variable"&gt;seconds_until_expiration&lt;/TimeoutInSec&gt;
+  &lt;ExpiryDate ref="date_variable"&gt;expiration_date&lt;/ExpiryDate&gt;
+&lt;/ExpirySettings&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Required</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="KeyFragmentElement">&lt;CacheKey&gt;/&lt;KeyFragment&gt; element</h2>
+<p class="summary">Specifies a value that should be included in the cache key, creating a namespace for matching requests to cached responses.</p>
+<pre>
+&lt;KeyFragment ref="<i>variable_name</i>"/&gt;
+&lt;KeyFragment&gt;<i>literal_string</i>&lt;/KeyFragment&gt;
+</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p class="description">This can be a key (a static name that you provide) or a value (a dynamic entry set by referencing a variable). All specified fragments combined (plus the prefix) are concatenated to create the cache key.</p>
+<pre>
+&lt;KeyFragment&gt;apiAccessToken&lt;/KeyFragment&gt;
+&lt;KeyFragment ref="request.queryparam.client_id" /&gt;
+</pre>
+<p>You use the <code>&lt;KeyFragment&gt;</code> element in conjunction with <code>&lt;Prefix&gt;</code> and <code>&lt;Scope&gt;</code>. For more information, see <a href="http://docs.apigee.com/node/15591">http://docs.apigee.com/node/15591</a>.</p>
+<h3>Attributes</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Attribute</th>
+			<th>Type</th>
+			<th>Default</th>
+			<th>Required</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="firstColumn">ref</td>
+			<td>string</td>
+			<td>&nbsp;</td>
+			<td>No</td>
+			<td>
+				<div class="annotation">
+					<p class="summary">The variable from which to get the value. Should not be used if this element contains a literal value.</p>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="PrefixElement">&lt;CacheKey&gt;/&lt;Prefix&gt; element</h2>
+<p class="summary">Specifies a value to use as a cache key prefix.</p>
+<pre>
+&lt;Prefix&gt;<i>prefix_string</i>&lt;/Prefix&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p class="description">Use this value instead of <code>&lt;Scope&gt;</code> when you want to specify your own value rather than a <code>&lt;Scope&gt;</code> -enumerated value. If defined, <code>&lt;Prefix&gt;</code> prepends the cache key value for entries written to the cache. A <code>&lt;Prefix&gt;</code> element value overrides a <code>&lt;Scope&gt;</code> element value.</p>
+<p class="description">You use the <code>&lt;Prefix&gt;</code> element in conjunction with <code>&lt;CacheKey&gt;</code> and <code>&lt;Scope&gt;</code>. For more information, see <a href="http://docs.apigee.com/node/15591">http://docs.apigee.com/node/15591</a>.</p>
+<h2 id="ScopeElement">&lt;Scope&gt; element</h2>
+<p class="summary">Enumeration used to construct a prefix for a cache key when a <code>&lt;Prefix&gt;</code> element is not provided in the <code>&lt;CacheKey&gt;</code> element.</p>
+<pre>
+&lt;Scope&gt;<i>scope_enumeration</i>&lt;/Scope&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>"Exclusive"</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p class="description">The <code>&lt;Scope&gt;</code> setting determines a cache key that is prepended according to the <code>&lt;Scope&gt;</code> value. For example, a cache key would take the following form when scope is set to <code>Exclusive</code> : <i> orgName__envName__apiProxyName__deployedRevisionNumber__proxy|TargetName__ </i> [ <i> serializedCacheKey </i> ].</p>
+<p class="description">If a <code>&lt;Prefix&gt;</code> element is present in <code>&lt;CacheKey&gt;</code>, it supercedes a <code>&lt;Scope&gt;</code> element value. Valid values include the enumerations below.</p>
+<p class="description">You use the <code>&lt;Scope&gt;</code> element in conjunction with <code>&lt;CacheKey&gt;</code> and <code>&lt;Prefix&gt;</code>. For more information, see <a href="http://docs.apigee.com/node/15591">http://docs.apigee.com/node/15591</a>.</p>
+<h3>Acceptable values</h3>
+<table class="table">
+	<tbody>
+		<tr>
+			<td><code>Global</code></td>
+			<td>
+				<p class="summary">Cache key is shared across all API proxies deployed in the environment. Cache key is prepended in the form&nbsp;<i> orgName </i> __ <i> envName </i> __.</p>
+				<p>If you define a <code>&lt;CacheKey&gt;</code> entry with the <code>&lt;KeyFragment&gt;</code> apiAccessToken and a <code>&lt;Global&gt;</code> scope, each entry is stored as <code>orgName__envName__apiAccessToken</code>, followed by the serialized value of the access token. For an API proxy deployed in an environment called 'test' in an organization called 'apifactory', access tokens would be stored under the following cache key: <code>apifactory__test__apiAccessToken</code>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td><code>Application</code></td>
+			<td>
+				<div class="annotation">
+					<p class="summary">API proxy name is used as the prefix.</p>
+					<p class="summary">Cache key is prepended in the form <i>orgName__envName__apiProxyName</i>.</p>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td><code>Proxy</code></td>
+			<td>
+				<div class="annotation">
+					<p class="summary">ProxyEndpoint configuration is used as the prefix.</p>
+					<p class="summary">Cache key is prepended in the form <i> orgName__envName__apiProxyName__deployedRevisionNumber__proxyEndpointName </i> .</p>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td><code>Target</code></td>
+			<td>
+				<div class="annotation">
+					<p class="summary">TargetEndpoint configuration is used as the prefix.</p>
+					<p class="summary">Cache key prepended in the form <i> orgName__envName__apiProxyName__deployedRevisionNumber__targetEndpointName </i> .</p>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td><code>Exclusive</code></td>
+			<td>
+				<p class="summary">Default. This is the most specific, and therefore presents minimal risk of namespace collisions within a given cache.</p>
+				<p>Prefix is one of two forms:</p>
+				<ul>
+					<li>If the policy is attached to the <code>ProxyEndpoint</code> flow, prefix is of the form <i>ApiProxyName_ProxyEndpointName</i>.</li>
+					<li>If the policy is attached at <code>TargetEndpoint</code>, prefix is of the form <i>ApiProxyName_TargetName</i>.</li>
+				</ul>
+				<p>Cache key prepended in the form <i> orgName__envName__apiProxyName__deployedRevisionNumber__proxyNameITargetName</i></p>
+				<p>For example, the full string might look like this:</p>
+				<pre>
+apifactory__test__weatherapi__16__default__apiAccessToken</pre>
+				.</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="SourceElement">&lt;Source&gt; element</h2>
+<p class="summary">Specifies the variable whose value should be written to the cache.</p>
+<pre>
+&lt;Source&gt;<i>source_variable</i>&lt;/Source&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Required</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="TimeOfDayElement">&lt;ExpirySettings&gt;/&lt;TimeOfDay&gt; element</h2>
+<p><span style="font-size: 12px;">The time of day at which a cache entry should expire. Use the form </span><code style="font-size: 12px;"> HH:mm:ss</code><span style="font-size: 12px;">. When present, this element's sibling, </span><code style="font-size: 12px;">&lt;TimeoutInSec&gt;</code><span style="font-size: 12px;">, overrides </span><code style="font-size: 12px;">&lt;TimeOfDay&gt;</code><span style="font-size: 12px;">.</span></p>
+<p>Enter time of day in the format HH:mm:ss, where HH represents the hour on a 24-hour clock. For example, 14:30:00 for 2:30 in the afternoon.</p>
+<p>For the time of day, the default locale and time zone will vary depending on where the code is running (which isn't knowable when you configure the policy). For information on configuring your locale, see <a href="http://docs.apigee.com/node/10170">http://docs.apigee.com/node/10170</a>.</p>
+<pre>
+&lt;ExpirySettings&gt;
+    &lt;TimeOfDay ref="<i>time_variable</i>"&gt;<i>expiration_time</i>&lt;/TimeOfDay&gt;
+&lt;/ExpirySettings&gt;
+</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table class="table" width="700">
+	<tbody>
+		<tr>
+			<th scope="col" width="118">Attribute</th>
+			<th scope="col" width="382">Description</th>
+			<th scope="col" width="382">Default</th>
+			<th scope="col" width="92">Presence</th>
+			<th scope="col" width="88">Type</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>Variable with the expiration time value.</td>
+			<td>N/A</td>
+			<td>Optional</td>
+			<td>String<br />
+				&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="TimeoutInSecElement">&lt;ExpirySettings&gt;/&lt;TimeoutInSec&gt; element</h2>
+<p>The number of seconds after which a cache entry should expire.</p>
+<pre>
+&lt;ExpirySettings&gt;
+    &lt;TimeoutInSec ref="<i>duration_variable</i>"&gt;<i>seconds_until_expiration</i>&lt;/TimeoutInSec&gt;
+&lt;/ExpirySettings&gt;
+</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>Integer</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<table class="table" width="700">
+	<tbody>
+		<tr>
+			<th scope="col" width="118">Attribute</th>
+			<th scope="col" width="382">Description</th>
+			<th scope="col" width="382">Default</th>
+			<th scope="col" width="92">Presence</th>
+			<th scope="col" width="88">Type</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>Variable with the timeout value.</td>
+			<td style="vertical-align: top;">
+				<div>N/A</div>
+			</td>
+			<td>Optional</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="usage_notes">Usage notes</h2>
+<p>The maximum size for each cached object is 512 kb.&nbsp;</p>
+<p>Use this policy for general purpose caching. At runtime, the <code>&lt;PopulateCache&gt;</code> policy writes data from the variable you specified in the <code>&lt;Source&gt;</code> element to the cache you specified in the <code>&lt;CacheResource&gt;</code> element. You can use the <code>&lt;CacheKey&gt;</code>, <code>&lt;Scope&gt;</code>, and <code>&lt;Prefix&gt;</code> elements to specify a key that you can use from the <code>&lt;LookupCache&gt;</code> policy to retrieve the value. Use the <code>&lt;ExpirySettings&gt;</code> element to configure when the cached value should expire.</p>
+<p>General purpose caching with the PopulateCache policy, <a href="http://docs.apigee.com/node/15581">http://docs.apigee.com/node/15581</a>, and <a href="http://docs.apigee.com/node/15586">http://docs.apigee.com/node/15586</a> uses either a cache you configure or a shared cache that's included by default. In most cases, the underlying shared cache should meet your needs. To use this cache, simply omit the <code>&lt;CacheResource&gt;</code> element.</p>
+<p>For more about the underlying data store, see <a href="http://docs.apigee.com/node/18281">http://docs.apigee.com/node/18281</a>. For more about configuring caches, see <a href="http://docs.apigee.com/node/10170">http://docs.apigee.com/node/10170</a>.</p>
+<h2>Error codes</h2>
+<p><a href="http://docs.apigee.com/node/21321">Content to be inserted here</a></p>

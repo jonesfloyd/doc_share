@@ -1,0 +1,109 @@
+<h1> Implementing the password grant type </h1>
+<p>[toc]</p>
+<p>&nbsp;</p>
+<p>The resource owner password (or "password") grant type is mostly used in cases where the app is highly trusted. In this configuration, the user provides his resource server credentials (username/password) to the client app, which sends them in an access token request to Apigee Edge. An identity server validates the credentials, and if they are valid, Edge proceeds to mint an access token and returns it to the app.</p>
+<h2>About this topic</h2>
+<p>This topic offers a general description and overview of the OAuth 2.0 resource owner password grant type flow and discusses how to implement this flow on Apigee Edge.&nbsp;</p>
+<h2>Examples you might find useful</h2>
+<ul>
+	<li><a href="http://docs.apigee.com/api-services/content/access-tokens#requestinganaccesstokenpasswordgranttype">Requesting an accesstoken: Password grant type</a>: Shows you how to form a token request, configure the OAuthV2 policy for password grant type, and how to configure an endpoint for the policy in Edge.&nbsp;</li>
+	<li><a href="https://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-validate-key-secret">oauth-validate-key-secret</a>: A sample proxy in GitHub that you can deploy to Edge and try out. It is an end-to-end example featuring the password grant type. It demonstrates a best practice, which is to authenticate the client app's credentials (key/secret) before sending the user's credentials to an identity provider.&nbsp;</li>
+</ul>
+<h2>Video</h2>
+<div class="video">
+	<p><strong>Video:&nbsp;</strong>Check out this video on implementing the password grant type.&nbsp;</p>
+	<div class="collapse" id="demo2">
+		<div style="text-align: left;">
+			<p><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/WWWUzSTaIls" width="420"></iframe></p>
+		</div>
+	</div>
+	<div id="collapsible_2"><a class="btn" data-toggle="collapse" href="#demo2">Show/Hide Video</a></div>
+</div>
+<h2>Use cases</h2>
+<p>This grant type is intended for highly trusted or privileged apps because the user is required to give his resource server credentials to the app. Typically, the app provides a login screen where the user enters her credentials.</p>
+<h2>Flow diagram</h2>
+<p>The following flow diagram illustrates the resource owner password grant type flow with Apigee Edge serving as the authorization server.&nbsp;</p>
+<p><strong>Tip:</strong> To see a larger version of this diagram, right-click it and open it in a new tab, or save it and open it in an image viewer.&nbsp;</p>
+<p><img alt="" src="sites/docs/files/password-grant-flow-diagram.png" style="width: 800px; height: 452px; border-width: 1px; border-style: solid;" /></p>
+<p>&nbsp;</p>
+<h2>Steps in the password grant type flow</h2>
+<p>Here is a summary of the steps required to implement the password grant type where Apigee Edge serves as the authorization server.&nbsp;</p>
+<p><strong>Prerequisite:</strong>&nbsp;The client app must be registered with Apigee Edge to obtain the client ID and client secret keys. See&nbsp;<a href="http://apigee.com/docs/api-services/content/registering-client-apps">Registering client apps</a>&nbsp;for details.</p>
+<h3>1. User initiates the flow and enters credentials</h3>
+<p>When the app needs to access the user's protected resources (for example, the user clicks a button in the app), the user is redirected to a login form. &nbsp;</p>
+<h3>2. App requests an access token from Apigee Edge</h3>
+<p>The app sends an access token request, including the user's credentials, to a GenerateAccessToken endpoint on Apigee Edge.</p>
+<div class="note">
+	<p>For information on configuring endpoints, including the default OAuth endpoints, see <a href="http://docs.apigee.com/node/17876">http://docs.apigee.com/node/17876</a>.&nbsp;</p>
+</div>
+<p>Here is a sample POST request, which includes the required parameters for this grant type:</p>
+<pre style="margin-top: 18px; margin-bottom: 9px; padding: 10px; font-family: Courier, monospace; font-size: 13px; color: rgb(72, 72, 72); border-radius: 4px; line-height: 18px; white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; border: 1px solid rgb(210, 209, 185) !important; background-color: rgb(253, 246, 227);">
+$ curl -i \
+  -X POST \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'Authorization: Basic c3FIOG9vSGV4VHo4QzAySVg5T1JvNnJoZ3ExaVNyQWw6WjRsanRKZG5lQk9qUE1BVQ' \
+  -d 'grant_type=password&amp;username=the-user-name&amp;password=the-users-password' \
+  https://docs-test.apigee.net/oauth/token</pre>
+<p>Alternatively, that command could be performed as the following, using the -u option to curl to create the base64-encoded Basic Authentication header for you.</p>
+<pre style="margin-top: 18px; margin-bottom: 9px; padding: 10px; font-family: Courier, monospace; font-size: 13px; color: rgb(72, 72, 72); border-radius: 4px; line-height: 18px; white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; border: 1px solid rgb(210, 209, 185) !important; background-color: rgb(253, 246, 227);">
+$ curl -i \
+  -X POST \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -u sqH8ooHexTz8C02IX9ORo6rhgq1iSrAl:Z4ljtJdneBOjPMAU \
+  -d 'grant_type=password&amp;username=the-user-name&amp;password=the-users-password' \
+  https://docs-test.apigee.net/oauth/token</pre>
+<p>(Each of those commands should be all on one line.)</p>
+<p>The user credentials are contained in the form parameters, while the client credentials are encoded in the HTTP basic authentication header. For a detailed description of this API call, including details about the required Basic Auth header, see the password grant section of "<a href="http://apigee.com/docs/api-services/content/asking-tokens#requestinganaccesstokenpasswordgranttype">Requesting access tokens and authorization codes</a>".</p>
+<h3>3. Edge validates the client app</h3>
+<p>Before sending the user's username and password to an identity provider, Edge needs to know that the client app making the request is a valid, trusted app. One way to do this is to use API key authentication on the API call. In some cases, you might wish to validate both the client key and secret. There's a sample proxy that illustrates this allternate technique in the <a href="https://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-validate-key-secret">api-platform-samples repository on GitHub</a>.&nbsp;</p>
+<h3>4. Edge processes the login credentials</h3>
+<p>After the client app is validated, you can use a Service Callout or JavaScript policy to call the identity service, sending in the user's credentials. For example, it could be an LDAP service or any service that you wish to use to validate the credentials. For details on these policies, see <a href="http://docs.apigee.com/node/227">http://docs.apigee.com/node/227</a> and <a href="http://docs.apigee.com/node/245">http://docs.apigee.com/node/245</a>.&nbsp;</p>
+<div class="note">
+	<p>The <a href="#learn">Apigee Learn example</a> gives a good demonstration of this pattern.&nbsp;</p>
+</div>
+<p>If the identity service validates the credentials, and returns a 200 response, then Edge will continue processing the request; otherwise, Edge stops processing and returns an error to the client app.&nbsp;</p>
+<h3>5. The OAuthV2 policy executes</h3>
+<p>If the credentials are valid, the next processing step is to execute an OAuthV2 policy configured for the password grant type. Here is an example. The &lt;UserName&gt; and &lt;PassWord&gt; elements are required, and you can retrieve them from the flow variables that were saved with the ExtractVariables policy. For detailed reference information on this policy, see <a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a>.</p>
+<pre>
+&lt;OAuthV2 name="GetAccessToken"&gt;
+  &lt;Operation&gt;GenerateAccessToken&lt;/Operation&gt;
+  &lt;ExpiresIn&gt;360000000&lt;/ExpiresIn&gt; 
+  &lt;SupportedGrantTypes&gt; 
+  &lt;GrantType&gt;password&lt;/GrantType&gt; 
+    &lt;/SupportedGrantTypes&gt; 
+  &lt;GrantType&gt;request.queryparam.grant_type&lt;/GrantType&gt; 
+  &lt;UserName&gt;login&lt;/UserName&gt;
+  &lt;PassWord&gt;password&lt;/PassWord&gt;
+  &lt;GenerateResponse/&gt; 
+&lt;/OAuthV2&gt;
+</pre>
+<div>&nbsp;</div>
+<p>If this policy succeeds, a response is generated back to the client containing an access token. The response is in JSON format. Here's an example. Note that access_token is one of the elements:</p>
+<pre style="margin-top: 18px; margin-bottom: 9px; padding: 10px; font-family: Courier, monospace; font-size: 13px; color: rgb(72, 72, 72); border-radius: 4px; line-height: 18px; white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; border: 1px solid rgb(210, 209, 185) !important; background-color: rgb(253, 246, 227);">
+{
+    "issued_at": "1420258685042",
+    "scope": "READ",
+    "application_name": "ce1e94a2-9c3e-42fa-a2c6-1ee01815476b",
+    "refresh_token_issued_at": "1420258685042",
+    "status": "approved",
+    "refresh_token_status": "approved",
+    "api_product_list": "[PremiumWeatherAPI]",
+    "expires_in": "1799",
+    "developer.email": "tesla@weathersample.com",
+    "organization_id": "0",
+    "token_type": "BearerToken",
+    "refresh_token": "IFl7jlijYuexu6XVSSjLMJq8SVXGOAAq",
+    "client_id": "5jUAdGv9pBouF0wOH5keAVI35GBtx3dT",
+    "access_token": "I6daIgMSiUgYX1K2qgQWPi37ztS6",
+    "organization_name": "docs",
+    "refresh_token_expires_in": "0",
+    "refresh_count": "0"
+}</pre>
+<h3>5. The client calls the protected API</h3>
+<p>Now, with a valid access code, the client can make calls to the protected API. In this scenario, requests are made to Apigee Edge (the proxy), and Edge is responsible for validating the access token before passing the API call along to the target resource server. Access tokens are passed in an Authorization header. For example:</p>
+<pre class="terminal prettyprint prettyprinted" style="margin-top: 18px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 13px; color: rgb(208, 208, 208); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+<span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);">$ curl </span><span class="pun" style="margin: 0px; padding: 0px; color: rgb(102, 102, 0);">-</span><span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);">H </span><span class="str" style="margin: 0px; padding: 0px; color: rgb(0, 0, 187);">"Authorization: Bearer <span style="color: rgb(72, 72, 72); line-height: 18px;">I6daIgMSiUgYX1K2qgQWPi37ztS6</span>
+</span><span class="str" style="margin: 0px; padding: 0px; color: rgb(0, 0, 187);">"</span><span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);"> http</span><span class="pun" style="margin: 0px; padding: 0px; color: rgb(102, 102, 0);">:</span><span class="com" style="margin: 0px; padding: 0px; color: rgb(162, 0, 0);">//{org_name}-test.apigee.net/weather/forecastrss?w=12797282</span></pre>
+<h2>&nbsp;</h2>
+<!-- End tab list -->
+<p>&nbsp;</p>

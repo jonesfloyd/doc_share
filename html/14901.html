@@ -1,0 +1,373 @@
+<h1> Get OAuth V2 Info policy </h1>
+<img src="sites/docs/files/icon_policy_security.jpg" />
+<h3>What</h3>
+<p>Gets attributes of access tokens, refresh tokens, and authorization codes and populates variables with the values of those attributes. This policy type can be useful when you need to configure dynamic, conditional behavior based on a value in a token or code. Whenever token validation occurs, variables are automatically populated with the values of token attributes. However, in cases where token validation has not occured, you can use this feature to explicity populate variables with the attribute values of a token. &nbsp;See also <a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a>.</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations. See the Samples section below&nbsp;for specific attachment guidance in different situations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="samples">Samples</h2>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Access token</a></li>
+	<li><a data-toggle="tab" href="#tab_2">Auth code</a></li>
+	<li><a data-toggle="tab" href="#tab_3">Refresh token</a></li>
+	<li><a data-toggle="tab" href="#tab_4">Static</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<p>This example shows how to retrieve profile information for an access token and use it to populate a set of variables. In this case, the policy expects to find the access token in a query parameter called&nbsp;<code>access_token</code>. Given the access token, the policy looks up the token's profile and populates a set of variables with the profile data. The variables will be prefixed with&nbsp;<code>oauthv2accesstoken.&nbsp;</code></p>
+		<pre>
+&lt;GetOAuthV2Info name="GetTokenAttributes"&gt;
+  &lt;AccessToken ref="request.queryparam.access_token"&gt;&lt;/AccessToken&gt;
+&lt;/GetOAuthV2Info&gt;</pre>
+		<p>You can then access the variables using JavaScript or another means. For example, to retrieve the scope(s) associated with an access token using JavaScript:</p>
+		<pre>
+var scope = context.getVariable(‘oauthv2accesstoken.GetTokenAttributes.scope’);</pre>
+	</div>
+	<!-- Tab 1 end. --><!--Tab 2 begin. -->
+	<div class="tab-pane active" id="tab_2">
+		<h3>Retrieving authorization code attributes</h3>
+		<p>As with access tokens (described in the Access Code example), you can retrieve authorization code attributes by using the <code>AuthorizationCode</code> element in the policy as follows:</p>
+		<pre>
+&lt;GetOAuthV2Info name="GetAuthCodeAttributes"&gt;
+    &lt;AuthorizationCode ref="{variable name}"/&gt;
+&lt;/GetOAuthV2Info&gt;</pre>
+		<h3>For example:</h3>
+		<pre>
+&lt;GetOAuthV2Info name="GetAuthCodeAttributes"&gt;
+    &lt;AuthorizationCode ref="request.queryparam.code"&gt;&lt;/AuthorizationCode&gt;
+&lt;/GetOAuthV2Info&gt;</pre>
+		<p>&nbsp;</p>
+	</div>
+	<!-- Tab 2 end. --><!--Tab 2 begin. -->
+	<div class="tab-pane active" id="tab_3">
+		<h3>Retrieving refresh token attributes</h3>
+		<p>As with access tokens (described in the Access Code example), you can retrieve refresh token attributes by using the&nbsp;<code>AuthorizationCode</code>&nbsp;element in the policy as follows:</p>
+		<pre>
+&lt;GetOAuthV2Info name="GetTokenAttributes"&gt;
+    &lt;RefreshToken ref="{variable name}"/&gt;
+&lt;/GetOAuthV2Info&gt;</pre>
+		<h3>For example:</h3>
+		<pre>
+&lt;GetOAuthV2Info name="GetTokenAttributes"&gt;
+  &lt;RefreshToken ref="request.queryparam.refresh_token"&gt;&lt;/RefreshToken&gt;
+&lt;/GetOAuthV2Info&gt;
+    </pre>
+	</div>
+	<div class="tab-pane active" id="tab_4">
+		<p>In some rare cases you may need to get the profile of a statically configured token (one that is not accessible through a variable). You can do this by providing the value of the access token as an element.</p>
+		<pre>
+&lt;GetOAuthV2Info name="GetTokenAttributes"&gt;
+  &lt;AccessToken&gt;shTUmeI1geSKin0TODcGLXBNe9vp&lt;/AccessToken&gt;
+&lt;/GetOAuthV2Info&gt;</pre>
+		<p>You can do this with all other token types (client ID, authorization code, and refresh tokens) as well.</p>
+	</div>
+	<!-- Tab 2 end. --></div>
+<!-- End tabbed region. -->
+<hr />
+<h2 id="elementreference">Element Reference</h2>
+<p>The element reference describes the elements and attributes of the GetOAuthV2Info policy.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;GetOAuthV2Info async="false" continueOnError="false" enabled="true" name="GetOAuthV2Info-1"
+    &lt;DisplayName&gt;Get OAuth v2.0 Info 1&lt;/DisplayName&gt;
+    &lt;AccessToken ref={some-variable}&gt;&lt;/AccessToken&gt;
+&lt;/GetOAuthV2Info</pre>
+<h2>&lt;GetOAuthV2Info&gt; attributes</h2>
+<pre class="prettyprint prettyprinted" style="margin-top: 0px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 12.727272033691406px; color: rgb(72, 72, 72); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+&lt;GetOAuthV2Info async="false" continueOnError="false" enabled="true" name="Get-OAuth-v20-Info-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2>&lt;AccessToken&gt; element</h2>
+<p>Retrieves the profile for an access token. You pass in a either a variable that contains the access token string or a literal token string (rare case). In this example, the access token is retrieved from a query parameter passed in a request. Use the &lt;IgnoreAccessTokenStatus&gt; element if you want to return information for a revoked or expired token.</p>
+<pre>
+&lt;AccessToken ref="request.queryparam.access_token"&gt;&lt;/AccessToken&gt;</pre>
+<table class="table">
+	<tbody>
+		<tr>
+			<td style="width: 120px;" width="150">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="223">
+				<p>request.formparam.access_token (a x-www-form-urlencoded and specified in the request body)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>
+				<p>Optional</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Type:</strong></td>
+			<td>String</td>
+		</tr>
+		<tr>
+			<td><strong>Valid values:</strong></td>
+			<td>
+				<p>Either a flow variable containing an access token string, or a literal string.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<h2>&lt;AuthorizationCode&gt; element</h2>
+<p>Retrieves the profile for an authorization code. You pass in a either a variable that contains the auth code string or a literal token string (rare case). In this example, the auth code is retrieved from a query parameter passed in a request. For a list of variables populated by this operation, see "<a href="#flowvariables">Flow variables</a>".&nbsp;</p>
+<pre>
+&lt;AuthorizationCode ref="request.queryparam.authorization_code"&gt;&lt;/AuthorizationCode&gt;</pre>
+<table class="table">
+	<tbody>
+		<tr>
+			<td style="width: 120px;" width="150">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="223">
+				<p>request.formparam.access_token (a x-www-form-urlencoded and specified in the request body)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>
+				<p>Optional</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Type:</strong></td>
+			<td>String</td>
+		</tr>
+		<tr>
+			<td><strong>Valid values:</strong></td>
+			<td>
+				<p>Either a flow variable containing an auth code string, or a literal string.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;ClientId&gt; element</h2>
+<p>Retrieves information related to a client ID.&nbsp;In this example, the client ID is retrieved from a query parameter passed in a request. For a list of variables populated by this operation, see "<a href="#flowvariables">Flow variables</a>".&nbsp;</p>
+<pre>
+<span style="font-family:courier new,courier,monospace;">&lt;ClientId ref="request.queryparam.client_id"&gt;&lt;/ClientId&gt;</span></pre>
+<table class="table">
+	<tbody>
+		<tr>
+			<td style="width: 120px;" width="150">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="223">
+				<p>request.formparam.access_token (a x-www-form-urlencoded and specified in the request body)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>
+				<p>Optional</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Type:</strong></td>
+			<td>String<br />
+				&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>Valid values:</strong></td>
+			<td>Either a flow variable containing an auth code string, or a literal string.</td>
+		</tr>
+	</tbody>
+</table>
+<p>&nbsp;</p>
+<h2>&lt;IgnoreAccessTokenStatus&gt; element</h2>
+<p>Returns the token information even if the token is expired or revoked. This element can only be used with access tokens. Information for other entities like refresh tokens and authorization codes are returned regardless of their status, by default.</p>
+<pre>
+&lt;IgnoreAccessTokenStatus&gt;<span style="font-family: Arial, Verdana, sans-serif;">true</span><span style="font-family: Arial, Verdana, sans-serif;">&lt;/</span><span style="font-family: Arial, Verdana, sans-serif;">IgnoreAccessTokenStatus</span><span style="font-family: Arial, Verdana, sans-serif;">&gt;</span></pre>
+<table class="table">
+	<tbody>
+		<tr>
+			<td style="width: 120px;" width="150">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="223">
+				<p>false</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>
+				<p>Optional</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Type:</strong></td>
+			<td>Boolean<br />
+				&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>Valid values:</strong></td>
+			<td>true or false<br />
+				&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2>&lt;RefreshToken&gt; element</h2>
+<p>Retrieves the profile for a refresh token. You pass in a either a variable that contains the refresh token string or a literal token string (rare case). In this example, the refresh token is retrieved from a query parameter passed in a request. For a list of variables populated by this operation, see "<a href="#flowvariables">Flow variables</a>".&nbsp;</p>
+<pre>
+&lt;RefreshToken ref="request.queryparam.refresh_token"&gt;&lt;/RefreshToken&gt;</pre>
+<table class="table">
+	<tbody>
+		<tr>
+			<td style="width: 120px;" width="150">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="223">
+				<p>request.formparam.access_token (a x-www-form-urlencoded and specified in the request body)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>
+				<p>Optional</p>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Type:</strong></td>
+			<td>String</td>
+		</tr>
+		<tr>
+			<td><strong>Valid values:</strong></td>
+			<td>
+				<p>Either a flow variable containing an refresh token string, or a literal string.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="flowvariables"><a id="flowvariables" name="flowvariables"></a>Flow variables</h2>
+<p>The GetOAuthV2Info policy populates these variables, and is typically used in cases where you need the profile data, but where a grant or validation has not occurred yet. .</p>
+<h3>Client ID variables</h3>
+<p>These variables are populated when the &lt;ClientId&gt; operation executes:</p>
+<pre>
+oauthv2client.{policy_name}.client_id
+oauthv2client.{policy_name}.client_secret
+oauthv2client.{policy_name}.redirection_uris // Note the spelling -- 'redirection_uris'
+oauthv2client.{policy_name}.developer.email
+oauthv2client.{policy_name}.developer.app.name
+oauthv2client.{policy_name}.developer.id
+oauthv2client.{policy_name}.{developer_app_custom_attribute_name}</pre>
+<h3>Access token variables</h3>
+<p>These variables are populated when the &lt;AccessToken&gt; operation executes:</p>
+<pre>
+oauthv2accesstoken.{policy_name}.access_token
+oauthv2accesstoken.{policy_name}.scope
+oauthv2accesstoken.{policy_name}.refresh_token
+oauthv2accesstoken.{policy_name}.accesstoken.{custom_attribute_name}
+oauthv2accesstoken.{policy_name}.developer.id
+oauthv2accesstoken.{policy_name}.developer.app.name
+oauthv2accesstoken.{policy_name}.expires_in
+oauthv2accesstoken.{policy_name}.status</pre>
+<h3>Authorization code variables</h3>
+<p>These variables are populated when the &lt;AuthorizationCode&gt; operation executes:</p>
+<pre>
+oauthv2authcode.{policy_name}.client_id
+oauthv2authcode.{policy_name}.organization_id
+oauthv2authcode.{policy_name}.issued_at
+oauthv2authcode.{policy_name}.expires_in
+oauthv2authcode.{policy_name}.redirect_uri
+oauthv2authcode.{policy_name}.status
+oauthv2authcode.{policy_name}.state
+oauthv2authcode.{policy_name}.scope
+oauthv2authcode.{policy_name}.id
+oauthv2authcode.{policy_name}.{auth_code_custom_attribute_name}</pre>
+<h3>Refresh token variables</h3>
+<p>These variables are populated when the &lt;RefreshToken&gt; operation executes:</p>
+<pre>
+oauthv2refreshtoken.{policy_name}.access_token
+oauthv2refreshtoken.{policy_name}.refresh_token
+oauthv2refreshtoken.{policy_name}.client_id
+oauthv2refreshtoken.{policy_name}.refresh_count
+oauthv2refreshtoken.{policy_name}.organization_name
+oauthv2refreshtoken.{policy_name}.refresh_token_expires_in
+oauthv2refreshtoken.{policy_name}.refresh_token_issued_at
+oauthv2refreshtoken.{policy_name}.refresh_token_status
+oauthv2refreshtoken.{policy_name}.developer.email
+oauthv2refreshtoken.{policy_name}.developer.id
+oauthv2refreshtoken.{policy_name}.developer.app.name
+oauthv2refreshtoken.{policy_name}.developer.app.id
+oauthv2refreshtoken.{policy_name}.accesstoken.{custom_attribute_name}
+</pre>
+<h2 id="schema">Schema</h2>
+<p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
+<h2>Error reference</h2>
+<p><a href="http://docs.apigee.com/node/21346">Content to be inserted here</a></p>
+<h2 id="relatedtopics">Related topics</h2>
+<ul>
+	<li><a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a></li>
+	<li><a href="http://docs.apigee.com/node/17786">http://docs.apigee.com/node/17786</a></li>
+	<li><a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a></li>
+</ul>

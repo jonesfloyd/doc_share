@@ -1,0 +1,516 @@
+<h1> Setting up and configuring Edge Microgateway </h1>
+<p style="text-align: right;"><em>Edge Microgateway v. 2.0.x</em></p>
+<h2>Audience</h2>
+<p>This topic is for operators who wish to set up and configure a working instance of Edge Microgateway.&nbsp;</p>
+<h2>Overview</h2>
+<p>Structured as a step-by-step tutorial, this topic shows you how to set up and configure a working Edge Microgateway instance. In general, you'll need to follow these same steps each time you set up a new instance of Edge Microgateway.&nbsp;</p>
+<p>After completing the steps in this topic, you'll have a fully configured, working Edge Microgateway installation capable of processing API requests. You'll test the setup by making secure API calls through Edge Microgateway to a backend target. At the end of this topic, you will learn how to add a spike arrest plugin to the Microgateway, which will familiarize you with the pattern used to add any plugin.&nbsp;</p>
+<p>This guide is divided into these parts:</p>
+<ul>
+	<li><strong>Prerequisite:</strong> <a href="#Prerequisite">Installing Edge Microgateway</a></li>
+	<li><strong>Part 1:</strong> <a href="#Part1">Configure Edge Microgateway</a></li>
+	<li><strong>Part 2:</strong> <a href="#Part2">Create entities on Apigee Edge</a></li>
+	<li><strong>Part 3:</strong> <a href="#Operating Edge Microgateway">Operate Edge Microgateway</a></li>
+	<li><strong>Part 4:</strong> <a href="#Secure">Secure Edge Microgateway</a></li>
+	<li><strong>Part 5:</strong> <a href="#Part4">Add the Spike Arrest plugin</a></li>
+	<li><strong>Part 6:</strong> <a href="#Part5">View Analytics data on Apigee Edge</a></li>
+</ul>
+<p>&nbsp;</p>
+<h2><a id="Prerequisite" name="Prerequisite"></a>Prerequisite: Install Edge Microgateway</h2>
+<p>Please follow the instructions in <a href="http://docs.apigee.com/node/22631">http://docs.apigee.com/node/22631</a>. When you complete the installation, you'll be ready to follow the steps in this setup topic.&nbsp;</p>
+<div class="note">
+	<p><strong>Important:</strong> Throughout this topic, we assume that the <code>&lt;microgateway-root-dir&gt;/cli</code> directory is in your PATH.</p>
+</div>
+<p>When you are finished with the installation, proceed to the next section, "<a href="#Part1">Part 1: Configure Edge Microgateway</a>".</p>
+<h2><a id="Part1" name="Part1"></a>Part 1: Configure Edge Microgateway</h2>
+<p>In this part you'll use a command-line interface (CLI) command to configure Edge Microgateway to work with your Apigee Edge instance. If you are using Apigee Cloud, then follow the <a href="#Cloud config">Apigee Cloud configuration steps</a>. If you are on Apigee Private Cloud, follow the <a href="#Private config">steps for Private Cloud</a>.</p>
+<h3><a id="Cloud config" name="Cloud config"></a>Apigee Cloud configuration steps</h3>
+<p>Follow these steps to use Edge Microgateway with Apigee Cloud.</p>
+<div class="note">
+	<p><strong>Important:</strong> Did you remember to put <code>&lt;microgateway-root-dir&gt;/cli</code> in your PATH? Throughout the topic, we assume that the <code>&lt;microgateway-root-dir&gt;/cli</code> directory is in your PATH. If you do not put it in your PATH, then you need to execute CLI commands from the <code>&lt;microgateway-root-dir&gt;/cli</code> directory.</p>
+</div>
+<ol>
+	<li>Print help for the <strong>edgemicro configure</strong> command. You can print help this way for any Edge Microgateway CLI command or command option.</li>
+</ol>
+<pre>
+edgemicro configure -h</pre>
+<ol start="2">
+	<li>Execute the following command. It requires standard information about your Apigee Edge account: organization name, environment name, username (email address), and password. You must be an Edge organization administrator to use this command:</li>
+</ol>
+<pre>
+edgemicro configure -o &lt;org-name&gt; -e &lt;env-name&gt; -u &lt;your Apigee email&gt; </pre>
+<p>For example:</p>
+<pre>
+edgemicro configure -o docs -e test -u jdoe@example.com</pre>
+<h4>Sample output:</h4>
+<pre>
+./edgemicro configure -o docs -e test -u wwitman@apigee.com
+password:
+deleted /Users/ApigeeCorporation/.edgemicro/docs-test-config.yaml
+init config
+file doesn't exist, setting up
+checking for previously deployed proxies
+copy auth app into tmp dir
+copy config into tmp dir
+Give me a minute or two... this can take a while...
+App edgemicro-auth added to your org. Now adding resources.
+App edgemicro-auth deployed.
+checking org for existing vault
+creating vault
+adding private_key
+adding public_key
+configuring host edgemicroservices-us-east-1.apigee.net for region us-east-1
+updating agent configuration
+
+saving configuration information to: /Users/ApigeeCorporation/.edgemicro/docs-test-config.yaml
+
+vault info:
+ -----BEGIN CERTIFICATE-----
+MIICpDCCAYwCCQCGOBgzyhn9jANBgkqhkiG9w0BAQsFADAUMRIwEAYDVQQDEwls
+b2NhbGhvc3QwHhcNMTYwNDyMjEwMzIzWhcNMTYwNDEzMjEwMzIzWjAUMRIwEAYD
+VQQDEwlsb2NhbGhv3QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDP
+1fPS53qJCl1D1nYSjVLoCM4hh5Fk7asxyvk6Hr2iMPskRUuo+JylLxof8YjeK4w
+PsrljyL/T6ndrUAJlPngomcszdAr93D1NukikQkVC3PAeRatRN9TFGM1P4TD0pf
+vUQF50UB1Y5Fd6R0laVdoeKzGByQ6b8tbYhYNXKFcv423f/qHyZ80w5+2iVItU/
+ms/4lvDA1BiURr4z55D0L88L1ihnHnXd8JDL7gSa76gfigitcwVMaYyMemyhxJz
+BFTaLn9RcB5TO7apbC9w4lC/Qbtq2Rvyv/Dc0iYD/0dezC7NrulFiykAV66IV5I
+OYajNwsfX/c+pvKx+a1HAgMBAAEwDQYJKoZIhvcNAQELBQADgEBALJx+qEhMFKp
+2OgNbpBqllPNrrTTcVvulYdtPQZHbvYZk6ijI8+SuA8SzMPbSISJxDPydqtf0mm
+74iREoFSVfMzySh+UtF+i0r4RJ+QejvauOB+pwtJ4ohYBDfMZ2pifhJxUWzsNiX
+8E3LA34ikutygxYPCHG15nczUPzncgfrmAsZAaJ4PkevqHLN83AqDcXOfMqRP72
+xmYHmDMr9dT+DLn3Ez/VpS0LJ/EEXgTUp21HHrNhRmUtaQhQZy9NYYFs+9l9MfC
+5BiyaWIS2lprnmyMRg6KuwxOIs/kYUZlf3KFAr5hKvOKcLKB0LOKRB3n9QNtjpM
+Rv3Yozcw6lw=
+-----END CERTIFICATE-----
+
+The following credentials are required to start edge micro
+  key: a3f8f3dfe39158fc3c50b274f0af2234246e0d5f6ea4dd09389b645147151ba3
+  secret: 3e9904802fb3c0e8ca408128a11119cf13546d54dac30ace944c097a726a1263
+
+edgemicro configuration complete!
+</pre>
+<div class="note">
+	<p>You'll need the returned <strong>key</strong> and <strong>secret</strong> later when you start Edge Microgateway.</p>
+</div>
+<h3><a id="Private config" name="Private config"></a>Apigee Private Cloud configuration steps</h3>
+<p>Follow these steps to use Edge Microgateway with Apigee Private Cloud.</p>
+<div class="note">
+	<p><strong>Important:</strong> Did you remember to put <code>&lt;microgateway-root-dir&gt;/cli</code> in your PATH? Throughout the tutorial, we assume that the <code>&lt;microgateway-root-dir&gt;/cli</code> directory is in your PATH. If you do not put it in your PATH, then you need to execute CLI commands from the <code>&lt;microgateway-root-dir&gt;/cli</code> directory.</p>
+</div>
+<ol>
+	<li>Print help information for the <strong>edgemicro private configure</strong> command. You can print help this way for any Edge Microgateway CLI command or command option.</li>
+</ol>
+<pre>
+edgemicro private configure -h</pre>
+<ol start="2">
+	<li>Execute the following command. It requires standard information about your Apigee Edge Private Cloud account: organization name, environment name, username (email address), password, management server IP and router IP. You must be an Edge organization administrator to use this command:</li>
+</ol>
+<pre>
+edgemicro private configure -o &lt;org-name&gt; -e &lt;env-name&gt; -r &lt;router-ip&gt; -m &lt;management-server-ip&gt; -u &lt;your Apigee email&gt;</pre>
+<p>For example:</p>
+<pre>
+edgemicro private configure -o docs -e test -u jdoe@example.com -r http://192.162.52.106:9001 -m http://192.162.52.106:8080</pre>
+<h4>Sample output:</h4>
+<pre>
+delete cache config
+checking for previously deployed proxies
+configuring edgemicro internal proxy
+deploying edgemicro internal proxy
+deploying  edgemicro-auth  app
+copy auth app into tmp dir
+copy config into tmp dir
+Give me a minute or two... this can take a while...
+App edgemicro-auth added to your org. Now adding resources.
+
+checking org for existing vault creating vault adding private_key adding public_key
+configuring host http://192.168.52.106:9001 for region dc-1
+
+The following credentials are required to start edge micro key: a3f8f3dfe39158fc3c50b274f0af2234246e0d5f6ea4dd09389b645147151ba3 secret: 3e9904802fb3c0e8ca408128a11119cf13546d54dac30ace944c097a726a1263
+saving configuration information to: /Users/ApigeeCorporation/.edgemicro/docs-test-config.yaml 
+vault info: 
+-----BEGIN CERTIFICATE----- 
+MIICpDCCAYwCCQDpIvWlpaZJGDANBgkqhkiG9w0BAQFADAUMRIwEAYDVQQDEwls 
+b2NhbGhvc3QwHhcNMTYwNDA3MTcxNTM5WhcNMTYwND4MTcxNTM5WjAUMRIwEAYD 
+VQQDEwlsb2NhbGhvc3QwggEiMA0GCSqGSIb3DQEBAUAA4IBDwAwggEKAoIBAQD3 
+OAQ+kf5FH0S0yuj05ITqUODuUJspBPberRMbqOZYHcFswhB0Yvg6JKWxKWBDP9o 
+Xl96dtgH7xPFRqIU0zI452jkMQ1fPz2mSaGwik245yfBku7olooXKRKTRKOUoXa 
+q3Hld/RPxGSsWtiyyYtKex7tuFdq0Knm1EhowdTRGIgjNvudeYMka/XPRXuykhd 
+xIDxWj4rdX+4GPx9qT2eTQC5nOAC7XHVL7ys4KqsAiv28vw10u400KstFFS8Qho 
+7FaE0bOKLolKKadKyA60ha1XIw/uSTD6ZQFWQ+XM3OaRbXePWXnSZioSxXcZT7L 
+hMUKbsRXw/TCvRB51LgNAgMBAAEwDQYJKoZIhvcNAQELBQADgEBAOuR1OmE/W6j 
+gRAarJB5EQuTEpI/9Zpg5c5RAGjzLhkazsycn7pal+IymUjCV7D0oIxTVuTM8ZZ 
+57kR5hF/C1ZypDN9i+KGP2ovX8WOCCXYtIQECgZPB/L/7/k7BDuKN4vFBvWUe3X 
+s2oyjnVWy+ASqsW8gHfj8ekhe22bP240Oqkbyg9SZP9ol1tvJX6+M0thYwcTwAd 
+ft929Icey/MOTQC0jB2qm0gnIx/7KInFXfS5KoFRJoGrWDeckr3RdBo2LhnPaeZ 
+1gPYIqphZ3HfisF5KlBXoR8oT/Ilym/nq5COlv+3L4tMIk18F7BQZB60SRazifz 
+pFkIxepyr/0= 
+-----END CERTIFICATE----- 
+
+edgemicro configuration complete!
+</pre>
+<h3>Verify the installation</h3>
+<p>Try running this command to verify the installation. If no errors are reported, everything is set up correctly and you will be able to start the Edge Microgateway successfully.&nbsp;</p>
+<pre>
+edgemicro verify -o &lt;your Apigee org name&gt; -e &lt;environment name&gt; -k &lt;the key returned by the previous command&gt; -s &lt;the secret returned by the previous command&gt;
+</pre>
+<p>For example:</p>
+<pre>
+./edgemicro verify -o docs -e test -k 93b01fd21d86331459ae52f664ae9aeb13eb94767ce40a4f621d172cdfb7e8e6 -s c8c755be97cf56c21f8b0556d7132afbd03625bbd85dc34ebfefae4f23fbcb3c</pre>
+<p>&nbsp;</p>
+<h3>About the configuration</h3>
+<p>All of the configuration done so far allows Edge Microgateway to bootstrap itself to Apigee Edge. After the bootstrapping succeeds, Edge Microgateway retrieves a payload of additional configuration information from Apigee Edge.</p>
+<p>What is this configuration information used for? As we'll discover in the next part of this tutorial, when Edge Microgateway starts, it needs to receive a list of special Edge Microgateway-aware API proxies that are already deployed on Apigee Edge. Edge Microgateway restricts clients to calling only the APIs fronted by these API proxies, and clients will be required (by default) to present a valid security token for each call. To read more about these proxies, see "<a href="http://apigee.com/docs/microgateway/content/edge-microgateway-overview#aboutedgemicrogateway-whatyouneedtoknowaboutedgemicrogatewayawareproxies">What you need to know about Edge Microgateway-aware proxies</a>" in the <a href="http://docs.apigee.com/node/22626">http://docs.apigee.com/node/22626</a>.</p>
+<p>As an Edge org admin, you'll be interested to know that Edge Microgateway-aware proxies can be added to Edge products, just like any other proxies. Through the use of products and developer apps, you can generate client-specific security tokens to control access to APIs called through Edge Microgateway. Again, the patterns involved are identical to working with any API proxies, products, and developer apps on Apigee Edge. If you'd like to read up on products, start with <a href="http://docs.apigee.com/node/14759">http://docs.apigee.com/node/14759</a> in the Edge documentation.</p>
+<p>Next we'll walk through how to create Edge Microgateway-aware proxies, and after that, we'll start Edge Microgateway and test the setup.</p>
+<p>&nbsp;</p>
+<h2><a id="Part2" name="Part2"></a>Part 2: Create entities on Apigee Edge</h2>
+<p>The main goals of this part are to create these entities on Edge:</p>
+<ul>
+	<li><strong>A</strong> <strong>microgateway-aware proxy</strong> - This is a special proxy that Edge Microgateway can discover upon startup. Microgateway-aware proxies have a naming convention that you must follow: the name must being with <code>edgemicro_</code>. For example <code>edgemicro_hello</code>. When Edge Microgateway starts, it retrieves from Edge a list of any of these microgateway-aware proxies that exist in your Edge organization and environment that you specify when you start the microgateway.<br />
+		<br />
+		For each microgateway-aware proxy, Edge Microgatway retrieves the target URL of the proxy and its base path. Microgateway-aware proxies also provide a convenient way to associate analytics data generated by Edge Microgateway with a proxy on the Edge platform. As the microgateway handles API calls, it asynchronously pushes analytics data to Edge. Analytics data will show up in the Edge Analytics UI under the microgateway-aware proxy name(s), as it does for any other proxy.<br />
+		<br />
+		<strong>Note:</strong> Do not attach policies or make conditional flows in microgateway-aware proxies, because they will never execute. Microgateway-aware proxies are never called directly -- they only serve to provide configuration information to Edge Microgateway and as a way to surface analytics data in the Edge analytics system.</li>
+	<li><strong>A product, developer, and developer app</strong> - Edge Microgateway uses products, developers, and developer apps to enable OAuth2 or API key security. When Edge Microgateway starts, it downloads all of the product configurations from Edge (for the org/environment against which Edge Microgateway is started). It uses this information to verify API calls made through Edge Microgateway with API keys or OAuth2 tokens.&nbsp;</li>
+</ul>
+<p><strong>Read more:</strong> See also "<a href="http://docs.apigee.com/microgateway/content/edge-microgateway-overview#aboutedgemicrogateway-whatyouneedtoknowaboutedgemicrogatewayawareproxies">What you need to know about Edge Microgateway-aware proxies</a>" in the <a href="http://docs.apigee.com/node/22626">http://docs.apigee.com/node/22626</a>.</p>
+<h3>1. Create an Edge Microgateway-aware API proxy on Edge</h3>
+<div class="note">
+	<p>Edge Microgateway-aware proxies must point to an HTTP target endpoint. In other words, the TargetEndpoint for the proxy must include an HTTPTargetConnection. Edge Microgateway is not designed to work with proxies that use the ScriptTarget element to point to Node.js applications as backend targets. See also <a href="http://docs.apigee.com/node/6858">http://docs.apigee.com/node/6858</a> and <a href="http://docs.apigee.com/api-services/content/adding-nodejs-existing-api-proxy#specifythenodejstargetwithscripttarget">Specify the Node.js target with ScriptTarget</a>.&nbsp;</p>
+</div>
+<div class="note">
+	<p><strong>Important:</strong> Do not apply policies or create conditional flows in the microgateway-aware (<code>edgemicro_*</code>) proxy described in this step. This proxy is used by Edge Microgateway to obtain configuration that it uses to make secure API calls to the target endpoint specified by this proxy. Policies attached to this proxy will never execute. If you want to add policy functionality, such as quota, spike arrest, or OAuth2 security, you need to use plugins. For details, see <a href="http://docs.apigee.com/node/22651">http://docs.apigee.com/node/22651</a>. See also <a href="http://docs.apigee.com/node/22626">http://docs.apigee.com/node/22626</a>.</p>
+</div>
+<ol>
+	<li>Log in to your organization on Apigee Edge.</li>
+	<li>Select <strong>APIs &gt; API Proxies</strong> from the top menu.</li>
+	<li>In the API Proxies page, click <strong>+ API Proxy</strong>.</li>
+	<li>In the Build a Proxy wizard, select <strong>Reverse proxy (most common)</strong>.</li>
+	<li>In the Details page of the wizard, configure as follows, where we point to an example target API that we can use for testing purposes:
+		<ul>
+			<li>Proxy Name: <strong>edgemicro_hello</strong></li>
+			<li>Proxy Base Path: <strong>/hello</strong></li>
+			<li>Existing API: <strong>http://mocktarget.apigee.net/</strong></li>
+		</ul>
+	</li>
+	<li>Click <strong>Next</strong>.<br />
+		<br />
+		<strong>Important:</strong> Edge Microgateway-aware proxy names <strong>must always begin</strong> with the prefix<strong> edgemicro_</strong>.<br />
+		&nbsp;</li>
+	<li>In the Security page of the wizard, select <strong>Pass through (none)</strong>.</li>
+	<li>Click <strong>Next</strong>.</li>
+	<li>In the Virtual Hosts page of the wizard, accept the defaults.</li>
+	<li>Click <strong>Next</strong>.</li>
+	<li>In the Build page of the wizard, review your proxy settings. Make sure the <strong>test</strong> environment is selected.</li>
+	<li>Click <strong>Build and Deploy</strong>.</li>
+</ol>
+<h3>2. Create a product</h3>
+<p>You just need a product that contains your Edge Microgateway-aware proxy(s):</p>
+<ol>
+	<li>Log in to the Edge management UI.</li>
+	<li>Go to <strong>Publish &gt; Products</strong>.</li>
+	<li>In the Products page, click <strong>+ Product</strong>.</li>
+	<li>Fill out the Product Details dialog as follows:
+		<ol>
+			<li><strong>Name:</strong> EdgeMicroTestProduct</li>
+			<li><strong>Display Name:</strong> EdgeMicroTestProduct</li>
+			<li><strong>Environment:</strong> test and prod</li>
+			<li><strong>Access:</strong> Public</li>
+			<li><strong>Key Approval Type:</strong> Automatic</li>
+			<li><strong>Resources:</strong>
+				<ul>
+					<li><strong>API Proxy: </strong>Add these <strong>two</strong> proxies: <strong>edgemicro_hello</strong> and <strong>edgemicro-auth</strong></li>
+					<li><strong>Revision:</strong> 1</li>
+					<li><strong>Resource Path:</strong> /**</li>
+				</ul>
+			</li>
+		</ol>
+	</li>
+	<li>Click <strong>Import Resource</strong>.</li>
+	<li>Click <strong>Save</strong>.</li>
+</ol>
+<h3>3. (Optional) Create a test developer</h3>
+<p>For the purpose of this tutorial, you can use any existing developer for the next step, creating a developer app. But if you wish, create a test developer now:</p>
+<ol>
+	<li>Go to <strong>Publish &gt; Developers</strong>.</li>
+	<li>In the Products page, click <strong>+ Developer</strong>.</li>
+	<li>Fill out the dialog to create a test developer.</li>
+</ol>
+<h3>4. Create a developer app</h3>
+<p>You are going to use the client credentials from this app to make secure API calls through Edge Microgateway:</p>
+<ol>
+	<li>Go to <strong>Publish &gt; Developer Apps</strong>.</li>
+	<li>In the Developer Apps page, click <strong>+ Developer App</strong>.</li>
+	<li>Fill out the Developer App dialog as follows:
+		<ol type="a">
+			<li><strong>Name:</strong> EdgeMicroTestApp</li>
+			<li><strong>Display Name:</strong> EdgeMicroTestApp</li>
+			<li><strong>Developer:</strong> If you created a test developer, select it. Or, you can use any existing developer for the purpose of this tutorial.</li>
+			<li><strong>Products:</strong> Select EdgeMicroTestProduct (the product you just created)</li>
+		</ol>
+	</li>
+	<li>Click the checkmark button next to the Products field to add the product.</li>
+	<li>Click <strong>Save</strong>.</li>
+	<li>You're back in the Developer Apps list page.</li>
+	<li>Select the app you just created, <strong>EdgeMicroTestApp</strong>.</li>
+	<li>Click <strong>Show</strong> next to the <strong>Consumer Key</strong> and <strong>Consumer Secret</strong>.</li>
+</ol>
+<p><img alt="" src="sites/docs/files/em-tut-fig-2.png" style="width: 700px; height: 74px; border-width: 1px; border-style: solid;" /></p>
+<div class="note">
+	<p>You'll need to use these keys later when you configure use API Key or OAuth2 security for your API.</p>
+</div>
+<p></p>
+<h2><a id="Operating Edge Microgateway" name="Operating Edge Microgateway"></a>Part 3: Operate Edge Microgateway</h2>
+<p>Now that you have a configured Edge Microgateway and at least one Edge Microgateway-aware proxy on Edge, it's time to start up Edge Microgateway. An Edge Microgateway HTTP server will run on your local machine, and you'll make API calls directly to that server.</p>
+<h3>1. Start Edge Microgateway</h3>
+<p>Use the <strong>edgemicro</strong> <strong>start </strong>command to start Edge Microgateway.</p>
+<ol>
+	<li>Print help information for the edgemicro start command. We're going to use the<strong> -k</strong>, and <strong>-s</strong> options to start Edge Microgateway. Execute the help command to see all the command options:</li>
+</ol>
+<pre>
+edgemicro start -h</pre>
+<ol start="2">
+	<li>Now, be sure you have the keys that were returned previously when you ran the <strong>edgemicro configure</strong> command. That output looked something like this:</li>
+</ol>
+<pre>
+You need key and secret while starting edgemicro instance
+
+key: da4778e7c240a5d4585fc559eaba5083328828ac9f3a7f583e8b73e
+secret: 3aad7439708b4aeb38ee08e87189921ad00e6fc1ba8a8ae9f929ee2</pre>
+<ol start="3">
+	<li>To start Edge Microgateway, execute the following command, substituting names for your Edge org and environment, and the key and secret values.</li>
+</ol>
+<pre>
+edgemicro start -o &lt;your org&gt; -e &lt;your env&gt; -k &lt;key&gt; -s &lt;secret&gt;</pre>
+<p>For example:</p>
+<pre>
+ edgemicro start -o docs -e test -k 701e70e718ce6dc1880616b3c39177d64a88754d615c7a4e1f78b6181d000723 -s 05c14356e42d136b83dd135cf8a18531ff52d7299134677e30ef4e34ab0cc824</pre>
+<h4>Sample output</h4>
+<p>The start command retrieves a lot of configuration information from Apigee Edge (which scrolls into the terminal window). In the output, you'll see a list of microgateway-aware proxies and products that were discovered. At the end of the output, you should see something like this:</p>
+<pre>
+installed plugin from analytics
+installed plugin from oauth
+578dc8a0-f2aa-11e5-9078-47057a418de6 edge micro listening on port 8000
+edge micro started
+command started successfully.</pre>
+<h4>What happened?</h4>
+<p>Look at the terminal where you ran the <strong>edgemicro config</strong> command. Scrolling up through the standard output, you can see that the command retrieves a payload of Edge Microgateway configuration information from Apigee Edge. This information includes:</p>
+<ul>
+	<li>The public key we created and stored previously in the Apigee vault.</li>
+	<li>A JSON representation of all Edge Microgateway-aware proxies that exist in the organization/environment. These are all proxies that are named with the prefix <strong>edgemicro_</strong>.</li>
+	<li>A JSON representation of all of the API products that exist in the organization/environment.</li>
+</ul>
+<p>With this information, Edge Microgateway knows which proxies and proxy paths it is allowed to process. It uses the product information to enforce security (in exactly the same way as any API proxy does on Apigee Edge, where developer app keys have an association with products). We'll go through the steps to secure Edge Microgateway shortly.</p>
+<h3>2. Test Edge Microgateway</h3>
+<p>Now Edge Microgateway is running, and it is configured to be able to call the <strong>/hello</strong> base path and the backend target&nbsp;<strong>http://mocktarget.apigee.net/</strong>. It knows about these paths because they were specified in the <strong>edgemicro_hello</strong> proxy. The configuration for that proxy was downloaded from Edge when you started Edge Microgateway.</p>
+<p>To test Edge Microgateway, we start with the base path and add a resource path <strong>/echo</strong>. Note that everything after the base path (including any query parameters) is simply passed through to the backend target.</p>
+<ol>
+	<li>Call the API as follows.</li>
+</ol>
+<pre>
+curl -i http://localhost:8000/hello/echo
+{"error":"missing_authorization","error_description":"Missing Authorization header"}</pre>
+<p>This error occurs because we did not send a valid API key or OAuth2 access token with the request. By default, Edge Microgateway requires either an API key or an OAuth2 access token on every API call. In the next step of the tutorial, we'll secure this API properly and show you how to obtain a valid access token and include it with the request.</p>
+<h3>3. Stop Edge Microgateway</h3>
+<p>Hit Control-C in the terminal window where Edge Microgateway is running.&nbsp;</p>
+<h2><a id="Secure" name="Secure"></a>Part 4: Secure Edge Microgateway</h2>
+<p>You can secure API calls made through Edge Microgateway using an &nbsp;API key or an OAuth2 access token.</p>
+<ul>
+	<li><a href="#Oauthtoken">Secure API calls with an OAuth2 access token</a></li>
+	<li><a href="#apikey option">Secure API calls with an API Key</a></li>
+</ul>
+<h3><strong style="font-size: 12px;"><a id="Oauthtoken" name="Oauthtoken"></a></strong>Secure API calls with an OAuth2 access token</h3>
+<p>Follow these steps if you want to authenticate API calls with an OAuth2 access token:</p>
+<h4><strong>1. Configuration in the Edge UI</strong></h4>
+<p>You can skip these Edge UI steps if you already created the product called EdgeMicroTestProduct, and if it lists the <strong>edgemicro_hello</strong> and <strong>edgemicro-auth</strong> proxies, as explained in <a href="#Part2">Part 2: Create entities on Apigee Edge</a>. Here are the steps again if you need to create this product:</p>
+<ol>
+	<li>Go to&nbsp;<strong>Publish-&gt;Products</strong>.</li>
+	<li>Select the Product containing the Edge Microgateway-aware proxy you wish to protect. This is the same product you set up previously in the tutorial in <a href="#Part2">Part 2: Create entities on Apigee Edge</a>. We called the product&nbsp;<strong>EdgeMicroTestProduct</strong>.</li>
+	<li>Be sure that you have both the <strong>edgemicro_hello</strong> and <strong>edgemicro-auth</strong> proxies listed in the product. If not continue with the next step.</li>
+	<li>Select&nbsp;<strong>Edit</strong>.</li>
+	<li>Under&nbsp;<strong>Resources &gt; API Proxies</strong>, click&nbsp;<strong>+ API Proxy</strong>.</li>
+	<li>In the dropdown menu, select the Edge Microgateway authentication proxy.&nbsp;The proxy is called&nbsp;<strong>edgemicro-auth.&nbsp;</strong>This proxy was deployed when Edge Microgateway was originally set up and configured.&nbsp;Both the <strong>edgemicro_hello</strong> and <strong>edgemicro-auth</strong> proxies must be listed in the product.</li>
+	<li>Click&nbsp;<strong>Save</strong>.</li>
+	<li>In the same Product page, under Developer Apps, click the developer app. Earlier in the tutorial, we called it&nbsp;<strong>EdgeMicroTestApp</strong>.</li>
+	<li>In the Developer App page, show the Consumer Key and the Consumer Secret, and copy them.&nbsp;<strong>These values are required to obtain an access token in the next step.</strong></li>
+</ol>
+<h4><strong>2. Get an access token </strong></h4>
+<p>There are two ways to get an access token. We'll show you both methods:</p>
+<ul>
+	<li>You can use the Edge Microgateway CLI, or</li>
+	<li>You can make an HTTP request directly to the token endpoint on Apigee Edge.</li>
+</ul>
+<p>The <strong>first method</strong> is convenient, and follows the pattern we've used throughout the tutorial. The <strong>second method</strong> is generally more useful for client app developers who need to request tokens. The actual token endpoint is implemented in the proxy you deployed earlier with the deploy-edge-service CLI command.</p>
+<p><strong><em>Using the CLI to get a token</em></strong></p>
+<ol>
+	<li>View help for the <strong>token get</strong> command:</li>
+</ol>
+<pre>
+edgemicro token get -h</pre>
+<ol start="2">
+	<li>Generate the token, substituting your Consumer Key and Consumer Secret values from the developer app you created on Apigee Edge in the <strong>-i</strong> and <strong>-s</strong> parameters:</li>
+</ol>
+<pre>
+edgemicro token get -o &lt;org&gt; -e &lt;env&gt; -i G0IAeU864EtBo99NvUbn6Z4CBwVcS2 -s uzHTbwNWvoSmOy</pre>
+<p><strong><em>Using an API to get a token</em></strong></p>
+<p>If you're used to calling Edge proxies using curl or another HTTP client, you'll be interested to know that you can call the token endpoint directly, rather than using the <strong>edgemicro token</strong> command. Here's a curl example. Just substitute your org and environment names in the URL, and pass the colon-separated Consumer Key:Consumer Secret values in a Basic Authentication header:</p>
+<pre>
+curl -i -X POST --user 4t8X137pOUUtMR7wag3M1yZTcRxeK:RAcOFVOvO0jns "http://&lt;org&gt;-&lt;env&gt;.apigee.net/edgemicro-auth/token" -d '{"grant_type": "client_credentials"}' -H "Content-Type: application/json"</pre>
+<p><strong>Output:</strong></p>
+<p>The command, whether you used the <strong>edgemicro token</strong> CLI command or called the endpoint using curl, returns a signed access token that can be used to make client calls. Something like this:</p>
+<pre>
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhcHBsaWNhdGlvbl9uYW1lIjoiZjU5NDI4MTYtYjFiZC00
+Y2UyLWI0ZGItZTBmYTU3OTlkMWJiIiwiY2xpZW50X2lkIjoiZEc2cTViRlNFRFJRN2xDbU9IVFRuNE5RN2QycVF
+3NU4iLCJzY29wZXMiOltLCJhcGlfcHJvZHVjdF9saXN0IjpbIkVkZ2VNaWNyb1Rlc3RQcm9kdWN0Il0sImlhdCI
+6MTQzNTcxNTE0MCwiZXhwIjoxNDM1NzE2OTM5fQ.Jy3w9Xt7rqhQyc1UcrWsrVd6entcQa53rNaOf4QQgJBtIU
+4QxegEGqHr5ft1oY0inJBRoFxrskFWKlc_6Y7BtSEQReMXU0h04noCgv53ZajMWPN8iZvmrN9MWkxn_VxznBvCZ
+cMCuHTjckTdLwx1Ub5iordlil6xVPf2yYR49-ToRJ-l0t-CaeURV9OVpc1vTshSS2Kwp_Kf_9zWcBekpCaIAOjB
+0b-R04xxTaOYSp5W7s3fD8JC1-0cwq38jnpRRYrwhsMuB1jIX5ZsWNhnZPGc4K3GOZC_pnkJl70YZGeVF9CmFoV
+o4PeBO2RYzcsj093ZWGe6Waj2ZZ_tA</pre>
+<p><strong>3. Configuration in Edge Microgateway</strong></p>
+<ol>
+	<li>Stop Edge Microgateway by pressing <strong>control-c</strong> in the window where the process is running.</li>
+	<li>Be sure that OAuth2 authentication is enabled. Open <code>&lt;microgateway-root-dir&gt;/config/default.yaml</code>, and make sure these properties are set to <strong>false</strong>. They're false by default, but it's a good idea to double-check:
+		<pre>
+oauth:
+   allowNoAuthorization: false
+   allowInvalidAuthorization: false</pre>
+	</li>
+	<li>Also in the&nbsp;<span style="font-family: monospace; font-size: 12px;">default.yaml</span>&nbsp;file, be sure that the <strong>oauth</strong> plugin is added to the sequence element, like this:
+		<pre>
+plugins:
+   dir: ../plugins
+   sequence:
+   - oauth</pre>
+	</li>
+	<li>Reconfigure Edge Microgateway:
+		<pre>
+edgemicro configure -o docs -e test -u jdoe@example.com</pre>
+	</li>
+	<li>Restart Edge Microgateway, using the new key and secret values returned by the config:
+		<pre>
+./edgemicro start -o docs -e test -k a48148fde021a14ad89de0e5322de29587e36208faba8bdc62e4bb921ed90ff7 -s 6d9a401a6be70c220758efd4792993dae2e66a60e592d88f38e748b674bd5c22</pre>
+	</li>
+</ol>
+<p><strong>4. Call the API securely</strong></p>
+<p>With an access token in hand, you can now make the API call securely. For example:</p>
+<pre>
+  <strong>curl -i -H "Authorization: Bearer</strong> eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhcHBsaWNhdGlvbl
+9uYW1lIjoiYmU2YmZjYjAtMWQ0Ni00Y2IxLWFiNGQtZTMxNzRlNTAyMDZkIiwiY2xpZW50X2lkIjoiOGxTTTVIRHdyM
+VhIT1ZwbmhURExhYW9FVG5STVpwWk0iLCJzY29wZXMiOltdLCJhcGlfcHJvZHVjdF9saXN0IjpbIk1pY3JvZ2F0ZXdh
+eVRlQcm9kdWN0Il0sImCI6MTQzNTM0NzY5MiwiZXhwIjoxNDM1MzQ5NDkxfQ.PN30Y6uK1W1f2ONPEsBDB_BT31c6
+IsjWGfwpz-p6Vak8r767tAT4mQAjuBpQYv7_IU4DxSrnxXQ_q536QYCP4p4YKfBvyqbnW0Rb2CsPFziy_n8HIczsWO
+s0p4czcK63SjONaUpxV9DbfGVJ_-WrSdqrqJB5syorD2YYJPSfrCcgKm-LpJc6HCylElFDW8dHuwApaWcGRSV3l5Wx
+4A8Rr-WhTIxDTX7TxkrfI4THgXAo37p3au3_7DPB_Gla5dWTzV4j93xLbXPUbwTHzpaUCFzmPnVuYM44FW5KgvBrV0
+64RgPmIFUxSqBWGQU7Z1w2qFmWuaDljrMDoLEreI2g" <strong>http://localhost:8000/hello/echo</strong></pre>
+<p>The API returns headers and other information from the mock server.</p>
+<h3><strong style="font-size: 12px;"><a id="apikey option" name="apikey option"></a></strong>Securing the API with an API key</h3>
+<p>If you wish to use an API key for authorization, follow these steps:</p>
+<p><strong>1. Configuration in the Edge UI</strong></p>
+<p>You can skip these Edge UI steps if you already created the product called EdgeMicroTestProduct, and if it lists the <strong>edgemicro_hello</strong> and <strong>edgemicro-auth</strong> proxies, as explained in <a href="#Part2">Part 2: Create entities on Apigee Edge</a>. Here are the steps again if you need to create this product:</p>
+<ol>
+	<li>Go to <strong>Publish-&gt;Products</strong>.</li>
+	<li>Select the Product containing the Edge Microgateway-aware proxy you wish to protect. This is the same product you set up previously in the tutorial in <a href="#Part2">Part 2: Create entities on Apigee Edge</a>. We called the product <strong>EdgeMicroTestProduct</strong>.</li>
+	<li>Select <strong>Edit</strong>.</li>
+	<li>Under <strong>Resources &gt; API Proxies</strong>, click <strong>+ API Proxy</strong>.</li>
+	<li>In the dropdown menu, select the Edge Microgateway authentication proxy.&nbsp;The proxy is called&nbsp;<strong>edgemicro-auth.&nbsp;</strong>This proxy was deployed when Edge Microgateway was originally set up and configured.&nbsp;</li>
+	<li>Click <strong>Save</strong>.</li>
+	<li>In the same Product page, under Developer Apps, click the developer app. Earlier in the tutorial, we called it <strong>EdgeMicroTestApp</strong>.</li>
+	<li>In the Developer App page, show the Consumer Key, and copy it. <strong>This value is the API key.</strong> You'll use this key to make an authenticated call to the API.</li>
+</ol>
+<p><strong>2. Configuration in Edge Microgateway</strong></p>
+<p>To pull the Edge changes you just made into the Edge Microgateway configuration, follow these steps:</p>
+<ol>
+	<li>Stop Edge Microgateway by pressing <strong>control-c</strong> in the window where the process is running.</li>
+	<li>Be sure that OAuth2 authentication is enabled. Open <code>&lt;microgateway-root-dir&gt;/config/default.yaml</code>, and make sure these properties are set to <strong>false</strong>. They're false by default, but it's a good idea to double-check:
+		<pre>
+oauth:
+   allowNoAuthorization: false
+   allowInvalidAuthorization: false</pre>
+	</li>
+	<li>Also in the&nbsp;<span style="font-family: monospace; font-size: 12px;">default.yaml</span>&nbsp;file, be sure that the <strong>oauth</strong> plugin is added to the sequence element, like this:
+		<pre>
+plugins:
+   dir: ../plugins
+   sequence:
+   - oauth</pre>
+	</li>
+	<li>Reconfigure Edge Microgateway:
+		<pre>
+edgemicro configure -o docs -e test -u jdoe@example.com</pre>
+	</li>
+	<li>Restart Edge Microgateway, using the new key and secret values returned by the config:
+		<pre>
+./edgemicro start -o docs -e test -k a48148fde021a14ad89de0e5322de29587e36208faba8bdc62e4bb921ed90ff7 -s 6d9a401a6be70c220758efd4792993dae2e66a60e592d88f38e748b674bd5c22</pre>
+	</li>
+</ol>
+<p><strong>3. Call the API securely with an API key</strong></p>
+<p>Call the API with the <strong>x-api-key</strong> header as follows. The Consumer Key value you copied from the Developer App is the API key. By default, Edge Microgateway expects you to pass the key in a header called <strong>x-api-key</strong>, like this:</p>
+<pre>
+curl -i http://localhost:8000/hello/echo -H "x-api-key: &lt;Consumer key copied from the developer app&gt;"</pre>
+<p>For example:</p>
+<pre>
+curl -i http://localhost:8000/hello/echo -H 'x-api-key: XsU1R4zGXz2ERxa0ilYQ5szwuljr5bB'</pre>
+<h3>&nbsp;</h3>
+<p>You now have a fully functioning and secure Edge Microgateway. In the next part of the tutorial, we'll take a look at plugins that add functionality to an Edge Microgateway instance.</p>
+<p>&nbsp;</p>
+<h2><a id="Part4" name="Part4"></a>Part 5: Add a Spike Arrest plugin</h2>
+<p>In this part, we'll add a rate-limiting feature called spike arrest to your instance of Edge Microgateway.</p>
+<ul>
+	<li>Adding the spike arrest plugin</li>
+	<li>Extra credit: Adding the quota plugin</li>
+</ul>
+<h3>What are plugins?</h3>
+<p>A plugin is a Node.js module that adds functionality to Edge Microgateway. Plugin modules follow a consistent pattern and are stored in a location known to Edge Microgateway, enabling the microgateway to discover and load them automatically. You can read more about plugins in the <a href="http://docs.apigee.com/node/22656">http://docs.apigee.com/node/22656</a>.</p>
+<h3>Adding the spike arrest plugin</h3>
+<p>Spike Arrest protects against traffic spikes. It throttles the number of requests processed by an Edge Microgateway instance.</p>
+<p>In Edge Microgateway, spike arrest is implemented as a plugin module. To enable it, you need to add it to the Edge Microgateway configuration file.</p>
+<ol>
+	<li>Stop Edge Microgateway by pressing control-c in the window where the process is running.</li>
+	<li>Open&nbsp;<span style="font-family: monospace; font-size: 12px;">~/.edgemicro/&lt;org&gt;-&lt;env&gt;-config.yaml</span>&nbsp;in an editor. See also "Making configuration changes".</li>
+	<li>Add the following element. You can add it anywhere in the file.</li>
+</ol>
+<pre>
+   spikearrest:
+      timeUnit: minute   
+      allow: 10   
+      buffersize: 0   </pre>
+<ol start="4">
+	<li>Add spikearrest element to the sequence element under plugins, as shown below. The sequence configuration property tells Edge Microgateway the order in which the plugin modules are executed.</li>
+</ol>
+<pre>
+edgemicro:
+  home: ../gateway
+  port: 8000
+  max_connections: -1
+  max_connections_hard: -1
+  logging:
+    level: info
+    dir: /var/tmp
+    stats_log_interval: 60
+  plugins:
+    dir: ../plugins
+  sequence:
+    - spikearrest
+    - oauth </pre>
+<ol start="5">
+	<li>Save the config file.</li>
+	<li>Restart Edge Microgateway with the<strong> edgemicro start</strong> command as explained previously.</li>
+	<li>Try calling the API several times in quick succession. After the second call, Edge Microgateway returns this error:</li>
+</ol>
+<pre>
+{"error": "spike arrest policy violated"}</pre>
+<p>The reason is that spike arrest smooths out the number of calls that can be made over the specified time unit. So, in this case, you can make 10 calls in a minute, or one every 6 seconds.</p>
+<p>For more information, see "<a href="/microgateway/content/develop-plugins#usingthespikearrestplugin-howdoesspikearrestwork">How does spike arrest work?</a>" in the&nbsp;<a href="http://docs.apigee.com/node/22656">http://docs.apigee.com/node/22656</a>.</p>
+<h3>Extra credit: Adding the quota plugin</h3>
+<p>Following the same pattern used to configure spike arrest, you can add other plugins, like the quota plugin. Like with spike arrest, the quota plugin is included with every Edge Microgateway installation. A quota specifies the number of request messages that an app is allowed to submit to an API over a specified time interval (minutes or hours).</p>
+<p>To learn how quotas work, see "<a href="/microgateway/content/develop-plugins#usingthequotaplugin">Using the quota plugin</a>" in the&nbsp;<a href="http://docs.apigee.com/node/22656">http://docs.apigee.com/node/22656</a>.</p>
+<h2><a id="Part5" name="Part5"></a>Part 6: Viewing analytics on Apigee Edge</h2>
+<p>We now have a fully functioning Edge Microgateway instance, let's see what's it's been up to! By default, the analytics plugin module is added to Edge Micro. This module silently pushes analytics data from Edge Micro to Apigee edge, where it is consumed by the Edge Analytics system. Let's see:</p>
+<ol>
+	<li>Log in to your organization on Apigee Edge.</li>
+	<li>Select <strong>Analytics &gt; Proxy Performance</strong>.</li>
+	<li>In the Proxy Performance dashboard, select the <strong>edgemicro_hello proxy</strong>.</li>
+	<li>The graph shows you information about the the proxy's traffic patterns, such as total traffic, average response time, average target response time, and more.</li>
+</ol>
+<p>You can read more about Edge Analytics dashboards on the Analytics Dashboards home page in the Edge documentation. To learn more about plugins, see the&nbsp;<a href="http://docs.apigee.com/node/19366">http://docs.apigee.com/node/19366</a>.</p>

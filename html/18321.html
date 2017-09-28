@@ -1,0 +1,74 @@
+<h1> Managing organization users </h1>
+<p>[toc]</p>
+<p>This topic explains how to create and manage organization users. You must be an organization administrator to perform these tasks.</p>
+<h2>What are organization users?</h2>
+<p>Organization users are given explicit permission by the organization administrator to create, read, edit, and/or delete entities in an Apigee Edge organization. Permissions are role-based, where a role conveys a specific, targeted set of permissions. This permission scheme is also called <strong>role-based access control</strong>, or RBAC for short.</p>
+<div class="note">
+	<p>Organization users are typically members of your API team who develop and test APIs, run reports, and perform other API admin tasks. Do not confuse organization users with app developers, the consumers of your APIs. The process of onboarding app developers and managing their access to your APIs is an entirely separate topic. See <a href="http://docs.apigee.com/node/16051">http://docs.apigee.com/node/16051</a>.</p>
+	<p>Also, note that topic applies to API management, not API BaaS, which has its own user management framework.</p>
+</div>
+<h2>What Edge entities do organization users work with?</h2>
+<p>Organization users interact with a number of entities, including:</p>
+<ul>
+	<li>API proxies</li>
+	<li>API products</li>
+	<li>Developer apps</li>
+	<li>Developers</li>
+	<li>Environments (Trace tool sessions and deployments)</li>
+	<li>Custom reports (Analytics)</li>
+</ul>
+<p>The degree of interaction permitted depends on the role or roles that are assigned to the user by the organization administrator. See also <a href="http://docs.apigee.com/node/18361">http://docs.apigee.com/node/18361</a>.</p>
+<h2>Getting started</h2>
+<p><strong>You must be an org administrator</strong></p>
+<p>You must be an Apigee Edge organization administrator to create users and assign roles. Only organization admins can see and use the Admin menu, which is for managing organization users.</p>
+<p><img alt="" src="sites/docs/files/admin_menu.png" style="width: 444px; height: 126px; border-width: 1px; border-style: solid;" /></p>
+<h2><a name="view"></a>Viewing user data</h2>
+<p>The Organization Users table on the <strong>Admin &gt; Organization Users</strong> page lists all of the users attached to the current organization. For each user you can see:</p>
+<div class="note">
+	<p>By default, all users associated with an organization can view details about other organization users, such as email address, first name, and last name. Only users with the Organization Administrator role can add or update other organization users.</p>
+</div>
+<ul>
+	<li><strong>Name:</strong> The name of the user you entered when you created the user.</li>
+	<li><strong>Primary email:</strong>&nbsp;The email address you entered when you created the user.</li>
+	<li><strong>Role:</strong> The role of the user, which determines the degree of access. By default, all users have a user role that gives them full access to all features in Apigee.&nbsp;See also <a href="http://docs.apigee.com/node/18361">http://docs.apigee.com/node/18361</a>.</li>
+</ul>
+<h2><a name="add"></a>Adding users</h2>
+<p>To add an organization user:</p>
+<ol>
+	<li>In the Edge management UI, while logged in as an organization administrator, select <strong>Admin &gt; Organization Users</strong>. If you are not an org admin, this menu does not show up.&nbsp;</li>
+	<li>Click <strong>+ User</strong>. The "Add a User" screen appears.</li>
+	<li>Enter the user's email address.</li>
+	<li>Select the role you want to offer to the user. You can add more than one role to a user. See also See "<a href="#AddMultipleRoles">Adding roles to a user</a>" below.&nbsp;</li>
+	<li>Click <strong>Save</strong>.</li>
+</ol>
+<p>If the user already has an Apigee account, she will see the new organization after logging into Apigee.</p>
+<p>If the new user doesn't yet have an Apigee account, she is sent email instructions for account activation, password reset, and logging in. The user can log in with either:</p>
+<ul>
+	<li>email address<br />
+		or</li>
+	<li>username, which is the part of the email address before @.</li>
+</ul>
+<h2><a id="AddMultipleRoles" name="AddMultipleRoles"></a>Modifying a user's role or profile</h2>
+<p>You can add one or more roles to a user when you create a new user or if you edit an existing user.&nbsp;See also <a href="http://docs.apigee.com/node/18361">http://docs.apigee.com/node/18361</a>. You can also edit the user's first name and last name.</p>
+<div class="note">
+	<p>If a user has multiple roles assigned, the greater permission takes precedence. For example, if one role doesn't allow the user to create API proxies, but another role does, then the user can create API proxies. In general, it is not a common use case to assign users multiple roles.</p>
+</div>
+<ol>
+	<li>Select <strong>Admin &gt; Organization Users</strong>.</li>
+	<li>Click&nbsp;an existing user.</li>
+	<li>Click in the <strong>Roles</strong> field, and a dropdown appears.</li>
+	<li>Select a role to add.</li>
+	<li>Repeat steps 3 and 4 to add additional roles to the user if you want.</li>
+	<li>Edit the&nbsp;<strong>First Name</strong>&nbsp;or&nbsp;<strong>Last Name</strong>&nbsp;fields, if necessary.</li>
+	<li>Click <strong>Save</strong>.</li>
+</ol>
+<h2><a name="delete"></a>Removing users from an organization</h2>
+<p>To remove a user from an organization, you must be an org administrator.&nbsp;</p>
+<ol>
+	<li>Select the user in the Organization Users table.</li>
+	<li>Click <strong>Remove</strong>.</li>
+</ol>
+<div class="note">
+	<p>This only removes the user from the current account. If the user is a member of multiple accounts, they remain in the system.</p>
+</div>
+<p>To remove a user from Apigee completely, contact <a href="http://apigee.com/about/support/portal" target="_blank">Apigee Support</a>.</p>

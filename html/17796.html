@@ -1,0 +1,155 @@
+<h1> Implementing the authorization code grant type </h1>
+[toc]
+<p>Authorization code is one of the most commonly used OAuth 2.0 grant types. The authorization code flow is a "three-legged OAuth" configuration. In this configuration, the user authenticates himself with the resource server and gives the app consent to access his protected resources without divulging username/passwords to the client app.&nbsp;</p>
+<h2>About this topic</h2>
+<p>This topic offers a general description and overview of the OAuth 2.0 authorization grant type flow and discusses how to implement this flow on Apigee Edge.</p>
+<h2>Use cases</h2>
+<p>This grant type is intended for apps that are written by third-party developers who do not have a trusted business relationship with the API provider. For example, developers who register for public API programs should not generally be trusted. With this grant type, the user's credentials on the resource server are never shared with the app.&nbsp;</p>
+<h2>Code sample</h2>
+<p>You can find a complete, working sample implementation of the authorization code grant type on Apigee Edge in the <code>api-platform-samples</code> repo on GitHub. See the <a href="https://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-advanced">oauth-advanced sample</a> in the api-platform-samples/sample-proxies directory. See the <a href="http://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-advanced/README.md">README</a> file for details on the sample.&nbsp;</p>
+<h2>Flow diagram</h2>
+<p>The following flow diagram illustrates the authorization code OAuth flow with Apigee Edge serving as the authorization server.&nbsp;</p>
+<p><strong>Tip:</strong> To see a larger version of this diagram, right-click it and open it in a new tab, or save it and open it in an image viewer.&nbsp;</p>
+<p><img alt="" src="sites/docs/files/oauth-auth-code-flow (1).png" style="width: 700px; height: 471px; border-width: 1px; border-style: solid;" /></p>
+<p>&nbsp;</p>
+<h2>Steps in the authorization code flow</h2>
+<p>Here is a summary of the steps required to implement the authorization code grant type where Apigee Edge serves as the authorization server. Remember, the key to this flow is that the client never gets to see the user's credentials on the resource server.</p>
+<div class="note">
+	<p>The illustrations below are taken from the <a href="http://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-advanced">authorization code sample implementation</a> on GitHub.</p>
+</div>
+<p><strong>Prerequisite:</strong>&nbsp;The client app must be registered with Apigee Edge to obtain the client ID and client secret keys. See&nbsp;<a href="http://apigee.com/docs/api-services/content/registering-client-apps">Registering client apps</a>&nbsp;for details.</p>
+<h3>1. User initiates the flow</h3>
+<p>When the app needs to access the user's protected resources from a resource server (for example, contacts list on a social media site), it sends an API call to Apigee Edge, which validates the client's ID and, if it's valid, redirects the user's browser to a login page where the user will enter her credentials.&nbsp;The API call includes information the client app obtained when it was registered: the client ID and redirect URI.</p>
+<h3>2. User enters credentials</h3>
+<p>The user now sees a login page where she is asked to enter her login credentials. If the login is successful, we go to the next step.&nbsp;</p>
+<p><img alt="" src="sites/docs/files/oauth-login-page.png" style="width: 395px; height: 350px; border-width: 1px; border-style: solid;" /></p>
+<h3>3. User gives consent</h3>
+<p>In this step, the user gives the app consent to access her resources. The consent form typically includes scope selections, where the user can choose what the app is permitted to do on the resource server.&nbsp;For example, the user may give read-only permission, or permission for the app to update resources.</p>
+<p><img alt="" src="sites/docs/files/oauth-consent-page.png" style="width: 361px; height: 279px; border-width: 1px; border-style: solid;" /></p>
+<p>&nbsp;</p>
+<h3>4. The login app sends a request Apigee Edge</h3>
+<p>If the login and consent are successful, the login app POSTs data to the /authorizationcode endpoint of Apigee Edge. The data includes the redirect URI, client ID, scope, any user-specific information it wishes to include, and an indication that the login was successful.</p>
+<div class="note">
+	<p>It is important to note that the client app never sees this information. It is handled server-side and negotiated between the login app and Apigee Edge. For an example that shows how this step is handled securely, refer to the&nbsp;<a href="http://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-advanced">authorization code sample implementation</a> on GitHub.&nbsp;</p>
+</div>
+<h3>5. Apigee Edge generates an authorization code</h3>
+<p>When Edge receives a GET request from the login app on its /authorizationcode endpoint, two things happen. First, Edge determines that the login was successful (by checking HTTP status or some other means). Next Edge checks to be sure that the redirect URI sent from the login app matches the redirect URI that was specified when the app was registered with Apigee Edge. If everything is okay, Edge generates an authorization code. For example:</p>
+<pre class="prettyprint prettyprinted" style="margin-top: 18px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 13px; color: rgb(72, 72, 72); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+<span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);">http</span><span class="pun" style="margin: 0px; padding: 0px; color: rgb(102, 102, 0);">:</span><span class="com" style="margin: 0px; padding: 0px; color: rgb(162, 0, 0);">//myorg-test.apigee.net/oauth/authorizationcode?client_id={consumer_key}&amp;response_type=code&amp;redirect_uri={redirect_uri}&amp;scope=scope1%20scope2&amp;state={some_string}</span></pre>
+<h3>6. Edge sends the authorization code back to the client</h3>
+<p>Edge sends a 302 redirect with the auth code attached as a query parameter to the client.&nbsp;</p>
+<h3>7. The client retrieves the authorization code and requests an access code from Edge</h3>
+<p>Now with a valid auth code, the client can request an access token from Edge. It does this by POSTing the client ID and client secret keys (obtained when the app was registered on Edge), the grant type, and scope.&nbsp;By including the client ID and secret keys Apigee Edge can verify that the client app is the one that was registered. For example:</p>
+<pre class="terminal prettyprint prettyprinted" style="margin-top: 18px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 13px; color: rgb(208, 208, 208); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+<span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);">$ curl https</span><span class="pun" style="margin: 0px; padding: 0px; color: rgb(102, 102, 0);">:</span><span class="com" style="margin: 0px; padding: 0px; color: rgb(162, 0, 0);">//{org_name}-test.apigee.net/my_oauth_proxy/accesstoken?code=Xyz123&amp;grant_type=authorization_code -X POST -d 'client_id=bBGAQrXgivA9lKu7NMPyoYpKNhGar6K&amp;client_secret=hAr4GngA9vAyvI4'</span></pre>
+<h3>8. The client receives an access token</h3>
+<p>If everything is successful, Edge returns an access token to the client. The access token will have an expiration, and it will be valid only for the scope specified by the user when she gave consent to the app to access her resources.</p>
+<h3>9. The client calls the protected API</h3>
+<p>Now, with a valid access code, the client can make calls to the protected API. In this scenario, requests are made to Apigee Edge (the proxy), and Edge is responsible for validating the access token before passing the API call along to the target resource server. Access tokens are passed in an Authorization header. For example:</p>
+<pre class="terminal prettyprint prettyprinted" style="margin-top: 18px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 13px; color: rgb(208, 208, 208); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+<span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);">$ curl </span><span class="pun" style="margin: 0px; padding: 0px; color: rgb(102, 102, 0);">-</span><span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);">H </span><span class="str" style="margin: 0px; padding: 0px; color: rgb(0, 0, 187);">"Authorization: Bearer ylSkZIjbdWybfs4fUQe9BqP0LH5Z"</span><span class="pln" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0);"> http</span><span class="pun" style="margin: 0px; padding: 0px; color: rgb(102, 102, 0);">:</span><span class="com" style="margin: 0px; padding: 0px; color: rgb(162, 0, 0);">//{org_name}-test.apigee.net/weather/forecastrss?w=12797282</span></pre>
+<h2>Configuring flows and policies</h2>
+<p>As the authorization server, Edge needs to process a number of OAuth requests: for access tokens, auth codes, refresh tokens, login page redirects, etc. There are two fundamental steps to configure these endpoints:</p>
+<ul>
+	<li>Creating custom flows</li>
+	<li>Adding and configuring OAuthV2 policies</li>
+</ul>
+<h3><a id="flowconfig" name="flowconfig"></a>Custom&nbsp;flow configuration</h3>
+<p>You typically configure this grant type flow so that each step or "leg" of the flow is defined by a flow in the Apigee Edge proxy. Each flow has an endpoint and a policy that performs the OAuth-specific task required, such as generating an authorization code or an access token. For example, as shown in the XML below, the <code>/oauth/authorizationcode</code> endpoint has an associated policy called GenerateAuthCode (which is an OAuthV2 policy with the GenerateAuthorizationCode operation specified).&nbsp;</p>
+<p>The easiest way to show the flow configuration is with an XML example. See the in-line comments for information about each flow.&nbsp;This is an example -- names of flows and paths can be configured however you wish. See also&nbsp;<a href="http://apigee.com/docs/api-services/content/configuring-oauth-endpoints-and-policies">Configuring OAuth endpoints and policies</a>&nbsp;for a quick overview of the steps needed to create a custom flow like this.</p>
+<p>See also the <a href="http://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-advanced">example implementation</a> on GitHub.&nbsp;</p>
+<pre class="prettyprint prettyprinted" style="margin-top: 18px; margin-bottom: 18px; padding: 2px; font-family: Courier, monospace; font-size: 13px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; line-height: 19.5px; border: 1px solid rgb(136, 136, 136); white-space: pre-wrap; word-break: normal; word-wrap: break-word; max-width: 700px; background-color: rgb(253, 246, 227);">
+<span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Flows&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+  </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Flow</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;"> </span><span class="atn" style="color: rgb(102, 0, 102); margin: 0px; padding: 0px;">name</span><span class="pun" style="color: rgb(102, 102, 0); margin: 0px; padding: 0px;">=</span><span class="atv" style="color: rgb(0, 136, 0); margin: 0px; padding: 0px;">"RedirectToLoginApp"</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+         </span><span class="com" style="color: rgb(162, 0, 0); margin: 0px; padding: 0px;">&lt;!-- 
+         Publish this URI to developers to use for their 'login' link 
+         --&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Condition&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">proxy.pathsuffix == "/oauth/authorize"</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Condition&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Request&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+	</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Step&gt;&lt;Name&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">RedirectToLoginPage</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Name&gt;&lt;/Step&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Request&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+  </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Flow&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+  </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Flow</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;"> </span><span class="atn" style="color: rgb(102, 0, 102); margin: 0px; padding: 0px;">name</span><span class="pun" style="color: rgb(102, 102, 0); margin: 0px; padding: 0px;">=</span><span class="atv" style="color: rgb(0, 136, 0); margin: 0px; padding: 0px;">"GetAuthCode"</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+         </span><span class="com" style="color: rgb(162, 0, 0); margin: 0px; padding: 0px;">&lt;!-- 
+         Call this URL from your Login app after you authenticate the user.</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+</span><span class="com" style="color: rgb(162, 0, 0); margin: 0px; padding: 0px;">         The policy will automatically return the auth code in the response to the 
+         redirect_uri registered by the calling app 
+         --&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Condition&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">proxy.pathsuffix == "/oauth/authorizationcode"</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Condition&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Request&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+	</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Step&gt;&lt;Name&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">GenerateAuthCode</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Name&gt;&lt;/Step&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Request&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+  </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Flow&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+  </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Flow</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;"> </span><span class="atn" style="color: rgb(102, 0, 102); margin: 0px; padding: 0px;">name</span><span class="pun" style="color: rgb(102, 102, 0); margin: 0px; padding: 0px;">=</span><span class="atv" style="color: rgb(0, 136, 0); margin: 0px; padding: 0px;">"GetAccessToken"</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+         </span><span class="com" style="color: rgb(162, 0, 0); margin: 0px; padding: 0px;">&lt;!-- This policy flow is triggered when the URI path suffix
+         matches&nbsp;/oauth/accesstoken.</span><span class="com" style="margin: 0px; padding: 0px;"><font color="#000000"> </font></span><span class="com" style="color: rgb(162, 0, 0); margin: 0px; padding: 0px;">Publish this URL to app developers 
+         to use when obtaining an access token using an auth code   
+         --&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Condition&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">proxy.pathsuffix == "/oauth/accesstoken"</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Condition&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Request&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+	</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;Step&gt;&lt;Name&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">GenerateAccessToken</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Name&gt;&lt;/Step&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+    </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Request&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+  </span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Flow&gt;</span><span class="pln" style="color: rgb(0, 0, 0); margin: 0px; padding: 0px;">
+</span><span class="tag" style="color: rgb(0, 0, 187); margin: 0px; padding: 0px;">&lt;/Flows&gt;</span></pre>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<h3><a id="Example" name="Example"></a>Configure the flows with policies</h3>
+		<p>Each endpoint has a policy associated with it. Let's see examples of the policies. See also&nbsp;<a href="http://apigee.com/docs/api-services/content/configuring-oauth-endpoints-and-policies">Configuring OAuth endpoints and policies</a>&nbsp;for a quick overview of the steps needed to add OAuthV2 policies to proxy endpoints.</p>
+		<h4>Login redirect&nbsp;</h4>
+		<p>This is the <code>/oauth/authorize</code> path. The attached policy is responsible for redirecting the user to a login app, where the end user can safely authenticate and authorize the client app to access his protected resources without divulging his username and password to the client app. You can accomplish this with a service callout policy, JavaScript, Node.js, or other means.</p>
+		<p>The API call to do the request is a GET and requires the query parameters client_id, response_type, redirect_uri, scope, and state.</p>
+		<pre>
+$ curl&nbsp;http://myorg-test.apigee.net/oauth/authorize?client_id={consumer_key}&amp;response_type=code&amp;redirect_uri={redirect_uri}&amp;scope=scope1%20scope2&amp;state={some_string}</pre>
+		<div class="bestpractices">
+			<p>The login app typically POSTs a redirect response back to Apigee Edge. Edge then directs the user's browser to the registered callback URL. It's a best practice not to send the response directly back to the user agent/client to avoid exposing sensitive information.&nbsp;</p>
+		</div>
+		<h4>Get auth code</h4>
+		<p>This is the <code>/oauth/authorizationcode</code> path. It uses the OAuthV2 policy with the GenerateAuthorizationCode operation specified.</p>
+		<pre>
+&lt;OAuthV2 async="false" continueOnError="false" enabled="true" name="GetAuthCode"&gt;
+    &lt;DisplayName&gt;GetAuthCode&lt;/DisplayName&gt;
+    &lt;Operation&gt;GenerateAuthorizationCode&lt;/Operation&gt;
+    &lt;ExpiresIn&gt;600000&lt;/ExpiresIn&gt;
+    &lt;GenerateResponse/&gt;
+&lt;/OAuthV2&gt;</pre>
+		<p>The API call to obtain the authorization code is a GET and requires the query parameters client_id, response_type, and optionally scope and state, as shown in this example:</p>
+		<pre>
+$curl http://myorg-test.apigee.net/oauth/authorizationcode?client_id={consumer_key}&amp;response_type=code&amp;scope=scope1%20scope2&amp;state={some_string}</pre>
+		<h4>Get access token</h4>
+		<p>This policy is attached to the <code>/oauth/accesstoken</code> path. It uses the OAuthV2 policy with the GenerateAccessCode operation specified. In this case, the grant_type parameter is expected as a query param:</p>
+		<pre>
+&lt;OAuthV2 name="GetAccessToken"&gt;
+    &lt;Operation&gt;GenerateAccessToken&lt;/Operation&gt;
+    &lt;ExpiresIn&gt;360000000&lt;/ExpiresIn&gt;&nbsp;
+    &lt;SupportedGrantTypes&gt;&nbsp;
+        &lt;GrantType&gt;authorization_code&lt;/GrantType&gt;&nbsp;
+    &lt;/SupportedGrantTypes&gt;&nbsp;
+    &lt;GrantType&gt;request.queryparam.grant_type&lt;/GrantType&gt;&nbsp;
+    &lt;GenerateResponse/&gt;&nbsp;
+&lt;/OAuthV2&gt;</pre>
+		<p>The API call to obtain the access code is a POST and must include the client_id, client_secret, grant_type=authorization_code, and, optionally, scope. For example:</p>
+		<pre>
+$ curl https://{org_name}-test.apigee.net/oauth/accesstoken?grant_type=authorization_code -X POST -d 'client_id=bBGAQrXgivA9lKu7NMPyoYpVKNhGar6K&amp;client_secret=hAr4Gn0gA9vAyvI4'</pre>
+		<p>This is just a basic summary. A production example includes many other policies for building up URLs, doing transformations, and performing other tasks. Refer to the sample on GitHub for a complete, working project.</p>
+		<h2>Attaching the verify access token policy</h2>
+		<p>Attach a VerifyAccessToken policy (OAuthV2 policy with the VerifyAccessToken operation specified) to the beginning of any flow that accesses a protected API, so that it is executed whenever a request for a protected resources comes in. Edge checks to be sure each request has a valid access token. If not, an error is returned. For the basic steps, see&nbsp;<a href="http://apigee.com/docs/api-services/content/using-access-tokens">Verifying access tokens</a>.&nbsp;</p>
+		<pre>
+&lt;OAuthV2 async="false" continueOnError="false" enabled="true" name="VerifyAccessToken"&gt;
+    &lt;DisplayName&gt;VerifyAccessToken&lt;/DisplayName&gt;
+    &lt;ExternalAuthorization&gt;false&lt;/ExternalAuthorization&gt;
+    &lt;Operation&gt;VerifyAccessToken&lt;/Operation&gt;
+    &lt;SupportedGrantTypes/&gt;
+    &lt;GenerateResponse enabled="true"/&gt;
+    &lt;Tokens/&gt;
+&lt;/OAuthV2&gt;</pre>
+		<h2>Calling the protected API</h2>
+		<p>To call an API that is protected with OAuth 2.0 security, you need to present a valid access token. The correct pattern is to include the token in an Authorization header, as follows: Note that the access token is also referred to as a "bearer token".&nbsp;</p>
+		<pre class="terminal">
+$ curl -H "Authorization: Bearer UAj2yiGAcMZGxfN2DhcUbl9v8WsR" \
+  http://myorg-test.apigee.net/v0/weather/forecastrss?w=12797282 </pre>
+		<p>See also&nbsp;<a href="http://apigee.com/docs/api-services/content/sending-access-token">Sending an access token</a>.</p>
+		<p>&nbsp;</p>
+	</div>
+</div>
+<p>&nbsp;</p>

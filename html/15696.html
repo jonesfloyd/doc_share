@@ -1,0 +1,119 @@
+<h1> Create custom reports </h1>
+[toc]
+<div class="video">
+	<p>Watch a video to learn how to create custom reports using the <strong>classic Edge UI</strong>.</p>
+	<div class="collapse" id="demo">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/lTcuc2so4oI" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
+</div>
+<div class="video">
+	<p>Watch a video to learn how to create custom reports using the <strong>new Edge experience UI</strong>.</p>
+	<div class="collapse" id="demo2">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/p91de5WkR98" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo2">Show/Hide Video</a></div>
+</div>
+<h2>Adding new custom reports</h2>
+<p>By adding custom reports, you can create a set of charts that provide insight into every aspect of your API program.</p>
+<h4>To add a custom report:</h4>
+<ol>
+	<li>Select<strong>&nbsp;Reports</strong> from the <strong>Analytics</strong> menu.</li>
+	<li>Click&nbsp;<strong>+ Custom Report</strong>.</li>
+	<li>Enter the <strong>Report Name</strong> and <strong>Report Description</strong>.&nbsp;</li>
+	<li>Select a chart type, <strong>Column</strong> or <strong>Line</strong>. This is the style of chart that will be used to present your custom analytic data.</li>
+	<li>In the Metrics sections, choose the metric that you wish to analyze. See "<a href="#CustomMetrics">Custom metrics</a>" for a description of each metric.</li>
+	<li>Select an <strong>Aggregate Function</strong> that you want applied to the data for the first metric. You can select an aggregation function to display the <strong>Sum</strong>, <strong>Average</strong>, <strong>Min</strong>, or <strong>Max</strong> values.</li>
+	<li>Click <strong>+ Metric</strong> to add additional metrics.&nbsp;<br />
+		<img alt="" src="sites/docs/files/NewReport_v1.png" style="width: 701px; height: 284px; border-width: 1px; border-style: solid; margin: 15px;" /></li>
+	<li>Choose your <a href="#CustomDrilldown">Dimension</a>, such as a Proxy. Every dimension you add (by clicking <strong>+ Drilldown</strong>) constrains the data set used to generate the reports. In effect, you're presenting more and more specific data with each drilldown.<br />
+		<img alt="" src="sites/docs/files/Dimensions_v1.png" style="width: 700px; height: 151px; border-width: 1px; border-style: solid; margin: 15px;" /></li>
+	<li>You can further narrow the data displayed by adding filters to your report definition. In the <strong>Filter</strong> section of the page, click <strong>+ Filter Condition</strong>. Select the entity you want to filter on, and construct an expression with the <strong>Operator</strong> and <strong>Value</strong> to include or exclude data in the report.&nbsp;For example, you could add a filter that excludes data for the weather API proxy or developer jane@example.com.<br />
+		<img alt="" src="sites/docs/files/Filters_v1.png" style="width: 900px; border-width: 1px; border-style: solid; margin: 15px; height: 129px;" /><br />
+		Select an <strong>AND</strong> or <strong>OR</strong> connector for multiple filters, and click the check mark icon to save each filter.</li>
+	<li>Click <strong>Save</strong>. Your custom report appears.<br />
+		You can view a list of all custom reports by selecting <strong>Analytics &gt; Reports</strong> from the main menu.</li>
+</ol>
+<p>With the report visible:</p>
+<ol>
+	<li>Select a data aggregation interval for the report. Note that the Hourly aggregation is the least costly choice in terms of system resources. Per Minute is the most costly.</li>
+	<li>Click the <strong>Environment</strong> menu and choose the environment in your organization from which you want data to be collected.</li>
+</ol>
+<p><a href="http://docs.apigee.com/node/22041">Content to be inserted here</a></p>
+<h2><a id="CustomMetrics" name="CustomMetrics"></a>Custom metrics</h2>
+<p>When building a custom report, you can choose from these metrics:</p>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td><strong>Metric</strong></td>
+			<td><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td>Average transactions per second</td>
+			<td>The number of API requests and resulting responses per second.</td>
+		</tr>
+		<tr>
+			<td>Cache hit</td>
+			<td>The number of API requests that are serviced from the Apigee cache. The request for the cached data is not forwarded to the backend target.&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Policy errors</td>
+			<td>The request is marked as is_Error when it cannot be serviced successfully by a policy.</td>
+		</tr>
+		<tr>
+			<td>Proxy errors</td>
+			<td>The request is marked as is_Error when it cannot be serviced successfully by the proxy.</td>
+		</tr>
+		<tr>
+			<td>Request processing latency</td>
+			<td>The length of time it takes the proxy to complete an end-to-end transaction.&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Request size</td>
+			<td>The size of the request in bytes.</td>
+		</tr>
+		<tr>
+			<td>Response processing latency</td>
+			<td>The time it takes for the proxy to process a request measured in milliseconds.&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Response size</td>
+			<td>The size of the response in bytes.</td>
+		</tr>
+		<tr>
+			<td>Target errors</td>
+			<td>The request is marked as is_Error when it cannot be serviced successfully by the backend target.</td>
+		</tr>
+		<tr>
+			<td>Target response time</td>
+			<td>
+				<p>The time it takes from when a request is sent from to the backend target and when it is received from the backend.&nbsp;</p>
+				<p>See also this interesting article on the Apigee Community site:&nbsp;<a href="http://community.apigee.com/articles/2695/when-can-the-average-total-response-time-be-less-t.html">When can the Average Total Response Time be less than the Average Target Response Time?</a></p>
+			</td>
+		</tr>
+		<tr>
+			<td>Total response time</td>
+			<td>
+				<p>The total time for an app to receive a response from an API request. This is the sum of the request processing latency of the proxy, request processing latency of the customer endpoint, response generation latency of the customer end point, and the response processing latency of the proxy. It also includes the latency introduced by the network layer as the request and response can go through multiple networks before it reaches its destination.&nbsp;</p>
+				<p>See also this interesting article on the Apigee Community site:&nbsp;<a href="http://community.apigee.com/articles/2695/when-can-the-average-total-response-time-be-less-t.html">When can the Average Total Response Time be less than the Average Target Response Time?</a></p>
+			</td>
+		</tr>
+		<tr>
+			<td>Traffic</td>
+			<td>Also known as throughput. The number of API requests and resulting responses seen by the organization.</td>
+		</tr>
+	</tbody>
+</table>
+<h2><a id="CustomDrilldown" name="CustomDrilldown"></a>Drilldown dimensions</h2>
+<p>You can select from a large number of custom drilldown dimensions. Drilldown dimensions let you specify which dimensions to measure in your custom report. Apigee Edge Analytics collects data on a wide range of dimensions. And, you can also select any custom dimensions that have been created in your organization. See <a href="http://docs.apigee.com/node/8409">http://docs.apigee.com/node/8409</a>.</p>
+<h2><a class="jumplink" name="edit_delete"></a>Editing and deleting your reports</h2>
+<p>When you've completed building your custom report, the data is populated immediately. The graph is defaulted to plot the first metric you chose for the tab in your custom report. If you want to see different metrics, or compare them against each other, follow these steps:</p>
+<ol>
+	<li>Click the report name to view the graphs of the selected report.</li>
+	<li>Click the Edit button to edit the display name, dimensions, and measures.</li>
+	<li>Click <strong>Save</strong>.</li>
+</ol>
+<p>You also have the option to delete a report by clicking the <strong>Delete</strong> button.</p>
+<h2>Save reports as CSV files</h2>
+<p>You can export a saved custom report to CSV (comma-separated value) format. Each report includes an export menu item to start the export.</p>
+<p><img alt="" src="sites/docs/files/ExportCSV_v1.png" style="width: 697px; height: 91px; border-width: 1px; border-style: solid; margin: 15px;" /></p>

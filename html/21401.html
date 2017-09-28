@@ -1,0 +1,45 @@
+<h1> SOAP Message Validation policy error codes </h1>
+<p id="errorcodes">This policy returns the following error codes and error messages in error responses.&nbsp;For guidance on handling errors, see <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.&nbsp;</p>
+<table border="0" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
+	<thead>
+		<tr>
+			<th scope="col">Error Code</th>
+			<th scope="col">Message</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr></tr>
+		<tr>
+			<td>InvalidResourceType</td>
+			<td>InvalidResourceType MessageValidation {0}: Invalid Resource Type {1}. It should be xsd or wsdl. Context {2}</td>
+		</tr>
+		<tr>
+			<td>ResourceCompileFailed</td>
+			<td>ResourceCompileFailed MessageValidation {0}: Failed to compile resource {1}. Context {2}</td>
+		</tr>
+		<tr>
+			<td>RootElementNameUnspecified</td>
+			<td>RootElementNameUnspecified MessageValidation {0}: RootElement name is not specified</td>
+		</tr>
+		<tr>
+			<td>InvalidRootElementName</td>
+			<td>InvalidRootElementName MessageValidation {0}: RootElement name {1} is invalid</td>
+		</tr>
+		<tr>
+			<td>NonMessageVariable</td>
+			<td>NonMessageVariable Variable {0} does not resolve to a Message</td>
+		</tr>
+		<tr>
+			<td>SourceMessageNotAvailable</td>
+			<td>SourceMessageNotAvailable {0} message is not available for MessageValidation: {1}</td>
+		</tr>
+		<tr>
+			<td>NoElements</td>
+			<td>Resource "{0}" has no element definitions</td>
+		</tr>
+		<tr>
+			<td>Failed</td>
+			<td>MessageValidation {0} failed with reason: "{1}"</td>
+		</tr>
+	</tbody>
+</table>

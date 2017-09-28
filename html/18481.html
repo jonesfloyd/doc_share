@@ -1,0 +1,10 @@
+<h1> JavaScript callouts </h1>
+<h2>Making JavaScript callouts</h2>
+<p>Use the JavaScript Object Model object&nbsp;<code>httpClient</code> to make multiple, parallel, asynchronous HTTP requests to any URL from within custom JavaScript code executing in an API proxy flow.</p>
+<p>Here's a basic usage pattern. Instantiate a Request object, assign to it a URL (e.g., to a backend service you wish to call), and call&nbsp;<code>httpClient.send</code>&nbsp;with that request object.</p>
+<pre>
+var myRequest = new Request();
+myRequest.url = "http://www.example.com";
+var exchangeObj = httpClient.send(myRequest);</pre>
+<p>For details, see the&nbsp;<a href="http://apigee.com/docs/api-services/reference/javascript-object-model">Apigee Edge Javascript object model</a>.&nbsp;</p>
+<p>&nbsp;</p>

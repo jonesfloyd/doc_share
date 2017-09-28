@@ -1,0 +1,165 @@
+<h1> Python Script policy </h1>
+<img src="sites/docs/files/icon_policy_python.jpg" />
+<h3>What</h3>
+<p>The Python Script policy lets you add customized Python functionality to your API proxy flow, especially when the functionality you need is beyond what the Edge out-of-the-box policies provide.</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations, but see the notes following the table for specific guidance.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="http://docs.apigee.com/node/23811">Content to be inserted here</a></p>
+<h3 id="samples">Samples</h3>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Python policy &amp; script</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<h3>Python Script policy</h3>
+		<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;Script name="Python-1"&gt;
+        &lt;DisplayName&gt;Python-1&lt;/DisplayName&gt;
+        &lt;ResourceURL&gt;py://myscript.py&lt;/ResourceURL&gt;
+&lt;/Script&gt;</pre>
+		<p>In this example, the element, ResourceURL specifies the relevant Python script resource.</p>
+		<h3>Python Script</h3>
+		<p>This shows what you might include in the Python script itself.</p>
+		<pre>
+import base64
+
+username = flow.getVariable("request.formparam.client_id")
+password = flow.getVariable("request.formparam.client_secret")
+
+base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
+authorization = "Basic "+base64string
+
+flow.setVariable("authorizationParam",authorization)</pre>
+	</div>
+	<!-- Tab 1 end. --></div>
+<!-- End tabbed region. -->
+<h2 id="elements">Element reference</h2>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;Script name="Python-1"&gt;
+    &lt;DisplayName&gt;Python-1&lt;/DisplayName&gt;
+    &lt;ResourceURL&gt;py://myscript.py&lt;/ResourceURL&gt;
+    &lt;IncludeURL&gt;py://myscript_dependency.py&lt;/IncludeURL&gt;
+&lt;/Script&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2><a id="ResourceURL" name="ResourceURL"></a>&lt;ResourceURL&gt; element</h2>
+<p>This element specifies the main Python file that will execute in the API flow. You can store this file at the API proxy scope (under <code>/apiproxy/resources/py</code>&nbsp;in the API proxy bundle or in the Scripts section of the API proxy editor's Navigator pane), or at the organization or environment scopes for reuse across multiple API proxies, as described in <a href="http://docs.apigee.com/node/11972">http://docs.apigee.com/node/11972</a>. Your code can use the objects, methods, and properties of the <a href="http://docs.apigee.com/node/3976">http://docs.apigee.com/node/3976</a>.</p>
+<pre>
+&lt;ResourceURL&gt;py://myscript.py&lt;/ResourceURL&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">None</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2><a id="IncludeURL" name="IncludeURL"></a>&lt;IncludeURL&gt; element</h2>
+<p>Specifies a Python file to be loaded as dependency to the main Python file specified with the <code>&lt;ResourceURL&gt;</code> element. The scripts will be evaluated in the order in which they are listed in the policy.</p>
+<p>Include more than one Python dependency resource with additional <code>&lt;IncludeURL&gt;</code> elements.</p>
+<div class="warning">
+	<p>If your Python files are stored at the organization or environment level, be sure they were uploaded correctly with cURL using the <code>-F</code> option or as a file attachment through a REST client. Content-Type is <code>multipart/form-data</code>. For more information, see <a href="http://docs.apigee.com/node/11972">http://docs.apigee.com/node/11972</a>.</p>
+</div>
+<pre>
+    &lt;IncludeURL&gt;py://myscript_dependency.py&lt;/IncludeURL&gt;
+</pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default:</td>
+			<td class="pd-td-right">None</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence:</td>
+			<td class="pd-td-right">Optional</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type:</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="usage">Usage notes</h2>
+<p>A Python policy contains no actual code. Instead, a Python policy references a Python 'resource' and defines the Step in the API flow where the Python script executes. You can upload your script through the Management UI proxy editor, or you can include it in the <code>/resources/py</code> directory in API proxies that you develop locally.</p>
+<div class="warning">
+	<p>System calls, for example network I/O, filesystem read/writes, current user info, process list, and CPU/memory utilization are not permitted by the security model. Although some such calls may be functional, they are unsupported and liable to be actively disabled at any time. For forward compatibility, you should avoid making such calls in your Python scripts.</p>
+</div>
+<h2>Error codes</h2>
+<p><a href="http://docs.apigee.com/node/21376">Content to be inserted here</a></p>
+<h2 id="relatedtopics">Related topics</h2>
+<div class="sample-github">
+	<p>For working samples of API proxies, see the <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a>.</p>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,28 @@
+<h1> Registering client apps </h1>
+[toc]
+<p>To participate in OAuth 2.0 flows on Apigee Edge, client apps must be registered.&nbsp;</p>
+<h2>What is registration?</h2>
+<p>Registration allows Apigee Edge (the authorization server) to uniquely identify your app. When you register your app, you receive back two keys: a client ID and client secret. The app needs these keys when negotiating for access tokens with the authorization server.</p>
+<h2>Quick steps</h2>
+<p>For development and testing, you can use one of the pre-registered developer apps to obtain keys. See <a href="http://docs.apigee.com/node/17861">http://docs.apigee.com/node/17861</a> for details.&nbsp;</p>
+<p>If you want to register a new app:</p>
+<ol>
+	<li>Log in to your Apigee Edge account.</li>
+	<li>From the main menu, select <strong>Publish &gt; Developer apps</strong>.&nbsp;</li>
+	<li>Click <strong>+ Developer App</strong>.&nbsp;</li>
+	<li>Fill out the form:
+		<ol>
+			<li>Enter a name.</li>
+			<li>Select a developer (you can choose one of the default developers or <a href="http://apigee.com/docs/developer-services/content/adding-developers-your-api-product">create your own</a>).&nbsp;</li>
+			<li>(Optional) Enter a callback URL. This is used for "three-legged" OAuth grant type flows. This is where Apigee Edge redirects the user after she completes authentication (login) with the resource server. It has to be a complete URL, so you might enter something like <code>https://www.example.com</code>.&nbsp;For more about three-legged OAuth, see <a href="http://docs.apigee.com/node/17796">http://docs.apigee.com/node/17796</a>.</li>
+			<li>Add a product. You can select one of the default products (or any product you wish). Or <a href="http://apigee.com/docs/developer-services/content/creating-api-products">create your own</a>.&nbsp;</li>
+			<li>Ignore custom attributes for now.</li>
+			<li>Click <strong>Save</strong>.&nbsp;</li>
+		</ol>
+	</li>
+	<li>Find your new app in the list of developer apps and select it.</li>
+	<li>Now, you can click <strong>Show</strong> to see the Consumer ID (client ID) and Consumer Secret (client secret) values.&nbsp;</li>
+</ol>
+<h2>Deeper dive</h2>
+<p>For a more detailed discussion of app registration, see <a href="http://docs.apigee.com/node/158">http://docs.apigee.com/node/158</a>. If you'd like to know more about the role of products, see <a href="http://docs.apigee.com/node/14759">http://docs.apigee.com/node/14759</a>.</p>
+<p>&nbsp;</p>

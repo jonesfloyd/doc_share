@@ -1,0 +1,543 @@
+<h1> Verify API Key policy </h1>
+<img src="sites/docs/files/icon_policy_security.jpg" />&nbsp;
+<h3>What</h3>
+<p>The Verify API Key policy lets you enforce verification of API keys at runtime, letting only apps with approved API keys access your APIs. This policy ensures that API keys are valid, have not been revoked, and are approved to consume the specific resources associated with your API products.</p>
+<!-- Pending tutorial update<p>For tutorials that show how to build an API proxy that uses the Verify API Key policy, see <a href="http://docs.apigee.com/node/17741">http://docs.apigee.com/node/17741</a> and <a href="http://docs.apigee.com/node/18151">http://docs.apigee.com/node/18151</a>.</p>-->
+<h3>Where</h3>
+<p>In most cases, the Verify API Key policy is the first policy in the request PreFlow&nbsp;because no further API processing should occur if a key is invalid or missing.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
+			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h3 id="samples">Samples</h3>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Key in query param</a></li>
+	<li><a data-toggle="tab" href="#tab_2">Key in header</a></li>
+	<li><a data-toggle="tab" href="#tab_3">Key in variable</a></li>
+	<li><a data-toggle="tab" href="#tab_4">Access policy flow variables</a></li>
+	<li><a data-toggle="tab" href="#tab_5">Learn Edge</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<pre>
+&lt;VerifyAPIKey name="APIKeyVerifier"&gt;
+    &lt;APIKey ref="request.queryparam.apikey" /&gt;
+&lt;/VerifyAPIKey&gt;</pre>
+		<p>The policy extracts the API key from the request message by referencing the flow variable specified by the <span style="font-family:courier new,courier,monospace;">ref</span> attribute. In this example, the policy extracts the API key from a flow variable named <span style="font-family:courier new,courier,monospace;">request.queryparam.apikey</span>, which is populated by a query param named <span style="font-family:courier new,courier,monospace;">apikey</span>.</p>
+		<p>The following URL shows how you pass the API key for this example:</p>
+		<p><span style="font-family:courier new,courier,monospace;">http://{org-name}-test.apigee.net/v1/weather/forecastrss?w=12797282&amp;<strong>apikey=IEYRtW2cb7A5Gs54A1wKElECBL65GVls</strong></span></p>
+		<p>where <span style="font-family:courier new,courier,monospace;">{org-name}</span> is the name of your Edge organization.</p>
+		<!-- Tab 1 end. --></div>
+	<!-- Tab 2 begin. -->
+	<div class="tab-pane" id="tab_2">
+		<pre>
+&lt;VerifyAPIKey name="APIKeyVerifier"&gt;
+    &lt;APIKey ref="request.header.AppKey" /&gt;
+&lt;/VerifyAPIKey&gt;</pre>
+		<p>In this example, you configure the policy to look for the API key in a header named <span style="font-family:courier new,courier,monospace;">AppKey</span>. The client app must then pass the API key as the value of an HTTP header named <code>AppKey</code>.</p>
+		<!-- Tab 2 end. --></div>
+	<!-- Tab 3 begin. -->
+	<div class="tab-pane" id="tab_3">
+		<pre>
+&lt;VerifyAPIKey name="APIKeyVerifier"&gt;
+    &lt;APIKey ref="requestAPIKey.key"/&gt;
+&lt;/VerifyAPIKey&gt;</pre>
+		<p>The policy can reference any variable that contains the key. The policy in this example extracts the API key from a variable named <span style="font-family:courier new,courier,monospace;">requestAPIKey.key</span>.</p>
+		<p>How that variable is populated is up to you. For example, you could use the Extract Variables policy to populate <span style="font-family:courier new,courier,monospace;">requestAPIKey.key</span> from a query parameter named <span style="font-family:courier new,courier,monospace;">myKey</span>, as shown below:</p>
+		<pre>
+&lt;ExtractVariables async="false" continueOnError="false" enabled="true" name="SetAPIKeyVar"&gt;
+    &lt;Source&gt;request&lt;/Source&gt;
+    &lt;QueryParam name="myKey"&gt;
+        &lt;Pattern ignoreCase="true"&gt;{key}&lt;/Pattern&gt;
+    &lt;/QueryParam&gt;
+    &lt;VariablePrefix&gt;requestAPIKey&lt;/VariablePrefix&gt;
+    &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
+&lt;/ExtractVariables&gt;
+</pre>
+		<!-- Tab 3 end. --></div>
+	<!-- Tab 4 begin. -->
+	<div class="tab-pane" id="tab_4">
+		<pre>
+&lt;AssignMessage async="false" continueOnError="false" enabled="true" name="accessverifyvars"&gt;
+    &lt;AssignVariable&gt;
+        &lt;Name&gt;devFirstName&lt;/Name&gt;
+        &lt;Ref&gt;verifyapikey.verify-api-key.developer.firstName&lt;/Ref&gt;
+        &lt;Value&gt;ErrorOnCopy&lt;/Value&gt;
+    &lt;/AssignVariable&gt;
+    &lt;AssignVariable&gt;
+        &lt;Name&gt;devLastName&lt;/Name&gt;
+        &lt;Ref&gt;verifyapikey.verify-api-key.developer.lastName&lt;/Ref&gt;
+        &lt;Value&gt;ErrorOnCopy&lt;/Value&gt;
+    &lt;/AssignVariable&gt;
+    &lt;AssignVariable&gt;
+        &lt;Name&gt;devEmail&lt;/Name&gt;
+        &lt;Ref&gt;verifyapikey.verify-api-key.developer.email&lt;/Ref&gt;
+        &lt;Value&gt;ErrorOnCopy&lt;/Value&gt;
+    &lt;/AssignVariable&gt;
+    &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
+    &lt;AssignTo createNew="false" transport="http" type="request"/&gt;
+&lt;/AssignMessage&gt;
+</pre>
+		<p>Edge automatically populates a set of flow variables when executing the Verify API Key policy for a valid API key. You can use these variables to access information such as the app name, app ID, and information about the developer or company who registered the app. In the example above, you use the Assign Message policy to access the developer's first name, last name, and email address after the Verify API Key executes.</p>
+		<p>These variables are all prefixed by:</p>
+		<p><code>verifyapikey.{policy_name}</code></p>
+		<p>In this example, the Verify API key policy name is "<span style="font-family:courier new,courier,monospace;">verify-api-key</span>". Therefore, you reference the first name of the developer making the request by accessing the variable&nbsp;<code>verifyapikey.verify-api-key.developer.firstName.</code></p>
+		<!-- Tab 4 end. --></div>
+	<!--Tab 2 end.--><!--Tab 3 begin.--><!-- Tab 3 end. --><!--Tab 4 begin.--><!-- Tab 3 begin. -->
+	<div class="tab-pane active" id="tab_5">
+		<div class="sample-github">
+			<p><strong>Learn by doing!</strong><br />
+				This <a href="https://github.com/apigee/api-platform-samples/tree/master/learn-edge/apikey-security-1" target="_blank">Learn Edge</a> example secures an API proxy with an API key, and this <a href="https://github.com/apigee/api-platform-samples/tree/master/learn-edge/apikey-security-2">Learn Edge example</a> shows you how to remove the API key from the request to prevent it from being passed to the backend target (a best practice). Just clone the repository and follow the instructions in the READMEs.&nbsp;</p>
+		</div>
+	</div>
+	<!-- Tab 3 end. --><!-- End tabbed region. --></div>
+<hr />
+<h2 id="usage">About the Verify API Key policy</h2>
+<p>When a developer registers an app on Edge, Edge automatically generates a consumer key and secret pair. You can see the app's consumer key and secret pair in the Edge UI or access them from the Edge API. &nbsp;&nbsp;</p>
+<div class="note">
+	<p>API keys go by many names. You may see them referred to as 'API keys', 'app keys', and 'consumer keys'. All of these names are synonymous.</p>
+</div>
+<p>At the time of app registration, the developer selects one or more <em>API products</em> to associate with the app, where an API product is a collection of<em>&nbsp;resources</em> accessible through API proxies. The developer then passes the API key (consumer key) as part of every request to an API in an API product associated with the app. See <a href="http://docs.apigee.com/node/16051">http://docs.apigee.com/node/16051</a> for more.</p>
+<p>API keys can be used as authentication tokens, or they can be used to obtain OAUth access tokens. In OAuth, API keys are referred to as "client id". The names can be used interchangeably. See <a href="http://docs.apigee.com/node/17786">http://docs.apigee.com/node/17786</a> for more.&nbsp;</p>
+<p>Edge automatically populates a set of flow variables when executing the Verify API Key policy. See <a href="http://apigee.com/docs/api-services/reference/verify-api-key-policy#variables">Flow variables</a> below for more.&nbsp;</p>
+<h2 id="elements">Element Reference</h2>
+<p>Following are elements and attributes you can configure on this policy.</p>
+<pre>
+&lt;VerifyAPIKey async="false" continueOnError="false" enabled="true" name="Verify-API-Key-1"&gt;
+    &lt;DisplayName&gt;Custom label used in UI&lt;/DisplayName&gt;
+    &lt;APIKey ref="variable_containing_api_key"/&gt;
+&lt;/VerifyAPIKey&gt;</pre>
+<h2>&lt;VerifyAPIKey&gt; attributes</h2>
+<pre>
+&lt;VerifyAPIKey async="false" continueOnError="false" enabled="true" name="Verify-API-Key-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2 id="apikey">&lt;APIKey&gt; element</h2>
+<p>References the variable containing the API key. The key can be contained in any variable accessible by the policy.</p>
+<p>For example, you can pass the API key a request as a query parameter, HTTP header, or form parameter. You then access the API key as a flow variable in the request message.</p>
+<p>Setting <span style="font-family:courier new,courier,monospace;">ref</span> to the flow variable&nbsp;<span style="font-family:courier new,courier,monospace;">request.queryparam.apikeyquery</span> indicates that the API key is passed as a query parameter named <span style="font-family:courier new,courier,monospace;">apikeyquery</span>.&nbsp;</p>
+<pre>
+&lt;VerifyAPIKey name="APIKeyVerifier"&gt;
+    &lt;APIKey ref="request.queryparam.apikey"/&gt;
+&lt;/VerifyAPIKey&gt;</pre>
+<p>If the API key is passed in an HTTP header named <span style="font-family:courier new,courier,monospace;">apikeyheader</span>, set <span style="font-family:courier new,courier,monospace;">ref</span> to <span style="font-family:courier new,courier,monospace;">request.header.apikeyheader</span>. If it is passed as a form parameter named <span style="font-family:courier new,courier,monospace;">apikeyform</span>, set <span style="font-family:courier new,courier,monospace;">ref</span> to&nbsp;<span style="font-family:courier new,courier,monospace;">request.formparam.apikeyform</span>.&nbsp;</p>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default</td>
+			<td class="pd-td-right">NA</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence</td>
+			<td class="pd-td-right">Required</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type</td>
+			<td class="pd-td-right">String</td>
+		</tr>
+	</tbody>
+</table>
+<h4>Attributes</h4>
+<table border="1" cellpadding="1" cellspacing="1" class="table" width="650">
+	<tbody>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Description</th>
+			<th scope="col">Default</th>
+			<th scope="col">Presence</th>
+		</tr>
+		<tr>
+			<td>ref</td>
+			<td>
+				<p>A reference to the variable that contains the API key. Only one location is allowed per policy.</p>
+			</td>
+			<td>N/A</td>
+			<td>Required</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Schemas</h2>
+<div class="sample-github">
+	<p>See our <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">Github repository</a>&nbsp;samples for the most recent schemas.</p>
+</div>
+<h2 id="variables">Flow variables</h2>
+<p>When a Verify API Key policy is enforced on a valid API key, Edge populates a set of flow variables. These variables are available to policies or code executed later in the flow, and are often used to perform custom processing based on attributes of the API key such as the app name, the API product used to authorize the key, or custom attributes of the API key.</p>
+<p>The policy populates several different types of flow variables, including:</p>
+<ul>
+	<li>General</li>
+	<li>App</li>
+	<li>Developer</li>
+	<li>Company</li>
+	<li>Analytics&nbsp;</li>
+</ul>
+<p>Each type of flow variable has a different prefix. All variables are scalars except those specifically&nbsp;indicated as arrays.</p>
+<h3>General flow variables</h3>
+<p>The following table lists the general flow variables populated by the Verify API Key policy. These variables are all prefixed by:</p>
+<p><code>verifyapikey.{policy_name}</code></p>
+<p>For example: <code>verifyapikey.{policy_name}.client_id</code></p>
+<p>The available variables include:</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table">
+	<thead>
+		<tr>
+			<th scope="col">Variable</th>
+			<th scope="col">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>client_id</code></td>
+			<td>The consumer key (aka API key or app key) supplied by the requesting app.</td>
+		</tr>
+		<tr>
+			<td><code>client_secret</code></td>
+			<td>The consumer secret associated with the consumer key.</td>
+		</tr>
+		<tr>
+			<td><code>redirection_uris</code></td>
+			<td>Any redirect URIs in the request.</td>
+		</tr>
+		<tr>
+			<td><code>developer.app.id</code></td>
+			<td>The ID of the developer app making the request.</td>
+		</tr>
+		<tr>
+			<td><code>developer.app.name</code></td>
+			<td>The app name of the developer app making the request.</td>
+		</tr>
+		<tr>
+			<td><code>developer.id</code></td>
+			<td>The ID of the developer registered as the owner of the requesting app.</td>
+		</tr>
+		<tr>
+			<td><code>developer.{custom_attrib_name}</code></td>
+			<td>Any custom attributes derived from the app key profile.</td>
+		</tr>
+		<tr>
+			<td><code>DisplayName</code></td>
+			<td>The value of the policy's &lt;DisplayName&gt; attribute.</td>
+		</tr>
+		<tr>
+			<td><code>failed</code></td>
+			<td>Set to "true" when API Key validation fails.</td>
+		</tr>
+		<tr>
+			<td><code>{custom_app_attrib}</code></td>
+			<td>Any custom attribute derived from the app profile. Specify the name of the custom attribute.</td>
+		</tr>
+		<tr>
+			<td><code>apiproduct.name*</code></td>
+			<td>The name of the API product used to validate the request.</td>
+		</tr>
+		<tr>
+			<td><code>apiproduct.{custom_attrib_name}*</code></td>
+			<td>Any custom attribute derived from the API product profile.</td>
+		</tr>
+		<tr>
+			<td><code>apiproduct.developer.quota.limit*</code></td>
+			<td>The quota limit set on the API product, if any.</td>
+		</tr>
+		<tr>
+			<td><code>apiproduct.developer.quota.interval*</code></td>
+			<td>The quota interval set on the API product, if any.</td>
+		</tr>
+		<tr>
+			<td><code>apiproduct.developer.quota.timeunit*</code></td>
+			<td>The quota time unit set on the API product, if any.</td>
+		</tr>
+		<tr>
+			<td colspan="2">* API product variables are populated automatically if the API products are configured with valid environment, proxies, and resources (derived from the&nbsp;<code>proxy.pathsuffix</code>). For instructions on setting up API products, see <a href="http://docs.apigee.com/node/427">http://docs.apigee.com/node/427</a>.</td>
+		</tr>
+	</tbody>
+</table>
+<h3>App flow variables</h3>
+<p>The following flow variables containing information about the app are populated by the policy. These variables are all prefixed by:</p>
+<p><code>verifyapikey.{policy_name}.app</code>.</p>
+<p>For example:</p>
+<p><code>verifyapikey.{policy_name}.app.name</code></p>
+<p>The available variables include:</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table">
+	<thead>
+		<tr>
+			<th scope="col">Variable</th>
+			<th scope="col">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>name</code></td>
+			<td>The name of the app.</td>
+		</tr>
+		<tr>
+			<td><code>id</code></td>
+			<td>The ID of the app.</td>
+		</tr>
+		<tr>
+			<td><code>accessType</code></td>
+			<td>Unused by Apigee.</td>
+		</tr>
+		<tr>
+			<td><code>callbackUrl</code></td>
+			<td>The callback URL of the app. Typically used only for OAuth.</td>
+		</tr>
+		<tr>
+			<td><span style="font-family: monospace; font-size: 12px;">DisplayName</span></td>
+			<td>The app's display name.</td>
+		</tr>
+		<tr>
+			<td><code>status</code></td>
+			<td>The app status, such as&nbsp;'approved' or 'revoked'.</td>
+		</tr>
+		<tr>
+			<td><code>apiproducts</code></td>
+			<td>An array containing the list of API products associated with the app.&nbsp;</td>
+		</tr>
+		<!--	<tr>
+			<td><code>scopes</code></td>
+			<td>An array of OAuth scopes assigned to the API products associated with the app.</td>
+		</tr> -->
+		<tr>
+			<td><code>appFamily</code></td>
+			<td>Any app family containing the app, or "default".</td>
+		</tr>
+		<tr>
+			<td><code>appParentStatus</code></td>
+			<td>The status of the app's parent, such as&nbsp;'active' or 'inactive'</td>
+		</tr>
+		<tr>
+			<td><code>appType</code></td>
+			<td>The app type, as either "Company" or "Developer".</td>
+		</tr>
+		<tr>
+			<td><code>appParentId</code></td>
+			<td>The ID of the parent app.</td>
+		</tr>
+		<tr>
+			<td><code>created_at</code></td>
+			<td>The date/time stamp when the app was created.</td>
+		</tr>
+		<tr>
+			<td><code>created_by</code></td>
+			<td>The email address of the&nbsp;developer who created the app.</td>
+		</tr>
+		<tr>
+			<td><code>last_modified_at</code></td>
+			<td>The date/time stamp when the app was last updated.</td>
+		</tr>
+		<tr>
+			<td><code>last_modified_by</code></td>
+			<td>The email address of the&nbsp;developer who last updated the app.</td>
+		</tr>
+		<tr>
+			<td><code>{app_custom_attributes}</code></td>
+			<td>Any custom app attribute.&nbsp;Specify the name of the custom attribute.</td>
+		</tr>
+	</tbody>
+</table>
+<h3><strong>Developer flow variables</strong></h3>
+<p>The following flow variables containing information about the developer are populated by the policy. These variables are all prefixed by:</p>
+<p><code>verifyapikey.{policy_name}.developer</code>.</p>
+<div class="note">
+	<p>If the&nbsp;<code>verifyapikey.{policy_name}.app.appType</code>&nbsp;flow variable is "Developer", then developer attributes are populated. If&nbsp;<code>app.appType</code>&nbsp;is "Company", then company attributes are populated.</p>
+</div>
+<p>For example:</p>
+<p><code>verifyapikey.{policy_name}.developer.id</code></p>
+<p>The available variables include:</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table">
+	<thead>
+		<tr>
+			<th scope="col">Variable</th>
+			<th scope="col">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>id</code></td>
+			<td>Returns {org_name}@@@{developer_id}</td>
+		</tr>
+		<tr>
+			<td><code>userName</code></td>
+			<td>The developer's user name.</td>
+		</tr>
+		<tr>
+			<td><code>firstName</code></td>
+			<td>The developer's first name.</td>
+		</tr>
+		<tr>
+			<td><code>lastName</code></td>
+			<td>The developer's last name.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>email</code></td>
+			<td>The developer's email address.</td>
+		</tr>
+		<tr>
+			<td><code>status</code></td>
+			<td>The developer's status, as&nbsp;active, inactive, or login_lock.</td>
+		</tr>
+		<tr>
+			<td><code>apps</code></td>
+			<td>An array of apps associated with the developer.</td>
+		</tr>
+		<tr>
+			<td><code>created_at</code></td>
+			<td>The date/time stamp when the developer was created.</td>
+		</tr>
+		<tr>
+			<td><code>created_by</code></td>
+			<td>The email address of the user who created the developer.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>last_modified_at</code></td>
+			<td>The date/time stamp when the developer was last modified.</td>
+		</tr>
+		<tr>
+			<td><code>last_modified_by</code></td>
+			<td>The email address of the user who modified the developer.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>{developer_custom_attributes}</code></td>
+			<td>Any custom developer attribute.&nbsp;Specify the name of the custom attribute.</td>
+		</tr>
+		<tr>
+			<td><code>Company</code></td>
+			<td>The name of the company, if any, associated with the developer.</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Company flow variables</h3>
+<p>The following flow variables containing information about the company are populated by the policy. These variables are all prefixed by:</p>
+<p><code>verifyapikey.{policy_name}.company</code>.</p>
+<div class="note">
+	<p>If the&nbsp;<code>verifyapikey.{policy_name}.app.appType</code>&nbsp;is "Company", then company attributes are populated. If&nbsp;<code>app.appType</code>&nbsp;is "Developer", then developer attributes are populated.</p>
+</div>
+<p>For example:</p>
+<p><code>verifyapikey.{policy_name}.company.name</code></p>
+<p>The available variables include:</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table">
+	<thead>
+		<tr>
+			<th scope="col">Variable</th>
+			<th scope="col">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>name</code></td>
+			<td>The company&nbsp;name.</td>
+		</tr>
+		<tr>
+			<td><code>displayName</code></td>
+			<td>The display name of the company.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>id</code></td>
+			<td>The&nbsp;company ID.</td>
+		</tr>
+		<tr>
+			<td><code>apps</code></td>
+			<td>An array containing the list of company apps.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>appOwnerStatus</code></td>
+			<td>
+				<div>The status of the app owner, as active, inactive, or login_lock.</div>
+			</td>
+		</tr>
+		<tr>
+			<td><code>created_at</code></td>
+			<td>The date/time stamp when the company was created.</td>
+		</tr>
+		<tr>
+			<td><code>created_by</code></td>
+			<td>The email address of the user who created the company.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>last_modified_at</code></td>
+			<td>The date/time stamp when the company was last modified.</td>
+		</tr>
+		<tr>
+			<td><code>last_modified_by</code></td>
+			<td>The email address of the user who last modified the company.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><code>{company_custom_attributes}</code></td>
+			<td>Any custom company attribute. Specify the name of the custom attribute.</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Analytics variables</h3>
+<p>The following variables are automatically populated in Analytics when a Verify API Key policy is enforced for a valid API key. These variables are only populated by the Verify API Key policy&nbsp;and the OAuth policies.</p>
+<p>The variables and values can be used as dimensions to build Analytics reports to gain visibility into consumption patterns by developers and apps.</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">apiproduct.name</span></li>
+	<li><span style="font-family:courier new,courier,monospace;">developer.app.name</span></li>
+	<li><span style="font-family:courier new,courier,monospace;">client_id</span></li>
+	<li><span style="font-family:courier new,courier,monospace;">developer.id</span></li>
+</ul>
+<h2 id="errors">Error reference</h2>
+<p><a href="http://docs.apigee.com/node/21431">Content to be inserted here</a></p>
+<h2 id="relatedtopics">Related topics</h2>
+<div class="sample-github">
+	<p>For working samples of API proxies, see the <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a>.</p>
+</div>
+<!-- Pending tutorial update	<ul><li>For instructions on configuring API key validation using the management UI, see <a href="http://docs.apigee.com/node/8398">http://docs.apigee.com/node/8398</a>.</li>
+	<li>For instructions on configuring API key validation using the management API, see <a href="http://docs.apigee.com/node/18131">http://docs.apigee.com/node/18131</a>.</li>
+	<li>For instructions on configuring API key validation locally, see <a href="http://docs.apigee.com/node/14735">http://docs.apigee.com/node/14735</a>.</li></ul>-->
+<p>&nbsp;</p>

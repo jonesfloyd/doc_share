@@ -1,0 +1,213 @@
+<h1> JMS integration </h1>
+<p>[toc]</p>
+<div class="opdk">
+	<p>This topic pertains to Apigee Edge for Private Cloud only, on versions prior to 4.16.01. It is not supported on Private Cloud version <a href="/release-notes/content/4160100-apigee-edge-private-cloud-release-notes#knownissues">4.16.01</a> with the introduction of the Nginx server that replaced the Netty router. JMS support on Private Cloud releases after 4.16.01 is pending.</p>
+</div>
+<h2>Overview</h2>
+<p>If you use Java Message Service (JMS) with Java Naming and Directory Interface (JNDI), you can make RESTful calls from JMS to backend services through Apigee Edge. JMS support is available only in Edge for Private Cloud (on-premises) for inbound/northbound requests to an API proxy.&nbsp;For example, you might need an API proxy endpoint to handle incoming JMS messages from multiple JMS queues, apply logic to convert JMS messages to HTTP, forward the request to a target endpoint, and return the response as JMS, where Edge can send it to the default response queue.</p>
+<p>The following diagram illustrates the use case.</p>
+<p><img alt="" src="sites/docs/files/jms_north.png" /></p>
+<p>This document describes how to configure Edge to work with a JMS host and how to create an API proxy that handles incoming JMS messages.</p>
+<p>Regardless of the JMS provider you use—for example, whether you’re using Apache ActiveMQ or JBoss HornetQ (or neither)—the Edge supports only Java Naming and Directory Interface (JNDI) to connect to the JMS provider. If a JMS provider doesn’t support JNDI, it can't be used with Edge.</p>
+<div class="note">
+	<h4>Southbound PUT operations to a JMS queue</h4>
+	<p>Apigee's default JMS integration supports receiving messages from a JMS queue (northbound) and optionally putting the response in the default response queue. If you want to do PUT operations to a JMS queue (southbound), use a Java Callout policy, as illustrated by the following diagram.</p>
+	<p><img alt="" src="sites/docs/files/jms_south.png" /></p>
+</div>
+<h2>Adding JMS libraries to the Edge router</h2>
+<p>In Edge, the router behaves like a consumer of JMS messages and can subscribe to a queue for a JMS provider like ActiveMQ.&nbsp;This section describes how to add the required JMS libraries to your Edge router so that it can communicate with a JMS provider.</p>
+<ol>
+	<li>Go to the third-party lib folder in your Edge for Private Cloud installation: <code>cd /opt/apiged4/share/lib/thirdparty</code>.</li>
+	<li>Download JMS client libraries to the thirdparty folder:<br />
+		<pre>
+sudo wget http://repo1.maven.org/maven2/org/apache/activemq/activemq-client/5.8.0/activemq-client-5.8.0.jar
+
+sudo wget http://repo1.maven.org/maven2/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar
+
+sudo wget http://repo1.maven.org/maven2/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar
+
+sudo wget http://repo1.maven.org/maven2/org/fusesource/hawtbuf/hawtbuf/1.2/hawtbuf-1.2.jar
+</pre>
+	</li>
+	<li>Change the file owner and permissions:
+		<pre>
+sudo chown apigee geronimo-jms_1.1_spec-1.1.1.jar
+
+sudo chown apigee geronimo-j2ee-management_1.1_spec-1.0.1.jar
+
+sudo chown apigee hawtbuf-1.2.jar
+
+sudo chown apigee activemq-client-5.8.0.jar
+
+sudo chmod +x geronimo-jms_1.1_spec-1.1.1.jar
+
+sudo chmod +x geronimo-j2ee-management_1.1_spec-1.0.1.jar
+
+sudo chmod +x hawtbuf-1.2.jar
+
+sudo chmod +x activemq-client-5.8.0.jar
+</pre>
+	</li>
+</ol>
+<p>In the next section, you'll create a JMS host entity in Edge that connects Edge to your JMS provider.</p>
+<h2>Creating a JMS Host</h2>
+<p>To use JMS with Edge, you configure the JMS connection details by creating a JMS host. The JMS host then can be referenced from JMS API proxy endpoints by using the <code>&lt;JMSHost&gt;</code> or <code>&lt;JmsResponseHost&gt;</code> tags. All JMS API proxies share the same JMS host.</p>
+<div class="note">
+	<p>Create a JMS host with the following API call to your Edge for Private Cloud management environment:</p>
+</div>
+<pre class="terminal">
+curl –H “Content-Type: application/xml” –u <admin user="">:<admin passwd=""> –X POST “http://{host}<ms-ip>:8080/v1/organizations/{org_name}/<org-name>environments/{env_name}/<env- name="">jmshosts" –d<div>“&lt;JMSHost name="jmshost1"&gt;&nbsp;</div><div>&lt;Description&gt;&lt;/Description&gt;&nbsp;</div><div>&lt;ConnectionFactoryClass&gt;org.apache.activemq.jndi.ActiveMQInitialContextFactory&lt;/ConnectionFactoryClass&gt;&nbsp;</div><div>&lt;ConnectionFactory&gt;FooFactory&lt;/ConnectionFactory&gt;</div><div>&lt;ConnectionURL&gt;tcp://172.16.1.94:61616&lt;/ConnectionURL&gt;</div><div>&lt;Context&gt;JmsContext&lt;/Context&gt;&nbsp;</div><div>&lt;ContextUsername&gt;abc&lt;/ContextUsername&gt;&nbsp;</div><div>&lt;ContextPassword&gt;password&lt;/ContextPassword&gt;&nbsp;</div><div>&lt;ConnectionUsername&gt;admin&lt;/ConnectionUsername&gt;&nbsp;</div><div>&lt;ConnectionPassword&gt;password&lt;/ConnectionPassword&gt;&nbsp;</div><div>&lt;Connections&gt;5&lt;/Connections&gt;&nbsp;</div><div>&lt;/JMSHost&gt;”</div></env-></org-name></ms-ip></admin></admin>
+</pre>
+<h3>Request payload elements</h3>
+<table class="table">
+	<tbody>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>Name of the JMS host.</td>
+		</tr>
+		<tr>
+			<td>Description</td>
+			<td>Description of the JMS host.</td>
+		</tr>
+		<tr>
+			<td>ConnectionFactoryClass</td>
+			<td>Provider specific implementation of JMS Connection factory class.</td>
+		</tr>
+		<tr>
+			<td>ConnectionFactory</td>
+			<td>Property used to select the registry service provider as the initial context and specifies the class name of the initial context factory for the provider. Note that it is not used by the provider.</td>
+		</tr>
+		<tr>
+			<td>ConnectionURL</td>
+			<td>URL of the JNDI provider.</td>
+		</tr>
+		<tr>
+			<td>Context</td>
+			<td>Initial JNDI context and values are specific to JMS provider.</td>
+		</tr>
+		<tr>
+			<td>ContextUsername</td>
+			<td>User name to access the JNDI context.</td>
+		</tr>
+		<tr>
+			<td>ContextPassword</td>
+			<td>Password to access the JNDI context.</td>
+		</tr>
+		<tr>
+			<td>ConnectionUsername</td>
+			<td>User name to access the JMS provider.</td>
+		</tr>
+		<tr>
+			<td>ConnectionPassword</td>
+			<td>Password to access the JMS provider.</td>
+		</tr>
+		<tr>
+			<td>Connections</td>
+			<td>Number of physical TCP connections to JMS provider. The maximum is 5.</td>
+		</tr>
+	</tbody>
+</table>
+<p>You might need to remove a JMS host associated with an environment. To do this, execute the following API call:</p>
+<pre class="terminal">
+curl –u <admin user="">:<passwd> “http://{host}<ms-ip>:8080/v1/organizations/<org- name="">environments/<env-name>jmshosts/{jmshost_name}” -X DELETE
+</env-name></org-></ms-ip></passwd></admin></pre>
+<h2>Creating a JMS proxy endpoint</h2>
+<p>The <code>ProxyEndpoint</code> and <code>JmsProxyConnection</code> elements define a set of JMS transport properties. These properties can be used to set network configurations to connect to the JMS provider.</p>
+<div class="note">
+	<p>The Edge JMS API proxy endpoint supports only receiving messages from a JMS queue. Other JMS operations are not supported.</p>
+</div>
+<p>Properties are set on a JMS API proxy as follows:</p>
+<pre>
+&lt;ProxyEndpoint name=”default” <strong>proxyType="jmsConnection"</strong>&gt; 
+&lt;!-- "proxyType” is mandatory if you want to create JMS endpoints --&gt;
+  &lt;PreFlow name="PreFlow"&gt;
+&nbsp;   &lt;Request/&gt;
+&nbsp;   &lt;Response/&gt;
+  &lt;/PreFlow&gt;
+  &lt;PostFlow name="PostFlow"&gt;
+&nbsp;   &lt;Request/&gt;
+&nbsp;   &lt;Response/&gt;
+  &lt;/PostFlow&gt;
+  &lt;Flows/&gt;
+&nbsp; <strong>&lt;JmsProxyConnection state=”on”&gt;
+&nbsp; &nbsp; &lt;JmsHost&gt;jmshost1&lt;/JmsHost&gt; &lt;!-- this is the JMS host created in prev section --&gt;
+&nbsp; &nbsp; &lt;Destination type="queue"&gt;dynamicQueues/sourceAppsDataQ&lt;/Destination&gt;
+&nbsp; &nbsp; &lt;MessageSelector&gt;&lt;/MessageSelector&gt;
+&nbsp; &nbsp; &lt;DefaultResponseQueue&gt;dynamicQueues/defaultResponseQueue&lt;/DefaultResponseQueue&gt;
+&nbsp;   &lt;JmsResponseHost&gt;defaultResponseHost&lt;/JmsResponseHost&gt;
+ &nbsp;&lt;/JmsProxyConnection&gt;</strong>
+  &lt;RouteRule name="noroute"/&gt;
+&lt;/ProxyEndpoint&gt;&nbsp;
+</pre>
+<div class="note">
+	<p>Ensure that you define the attribute <code>proxyType="jmsConnection"</code> in order to create JMS proxy endpoints.</p>
+	<p>Also, ensure that you have the JMS provider-specific client library in the classpath.</p>
+</div>
+<h3>Property description</h3>
+<p>The following table provides the description of all JmsProxyConnection properties that are available for JMS implementation.</p>
+<table class="table">
+	<tbody>
+		<tr>
+			<th>Property name</th>
+			<th>Description</th>
+			<th>Required?</th>
+		</tr>
+		<tr>
+			<td>JmsProxyConnection</td>
+			<td>
+				<p>JMS network details associated with the API proxy. You can dynamically set to subscribe/unsubscribe to a given queue by defining an attribute state=”on/off”. By default it is “on”.</p>
+				<p>The element replaces the&nbsp;HTTPProxyConnection used by non-JMS API proxies.</p>
+			</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<td>JmsHost</td>
+			<td>JMS host defined for the JMS proxy.</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<td>Destination</td>
+			<td>Queue path to which the subscribe listens to the messages.</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<td>MessageSelector</td>
+			<td>Selector pattern on queues based on JMS headers.</td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td>DefaultResponseQueue</td>
+			<td>Name of the JMS queue where response from target should be published.</td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td>JmsResponseHost</td>
+			<td>JMS response host defined for the JMS proxy. If specified, all responses are sent to the queues over this host.</td>
+			<td>No</td>
+		</tr>
+	</tbody>
+</table>
+<div class="note">
+	<p>All HTTP headers matching standard JMS headers will be set “as is” and other HTTP headers will be set as JMS properties in the response message used by the JMS proxy.</p>
+</div>
+<h2>Setting JMS headers</h2>
+<p>You can use the <a href="http://docs.apigee.com/node/228">AssignMessage policy</a> to specify the following headers in a JMS proxy.</p>
+<ul>
+	<li><code>X-Apigee-Ignore-JMSResponse</code> - By default, the API proxy puts the response on the JMS response queue specified in the JMSReplyTo header. However, if you want the backend service to handle putting the response on the queue specified in JMSReplyTo—or something else outside of the API proxy such as a Java callout or another API proxy—add the <code>X-Apigee-Ignore-JMSResponse</code> header and set it to true:<br />
+		&nbsp;<br />
+		<code>&lt;Header name="X-Apigee-Ignore-JMSResponse"&gt;true&lt;/Header&gt;</code><br />
+		<br />
+		<strong>Where to set the header</strong>: If the proxy is calling a backend service, the header must be set after the backend service is called. If there is no backend service, such as when you use a Java callout or another API proxy to put the message on the response queue, the header can be set anywhere in the flow of the API proxy (the API proxy you don't want putting the response on the queue).<br />
+		For more information about API proxy flows, see <a href="http://docs.apigee.com/node/14717">http://docs.apigee.com/node/14717</a>.</li>
+</ul>
+<p>For messages placed in the ResponseQueue:</p>
+<ul>
+	<li><code>JMSExpiration</code> - Time in milliseconds after which the message expires.</li>
+	<li><code>JMSDeliveryMode</code> - A value of 1 (non-persistent) or 2 (persistent).</li>
+</ul>
+<h2>Additional information</h2>
+<p>You can also find a JMS discussion thread on the Apigee Community:&nbsp;<a href="https://community.apigee.com/questions/22294/activemq-jms-integration-to-apigee.html">https://community.apigee.com/questions/22294/activemq-jms-integration-to-apigee.html</a>.</p>

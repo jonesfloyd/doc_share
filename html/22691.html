@@ -1,0 +1,182 @@
+<h1> Flow Callout policy </h1>
+<img src="sites/docs/files/icon_policy_flow-callout.png" />
+<h3>What</h3>
+<p>Use the Flow Callout policy to call out to a shared flow from either an API proxy or another shared flow.</p>
+<div class="note">The ability to create shared flows is available only on request. The feature will not appear in the user interface unless activated for your org. Contact Apigee for more information.</div>
+<p>In a shared flow, you create a sequence of steps that you can reuse at run time from multiple places. These steps are implemented as policies, as with an API proxy. The Flow Callout policy gives you a way to call to the shared flow from API proxies and other shared flows.</p>
+<ul>
+	<li>For example, imagine that you've implemented a shared flow with security features such as API key verification and OAuth token validation. Using the Flow Callout policies, you can route requests through that flow from multiple API proxies. In this way, you can enforce standard security in one place, then use it from multiple others.</li>
+	<li>You can call one shared flow from another by implementing a Flow Callout policy in a shared flow. For example, the security shared flow could use a Flow Callout policy to call to another shared flow that performs a transformation on the incoming request message.</li>
+</ul>
+<div class="note">For more on shared flows, see <a href="http://docs.apigee.com/node/22581">http://docs.apigee.com/node/22581</a>. You can also call a shared flow from outside API proxy code to do request pre-processing or response post-processing. For more, see <a href="http://docs.apigee.com/node/22726">http://docs.apigee.com/node/22726</a>.</div>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h3 id="samples"><a id="Samples" name="Samples"></a>Samples</h3>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Call a shared flow from an API proxy</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<p>This example creates a callout to a local API proxy (that is, one in the same organization and environment) called <code>data-manager</code>, specifying its proxy endpoint whose name is <code>default</code>.</p>
+		<pre>
+&lt;LocalTargetConnection&gt;
+    &lt;APIProxy&gt;data-manager&lt;/APIProxy&gt;
+    &lt;ProxyEndpoint&gt;default&lt;/ProxyEndpoint&gt;
+&lt;/LocalTargetConnection&gt;</pre>
+	</div>
+	<!-- Tab 1 end. --></div>
+<!-- End tabbed region. -->
+<hr />
+<h2 id="usage">About the Flow Callout policy</h2>
+<p>There are many scenarios where you can use a Service Callout policy in your API proxy. For example, you can configure an API proxy to make calls to an external service to deliver geolocation data, customer reviews, items from a partner’s retail catalog, and so on.</p>
+<h2 id="elements">Element reference</h2>
+<p>Following are elements and attributes you can configure on this policy:</p>
+<pre>
+&lt;FlowCallout async="false" continueOnError="false" enabled="true" name="Flow-Callout-1"&gt;
+    &lt;DisplayName&gt;Custom label used in UI&lt;/DisplayName&gt;
+    &lt;SharedFlowBundle&gt;thereferencedsharedflowbundle&lt;/SharedFlowBundle&gt;
+&lt;/FlowCallout&gt;
+</pre>
+<h2>&lt;FlowCallout&gt; attributes</h2>
+<pre>
+&lt;ServiceCallout async="false" continueOnError="false" enabled="true" name="Service-Callout-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2 id="request">&lt;SharedFlowBundle&gt; element</h2>
+<p>Specifies the name of the shared flow to call. This element's value should be the same as the value of the target SharedFlowBundle element's name attribute.</p>
+<pre>
+&lt;SharedFlowBundle/&gt;
+</pre>
+<p>In the simplest example, you give the name of the shared flow being called as a value for this element. That is, this element's value must be the same as the shared flow's <code>name</code> attribute value.</p>
+<pre>
+&lt;SharedFlowBundle&gt;Shared-Flow-Name&lt;/SharedFlowBundle&gt;
+ </pre>
+<table class="pd-table">
+	<tbody>
+		<tr>
+			<td class="pd-td-left">Default</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Presence</td>
+			<td class="pd-td-right">
+				<p>Required.</p>
+			</td>
+		</tr>
+		<tr>
+			<td class="pd-td-left">Type</td>
+			<td class="pd-td-right">N/A</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Attributes</h3>
+<p>None.</p>
+<h2>Schemas</h2>
+<div class="sample-github">
+	<p>See our <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">Github repository</a> samples for the most recent schemas.</p>
+</div>
+<h2 id="flowvariables">Flow variables</h2>
+<p>Flow variables enable dynamic behavior of policies and flows at runtime, based on HTTP headers, message content, or flow context. For more information about Flow variables, see <a href="http://docs.apigee.com/node/243">http://docs.apigee.com/node/243</a>.</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table">
+	<thead>
+		<tr>
+			<th style="text-align: left;">Variable</th>
+			<th style="text-align: left;">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p><code>apigee.edge.sharedflow.name</code></p>
+			</td>
+			<td>
+				<p><strong>Scope</strong>: During the shared flow execution<br />
+					<strong>Type</strong>: String<br />
+					<strong>Permission</strong>: Read</p>
+				<p>The value of the shared flow's name attribute.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><code>apigee.edge.flowhook.name</code></p>
+			</td>
+			<td>
+				<p><strong>Scope</strong>: During execution of the shared flow attached to the flow hook.<br />
+					<strong>Type</strong>: String<br />
+					<strong>Permission</strong>: Read</p>
+				<p>The name of the flow hook.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="errors">Error codes</h2>
+None.
+<h2 id="relatedtopics">Related topics</h2>
+<div class="sample-github">
+	<p>For working samples of API proxies, see the <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a>.</p>
+</div>
+<ul>
+	<li>Creating shared flows: <a href="http://docs.apigee.com/node/22581">http://docs.apigee.com/node/22581</a></li>
+	<li>Executing shared flows across multiple proxies: <a href="http://docs.apigee.com/node/22726">http://docs.apigee.com/node/22726</a></li>
+</ul>

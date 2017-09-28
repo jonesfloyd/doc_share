@@ -1,0 +1,460 @@
+<h1> Build a simple API proxy </h1>
+<p>[toc]</p>
+<p>Apigee Edge enables you to quickly expose backend services as APIs. You do this by creating an API proxy that provides a facade for the backend service that you want to expose. You only need to provide the network address for the backend service, along with some information that Edge uses to create the API proxy that is exposed to developers.&nbsp;</p>
+<p>The API proxy&nbsp;decouples your backend service implementation from the API that developers consume. This shields developers from future changes to your backend services. As you update backend services, developers, insulated from those changes, can continue to call the API uninterrupted.</p>
+<div class="video">
+	<p>Watch this video for an overview of the process of creating an API proxy.</p>
+	<div class="collapse" id="demo">
+		<div style="text-align: left;"><!--<p><iframe allowfullscreen="" frameborder="0" height="400" scrolling="no" src="http://www.youtube.com/embed/sELHtOZ_nxs" width="560"></iframe></p><iframe allowfullscreen="" frameborder="0" height="315" src="//www.youtube.com/embed/sELHtOZ_nxs" width="560"></iframe>--><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/ZtINy7n9QRc" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
+</div>
+<h2>Creating an API proxy in the Edge management UI</h2>
+<p>The easiest way to create an API proxy is using the Edge management UI:</p>
+<ol>
+	<li>Log in into the <strong><a href="http://enterprise.apigee.com">Edge management UI</a></strong>.</li>
+	<li>From the main menu, select <strong>APIs &gt; API Proxies</strong>.<br />
+		<br />
+		<img alt="" src="sites/docs/files/UI-select-api-proxies.png" style="width: 300px; height: 90px; border-width: 1px; border-style: solid;" /><br />
+		<br />
+		A list of all API proxies in your organization is displayed.</li>
+	<li>To create a new API proxy, select add <strong>(+) API Proxy</strong> button.<br />
+		<img alt="" src="sites/docs/files/add-proxy_1.png" style="width: 106px; height: 43px; margin-top: 15px; margin-bottom: 15px;" /><br />
+		The<strong> Build a Proxy </strong>wizard is displayed.</li>
+</ol>
+<p>The wizard leads you through the steps needed to generate an API proxy and, to add some minimal features to the API proxy:</p>
+<p><img alt="" src="sites/docs/files/tutorial-proxy-wizard-type.png" style="width: 700px; height: 380px; border-width: 1px; border-style: solid; margin-top: 2px; margin-bottom: 2px;" /></p>
+<p>The first page of the wizard enables you create an API proxy from the following sources:</p>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="col" width="265">Type</th>
+			<th scope="col" width="368">Description</th>
+		</tr>
+		<tr>
+			<td>Reverse proxy (most common)</td>
+			<td>
+				<p>An API proxy that routes inbound requests to existing HTTP backend services. Could be a JSON or XML API.</p>
+				<p>Click <strong>UseOpenAPI</strong> to generate the proxy from a valid OpenAPI specification. For more informations on this option, see <a href="#openapi">Using OpenAPI to generate proxies</a>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Node.js App</td>
+			<td>
+				<p>An API proxy that routes to a Node.js backend target running on Edge.</p>
+				<p>Click <strong>UseOpenAPI</strong> to generate the proxy from a valid OpenAPI specification. For more informations on this option, see <a href="#openapi">Using OpenAPI to generate proxies</a>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>SOAP service</td>
+			<td>An API proxy generated from a WSDL file.</td>
+		</tr>
+		<tr>
+			<td>No Target</td>
+			<td>
+				<p>An API proxy with no API backend ("No target").</p>
+				<p>Click <strong>UseOpenAPI</strong> to generate the proxy from a valid OpenAPI specification. For more informations on this option, see <a href="#openapi">Using OpenAPI to generate proxies</a>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Proxy bundle</td>
+			<td>An existing API proxy bundle (for example one of the <a href="http://github.com/apigee/api-platform-samples">sample API proxies</a> available on GitHub.)</td>
+		</tr>
+	</tbody>
+</table>
+<p>The following sections describe how to create an API proxy using each source.</p>
+<p><strong>Learn more:</strong></p>
+<ul>
+	<li>For creating API proxies with Node.js, see <a href="http://docs.apigee.com/node/8831">http://docs.apigee.com/node/8831</a>.</li>
+</ul>
+<h2>Creating a reverse proxy for an HTTP service</h2>
+<p>Edge generates reverse proxies based on two pieces of information:</p>
+<ul>
+	<li>The URL of the backend service</li>
+	<li>The URI path that uniquely identifies the API that will be exposed by the API proxy to consumer apps</li>
+</ul>
+<p>The backend service URL typically represents a service-enabled application owned by your organization. It can also point to a publicly available API. The API or service can be under your control (for example, an internal HR application or a Rails application in the Cloud) or it can be a third-party API or service (for example, Twitter or Instagram).&nbsp;</p>
+<ol>
+	<li>Login to <a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a>.</li>
+	<li>In the API Platform UI, select the <strong>APIs</strong> tab.</li>
+	<li>Click <strong>(+) API Proxy</strong>.</li>
+	<li>In the Build a Proxy wizard, select <strong>Reverse proxy (most common)</strong>. To generate the proxy from an existing, valid OpenAPI spec, click <strong>Use OpenAPI</strong>. For details on this option, see <a href="#openapi">Using OpenAPI to generate proxies</a>.</li>
+	<li>Click <strong>Next</strong>.</li>
+	<li>Follow the Build a Proxy wizard and make the following selections.<br />
+		<table border="1" class="table" style="width: 690px;" width="865">
+			<colgroup>
+				<col width="25%" />
+				<col width="25%" />
+				<col width="50%" /></colgroup>
+			<thead valign="bottom">
+				<tr class="row-odd">
+					<th class="head" width="94">Field</th>
+					<th class="head" width="481">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr colspan="3">
+					<td><strong>Details</strong></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>Proxy Name</td>
+					<td>The name displayed for your API.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Proxy Base Path</td>
+					<td>
+						<p>The Proxy Base Path is a URI fragment after the http(s)://[host] address of your API proxy. Edge uses the Base Path URI to match and route incoming request messages to the proper API proxy.</p>
+						<p><b>Note</b>: For Apigee's recommendations on API versioning, see&nbsp;<a href="https://docs-apis.apigee.io/files/Web-design-the-missing-link-ebook-2016-11.pdf#page=45" target="_blank">Versioning</a>&nbsp;in the <em>Web API Design: The Missing Link</em> e-book.</p>
+						<p>After the base path are any additional resource URLs. Here's the full URL structure that clients will use to call your API proxy:</p>
+						<p><code>https://[host]/<strong>base_path</strong>/conditional_flow_path</code></p>
+						<p><strong>Note</strong>: The base path must be unique. If you later edit this proxy and set its base path to be the same as another API proxy, this API proxy is automatically&nbsp;undeployed when you save it. You must edit the base path before you can redeploy it.&nbsp;</p>
+						<p><strong>Using a wildcard in base paths</strong></p>
+						<p>You can use one or more <code>/*/</code> wildcards in API proxy base paths to future-proof your proxies. For example, a base path of <code>/team/*/members</code> allows clients to call <code>https://[host]/team/<strong>blue</strong>/members</code> and <code>https://[host]/team/<strong>green</strong>/members</code> without you needing to create new API proxies to support new teams. Note that /**/ is not supported.</p>
+						<p><strong>Note</strong>: The Proxy Base Path defaults to the value specified for Proxy Name converted to all lower case unless you explicitly edit the content in the Proxy Base Path field.</p>
+					</td>
+				</tr>
+				<tr class="row-odd">
+					<td>Existing API</td>
+					<td>The URL that the API Platform invokes on behalf of apps that call your API through the API proxy URL. This is the URL for the Yahoo! Weather API.</td>
+				</tr>
+				<tr class="row-odd">
+					<td>Description</td>
+					<td>The description of the API.</td>
+				</tr>
+			</tbody>
+			<tbody></tbody>
+			<tbody valign="top"></tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Security</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>API Key</td>
+					<td>Adds API key-based authentication&nbsp;to your API proxy. When this option is selected, the Impose Quota per Developer option becomes selectable.</td>
+				</tr>
+				<tr class="row-even">
+					<td>OAuth 2.0</td>
+					<td>Adds OAuth 2.0 based authentication&nbsp;to your API proxy. When this option is selected, the Impose Quota per Developer option becomes selectable.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Impose Quota per Developer</td>
+					<td>Adds a policy that limits the number of request messages that can be submitted to your API proxy by an individual app over an interval of time.</td>
+				</tr>
+				<tr class="row-odd">
+					<td>Publish API Product</td>
+					<td>When you select the Secure with API Keys option, the Publish API Product option is automatically selected. For the purposes of this tutorial, be sure to clear this option.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Add CORS headers</td>
+					<td>Enables CORS (cross-origin resource sharing) to allow a browser to make direct requests to another domain.</td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Virtual Hosts</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>default</td>
+					<td>To learn about virtual hosts, see <a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a>.</td>
+				</tr>
+				<tr class="row-even">
+					<td>secure</td>
+					<td>&nbsp;</td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Build</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>Deploy Environments</td>
+					<td>To learn about virtual hosts, see <a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a>.</td>
+				</tr>
+			</tbody>
+		</table>
+	</li>
+	<li>Click <strong>Build and Deploy</strong><br />
+		In response, you should see an acknowledgment that your new API proxy was successfully created and deployed in the 'test' environment.</li>
+	<li>Click<strong>&nbsp;View the &lt;proxy name&gt; proxy in the editor</strong>&nbsp;to display the details page for the API proxy.</li>
+</ol>
+<p><strong>Learn more:</strong></p>
+<ul>
+	<li>See <a href="http://docs.apigee.com/node/9860">http://docs.apigee.com/node/9860</a> for a complete tutorial on creating an API proxy in the Edge management UI.</li>
+</ul>
+<h2>Importing an API proxy from an API proxy bundle</h2>
+<p>Often you define API&nbsp;proxies as a collection of XML files, along with any other supporting files. By defining your API proxies as a set of files external to Edge you can maintain them in a source-control system, and then import them into Edge for testing and deployment.</p>
+<div class="note">
+	<p>Apigee provides a set of API proxy samples as bundles on GitHub that you can download, examine, modify, and upload to Edge. See <a href="http://docs.apigee.com/node/14921">http://docs.apigee.com/node/14921</a> for more.&nbsp;&nbsp;</p>
+</div>
+<div class="video">
+	<p>Watch this video to learn how to create and import an API proxy from an API proxy bundle.</p>
+	<div class="collapse" id="demo2">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/sruxgYQlc2M" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo2">Show/Hide Video</a></div>
+</div>
+<p>To import API proxies from a set of files:&nbsp;</p>
+<ol>
+	<li>Login to <a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a>.</li>
+	<li>In the API Platform UI, select the <strong>APIs</strong> tab.</li>
+	<li>Click <strong>(+) API Proxy</strong>.</li>
+	<li>In the Build a Proxy wizard, select <strong>Proxy bundle</strong>.</li>
+	<li>Click <strong>Next</strong>.</li>
+	<li>Follow the Build a Proxy wizard and make the following selections.<br />
+		<br />
+		<table class="table" style="font-size: 12px;">
+			<colgroup>
+				<col width="25%" />
+				<col width="25%" />
+				<col width="50%" /></colgroup>
+			<thead valign="bottom">
+				<tr class="row-odd">
+					<th class="head" width="94">Field</th>
+					<th class="head" width="481">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr colspan="3">
+					<td><strong>Details</strong></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>ZIP Bundle</td>
+					<td>Click&nbsp;<strong>Choose File</strong>&nbsp;and avigate to the ZIP file containing the API proxy configuration.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Proxy Name</td>
+					<td>The name displayed for your API.</td>
+				</tr>
+			</tbody>
+			<tbody></tbody>
+			<tbody valign="top"></tbody>
+			<tbody></tbody>
+			<tbody valign="top"></tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Build</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>Proxy details.</td>
+					<td>Review proxy settings.</td>
+				</tr>
+			</tbody>
+			<tbody></tbody>
+			<tbody valign="top"></tbody>
+		</table>
+	</li>
+	<li>Click <strong>Build.</strong></li>
+	<li>In response, you should see an acknowledgment that your new API proxy was successfully imported. API Services automatically deploys the imported API proxy to the 'test' environment in your organization. The API exposed by the API proxy is available to be invoked.</li>
+	<li>Click&nbsp;<strong>View the &lt;proxy name&gt; proxy</strong> in the editor&nbsp;to display the details page for the API proxy.</li>
+	<li>To deploy the proxy, click the <strong>Deployment</strong> drop-down, select the environment you want to deploy to, and respond to the prompt.</li>
+</ol>
+<h2>Copying and backing up an API proxy</h2>
+<p>You can copy an existing API proxy to a new API proxy, or backup and existing API proxy to a set of XML files as an API proxy bundle. Once exported to a bundle, you can import the API proxy to a new proxy, as described above.&nbsp;</p>
+<p>To copy an existing API proxy to a new API proxy:</p>
+<ol>
+	<li>In the main menu of the management UI, click <strong>APIs</strong> to display the API Proxies page.&nbsp;</li>
+	<li>Click the name of the proxy in the API Proxies table.&nbsp;</li>
+	<li>In the upper-left side of the API proxy detail page, click <strong>Project &gt; Save as New API proxy</strong>.<br />
+		<img alt="" src="sites/docs/files/saveAsNewAPIProxy.png" style="width: 152px; height: 200px; border-width: 1px; border-style: solid; margin: 15px;" /></li>
+	<li>Specify the name of the new API proxy.</li>
+	<li>Select <strong>Add</strong>.</li>
+</ol>
+<p>To&nbsp;backup and existing API proxy to an API proxy bundle:</p>
+<ol>
+	<li>In the main menu of the management UI, click&nbsp;<strong>APIs</strong>&nbsp;to display the API Proxies page.&nbsp;</li>
+	<li>Click the name of the proxy in the API Proxies table.&nbsp;</li>
+	<li>In the upper-left side of the API proxy detail page, click&nbsp;<strong>Project &gt; Download Current Revision</strong> to download a ZIP file of the bundle<strong>:</strong><br />
+		<img alt="" src="sites/docs/files/saveAsNewAPIProxy.png" style="width: 152px; height: 200px; border-width: 1px; border-style: solid; margin: 15px;" /></li>
+</ol>
+<h2>Exposing a SOAP-based web service as an API proxy</h2>
+<p>In the Build a Proxy wizard, select <strong>Soap Service</strong>, and follow the wizard to create a pass-through or REST-based proxy for a SOAP service.</p>
+<p>For details, see <a href="http://docs.apigee.com/node/15726">http://docs.apigee.com/node/15726</a>.</p>
+<h2><a id="security" name="security"></a>Adding security and CORS support to your API</h2>
+<p>When you add an API proxy for an existing backend service, the <b>Security</b> page of the Build a Proxy wizard, lets you add features to your API such as security and support for CORS.</p>
+<div class="note">
+	<p>If you import an API bundle, then you are responsible for configuring security in the bundle. The UI does not prompt you to add security when importing the bundle.</p>
+</div>
+<h3>Adding security</h3>
+<p>In the Security page of the Build a Proxy wizard, select the type of security you wish to add. Choices include:</p>
+<ul>
+	<li><strong>Pass through</strong> - Do not use security. Requests are passed too the backend without any security checks on Apigee Edge.</li>
+	<li><strong>API Key</strong> - Adds simple API key verification to the API proxy that you are defining. In response, the API Platform adds a VerifyAPIKey policy and an AssignMessage policy to your API proxy. The VerifyAPIKey policy validates API keys presented by requesting apps. The AssignMessage policy strips the API key, supplied in the API call as a query parameter, from the request forwarded to the backend server.</li>
+	<li><strong>OAuth 2.0</strong> - Edge automatically adds two policies to your API proxy: one policy to verify an access token and another policy to strip the access token from the message before forwarding it to your backend service. To learn how to obtain an access token, see <a href="http://docs.apigee.com/node/14736">http://docs.apigee.com/node/14736</a>.</li>
+</ul>
+<p>When you check <b>Secure with API Keys</b>, the following additional selections are available:</p>
+<ul>
+	<li>The <b>Impose Quota per Developer</b> checkbox becomes selectable. Check this to add a Quota policy to your API proxy that enforces a limit on the traffic to your API from individual apps.</li>
+	<li>The <strong>Publish API Product</strong> checkbox becomes selectable and is automatically selected. Check this if you want to automatically generate a product when you build the new API proxy. The autogenerated product will be created with an association to the new API proxy. If you have an existing product with which you want to associate this new API, be sure to clear this checkbox so that you don't create an unnecessary product. For information about products, see <a href="http://docs.apigee.com/node/14759">http://docs.apigee.com/node/14759</a></li>
+</ul>
+<!-- Pending tutorial updates<p><strong>Learn more:</strong></p>
+<ul>
+	<li>See <a href="http://docs.apigee.com/node/8398">http://docs.apigee.com/node/8398</a> for a complete tutorial on applying security to and API proxy in the Edge management UI.</li>
+	<li>See <a href="http://docs.apigee.com/node/18131">http://docs.apigee.com/node/18131</a> for a complete tutorial on applying security to an API proxy from an API bundle.</li>
+</ul>-->
+<h3>Adding support for CORS</h3>
+<p>CORS (Cross-origin resource sharing) is a standard mechanism that allows a Web browser to make direct requests to another domain. The CORS standard defines a set of HTTP headers that Web browsers and servers use to implement cross-domain communication.</p>
+<p>You can add support for CORS to your API by selecting <strong>Add CORS headers</strong> in the Security page of the Add a Proxy wizard.</p>
+<p><strong>Learn more:</strong></p>
+<ul>
+	<li>For more detailed information about CORS support, including adding CORS preflight support to a proxy, see <a href="http://docs.apigee.com/node/15151">http://docs.apigee.com/node/15151</a>.</li>
+</ul>
+<h2 id="openapi">Using OpenAPI Specifications to generate proxies</h2>
+<p>This section discusses the Use OpenAPI option that is available for generating from an OpenAPI Specification the following types of API proxies: reverse, Node.js, or no target.</p>
+<h3>What is an OpenAPI Specification?</h3>
+<p><a href="https://openapis.org" target="_blank"><img alt="Open API Initiative" src="sites/docs/files/OpenAPI_Pantone.png" style="width: 120px; margin: 2px 15px; float: left; height: 32px;" /></a>"The Open API Initiative (OAI) is focused on creating, evolving and promoting a vendor neutral API Description Format based on the Swagger Specification." For more information about the Open API Initiative, see&nbsp;<a href="https://openapis.org" target="_blank">https://openapis.org</a>.&nbsp;</p>
+<p>An&nbsp;<em>OpenAPI Specification</em>&nbsp;uses a standard format to describe a RESTful API. Written in either JSON or YAML format, an OpenAPI Specification is machine readable, but is also easy for humans to read and understand. The specification describes such elements of an API as its base path, paths and verbs, headers, query parameters, operations, content types, response descriptions, and more. In addition, an OpenAPI Specification is commonly used to generate API documentation.</p>
+<div class="note">
+	<p>The <a href="http://apistudio.io/" target="_blank">Apigee API Studio</a> is an open source tool for developing, testing, and documenting OpenAPI Specifications.&nbsp;</p>
+</div>
+<p>Here's a fragment from an OpenAPI Specification that describes Apigee's mock target service, <a href="http://mocktarget.apigee.net" target="_blank">http://mocktarget.apigee.net</a>. For more information, see <a href="https://github.com/apigee/api-platform-samples/tree/master/default-proxies/helloworld/openapi" target="_blank">https://github.com/apigee/api-platform-samples/tree/master/default-proxies/helloworld/openapi</a>.</p>
+<pre>
+swagger: '2.0'
+info:
+  description: 'OpenAPI Specification for the Apigee mock target service endpoint.'
+  version: 1.0.0
+  title: Mock Target API
+host: mocktarget.apigee.net
+schemes:
+  - http
+  - https
+paths:
+  /:
+    get:
+      summary: View personalized greeting
+      operationId: View a personalized greeting
+      description: View a personalized greeting for the specified or guest user.
+      produces:
+        - text/plain
+      parameters:
+        - name: user
+          in: query
+          description: Your user name.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+  /help:
+    get:
+      summary: Get help
+      operationId: Get help
+      description: View help information about available resources in HTML format.
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: Success
+...</pre>
+<p>Through the Build a Proxy wizard, you can import an OpenAPI Specification and use it to generate an API proxy. Once the proxy is generated, you can use the Edge UI to further develop it by adding policies, implementing custom code, and so on -- just like any Edge proxy.</p>
+<h3>Creating an API proxy from an OpenAPI Specification</h3>
+<div class="note">
+	<p>For a step-by-step hands-on experience, step through the tutorial <a href="http://docs.apigee.com/node/20981">http://docs.apigee.com/node/20981</a>.</p>
+</div>
+<div class="video">
+	<p>Watch this video to learn how to create an API proxy from an OpenAPI Specification.</p>
+	<div class="collapse" id="demo3">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/3XBG9QOUPzg" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo3">Show/Hide Video</a></div>
+</div>
+<p>To create an API proxy from an OpenAPI Specification:</p>
+<ol>
+	<li>In the Edge UI, select&nbsp;<strong>APIs &gt; API Proxies</strong>&nbsp;in the top menu.<br />
+		<img alt="APIs menu" src="sites/docs/files/tutorial-apiproxies.png" style="margin-top: 15px; margin-bottom: 15px; border-width: 1px; border-style: solid; height: 88px; width: 300px;" /></li>
+	<li>In the API Proxies page, click <strong>+ API Proxy</strong>.</li>
+	<li>In the Build a Proxy wizard, select the type of proxy you wish to create. OpenAPI is supported for reverse, Node.js, and no target proxies.</li>
+	<li>Click <strong>Use OpenAPI</strong>.</li>
+	<li>In the dialog, enter a URL pointing to an existing, valid OpenAPI Specification. For example, you can try this URL to test it out:&nbsp;<br />
+		<br />
+		<code>https://raw.githubusercontent.com/apigee/api-platform-samples/master/default-proxies/helloworld/openapi/mocktarget.yaml</code><br />
+		&nbsp;</li>
+	<li>Click <strong>Apply</strong>.<br />
+		Edge reads the spec, and uses it to generate the proxy.&nbsp;</li>
+	<li>
+		<p>Click <strong>Next</strong>.</p>
+	</li>
+	<li>The Details page in the Build a Proxy wizard displays. The fields are pre-populated using values defined in the OpenAPI Specification. For example, if you selected reverse proxy:<br />
+		<img alt="Build a Proxy Details" src="sites/docs/files/tutorial-build-proxy-details-v2.png" style="margin-top: 15px; margin-bottom: 15px; border-width: 1px; border-style: solid; height: 318px; width: 700px;" /><br />
+		The following table describes the default field values that are pre-populated using properties in the OpenAPI Specification. An excerpt of the OpenAPI Specification illustrating the properties used is shown following the table.<br />
+		<table class="table">
+			<thead>
+				<tr>
+					<th width="20%">Field</th>
+					<th width="40%">Description</th>
+					<th width="40%">Default</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><strong>Proxy Name</strong></td>
+					<td>Name of the API proxy. For example:&nbsp;<code>Mock-Target-API</code>.</td>
+					<td><code>title</code>&nbsp;property from the OpenAPI Specification with spaces replaced by dashes</td>
+				</tr>
+				<tr>
+					<td><strong>Proxy Base Path</strong></td>
+					<td>
+						<p>Path component that uniquely identifies this API proxy within the organization. The public-facing URL of this API proxy is comprised of your organization name, an environment where this API proxy is deployed, and this Proxy Base Path. For example:&nbsp;<code>http://myorg-test.apigee.net/mock-target-api</code></p>
+						<p><strong>Note</strong>: The Proxy Base Path defaults to the value specified for Proxy Name converted to all lower case unless you explicitly edit the content in the Proxy Base Path field.</p>
+					</td>
+					<td><strong>Proxy Name</strong>&nbsp;field content converted to all lower case</td>
+				</tr>
+				<tr>
+					<td><strong>Existing API</strong></td>
+					<td>
+						<p><strong>Note</strong>: Field is valid for reverse proxies only.</p>
+						<p>Target URL invoked on behalf of this API proxy. Any URL that is accessible over the open Internet can be used. For example:&nbsp;<code>http://mocktarget.apigee.net</code></p>
+					</td>
+					<td>Properties in OpenAPI Specification are combined to create target URL:
+						<ul>
+							<li><code>http://</code>&nbsp;or&nbsp;<code>https://</code>&nbsp;(depending on the&nbsp;<code>schemes</code>&nbsp;property)</li>
+							<li><code>host</code>&nbsp;property</li>
+							<li><code>basePath</code>&nbsp;property (if specified)</li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Description</strong></td>
+					<td>Description of the API proxy.</td>
+					<td><code>description</code>&nbsp;property</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>The following provides an excerpt from the OpenAPI Specification highlighting the properties that are used to pre-populate the fields.</p>
+		<pre class="terminal">
+swagger: '2.0'
+info:
+  <strong>description</strong>: 'OpenAPI Specification for the Apigee mock target service endpoint.'
+  version: 1.0.0
+  <strong>title</strong>: Mock Target API
+<strong>host</strong>: mocktarget.apigee.net
+<strong>schemes</strong>:
+  - http
+  - https
+...
+  </pre>
+	</li>
+	<li>Click <strong>Next</strong>.</li>
+	<li>On the Flows page, select the operations for which you want to generate conditional flows.&nbsp;Conditional flows are generated automatically from the operations that are defined within the&nbsp;<code>paths</code>&nbsp;object in the OpenAPI Specification.&nbsp;Conditional flows tell Edge, "When you see this, perform this logic." For more information, see <a href="http://docs.apigee.com/node/18261">http://docs.apigee.com/node/18261</a>. For example:<br />
+		<img alt="Build a Proxy Flows" src="sites/docs/files/buildproxy-flows.png" style="margin-top: 15px; margin-bottom: 15px; border-width: 1px; border-style: solid; height: 365px; width: 700px;" /><br />
+		<div class="note">
+			<p>Note that the <code>/help</code> operation has been deselected on the Flows page shown above. In this case, a conditional flow will not be generated automatically for this operation, but you will still be able to call it. If necessary, you can manually configure the flow later, as described in <a href="http://docs.apigee.com/node/14717">http://docs.apigee.com/node/14717</a>.</p>
+		</div>
+	</li>
+	<li>Step through the remaining pages in the wizard to complete the proxy configuration.</li>
+</ol>
+<p>The following figure shows the Develop view in the Edge UI for the Mock-Target-API proxy. (Note that a conditional flow is not automatically generated for the Get help operation.)</p>
+<p><img alt="XML to JSON policy in flow" src="sites/docs/files/mocktarget-developview.png" style="margin-top: 15px; margin-bottom: 15px; border-width: 1px; border-style: solid; height: 365px; width: 750px;" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

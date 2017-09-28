@@ -1,0 +1,121 @@
+<h1> Update a TLS certificate </h1>
+<p>If a TLS certificate expires, or if your system configuration changes such that the certificate is no longer valid, then you need to update the certificate. The process of updating a certificate depends on your deployment of Edge: cloud or on-premises.</p>
+<div class="note">
+	<p>You cannot update an existing keystore to add a new certificate. You must create a new keystore when updating a certificate.</p>
+</div>
+<div class="note">
+	<p>You can optionally choose to delete the existing keystore and then create a new one with the same name. However, for the time from when the certificate expired until you create the new&nbsp;keystore, you&nbsp;cannot service requests.</p>
+	<br />
+	<p>If the keystore is used for two-way TLS between Edge and the backend service, and you are using Edge for the Private Cloud, then after deleting and recreating the keystore with the same name, you must restart the Edge Message Processors.</p>
+</div>
+<div class="note">
+	<p>If you configured the virtual host or the TargetEndpoint&nbsp;to use a reference to the keystore or truststore, you can update the reference to point to a different keystore or truststore to update the TLS cert. That means Cloud customers do not have to contact Apigee Support and Private Cloud customers do not need to restart a Router or Message Processor. However, Cloud customers must contact Apigee Support if they require an update to the virtual host. See <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a> for more on using a reference in a virtual host or TargetEndpoint.</p>
+</div>
+<h2>Determine when a cert is due to expire</h2>
+<p>Typically, you create a new keystore&nbsp;before the current certificate expires, and then update your virtual hosts or target endpoints to use the new keystore so that you can continue to service requests without interruption due to an expired certificate. You can then delete the old keystore after ensuring that the new keystore is working correctly.</p>
+<p>To check when a certificate is due to expire, go to the&nbsp;<strong>Admin &gt; SSL Certificates</strong>&nbsp;menu in the Edge management UI. You can also configure that page to indicate if a certificate is due to expire in 10, 15, 30, or 90 days.&nbsp;</p>
+<h2>Update a TLS certificate in a keystore</h2>
+<p>The way you update a TLS certificate in a keystore is based on your Edge deployment type: cloud or Private Cloud.</p>
+<h3>Cloud deployment</h3>
+<p>For a cloud-based deployment of Edge:</p>
+<ol>
+	<li>Create a new keystore as described in <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.</li>
+	<li>Upload a new JAR file containing the new certificate and private key to the keystore.</li>
+	<li><strong>For inbound connections</strong>, meaning an API request into Edge, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Customer Support</a> to update the virtual host configuration to reference the the new keystore and key alias.</li>
+	<li><strong>For outbound connections</strong>, meaning from Apigee to a backend server:
+		<ol style="list-style: lower-alpha outside">
+			<li>Update the TargetEndpoint configuration for any API proxies that referenced the old keystore and key alias to reference the new keystore and key alias.<br />
+				<br />
+				If your TargetEndpoint references a TargetServer, update the TargetServer definition to reference the new keystore and key alias.</li>
+			<li>If the keystore and truststore are referenced directly from the TargetEndpoint definition, then you must redeploy the proxy.<br />
+				<br />
+				If the TargetEndpoint references a TargetServer definition, and the TargetServer definition references the keystore and truststore, then no proxy redeployment is necessary. &nbsp;</li>
+		</ol>
+	</li>
+	<li>After you have confirmed that your new keystore&nbsp;is working correctly, delete the old&nbsp;keystore&nbsp;with the expired cert and key as described above.</li>
+</ol>
+<h3>On-premises deployment</h3>
+<p>For an on-premises deployment of Edge:</p>
+<ol>
+	<li>Create a new keystore as described in <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.</li>
+	<li>Upload a new JAR file containing the new certificate and private key to the keystore.</li>
+	<li><strong>For inbound connections</strong>, meaning an API request into Edge:
+		<ol style="list-style: lower-alpha outside">
+			<li>Update any virtual hosts that referenced the old keystore and key alias to reference the new keystore and key alias.</li>
+			<li>Restart the Routers, one at a time. Note that if you deleted the old keystore and created a new keystore with the same name, then no Router restart is necessary.<br />
+				<br />
+				No proxy redeployment required.</li>
+		</ol>
+	</li>
+	<li><strong>For outbound connections</strong>, meaning from Apigee to a backend server:
+		<ol style="list-style: lower-alpha outside">
+			<li>Update the TargetEndpoint configuration for any API proxies that referenced the old keystore and key alias to reference the new keystore and key alias.<br />
+				If your TargetEndpoint references a TargetServer, update the TargetServer definition to reference the new keystore and key alias.</li>
+			<li>For any API proxies that reference the keystore and truststore&nbsp;from a TargetEndpoint definition, you must redeploy the proxy.<br />
+				<br />
+				If the TargetEndpoint references a TargetServer definition, and the TargetServer definition references the keystore and truststore, then no proxy redeployment is necessary.&nbsp;</li>
+			<li>If the keystore is used for two-way TLS between Edge and the backend service, and you deleted/recreated the keystore with the same name, you must restart the Edge Message Processors.</li>
+		</ol>
+	</li>
+	<li>After you have confirmed that your new keystore&nbsp;is working correctly, delete the old&nbsp;keystore&nbsp;with the expired cert and key as described above.</li>
+</ol>
+<h2>Update a TLS certificate in a truststore</h2>
+<p>The way you update a TLS certificate in a truststore is based on your Edge deployment type: cloud or Private Cloud.&nbsp;</p>
+<h3>Cloud deployment</h3>
+<p>For a cloud-based deployment of Edge:</p>
+<ol>
+	<li>Upload a new cert to the truststore as described in <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>. There is no need to delete the old cert.</li>
+	<li><strong>For both inbound or outbound connections</strong>, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Customer Support</a>.</li>
+	<li>Confirm that your updated truststore is working correctly.</li>
+</ol>
+<h3>On-premises deployment</h3>
+<p>For an on-premises deployment of Edge:</p>
+<ol>
+	<li>Upload a new cert to the truststore as described in <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.&nbsp;There is no need to delete the old cert.</li>
+	<li><strong>For inbound connections</strong>, meaning an API request into Edge,&nbsp;restart the Routers, one at a time.&nbsp;No proxy redeployment required.</li>
+	<li><strong>For outbound connections</strong>, meaning from Apigee to a backend server, restart&nbsp;the Edge Message Processors, one at a time.</li>
+	<li>Confirm that your new truststore is working correctly.</li>
+</ol>
+<h2>Update your truststore for an expired Apigee cert</h2>
+<p>Apigee provides all Cloud customers with a cert when they create an account so that the customer can get up and running quickly with Edge. All Cloud customers get a copy of the same Apigee-provided cert.</p>
+<p>Based on when you obtained your cert, the Apigee cert will expire on either February 23, 2016 or April 8, 2016. Apigee will be updating&nbsp;all keystores before those dates to upload a new cert and private key.</p>
+<p>However, if you have uploaded the Apigee cert to a truststore, you must add the new Apigee cert to your truststore before it expires. You do not have to delete the old Apigee cert, you only have to upload the new one.</p>
+<p>Shown below is the new cert:</p>
+<pre>
+-----BEGIN CERTIFICATE-----
+MIIFHzCCBAegAwIBAgIISzef6agJ+w4wDQYJKoZIhvcNAQELBQAwgbQxCzAJBgNV
+BAYTAlVTMRAwDgYDVQQIEwdBcml6b25hMRMwEQYDVQQHEwpTY290dHNkYWxlMRow
+GAYDVQQKExFHb0RhZGR5LmNvbSwgSW5jLjEtMCsGA1UECxMkaHR0cDovL2NlcnRz
+LmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvMTMwMQYDVQQDEypHbyBEYWRkeSBTZWN1
+cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IC0gRzIwHhcNMTYwMTEzMTcyNTU0WhcN
+MTkwNDA5MDYzNzEwWjA6MSEwHwYDVQQLExhEb21haW4gQ29udHJvbCBWYWxpZGF0
+ZWQxFTATBgNVBAMMDCouYXBpZ2VlLm5ldDCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBALRAjJBUiGcKTEye40tpQjqGnAYn+LgpfS8Wkhh5nUZFvJBbEVDe
+heH4Agc1LILOExEtKj/bGRhhFQzojSfTmz3LuGA8oVnzzOamYDvzkTkK5yO+Yd2C
+FXgEOQhphcaZms2Z1Kl9cn1fQRl/+KUbiKgV/piu4079cnPqR8uME94mWnHpRurd
+ZJqfOxpz+144RbTNaSJdQdiPQ1vzxmLQFFN2SrbWx4OXni/C5QJ0S14uplZHgw+j
+Ae/LGAiaJR7nirot3QEk7qdYRF6g86OvrpToDbG6vKSyuIXoOT33oBJnjfFQRkq+
+29VcMWwWLe6lmToGpp0xkNxdeyFB0oyQqFsCAwEAAaOCAawwggGoMAwGA1UdEwEB
+/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMA4GA1UdDwEB/wQE
+AwIFoDA3BgNVHR8EMDAuMCygKqAohiZodHRwOi8vY3JsLmdvZGFkZHkuY29tL2dk
+aWcyczEtMTc4LmNybDBTBgNVHSAETDBKMEgGC2CGSAGG/W0BBxcBMDkwNwYIKwYB
+BQUHAgEWK2h0dHA6Ly9jZXJ0aWZpY2F0ZXMuZ29kYWRkeS5jb20vcmVwb3NpdG9y
+eS8wdgYIKwYBBQUHAQEEajBoMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5nb2Rh
+ZGR5LmNvbS8wQAYIKwYBBQUHMAKGNGh0dHA6Ly9jZXJ0aWZpY2F0ZXMuZ29kYWRk
+eS5jb20vcmVwb3NpdG9yeS9nZGlnMi5jcnQwHwYDVR0jBBgwFoAUQMK9J47MNIMw
+ojPX+2yz8LQsgM4wIwYDVR0RBBwwGoIMKi5hcGlnZWUubmV0ggphcGlnZWUubmV0
+MB0GA1UdDgQWBBROfmwEgDjmhQL41zDFmOsQ/Z/ARTANBgkqhkiG9w0BAQsFAAOC
+AQEAq0MW3tOUPPdujGc2JLhd3SpYXCoHvps7JkjJ0yHurzXkCmnDHLAfYYXbu7Ei
+B+k3anDavgGpO7odJQaoYtbpTCfZHRlUWSaT0Xef3UUIAMuu2bKIaNIYRTKUA7Jj
+X4pCVTQCKHuoYMFjTAqm6d+q68WMv2oW6EERjf0irw++Yecuq+CllKIOird2zS73
+Fc3RTp1LcM+J0AwHkA3r8KSCQhsqLdn/Y0JTxJ8d2E4RYH2jpkMB1ogA1/VUj9ZW
+xTUVrk3Duw4Wq/66mPpQVGZHfRDJ9TBF5Qt8iUKxEIt4IzaWmk70049ygab29XaC
+xaC2QIzKJJbBueo76nvKKpfeGQ==
+-----END CERTIFICATE-----</pre>
+<p>Copy this cert to a PEM file, and then upload the certificate to your truststore. The way you update your truststore is based on its location and implementation. For example, if it is on your backend servers, use the procedure based on your server implementation.</p>
+<p>If you are updating a truststore on Edge, use the <a href="http://docs.apigee.com/node/17996">http://docs.apigee.com/node/17996</a> API:</p>
+<pre>
+$ curl -X POST -H "Content-Type: multipart/form-data" -F file="@newapigeecert.pem" \ 
+https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env_name}/keystores/myTruststore/certs?alias=myTruststore \
+-u email:password</pre>
+<p>where the&nbsp;<span style="font-family: 'courier new', courier, monospace;">-F</span>&nbsp;option specifies the path to the&nbsp;PEM&nbsp;file.</p>

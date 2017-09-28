@@ -1,0 +1,341 @@
+<h1> OAuth HTTP error response reference </h1>
+<p>[toc]</p>
+<p>This topic provides HTTP status codes and their related reason phrases you may encounter when an OAuth policy throws errors in Apigee Edge.&nbsp;</p>
+<p>For guidance on handling errors, see <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.</p>
+<p>For policy-specific error codes, see:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a></li>
+	<li><a href="http://docs.apigee.com/node/212">http://docs.apigee.com/node/212</a></li>
+</ul>
+<h2>Authorization Code</h2>
+<h3>Invalid Redirect URI</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Invalid redirection uri http://www.invalid_example.com"}</pre>
+</div>
+<h3>No Redirect URI</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request {"ErrorCode" : "invalid_request", "Error" :"Redirection URI is required"}</pre>
+</div>
+<h3>Invalid Key</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized {"ErrorCode" : "invalid_request", "Error" :"Invalid client id : AVD7ztXReEYyjpLFkkPiZpLEjeF2aYAz. ClientId is Invalid"}</pre>
+</div>
+<h3>Missing Key</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"The request is missing a required parameter : client_id"}</pre>
+</div>
+<h3>Invalid Response Type</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Response type must be code"}</pre>
+</div>
+<h3>Missing Response Type</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"The request is missing a required parameter : response_type"}</pre>
+</div>
+<h2>Generate AccessToken</h2>
+<h3>Invalid Auth Code</h3>
+<div id="well">
+	<pre>
+HTTP status: 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Invalid Authorization Code"}
+</pre>
+</div>
+<h3>No Redirect URI</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Required param : redirect_uri"}</pre>
+</div>
+<h3>Invalid Redirect URI</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Invalid redirect_uri : oob"}</pre>
+</div>
+<h3>Invalid Client ID</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"ErrorCode" : "InvalidClientIdentifier", "Error" :"Client identifier is required"}</pre>
+</div>
+<div class="warning">
+	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+</div>
+<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
+<h3>No Client ID</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"ErrorCode" : "invalid_client", "Error" :"Client identifier is required"}</pre>
+</div>
+<div class="warning">
+	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+</div>
+<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
+<h3>Invalid GrantType</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Unsupported grant type : client_credentials_invalid"}</pre>
+</div>
+<h3>No Username</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Required param : username"}</pre>
+</div>
+<h3>No Password</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Required param : password"}</pre>
+</div>
+<h3>No GrantType (Custom Policy)</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Required param : grant_type"}</pre>
+</div>
+<h3>No AuthCode</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Required param : code"} </pre>
+</div>
+<h2>Implicit</h2>
+<h3>Invalid Client ID</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"ErrorCode" : "invalid_request", "Error" :"Invalid client id : AVD7ztXReEYyjpLFkkPiZpLEjeF2aYAz. ClientId is Invalid"}</pre>
+</div>
+<h3>No Client ID</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"The request is missing a required parameter : client_id"}</pre>
+</div>
+<h3>Invalid Response Type</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Response type must be token"}</pre>
+</div>
+<h3>No Response Type</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"The request is missing a required parameter : response_type"}</pre>
+</div>
+<h3>Invalid Redirect URI</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Invalid redirection uri http://www.invalid_example.com"}</pre>
+</div>
+<h3>No Redirect URI</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Redirection URI is required"}</pre>
+</div>
+<h2>Refresh Token</h2>
+<h3>Invalid RefreshToken</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Invalid Refresh Token"}</pre>
+	<h3>Expired RefreshToken</h3>
+	<div id="well" style="font-size: 12px;">
+		<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Refresh Token expired"}</pre>
+	</div>
+</div>
+<h3>Invalid Scope</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Invalid Scope"}</pre>
+</div>
+<h3>Invalid Client ID</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"ErrorCode" : "invalid_client", "Error" :"Client identifier is required"}</pre>
+</div>
+<div class="warning">
+	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+</div>
+<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
+<h3>No Client ID</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"ErrorCode" : "invalid_client", "Error" :"Client identifier is required"}</pre>
+</div>
+<div class="warning">
+	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+</div>
+<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
+<h2>Verify AccessToken</h2>
+<h3>Invalid AccessToken</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"fault":{"faultstring":"Invalid Access Token","detail":{"errorcode":"keymanagement.service.invalid_access_token"}}}</pre>
+</div>
+<h3>Invalid Resource</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"fault":{"faultstring":"APIResource \/facebook\/acer does not exist","detail":{"errorcode":"keymanagement.service.apiresource_doesnot_exist"}}}</pre>
+</div>
+<h3>Invalid Scope</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 403 Forbidden
+{"fault":{"faultstring":"Required scope(s) : VerifyAccessToken.scopeSet","detail":{"errorcode":"steps.oauth.v2.InsufficientScope"}}}</pre>
+</div>
+<h3>No Auth Header</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"fault":{"faultstring":"Invalid access token","detail":{"errorcode":"oauth.v2.InvalidAccessToken"}}}</pre>
+</div>
+<h3>No match for ApiProduct (With Env &amp; Proxy Configured)</h3>
+<div id="well">
+	<pre>
+HTTP/1.1 401 Unauthorized
+{"fault":{"faultstring":"Invalid API call as no apiproduct match found","detail":{"errorcode":"keymanagement.service.InvalidAPICallAsNoApiProductMatchFound"}}}</pre>
+</div>
+<h3>Access token expired</h3>
+<pre>
+HTTP/1.1 401 Unauthorized
+{"fault":{"faultstring":"Access Token expired","detail":{"errorcode":"keymanagement.service.access_token_expired"}}} 
+</pre>
+<h3>Access token revoked</h3>
+<pre>
+HTTP/1.1 401 Unauthorized
+{"fault":{"faultstring":"Access Token not approved","detail":{"errorcode":"keymanagement.service.access_token_not_approved"}}}
+</pre>
+<h2>Get OAuth V2 Info</h2>
+<h3>Invalid Refresh Token</h3>
+<pre>
+HTTP/1.1 404 Not Found
+{"fault::{"detail":{"errorcode":"keymanagement.service.invalid_refresh_token"},"faultstring":"Invalid Refresh Token"}}
+
+</pre>
+<h3>Invalid Access Token</h3>
+<pre>
+HTTP/1.1 404 Not Found
+{
+  "fault": {
+    "faultstring": "Invalid Access Token",
+    "detail": {
+      "errorcode": "keymanagement.service.invalid_access_token"
+    }
+  }
+}
+</pre>
+<h3>Expired Access Token</h3>
+<pre>
+HTTP/1.1 500 Not Found
+{
+  "fault": {
+    "faultstring": "Access Token expired",
+    "detail": {
+      "errorcode": "keymanagement.service.access_token_expired"
+    }
+  }
+}
+
+</pre>
+<h3>Expired Refresh Token</h3>
+<pre>
+HTTP/1.1 500 Not Found
+{
+  "fault": {
+    "faultstring": "Refresh Token expired",
+    "detail": {
+      "errorcode": "keymanagement.service.refresh_token_expired"
+    }
+  }
+}</pre>
+<h3>Invalid Client ID</h3>
+<pre>
+HTTP/1.1 404 Not Found
+{
+  "fault": {
+    "faultstring": "Invalid Client Id",
+    "detail": {
+      "errorcode": "keymanagement.service.invalid_client-invalid_client_id"
+    }
+  }
+}</pre>
+<h3>Invalid Authorization Code</h3>
+<pre>
+HTTP/1.1 404 Not Found
+{
+  "fault": {
+    "faultstring": "Invalid Authorization Code",
+    "detail": {
+      "errorcode": "keymanagement.service.invalid_request-authorization_code_invalid"
+    }
+  }
+}</pre>
+<h3>Expired Authorization Code</h3>
+<pre>
+HTTP/1.1 500 Not Found
+{
+  "fault": {
+    "faultstring": "Authorization Code expired",
+    "detail": {
+      "errorcode": "keymanagement.service.authorization_code_expired"
+    }
+  }
+}</pre>
+<h2>Set OAuth V2 Info</h2>
+<h3>Invalid Access Token</h3>
+<pre>
+HTTP/1.1 404 Not Found
+{
+  "fault": {
+    "faultstring": "Invalid Access Token",
+    "detail": {
+      "errorcode": "keymanagement.service.invalid_access_token"
+    }
+  }
+}
+</pre>
+<h3>Expired Access Token</h3>
+<pre>
+HTTP/1.1 500 Not Found
+{
+  "fault": {
+    "faultstring": "Access Token expired",
+    "detail": {
+      "errorcode": "keymanagement.service.access_token_expired"
+    }
+  }
+}</pre>
+<h2>Delete OAuth V2 Info</h2>
+<p>On success, the policy returns a 200 status.</p>
+<p>On failure, the policy returns 404 and output similar to the following (depending on whether you are deleting an access token or an auth code):</p>
+<pre>
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+Content-Length: 144
+Connection: keep-alive
+
+{"fault":{"faultstring":"Invalid Authorization Code","detail":{"errorcode":"keymanagement.service.invalid_request-authorization_code_invalid"}}}</pre>

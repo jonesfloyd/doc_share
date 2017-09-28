@@ -1,0 +1,158 @@
+<h1> Using TLS in a Private Cloud installation </h1>
+<p>[toc]</p>
+<h2>Apigee Edge</h2>
+<p>The following figure shows where Apigee Edge for Private Cloud customers configure TLS:</p>
+<p><img alt="" src="sites/docs/files/EdgeSSLOPDK_v2.png" style="width: 776px; height: 445px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>The following table describes the locations where you configure TLS access for a Private Cloud installation:</p>
+<table border="0" cellpadding="0" cellspacing="0" class="table">
+	<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th>
+				<p><strong>Source</strong></p>
+			</th>
+			<th>
+				<p><strong>Destination</strong></p>
+			</th>
+			<th>
+				<p><strong>TLS Access</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>1</p>
+			</td>
+			<td>
+				<p>API developer</p>
+			</td>
+			<td>
+				<p>Edge management UI</p>
+			</td>
+			<td>
+				<p>Enable TLS on the Edge management UI.</p>
+				<p>See the Edge <em>Operations Guide</em> for more, which is available from your private FTP account or on the <a href="http://apigee.com/about/support/portal">Apigee Support Portal</a> under <strong>Libraries&nbsp;</strong>&nbsp;(Edge for Private Cloud version 4.16.01 and earlier) and online at&nbsp;<a href="http://docs.apigee.com/node/20491">http://docs.apigee.com/node/20491</a> (version 4.16.05 and later).</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>2</p>
+			</td>
+			<td>
+				<p>API Developer</p>
+			</td>
+			<td>
+				<p>Edge management API</p>
+			</td>
+			<td>
+				<p>Enable TLS on the Edge management API.</p>
+				<p>See the Edge <em>Operations Guide</em> for more, which is available from your private FTP account or on the&nbsp;<a href="http://apigee.com/about/support/portal">Apigee Support Portal</a>&nbsp;under&nbsp;<strong>Libraries</strong>&nbsp;(Edge for Private Cloud version 4.16.01 and earlier) and online&nbsp;at&nbsp;<a href="http://docs.apigee.com/node/20491">http://docs.apigee.com/node/20491</a> (version 4.16.05 and later).</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>3</p>
+			</td>
+			<td>
+				<p>API Client (app)</p>
+			</td>
+			<td>
+				<p>API</p>
+			</td>
+			<td>
+				<p>Enable TLS on API access through the use of virtual hosts on the Edge Router.</p>
+				<p>See <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a>&nbsp;for more.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>4</p>
+			</td>
+			<td>
+				<p>Edge</p>
+			</td>
+			<td>
+				<p>Target endpoint</p>
+			</td>
+			<td>
+				<p>Enable TLS between Edge and a backend service provider.</p>
+				<p>See <a href="http://docs.apigee.com/node/18091">http://docs.apigee.com/node/18091</a>&nbsp;for more.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>5</p>
+			</td>
+			<td>
+				<p>Router</p>
+			</td>
+			<td>
+				<p>Message Processor</p>
+			</td>
+			<td>
+				<p>Enable TLS for communication between a Router and Message Processor.</p>
+				<p>See the Edge <em>Operations Guide</em> for more, which is available from your private FTP account or on the&nbsp;<a href="http://apigee.com/about/support/portal">Apigee Support Portal</a>&nbsp;under&nbsp;<strong>Libraries</strong>&nbsp;(Edge for Private Cloud version 4.16.01 and earlier) and online&nbsp;at&nbsp;<a href="http://docs.apigee.com/node/20491">http://docs.apigee.com/node/20491</a> (version 4.16.05 and later)..</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>If your Edge for Private Cloud installation included a load balancer, then you might also have to replace the configuration for #3 above to configure TLS between the app and load balancer, and between the load balancer and the Edge Router:</p>
+<table border="0" cellpadding="0" cellspacing="0" class="table">
+	<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th>
+				<p><strong>Source</strong></p>
+			</th>
+			<th>
+				<p><strong>Destination</strong></p>
+			</th>
+			<th>
+				<p><strong>Description</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>6</p>
+			</td>
+			<td>
+				<p>App</p>
+			</td>
+			<td>
+				<p>Load Balancer</p>
+			</td>
+			<td>
+				<p>Enable TLS on the load balancer. This process is determined by your load balancer.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>7</p>
+			</td>
+			<td>
+				<p>Load Balancer</p>
+			</td>
+			<td>
+				<p>Router</p>
+			</td>
+			<td>
+				<p>If necessary, enable TLS on the Router for requests from the load balancer. Use the same process as you do for configuring TLS for a virtual host as described here: <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a>.</p>
+				<p>If the load balancer and Router are in the same security domain, TLS configuration may not be necessary. However, that is dependent on your network configuration.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p><strong>Learn more:</strong></p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/18061">http://docs.apigee.com/node/18061</a></li>
+	<li><a href="http://docs.apigee.com/node/18066">http://docs.apigee.com/node/18066</a></li>
+	<li><a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a></li>
+	<li><a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a></li>
+</ul>
+<h2>API BaaS</h2>
+<p>The following image shows the places where API BaaS uses TLS:</p>
+<p><img alt="" src="sites/docs/files/arch_ports_baas_tls_v2.png" style="width: 600px; height: 296px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>See <a href="http://docs.apigee.com/node/21941">http://docs.apigee.com/node/21941</a> for more information.&nbsp;</p>

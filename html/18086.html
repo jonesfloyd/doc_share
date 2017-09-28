@@ -1,0 +1,691 @@
+<h1> Configuring TLS access to an API for the Private Cloud </h1>
+<p>[toc]</p>
+<p>A virtual host on Edge defines the domains and ports on which an API proxy is exposed, and, by extension, the URL that apps use to access an API proxy.</p>
+<p>A virtual host also defines whether the API proxy is accessed by using the HTTP protocol, or by the encrypted HTTPS protocol that uses TLS. When configuring a virtual host to use HTTPS and TLS, you create a virtual host on Edge and configure the virtual host to use a <em>keystore </em>and<em>&nbsp;truststore</em>.</p>
+<div class="opdk">
+	<p>This document describes how to create a virtual host for an on-premises deployment of Edge. To create a virtual host for a cloud deployment of Edge, see <a href="http://docs.apigee.com/node/18071">http://docs.apigee.com/node/18071</a>.</p>
+</div>
+<p><strong>Learn more:</strong></p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/18061">http://docs.apigee.com/node/18061</a></li>
+	<li><a href="http://docs.apigee.com/node/18066">http://docs.apigee.com/node/18066</a></li>
+	<li><a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a></li>
+	<li><a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a></li>
+</ul>
+<div class="note">
+	<p>If your installation uses a load balancer, and the load balancer is responsible for handling encrypted traffic, then you still need to create the virtual host. However, your network configuration will determine whether or not the virtual host has to support TLS between the load balancer and the Router. See <a href="http://docs.apigee.com/node/18076">http://docs.apigee.com/node/18076</a> for more.</p>
+</div>
+<h2>What you need to create a virtual host</h2>
+<p>Before you create a virtual host, you should have the following information:</p>
+<ul>
+	<li>The publicly facing domain name of the virtual host.&nbsp;For example, you should know if the publicly facing name is <span style="font-family:courier new,courier,monospace;">api.myCompany.com</span>, <span style="font-family:courier new,courier,monospace;">myapi.myCompany.com</span>, etc. That information is used when you create the virtual host and also when you create the DNS record for the virtual host.</li>
+	<li><strong>For one-way TLS</strong>, you need to create a keystore where the keystore contains the following:
+		<ul>
+			<li>TLS certificate as a PEM file - either a certificate signed by a certificate authority (CA), or a chain of certificates where the last certificate is signed by a CA.</li>
+			<li>Private key as a PEM file. Edge supports key sizes up to 2048 bits. A passphrase is optional.</li>
+		</ul>
+	</li>
+	<li><strong>For two-way TLS</strong>, you need a keystore and you need a truststore to hold the client's certificate and, optionally, certificate's CA chain. You need the truststore even if the cert is signed by a CA.</li>
+</ul>
+<p>See <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a> for more information on creating keystores and truststores.</p>
+<h2>About host aliases</h2>
+<div class="note">
+	<p>As of Edge for Private Cloud version 4.16.01, you must specify a host alias when creating a virtual host. In releases previous to 4.16.01, the host alias was optional.</p>
+	<p>&nbsp;</p>
+	<p>Also, the combination of host alias name and port number for the virtual host must be unique for all virtual hosts in the Edge installation.</p>
+</div>
+<p>When you create the virtual host, you must specify the host alias of the virtual host. Typically this is the DNS name of the virtual host.</p>
+<p>The Edge Router compares the <span style="font-family:courier new,courier,monospace;">Host</span> header of the incoming request to the list of available host aliases as part of determining the API proxy that handles the request. When making a request through a virtual host, either specify a domain name that matches the host alias of a virtual host, or specify the IP address of the Router and the <span style="font-family:courier new,courier,monospace;">Host</span> header containing the host alias.</p>
+<p>For example, if you created a virtual host with a host alias of <strong>myapis.apigee.net</strong> on port <strong>9001</strong>, then a cURL request to an API through that virtual host could use one of the following forms:</p>
+<ul>
+	<li>If you have a DNS entry for <strong>myapis.apigee.net</strong>:<br />
+		<span style="font-family:courier new,courier,monospace;">curl http://<strong>myapis.apigee.net:9001</strong>/{proxy-base-path}/{resource-path}</span></li>
+	<li>If you do not have a DNS entry for&nbsp;<strong>myapis.apigee.net</strong>:<br />
+		<span style="font-family:courier new,courier,monospace;">curl http://<strong>&lt;routerIP&gt;:9001</strong>/{proxy-base-path}/{resource-path}&nbsp;-H 'host: myapis.apigee.net'</span><br />
+		In this form, you specify the IP address of the Router, and pass the host alias in the <span style="font-family:courier new,courier,monospace;">Host</span> header.&nbsp;<br />
+		<strong>Note</strong>: The curl command, most browsers, and many other utilities automatically append the <span style="font-family:courier new,courier,monospace;">Host</span> header with the domain as part of the request, so you can actually use a curl command in the form:<br />
+		<span style="font-family:courier new,courier,monospace;">curl http://<strong>&lt;routerIP&gt;:9001</strong>/{proxy-base-path}/{resource-path}&nbsp;</span></li>
+</ul>
+<h3>Options when you do not have a DNS entry for the virtual host</h3>
+<p>One option when you do not have a DNS entry is to set the host alias to the IP address of the Router and port of the virtual host, as <span style="font-family:courier new,courier,monospace;">&lt;routerIP&gt;:port</span>. For example:</p>
+<pre>
+192.168.1.31:9001</pre>
+<p>When you make a curl command in the form below:</p>
+<pre>
+curl http://<strong>&lt;routerIP&gt;:9001</strong>/{proxy-base-path}/{resource-path} </pre>
+<p>This option is preferred because it works well with the Edge UI.&nbsp;</p>
+<p>If you have multiple Routers, add a host alias for each Router, specifying the IP address of each Router and port of the virtual host.&nbsp;</p>
+<p>Alternatively, you can set the host alias to a value, such as <strong>temp.hostalias.com</strong>. Then, you have to pass the <span style="font-family:courier new,courier,monospace;">Host</span> header on every request:</p>
+<pre>
+curl -v http://<strong>&lt;routerIP&gt;:9001</strong>/{proxy-base-path}/{resource-path} -H 'H<strong>ost: temp.hostalias.com</strong>'</pre>
+<p>Or, add the host alias to your <strong>/etc/hosts</strong> file. For example, add this line to /etc/hosts:</p>
+<pre>
+192.168.1.31   temp.hostalias.com</pre>
+<p>Then you can make a request as if you had a DNS entry:</p>
+<pre>
+curl -v http://<strong>myapis.apigee.net:9001</strong>/{proxy-base-path}/{resource-path} </pre>
+<h2>About virtual host ports on Edge for Private Cloud releases 4.16.01 and later</h2>
+<p>When creating a virtual host, you specify the Router port used by the virtual host. For example, port 9001.</p>
+<p>For Apigee for Private Cloud releases 4.16.01 and later, by default, the Router runs as the user "apigee" which does not have access to privileged ports, typically ports 1024 and below. If you want to create a virtual host that binds the Router to a protected port then you have to configure the Router to run as a user with access to those ports. &nbsp;See <a href="http://docs.apigee.com/node/22951">http://docs.apigee.com/node/22951</a> for more. &nbsp;</p>
+<h2>Virtual host configuration</h2>
+<p>To create a virtual host, create an XML object that defines the virtual host. For example, the following XML object defines a virtual host that uses the HTTP protocol:</p>
+<pre>
+&lt;VirtualHost name="myVHost"&gt;
+   &lt;HostAliases&gt;
+     &lt;HostAlias&gt;DNS_name_or_IP:port&lt;/HostAlias&gt; 
+   &lt;/HostAliases&gt; 
+   &lt;Interfaces/&gt;
+   &lt;Port&gt;9005&lt;/Port&gt; 
+&lt;/VirtualHost&gt;
+</pre>
+<div class="note">
+	<p>As of Edge for Private Cloud version 4.16.01, you must specify a host alias when creating a virtual host. In releases previous to 4.16.01, the host alias was optional.</p>
+</div>
+<p>Notice that the virtual host contains a <span style="font-family:courier new,courier,monospace;">name</span> property. You use the value of the <span style="font-family:courier new,courier,monospace;">name</span> property to configure an API proxy to use the virtual host.</p>
+<p>You can then access an API proxy through this virtual host by making a request to:</p>
+<pre>
+http://&lt;routerIP&gt;:&lt;port&gt;/{proxy-base-path}/{resource-path}<span style="font-family:courier new,courier,monospace;">
+</span>https://&lt;routerIP&gt;:&lt;port&gt;/{proxy-base-path}/{resource-path}</pre>
+<p>where:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">http</span> or <span style="font-family:courier new,courier,monospace;">https</span>: If the virtual host is configured to supports TLS, use HTTPS. If the virtual host does not support TLS, use HTTP.&nbsp;</li>
+	<li><span style="font-family:courier new,courier,monospace;">&lt;routerIP&gt;:&lt;port&gt;</span> is the IP address and port number of the virtual host.</li>
+	<li><span style="font-family:courier new,courier,monospace;">{proxy-base-path}</span> and <span style="font-family:courier new,courier,monospace;">{resource-path}</span> are defined when you create the API proxy.</li>
+</ul>
+<p>Typically, you do not publish your APIs to customers with an IP address and port number. Instead, you define a DNS entry for the Router and port. For example:</p>
+<pre>
+http://api.myCompany.com/{proxy-base-path}/{resource-path}
+​https://api.myCompany.com/{proxy-base-path}/{resource-path}</pre>
+<p>If you define the DNS entry, then you must create a <em>host alias</em> for the virtual host that matches the domain name of the DNS entry. The host alias must match the string that the client passes in the <span style="font-family:courier new,courier,monospace;">Host</span> header. From the example above, you would specify a host alias of <span style="font-family:courier new,courier,monospace;">api.myCompany.com</span>.&nbsp;</p>
+<pre>
+&lt;VirtualHost name="myVHost"&gt;
+    &lt;HostAliases&gt;
+        &lt;HostAlias&gt;api.myCompany.com&lt;/HostAlias&gt;
+    &lt;/HostAliases&gt;
+    &lt;Interfaces/&gt;
+    &lt;Port&gt;9005&lt;/Port&gt;
+&lt;/VirtualHost&gt;</pre>
+<p>The next XML object uses the <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> element to define a virtual host for a one-way TLS configuration over HTTPS:</p>
+<pre>
+&lt;VirtualHost name="myTLSVHost"&gt; 
+    &lt;HostAliases&gt; 
+        &lt;HostAlias&gt;apiTLS.myCompany.com&lt;/HostAlias&gt; 
+    &lt;/HostAliases&gt; 
+    &lt;Interfaces/&gt; 
+    &lt;Port&gt;9006&lt;/Port&gt; 
+    <strong>&lt;SSLInfo&gt; 
+        &lt;Enabled&gt;true&lt;/Enabled&gt; 
+        &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt; 
+        &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt; 
+        &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt; 
+    &lt;/SSLInfo&gt;</strong>
+&lt;/VirtualHost&gt;</pre>
+<div class="note">
+	<p>Because Edge originally supported SSL, the tag that you use to configure TLS is named <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span>.&nbsp;</p>
+</div>
+<p>In this example, the <span style="font-family:courier new,courier,monospace;">&lt;Enabled&gt;</span> element is set to true to enable one-way TLS, and the <span style="font-family:courier new,courier,monospace;">&lt;KeyStore&gt;</span> and &lt;<span style="font-family:courier new,courier,monospace;">KeyAlias&gt;</span> elements specify the keystore and key used by the TLS connection.&nbsp;</p>
+<p>To enable two-way TLS, set the <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> element to <span style="font-family:courier new,courier,monospace;">true</span>, and specify a truststore using the <span style="font-family: 'courier new', courier, monospace;">&lt;TrustStore&gt;</span> element. The truststore&nbsp;holds the client's certificate and, optionally, certificate's CA chain.</p>
+<h3>Setting the TLS ciphers and protocols supported by the virtual host for Edge 4.15.07 and earlier</h3>
+<p>If you are using Edge version 4.15.07 and earlier, then you set the TLS protocol and ciphers used by the virtual host by using the <span style="font-family:courier new,courier,monospace;">&lt;Ciphers&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;Protocols&gt;</span> child tags of the <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> tag. These tags are described in the table below.</p>
+<p>For example:</p>
+<pre>
+    &lt;SSLInfo&gt; 
+        &lt;Enabled&gt;true&lt;/Enabled&gt; 
+        &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt; 
+        &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt; 
+        &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt; 
+        &lt;SSLInfo&gt;
+            &lt;Enabled&gt;true&lt;/Enabled&gt;
+            &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt;
+            &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt;
+            &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt;
+            <strong>&lt;Ciphers&gt;
+                &lt;Cipher&gt;TLS_RSA_WITH_3DES_EDE_CBC_SHA&lt;/Cipher&gt;    
+                &lt;Cipher&gt;TLS_RSA_WITH_DES_CBC_SHA&lt;/Cipher&gt;
+            &lt;/Ciphers&gt;
+            &lt;Protocols&gt;
+                &lt;Protocol&gt;TLSv1.2&lt;/Protocol&gt;
+            &lt;/Protocols&gt;</strong>
+        &lt;/SSLInfo&gt;
+   &lt;/SSLInfo&gt;</pre>
+<h3>Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 to 4.16.09</h3>
+<p>In Edge 4.16.01 through 4.16.09, you set the default ciphers and protocols for virtual hosts globally on the Router. These defaults then apply to all virtual hosts.</p>
+<div class="note">
+	<p>You cannot override these value for specific virtual hosts. All virtual hosts use the same values for protocol and cipher.</p>
+</div>
+<p>Use tokens to specify the default protocols and ciphers:</p>
+<ul>
+	<li>To specify the default protocols, use the token <span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.server.ssl.protocols</span></li>
+	<li>To specify the default ciphers for the Router, use the token&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers</span></li>
+</ul>
+<p>The default value of the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_load_balancing_load.balancing.driver.server.ssl.protocols</span>&nbsp;token is:</p>
+<pre>
+conf_load_balancing_load.balancing.driver.server.ssl.protocols=TLSv1 TLSv1.1 TLSv1.2</pre>
+<p>This setting specifies&nbsp;that the Router supports TLS versions 1.0, 1.1, and 1.2. Specify a space delimited list of values to the token.</p>
+<p>The default value of the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers</span>&nbsp;token is:</p>
+<pre>
+conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!DH+3DES:!RSA+3DES</pre>
+<p>This setting specifies:</p>
+<ul>
+	<li>Key length of 128 bits or more required (<span style="font-family:courier new,courier,monospace;">HIGH</span>).</li>
+	<li>Exclude ciphers with no authentication (<span style="font-family:courier new,courier,monospace;">!aNULL</span>)</li>
+	<li>Exclude cipher suites using MD5&nbsp;(<span style="font-family:courier new,courier,monospace;">!MD5</span>)</li>
+	<li>Exclude cipher suites using DH (including anonymous DH, ephemeral DH and fixed DH) AND triple DES (<span style="font-family:courier new,courier,monospace;">!DH+3DES</span>)</li>
+	<li>Exclude cipher suites using RSA key exchange AND triple DES (<span style="font-family: &quot;courier new&quot;, courier, monospace;">!RSA+3DES</span>)</li>
+</ul>
+<p>For information on the syntax and values allowed&nbsp;by this token, see <a href="https://www.openssl.org/docs/man1.0.2/apps/ciphers.html">https://www.openssl.org/docs/man1.0.2/apps/ciphers.html</a>. Note that this token uses the&nbsp;OpenSSL cipher names, such as&nbsp;AES128-SHA256, and not the standard cipher name,&nbsp;TLS_RSA_WITH_AES_128_CBC_SHA256.</p>
+<p>To set the token for the Router:</p>
+<ol>
+	<li>Edit the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/router.properties</span> file. If that file does not exist, create it.</li>
+	<li>Set the <span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers</span> token. For example, to specify TLSv1.2 only and exclude cipher suites using pre-shared keys, add<span style="font-family:courier new,courier,monospace;">!PSK</span>:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.server.ssl.protocols=TLSv1.2</span><br />
+		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!DH+3DES:!RSA+3DES:!PSK</span></li>
+	<li>Ensure that the <span style="font-family:courier new,courier,monospace;">router.properties</span>&nbsp;file is owned by apigee:<br />
+		<span style="font-family:courier new,courier,monospace;">​&gt; chown apigee:apigee ​/opt/apigee/customer/application/router.properties</span></li>
+	<li>Restart the Edge Router:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart</span></li>
+	<li>Check the value of the token:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router configure -search conf_load_balancing_load.balancing.driver.server.ssl.ciphers</span></li>
+</ol>
+<h3>Setting virtual host parameters for Edge version 4.17.01 and later</h3>
+<p>If you are using Edge version 4.17.01 and later, then you can set some TLS properties for an individual virtual host, such as TLS protocol and cipher, by using the <span style="font-family:courier new,courier,monospace;">&lt;Properties&gt;</span> child tag of the <span style="font-family:courier new,courier,monospace;">&lt;VirtualHost&gt;</span> tag.&nbsp;These tags are described in the table below.</p>
+<div class="note">
+	<p>You can still use tokens to set the default ciphers and protocols for virtual hosts globally on the Router, as described in the previous section for Edge 4.16.01 through 4.16.09. This section describes new properties added in 4.17.01 that let you override those defaults for an individual virtual host.</p>
+</div>
+<p>For example:</p>
+<pre>
+&lt;VirtualHost name="myTLSVHost"&gt;
+    &lt;HostAliases&gt;
+        &lt;HostAlias&gt;apiTLS.myCompany.com&lt;/HostAlias&gt;
+    &lt;/HostAliases&gt;
+    &lt;Interfaces/&gt;
+    &lt;Port&gt;9006&lt;/Port&gt;
+    &lt;SSLInfo&gt;
+        &lt;Enabled&gt;true&lt;/Enabled&gt;
+        &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt;
+        &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt;
+        &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt;
+    &lt;/SSLInfo&gt;
+<strong>    &lt;Properties&gt;
+        &lt;Property name="proxy_read_timeout"&gt;50&lt;/Property&gt;
+        &lt;Property name="keepalive_timeout"&gt;300&lt;/Property&gt;
+        &lt;Property name="proxy_buffering"&gt;false&lt;/Property&gt;
+        &lt;Property name="proxy_buffering"&gt;false&lt;/Property&gt;
+        &lt;Property name="ssl_protocols"&gt;TLSv1.2 TLSv1.1&lt;/Property&gt;
+        &lt;Property name="ssl_ciphers"&gt;HIGH:!aNULL:!MD5:!DH+3DES:!kEDH&lt;/Property&gt;
+    &lt;/Properties&gt;
+</strong>&lt;/VirtualHost&gt;</pre>
+<h3>Virtual host configuration parameters</h3>
+<p>The following table lists the XML elements that you use to configure a virtual host:</p>
+<table border="0" cellpadding="0" cellspacing="0" class="table">
+	<thead>
+		<tr>
+			<th>
+				<p><strong>Element</strong></p>
+			</th>
+			<th>
+				<p><strong>Description</strong></p>
+			</th>
+			<th>
+				<p><strong>Default</strong></p>
+			</th>
+			<th>
+				<p><strong>Required</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>VirtualHost</p>
+			</td>
+			<td>
+				<p>Specifies the name of the virtual host. You use that name to reference the virtual host when configuring an API proxy.</p>
+				<p>The characters that you can use in the <span style="font-family:courier new,courier,monospace;">name</span> attribute are restricted to: <span style="font-family:courier new,courier,monospace;">A-Z0-9._\-$ %</span>.</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>Yes</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Port</p>
+			</td>
+			<td>
+				<p>Specifies the port number used by the virtual host. Ensure that the port is open on the Edge Router.</p>
+				<p>If you specify a port in a <span style="font-family:courier new,courier,monospace;">&lt;HostAlias&gt;</span> element, then the port number specified by <span style="font-family:courier new,courier,monospace;">&lt;Port&gt;</span> must match it.</p>
+				<p>While it is not required, it is a best practice to use a different port for each virtual host.&nbsp;</p>
+				<p><strong>Note for&nbsp;Apigee&nbsp;for Private Cloud releases 4.16.01 and later:&nbsp;</strong>When creating a virtual host, you specify the Router port used by the virtual host. For example, port 9001. By default, the Router runs as the user "apigee" which does not have access to privileged ports, typically ports 1024 and below. If you want to create a virtual host that binds the Router to a protected port then you have to configure the Router to run as a user with access to those ports. &nbsp;See <a href="http://docs.apigee.com/node/22951">http://docs.apigee.com/node/22951</a> for more. &nbsp;</p>
+				<p><strong>Note for&nbsp;Apigee&nbsp;for Private Cloud releases prior to 4.16.01:&nbsp;</strong>A Router can listen to only one HTTPS connection per virtual host, on a specific port, with the specified cert. Therefore, multiple virtual hosts cannot use the same port number if TLS termination occurs on the Router at the specified port.</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>Yes</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>HostAliases</strong></p>
+			</td>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<p>HostAlias</p>
+			</td>
+			<td>
+				<p>The publicly visible DNS name of the virtual host on the Router, optionally including the port number.&nbsp;The combination of host alias name and port number for the virtual host must be unique for all virtual hosts in the Edge installation. That means multiple virtual hosts can use the same port number if they have different host aliases.</p>
+				<p>You must create a DNS record that matches the host alias, and the host alias must match the string that the client passes in the <span style="font-family:courier new,courier,monospace;">Host</span> header.</p>
+				<p>The port number in the <span style="font-family:courier new,courier,monospace;">HostAlias</span> is optional. If you specify the port as part of the host alias, you must also specify the same port by using the <span style="font-family: 'courier new', courier, monospace;">&lt;Port&gt;</span> element. Or, you can specify two&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;HostAlias&gt;</span>&nbsp;elements, one with the port number and one without.</p>
+				<p>You can have multiple&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;HostAlias&gt;</span>&nbsp;definitions in the same <span style="font-family:courier new,courier,monospace;">&lt;VirtualHost&gt;</span> definition, corresponding to multiple DNS entries for the virtual host, but not for multiple ports. If you want multiple ports, create multiple <span style="font-family:courier new,courier,monospace;">&lt;VirtualHost&gt;</span> definitions with different ports.</p>
+				<p>If you are setting the host alias by using the IP addresses of your Routers, and not DNS entries, add a separate host alias for each Router, specifying the IP address of each Router and port of the virtual host.&nbsp;</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>Yes</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Interfaces</strong></p>
+			</td>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Interface</p>
+			</td>
+			<td>
+				<p>Specifies the network interfaces that you want <span style="font-family:courier new,courier,monospace;">&lt;Port&gt;</span> to be bound to. If you omit this element, the &nbsp;port is bound on all interfaces.</p>
+				<p>For example, to specify to bind the port only to en0:</p>
+				<pre>
+&lt;Interfaces&gt;
+   &lt;Interface&gt;en0&lt;/Interface&gt;
+&lt;/Interfaces&gt;</pre>
+				<p>Determine the interfaces available on your system by running the "<span style="font-family:courier new,courier,monospace;">ifconfig -a</span>" command.</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>All interfaces</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Properties</strong></p>
+			</td>
+			<td colspan="3"><strong>Available&nbsp;for Edge for Private Cloud 4.17.01 and later.</strong></td>
+		</tr>
+		<tr>
+			<td>
+				<p>proxy_read_timeout</p>
+			</td>
+			<td>
+				<p>Sets the timeout duration, in seconds, between Message Processors and the Router. The Router drops the connection and returns an HTTP 504 response if it does not get a response from the Message Processor before this duration expires. &nbsp;</p>
+				<p>The value of <span style="font-family:courier new,courier,monospace;">proxy_read_timeout</span> should be greater than the target timeout value used by the Message Processor. This ensures that the Router does not timeout&nbsp;before the Message Processor has had time to return a response. The default target timeout for the Message Processor is 55 seconds, 55000 milliseconds, as defined by the &nbsp; <span style="font-family:courier new,courier,monospace;">conf_http_HTTPTransport.io.timeout.millis</span> token for the Message Processor.</p>
+			</td>
+			<td>
+				<p>57</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>keepalive_timeout</p>
+			</td>
+			<td>
+				<p>Sets the timeout duration, in seconds, between the client and the Router when the client makes a request that contains the&nbsp;<span style="font-family:courier new,courier,monospace;">Keep-Alive</span> header. The Router keeps the connection open until the duration expires.</p>
+				<p>The Router will not close the connection if it is currently waiting for a response&nbsp;from the Message Processor. The timeout begins only after the Router returns the response to the client. &nbsp;</p>
+			</td>
+			<td>
+				<p>65</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>ssl_ciphers</p>
+			</td>
+			<td>
+				<p>Sets the ciphers supported by the virtual host, overriding the defaults ciphers set on the Router.&nbsp;</p>
+				<p>See the section "<em>Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 and later</em>" above for information on setting this property. It uses the same syntax as the token&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers</span>.&nbsp;</p>
+			</td>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">HIGH:!aNULL:!MD5:!DH+3DES:!kEDH</span></p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>ssl_protocols</p>
+			</td>
+			<td>
+				<p>Sets the TLS protocols supported by the virtual host, as a space delimited list, overriding the defaults protocols set on the Router. &nbsp;</p>
+				<p><strong>Note</strong>: If two virtual hosts share the same port, they must set&nbsp;<span style="font-family:courier new,courier,monospace;">ssl_protocols</span> to the same protocols. Meaning, virtual hosts sharing the same port must support the exact same protocols.</p>
+				<p>See the section "<em>Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 and later</em>" above for information on setting this property. It uses the same syntax as the token&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_load_balancing_load.balancing.driver.server.ssl.protocols</span>.&nbsp;</p>
+			</td>
+			<td>
+				<p>TLSv1&nbsp;TLSv1.1 TLSv1.2</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>proxy_request_buffering</p>
+			</td>
+			<td>
+				<p>Enables (on) or disables (off) buffering of the request body. When buffering is on, the Router buffers the entire request body before sending it to the Message Processor. If there is an error, the Router can retry a different Message Processor.</p>
+				<p>If off, buffering is disabled and the request body is sent to the Message Processor immediately as it is received. If there is an error, the Router does not retry the request to another Message Processor.&nbsp;</p>
+			</td>
+			<td>
+				<p>on</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>proxy_buffering</p>
+			</td>
+			<td>
+				<p>Enables (on) or disables (off) buffering of the response. When buffering is on, the Router buffers the response. When buffering is off, the response is passed to the client synchronously, immediately as it is received by the Router.&nbsp;</p>
+			</td>
+			<td>on</td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>SSLInfo</strong></p>
+			</td>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Enabled</p>
+			</td>
+			<td>
+				<p>Enables one-way TLS/SSL. You must have defined a keystore containing the cert and private key.</p>
+			</td>
+			<td>
+				<p>false</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>ClientAuthEnabled</p>
+			</td>
+			<td>
+				<p>Enables two-way, or client, TLS between Edge (server) and the app (client) making the request. Enabling two-way TLS requires that you set up a truststore on Edge that contains the cert from the TLS client.&nbsp;</p>
+			</td>
+			<td>
+				<p>false</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>KeyStore</p>
+			</td>
+			<td>
+				<p>The name of the keystore on Edge.</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>Yes if Enabled is true</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>KeyAlias</p>
+			</td>
+			<td>
+				<p>The alias specified when you uploaded the cert and private key to the keystore.</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>Yes if Enabled is true</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>TrustStore</p>
+			</td>
+			<td>
+				<p>The name of the truststore on Edge that contains the certificate or certificate chain used for two-way TLS. Required if <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> is <span style="font-family:courier new,courier,monospace;">true</span>.</p>
+			</td>
+			<td>
+				<p>None</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>IgnoreValidationErrors</td>
+			<td>
+				<p>If true, specifies to ignore TLS certificate errors. This is similar to the "-k" option to cURL.</p>
+				<p>This option is valid when configuring TLS for Target Servers and Target Endpoints, and when configuring virtual hosts that use 2-way TLS.</p>
+			</td>
+			<td>false</td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Ciphers</p>
+			</td>
+			<td>
+				<p><strong>For Edge for Private Cloud version 4.15.07 and earlier only. </strong>See the sections above, <em>"Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 and later"</em> or <em>"Setting virtual host parameters for Edge version 4.17.01 and later"</em> if you are using version 4.16.01 or later.</p>
+				<p>Specifies the ciphers supported by the virtual host. If no ciphers are specified, then all ciphers available for the JVM will be permitted.</p>
+				<p>To restrict ciphers, add the following elements:</p>
+				<pre>
+&lt;Ciphers&gt;
+&lt;Cipher&gt;TLS_RSA_WITH_3DES_EDE_CBC_SHA&lt;/Cipher&gt;    
+&lt;Cipher&gt;TLS_RSA_WITH_DES_CBC_SHA&lt;/Cipher&gt;
+&lt;/Ciphers&gt;</pre>
+			</td>
+			<td>
+				<p>All supported by the JVM</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Protocols</p>
+			</td>
+			<td>
+				<p><strong>For Edge for Private Cloud version 4.15.07 and earlier only. </strong>See the sections above, <em>"</em><em>Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 and later</em><em>"</em> or <em>"</em><em>Setting virtual host parameters for Edge version 4.17.01 and later</em><em>"</em> if you are using version 4.16.01 or later.</p>
+				<p>Specifies the protocols supported by the virtual host. If no protocols are specified, then all protocols available for the JVM will be permitted.</p>
+				<p>To restrict protocols, add the following elements:</p>
+				<pre>
+&lt;Protocols&gt;
+ &lt;Protocol&gt;TLSv1&lt;/Protocol&gt;
+ &lt;Protocol&gt;TLSv1.2&lt;/Protocol&gt;
+ &lt;Protocol&gt;SSLv2Hello&lt;/Protocol&gt; 
+&lt;/Protocols&gt;</pre>
+			</td>
+			<td>
+				<p>All supported by the JVM</p>
+			</td>
+			<td>
+				<p>No</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Creating a virtual host that uses HTTP</h2>
+<p>To create a virtual host that uses the HTTP protocol, perform the following:</p>
+<ol>
+	<li>Create the virtual host by using the <a href="http://docs.apigee.com/node/18046">http://docs.apigee.com/node/18046</a> API, where <span style="font-family:courier new,courier,monospace;">&lt;ms-IP&gt;</span> is the IP address or domain name of the Management Server node:<br />
+		<br />
+		<span style="font-family:courier new,courier,monospace;">$ curl -X POST -H "Content-Type:application/xml" \<br />
+		http://&lt;ms-IP&gt;:8080/v1/o/{org_name}/environments/{env_name}/virtualhosts \<br />
+		-d '&lt;VirtualHost name="newVHost"&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;HostAliases&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp;&lt;HostAlias&gt;api.myCompany.com&lt;/HostAlias&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;/HostAliases&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;Interfaces/&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;Port&gt;9008&lt;/Port&gt;<br />
+		&nbsp; &nbsp;&lt;/VirtualHost&gt;' \<br />
+		-u email:password</span></li>
+	<li>Create the DNS record for the virtual host that matches the host alias.</li>
+	<li>If you have any existing API proxies, add the virtual host to the <span style="font-family:courier new,courier,monospace;">&lt;HTTPConnection&gt;</span> element in the Proxy Endpoint. The virtual host is added automatically to all new API proxies.<br />
+		<br />
+		See&nbsp;<em>Updating an API proxy after creating a virtual host</em>&nbsp;in <a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a>.
+		<div class="warning">All virtual hosts are automatically added to all new API proxies. Therefore, if you create a new API proxy that should not be accessible over a particular virtual host, then you must edit the API proxy to remove that virtual host from its ProxyEndpoint.</div>
+	</li>
+</ol>
+<p>After updating an API proxy to use the virtual host, and creating the DNS record for the host alias, access the API proxy as shown below:</p>
+<pre>
+http://api.myCompany.com/v1/{project-base-path}/{resource-path}</pre>
+<p>For example:</p>
+<pre>
+http://api.myCompany.com/v1/weather/forecastrss?w=12797282</pre>
+<h2>Creating a virtual host that uses HTTPS</h2>
+<p>Use the following procedure to create the virtual host:</p>
+<ol>
+	<li>Create and configure the keystore by using the procedure described here:&nbsp;<a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.<br />
+		<br />
+		When you create the keystore, you specify the keystore name and key alias. You need that information to create the virtual host.&nbsp;</li>
+	<li>Create the virtual host &nbsp;by using the <a href="http://docs.apigee.com/node/18046">http://docs.apigee.com/node/18046</a> API, where&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;ms-IP&gt;</span>&nbsp;is the IP address or domain name of the Management Server node.<br />
+		<br />
+		Make sure to specify the correct keystore and key alias:<br />
+		<br />
+		<span style="font-family:courier new,courier,monospace;">$ curl -X POST -H "Content-Type:application/xml" \<br />
+		http://&lt;ms-IP&gt;:8080/v1/o/{org_name}/environments/{env_name}/virtualhosts \<br />
+		-d '&lt;VirtualHost &nbsp;name="newTLSTrustStore2"&gt;<br />
+		&nbsp; &nbsp; &nbsp; &lt;HostAliases&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp; &lt;HostAlias&gt;apiTLS.myCompany.com&lt;/HostAlias&gt;<br />
+		&nbsp; &nbsp; &nbsp; &lt;/HostAliases&gt;<br />
+		&nbsp; &nbsp; &nbsp; &lt;Interfaces/&gt;<br />
+		&nbsp; &nbsp; &nbsp; &lt;Port&gt;9005&lt;/Port&gt;<br />
+		<strong>&nbsp; &nbsp; &nbsp; &lt;SSLInfo&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp; &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt;<br />
+		&nbsp; &nbsp; &nbsp; &lt;/SSLInfo&gt;</strong><br />
+		&nbsp; &lt;/VirtualHost&gt;' \<br />
+		-u email:</span><span style="font-family:courier new,courier,monospace;">password</span><br />
+		<div class="note">If you are performing two-way TLS with the client, then set <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> to <span style="font-family:courier new,courier,monospace;">true</span>&nbsp;and specify the truststore using the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;TrustStore&gt;</span>&nbsp;element. The client must be configured correctly for two-way TLS, meaning Edge has a truststore containing the client's cert and certificate chain. Create the truststore by using the procedure described here:&nbsp;<a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.&nbsp;</div>
+	</li>
+	<li>Create a DNS record for the virtual host &nbsp;that matches the host alias.</li>
+	<li>If you have any existing API proxies, add the virtual host to the <span style="font-family:courier new,courier,monospace;">&lt;HTTPConnection&gt;</span> element in the ProxyEndpoint. The virtual host is added automatically to all new API proxies.<br />
+		<br />
+		See&nbsp;<em>Updating an API proxy after creating a virtual host</em>&nbsp;in <a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a>.
+		<div class="warning">All virtual hosts are automatically added to all new API proxies. Therefore, if you create a new API proxy that should not be accessible over a particular virtual host, then you must edit the API proxy to remove that virtual host from its ProxyEndpoint.</div>
+	</li>
+</ol>
+<p>After updating an API proxy to use the virtual host, and creating the DNS record for the host alias, you can access the API proxy as shown below:</p>
+<pre>
+https://apiTLS.myCompany.com/v1/{project-base-path}/{resource-path}</pre>
+<p>For example:</p>
+<pre>
+https://apiTLS.myCompany.com/v1/weather/forecastrss?w=12797282</pre>
+<h2>Using references to a keystore or truststore</h2>
+<p>When configuring a virtual host that uses HTTPS, you have to consider the case when the TLS cert expires, or a change to the system configuration requires you to update the cert. The examples shown so far have all used the explicit names of the keystore and truststore when configuring TLS. With this technique, you might have to restart a Router on Edge to update an TLS cert.&nbsp;</p>
+<p>For more, see <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a>.</p>
+<p>However, you can optionally configure the virtual host to use a <em>reference</em> to the keystore or truststore instead. The advantage to using a reference is that you can update the reference to point to a different keystore or truststore to update the TLS cert without having to restart a Router. &nbsp; &nbsp;</p>
+<div class="note">
+	<p>You can only use a reference to the keystore and truststore; you cannot use a reference to the alias. When you change the reference to a keystore, ensure that the alias name of the cert is the same as in the old keystore.</p>
+</div>
+<p>For example, shown below is a virtual host that uses a reference to the keystore:</p>
+<pre>
+&lt;VirtualHost name="myTLSVHost"&gt; 
+    &lt;HostAliases&gt; 
+        &lt;HostAlias&gt;apiTLS.myCompany.com&lt;/HostAlias&gt; 
+    &lt;/HostAliases&gt; 
+    &lt;Interfaces/&gt; 
+    &lt;Port&gt;9006&lt;/Port&gt; 
+    <strong>&lt;SSLInfo&gt; 
+        &lt;Enabled&gt;true&lt;/Enabled&gt; 
+        &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt; 
+        &lt;KeyStore&gt;ref://keystoreref&lt;/KeyStore&gt; 
+        &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt; 
+    &lt;/SSLInfo&gt;</strong>
+&lt;/VirtualHost&gt;</pre>
+<p>Use the following POST API call to create the reference named <strong>keystoreref</strong>:</p>
+<pre>
+curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.com/v1/o/{org_name}/e/{env_name}/references \
+-d '&lt;ResourceReference name="<strong>keystoreref</strong>"&gt;
+    &lt;Refers&gt;<strong>myTestKeystore</strong>&lt;/Refers&gt;
+    &lt;ResourceType&gt;KeyStore&lt;/ResourceType&gt;
+&lt;/ResourceReference&gt;' -u email:password</pre>
+<p>The reference specifies the name of the keystore and its type.</p>
+<p>Use the following GET API call to view the reference:</p>
+<pre>
+curl -X GET https://api.enterprise.apigee.com/v1/o/[org_name}/e/{env_name}/references/keystoreref -u uname:password</pre>
+<p>To later change the reference to point to a different keystore, ensuring that the alias has the same name, use the following PUT call:</p>
+<pre>
+curl -X PUT -H "Content-Type:application/xml" https://api.enterprise.apigee.com/v1/o/{org_name}/e/{env_name}/references/<strong>keystoreref</strong> \
+-d '&lt;ResourceReference name="<strong>keystoreref</strong>"&gt;
+    &lt;Refers&gt;<strong>myNewKeystore</strong>&lt;/Refers&gt;
+    &lt;ResourceType&gt;KeyStore&lt;/ResourceType&gt;
+&lt;/ResourceReference&gt;' -u email:password</pre>
+<h2>Modifying a virtual host</h2>
+<div class="note">
+	<p>If you change the TLS settings of an existing virtual host, and do not change the port number of the virtual host, then you have to stop the Router and remove any cached configuration files. After removing the files, you can restart the Router.</p>
+</div>
+<p>To modify a virtual host, perform the following:</p>
+<ol>
+	<li>Update the virtual host by using the <a href="http://docs.apigee.com/node/18036">http://docs.apigee.com/node/18036</a> API, where&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;ms-IP&gt;</span>&nbsp;is the IP address or domain name of the Management Server node. You must specify the complete definition of the virtual host in the request body, not just the elements that you want to change. In this example, you change the port number of the virtual host from 9008 to 9009:<br />
+		<br />
+		<span style="font-family: 'courier new', courier, monospace;">$ curl -X PUT -H "Content-Type:application/xml" \<br />
+		http://&lt;ms-IP&gt;:8080/v1/o/{org_name}/environments/{env_name}/virtualhosts/{vhost_name} \<br />
+		-d '&lt;VirtualHost name="newVHost"&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;HostAliases&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp;&lt;HostAlias&gt;api.myCompany.com&lt;/HostAlias&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;/HostAliases&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;Interfaces/&gt;<br />
+		&nbsp; &nbsp; &nbsp;&lt;Port&gt;9009&lt;/Port&gt;<br />
+		&nbsp; &nbsp;&lt;/VirtualHost&gt;' \<br />
+		-u email:password</span></li>
+	<li><strong>For Edge for Private Cloud versions 4.16.01 and 4.16.05 only</strong>, If you modify an existing virtual host, and you either enable TLS or disable TLS without changing the port number, then:
+		<ol style="list-style: lower-alpha outside">
+			<li>Stop the Router:<br />
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router stop</span></li>
+			<li>Delete any files in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/nginx/conf.d</span>:&nbsp;<br />
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;rm&nbsp;-f /opt/nginx/conf.d/*</span></li>
+			<li>Start the Router:<br />
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router start</span></li>
+			<li>Repeat for all Routers.</li>
+		</ol>
+	</li>
+</ol>
+<h2>Deleting a virtual host</h2>
+<p>Before you can delete a virtual host from an environment, you must update any API proxies that reference the virtual host to remove the reference. See <a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a> for more.&nbsp;</p>
+<p>To delete a virtual host, perform the following:</p>
+<ol>
+	<li>Delete the virtual host by using the <a href="http://docs.apigee.com/node/18041">http://docs.apigee.com/node/18041</a> API, where&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;ms-IP&gt;</span>&nbsp;is the IP address or domain name of the Management Server node:<br />
+		<br />
+		<span style="font-family: 'courier new', courier, monospace;">$ curl -X DELETE \<br />
+		http://&lt;ms-IP&gt;:8080/v1/o/{org_name}/environments/{env_name}/virtualhosts/{vhost_name} \<br />
+		-u email:password</span></li>
+</ol>

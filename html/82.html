@@ -1,0 +1,648 @@
+<h1> Raise Fault policy </h1>
+<img src="sites/docs/files/icon_policy_raise-fault.jpg" />
+<h3>What</h3>
+<p>Generates a custom message in response to an error condition. Use Raise Fault to define a fault response that is returned to the requesting app when a specific condition arises.</p>
+<p>For general information on handling faults, see <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.&nbsp;</p>
+<h3>Where</h3>
+<p>This policy can be attached in the following locations.</p>
+<table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
+	<tbody>
+		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
+			<td class="bbdbrd" colspan="5" style="text-align: center">ProxyEndpoint</td>
+			<td class="bbd" colspan="5" style="text-align: center">TargetEndpoint</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PostFlow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
+			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<!-- End request dots -->
+			<td class="bbl">&nbsp;</td>
+			<td class="bbl">&nbsp;</td>
+		</tr>
+		<tr style="font-size:36px; line-height:24px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F">•</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">•</td>
+			<!-- End response dots -->
+			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
+		</tr>
+		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td class="brl" style="text-align: center">PreFlow</td>
+			<td style="text-align: center">PostFlow</td>
+			<td style="text-align: center">Flow</td>
+			<td style="text-align: center">PreFlow</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h3 id="samples">Samples</h3>
+<!-- Begin tab list -->
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#tab_1">Return FaultResponse</a></li>
+	<li><a data-toggle="tab" href="#tab_2">Return FaultResponse Payload</a></li>
+	<li><a data-toggle="tab" href="#tab_3">Handle service callout errors</a></li>
+</ul>
+<!-- End tab list --><!-- Begin tabbed region -->
+<div class="tab-content active"><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
+		<p>In the most common usage, Raise Fault is used to return a custom fault response to the requesting app. For example to return a 404:</p>
+		<pre>
+&lt;RaiseFault name="404"&gt;
+ &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
+ &lt;FaultResponse&gt;
+   &lt;Set&gt;
+     &lt;StatusCode&gt;404&lt;/StatusCode&gt;
+     &lt;ReasonPhrase&gt;The resource requested was not found&lt;/ReasonPhrase&gt;
+   &lt;/Set&gt;
+ &lt;/FaultResponse&gt;
+&lt;/RaiseFault&gt;</pre>
+	</div>
+	<!-- Tab 1 end. --><!--Tab 2 begin. -->
+	<div class="tab-pane" id="tab_2">
+		<p>A more complex example involves returning a custom fault response payload, along with HTTP headers and an HTTP status code. In the following example the fault response is populated with an XML message containing the HTTP status code received by Edge from the backend service, and a header containing the type of fault that occurred:</p>
+		<pre>
+&lt;RaiseFault name="ExceptionHandler"&gt;
+ &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
+ &lt;FaultResponse&gt;
+   &lt;Set&gt;
+     &lt;Payload contentType="text/xml"&gt;
+       &lt;root&gt;Please contact support@company.com&lt;/root&gt;
+     &lt;/Payload&gt;
+     &lt;StatusCode&gt;{response.status.code}&lt;/StatusCode&gt;
+     &lt;ReasonPhrase&gt;Server error&lt;/ReasonPhrase&gt;
+   &lt;/Set&gt;
+   &lt;Add&gt;
+     &lt;Headers&gt;
+       &lt;Header name="FaultHeader"&gt;{fault.name}&lt;/Header&gt;
+     &lt;/Headers&gt;
+   &lt;/Add&gt;
+ &lt;/FaultResponse&gt;
+&lt;/RaiseFault&gt;</pre>
+		<p>For a list of all variables that are available for dynamically populating FaultResponse messages, see <a href="http://docs.apigee.com/node/243">http://docs.apigee.com/node/243</a></p>
+	</div>
+	<!--Tab 2 end.--><!--Tab 3 begin.--><!-- Tab 3 end. --><!--Tab 4 begin.--><!-- Tab 3 begin. -->
+	<div class="tab-pane active" id="tab_3">
+		<div class="sample-github">
+			<p><strong>Learn by doing!</strong><br />
+				This <a href="https://github.com/apigee/api-platform-samples/tree/master/learn-edge/service-callout-2" target="_blank">Learn Edge</a> example shows you how to check the HTTP code in a Service Callout response and throw a custom exception based on the value of the code. The example returns a custom error message when the target service returns a 404 status. Just clone the repository and follow the instructions in that topic. The example illustrates a common pattern for handling service callout errors. .</p>
+		</div>
+	</div>
+</div>
+<!-- Tab 3 end. --><!-- End tabbed region. -->
+<hr />
+<h2 id="aboutpolicy">About the Raise Fault policy</h2>
+<p>Apigee Edge enables you to perform custom exception handling using a policy of type Raise Fault. The Raise Fault policy, which is a variation of the <a href="http://docs.apigee.com/node/228">http://docs.apigee.com/node/228</a>, lets you generate a custom fault response in response to an error condition.&nbsp;</p>
+<p>Use the Raise Fault policy to define a fault response that is returned to the requesting app when a specific error condition arises. The fault response can consist of HTTP headers, query parameters, and a message payload. A custom fault response can be more useful to app developers and app end users than generic error messages or HTTP response codes.</p>
+<p>When executed, the Raise Fault policy transfers control from the current flow to the Error flow, which then returns the designated fault response to the requesting client app. When the message Flow switches to the Error flow, no further policy processing occurs. All remaining processing Steps are bypassed, and the fault response is returned directly to the requesting app.</p>
+<div>There are two main places where you use the Raise Fault policy:</div>
+<ul>
+	<li>In a ProxyEndpoint/TargetEndpoint flow to trigger a fault in response to a condition or set of conditions. That fault can trigger a specific fault rule or, if there are no fault rules defined, it terminates processing of the proxy.</li>
+	<li>In a fault rule if you want to detect an error during processing of a fault. For example, your fault handler itself could cause an error that you want to signal by using Raise Fault.</li>
+</ul>
+<p>See <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a> for more.</p>
+<h2 id="elementreference">Element reference</h2>
+<p>The element reference describes the elements and attributes of the Raise Fault policy.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;RaiseFault async="false" continueOnError="false" enabled="true" name="Raise-Fault-1"&gt;
+    &lt;DisplayName&gt;Raise Fault 1&lt;/DisplayName&gt;
+    &lt;FaultResponse&gt;
+        &lt;Copy source="request"&gt;
+            &lt;Headers/&gt;
+            &lt;StatusCode/&gt;
+            &lt;ReasonPhrase/&gt;
+        &lt;/Copy&gt;
+        &lt;Remove&gt;
+            &lt;Headers/&gt;
+        &lt;/Remove&gt;
+        &lt;Set&gt;
+            &lt;Headers/&gt;
+            &lt;Payload/&gt;
+            &lt;ReasonPhrase/&gt;
+            &lt;StatusCode/&gt;
+        &lt;/Set&gt;
+    &lt;/FaultResponse&gt;
+    &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
+&lt;/RaiseFault&gt;
+</pre>
+<h2>&lt;RaiseFault&gt; attributes</h2>
+<pre>
+&lt;RaiseFault async="false" continueOnError="false" enabled="true" name="Raise-Fault-1"&gt;</pre>
+<a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
+<h2>&lt;IgnoreUnresolvedVariables&gt; element</h2>
+<p>(Optional) Ignores any unresolved variable error in the Flow. Valid values: true/false. Default <code>true</code>.</p>
+<h2>&lt;FaultResponse&gt; element</h2>
+<p>(Optional) Defines the response message returned to the requesting client. FaultResponse uses the same settings as the AssignMessage policy type. See <a href="http://docs.apigee.com/node/228">http://docs.apigee.com/node/228</a>.</p>
+<h3>&lt;FaultResponse&gt;&lt;Copy&gt; element</h3>
+<p>Copies information <em><strong>from</strong></em> the message specified by the <code>source</code> attribute <strong><em>to</em></strong> the error message.</p>
+<pre style="margin-top:20px">
+    &lt;Copy source="request"&gt;
+        &lt;Headers/&gt;
+        &lt;StatusCode/&gt;
+        &lt;ReasonPhrase/&gt;
+    &lt;/Copy&gt;
+</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>
+				<p>Optional</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h4>Attributes</h4>
+<pre>
+<strong>​</strong>&lt;Copy source="response"&gt;</pre>
+<table class="table" width="700">
+	<tbody>
+		<tr>
+			<th scope="col" style="width: 50px;">Attribute</th>
+			<th scope="col" width="382">Description</th>
+			<th scope="col" style="width: 50px;">Presence</th>
+			<th scope="col" style="width: 50px;">Type</th>
+		</tr>
+		<tr>
+			<td>source</td>
+			<td>
+				<p>Specifies the source object of the copy.</p>
+				<ul>
+					<li>If <span style="font-family:courier new,courier,monospace;">source</span> is not specified, it is treated as a simple message. For example, if the policy is in the request flow, then the source defaults to the <span style="font-family:courier new,courier,monospace;">request</span> object. If the policy is in the response flow, it defaults to the <span style="font-family:courier new,courier,monospace;">response</span> object. If you omit <span style="font-family:courier new,courier,monospace;">source</span>, you can use an absolute reference to a flow variable as the source of the copy. For example, specify the&nbsp;value as&nbsp;<span style="font-family:courier new,courier,monospace;">{request.header.user-agent}</span>.</li>
+					<li>If the source variable cannot be resolved, or resolves to a non-message type, <span style="font-family: courier new,courier,monospace;">&lt;Copy&gt;</span> fails to respond.</li>
+				</ul>
+			</td>
+			<td>Optional</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;&lt;Copy&gt;/&lt;Headers&gt; element</h3>
+<p>Copies the specified HTTP header from the source to the error message. To copy all headers, specify <code>&lt;Copy&gt;&lt;Headers/&gt;&lt;/Copy&gt;.</code></p>
+<pre>
+&lt;Copy source='request'&gt;
+    &lt;Headers&gt;      
+        &lt;Header name="headerName"/&gt;     
+    &lt;/Headers&gt; 
+&lt;/Copy&gt;</pre>
+<p>If there are multiple headers with the same name, use the following syntax:</p>
+<pre>
+&lt;Copy source='request'&gt;
+    &lt;Headers&gt;
+      &lt;Header name="h1"/&gt;
+      &lt;Header name="h2"/&gt;
+      &lt;Header name="h3.2"/&gt;
+    &lt;/Headers&gt;
+&lt;/Copy&gt;
+</pre>
+<p>This&nbsp;example copies "h1", "h2", and the second&nbsp;value of "h3". If "h3" has only one value, then it is not copied.</p>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td>
+				<p>N/A</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Presence:</strong></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>
+				<p>String</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;&lt;Copy&gt;/&lt;StatusCode&gt; element</h3>
+<p>The HTTP status code to copy from the object specified by the source attribute to the error message.</p>
+<pre>
+&lt;Copy source='response'&gt;
+    &lt;StatusCode&gt;404&lt;/StatusCode&gt;      
+&lt;/Copy&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">false</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>Boolean</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;&lt;Copy&gt;/&lt;ReasonPhrase&gt; element</h3>
+<p>The reason description to copy from the object specified by the source attribute to the error message.</p>
+<pre>
+&lt;Copy source='response'&gt;     
+    &lt;ReasonPhrase&gt;The resource requested was not found.&lt;/ReasonPhrase&gt;     
+&lt;/Copy&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">false</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>Boolean</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;&lt;Remove&gt;/&lt;Headers&gt; element</h3>
+<p>Removes specified HTTP headers from the error&nbsp;message. To remove all the headers, specify <code>&lt;Remove&gt;&lt;Headers/&gt;&lt;/Remove&gt;</code>. This example removes the&nbsp;<code>user-agent</code>&nbsp;header from the message.</p>
+<pre>
+&lt;Remove&gt;     
+    &lt;Headers&gt;      
+        &lt;Header name="user-agent"/&gt;     
+    &lt;/Headers&gt; 
+&lt;/Remove&gt;</pre>
+<p>If there are multiple headers with the same name, use the following syntax:</p>
+<pre>
+&lt;Remove&gt;
+    &lt;Headers&gt;
+      &lt;Header name="h1"/&gt;
+      &lt;Header name="h2"/&gt;
+      &lt;Header name="h3.2"/&gt;
+    &lt;/Headers&gt;
+&lt;/Remove&gt;
+</pre>
+<p>This&nbsp;example removes "h1", "h2", and the second&nbsp;value of "h3". If "h3" has only one value, then it is not removed.</p>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">N/A</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;&lt;Add&gt;/&lt;Headers&gt; element</h3>
+<p>Adds HTTP headers to the error message. Note that the empty header <code>&lt;Add&gt;&lt;Headers/&gt;&lt;/Add&gt;</code> does not add any header. This example&nbsp;copies the value of the <span style="font-family:courier new,courier,monospace;">request.user.agent</span> flow variable into the header.</p>
+<pre>
+&lt;Add&gt;     
+    &lt;Headers&gt;      
+        &lt;Header name="user-agent"&gt;{request.user.agent}&lt;/Header&gt;     
+    &lt;/Headers&gt; 
+&lt;/Add&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">N/A</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;&lt;Set&gt; element</h3>
+<p>Sets information in the error message.</p>
+<pre>
+    &lt;Set&gt;
+        &lt;Headers/&gt;
+        &lt;Payload&gt; &lt;/Payload&gt;
+        &lt;StatusCode/&gt;
+        &lt;ReasonPhrase/&gt;
+    &lt;/Set&gt;
+</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">N/A</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>N/A</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;/&lt;Set&gt;/&lt;Headers&gt; element</h3>
+<p>Sets or overwrites HTTP headers in the error message.&nbsp;Note that the empty header <code>&lt;Set&gt;&lt;Headers/&gt;&lt;/Set&gt;</code> does not set any header. This example sets the&nbsp;<code>user-agent</code>&nbsp;header to the message variable specified with the <code>&lt;AssignTo&gt;</code> element.</p>
+<pre>
+&lt;Set&gt;     
+    &lt;Headers&gt;      
+        &lt;Header name="user-agent"&gt;{request.header.user-agent}&lt;/Header&gt;     
+    &lt;/Headers&gt; 
+&lt;/Set&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">N/A</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;/&lt;Set&gt;/&lt;Payload&gt; element</h3>
+<p>Sets the payload of the error message.</p>
+<pre>
+&lt;Set&gt;     
+    &lt;Payload contentType="text/plain"&gt;test1234&lt;/Payload&gt;      
+&lt;/Set&gt;</pre>
+<p>Set a JSON payload:</p>
+<pre>
+&lt;Set&gt;
+    &lt;Payload contentType="application/json"&gt;
+        {"name":"foo", "type":"bar"}
+&nbsp; &nbsp; &lt;/Payload&gt;
+&lt;/Set&gt;</pre>
+<p>In a JSON payload, you can insert variables using the <code>variablePrefix</code> and <code>variableSuffix</code> attributes with delimiter characters&nbsp;as shown in the following example.</p>
+<pre>
+&lt;Set&gt;
+    &lt;Payload contentType="application/json" variablePrefix="@" variableSuffix="#"&gt;
+        {"name":"foo", "type":"@variable_name#"}
+&nbsp; &nbsp; &lt;/Payload&gt;
+&lt;/Set&gt;</pre>
+<p>or, as of cloud release 16.08.17, you can also curly braces to insert variables:</p>
+<pre>
+&lt;Set&gt;
+    &lt;Payload contentType="application/json"&gt;
+        {"name":"foo", "type":"{variable_name}"}
+&nbsp; &nbsp; &lt;/Payload&gt;
+&lt;/Set&gt;</pre>
+<p>Set a mixed payload in XML:</p>
+<pre>
+&lt;Set&gt;
+    &lt;Payload contentType="text/xml"&gt;
+        &lt;root&gt;
+          &lt;e1&gt;sunday&lt;/e1&gt;
+          &lt;e2&gt;funday&lt;/e2&gt;
+          &lt;e3&gt;{var1}&lt;/e3&gt;
+&nbsp; &nbsp; &lt;/Payload&gt;
+&lt;/Set&gt;          </pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>String</td>
+		</tr>
+	</tbody>
+</table>
+<h4>Attributes</h4>
+<pre>
+<strong>​</strong><span style="font-size: 12px;">&lt;Payload contentType="content_type" variablePrefix="char" variableSuffix="char"&gt;</span></pre>
+<table class="table" width="700">
+	<tbody>
+		<tr>
+			<th scope="col" style="width: 50px;">Attribute</th>
+			<th scope="col" width="382">Description</th>
+			<th scope="col" style="width: 50px;">Presence</th>
+			<th scope="col" style="width: 50px;">Type</th>
+		</tr>
+		<tr>
+			<td>contentType</td>
+			<td>
+				<p>If contentType is specified, its value is assigned to the contentType header.</p>
+			</td>
+			<td>Optional</td>
+			<td>String</td>
+		</tr>
+		<tr>
+			<td>variablePrefix</td>
+			<td>Optionally specifies&nbsp;the leading delimiter on a flow variable because&nbsp;JSON&nbsp;payloads cannot use the default "{" character.</td>
+			<td>Optional</td>
+			<td>Char</td>
+		</tr>
+		<tr>
+			<td>variableSuffix</td>
+			<td>Optionally specifies&nbsp;the trailing delimiter on a flow variable&nbsp;because&nbsp;JSON&nbsp;payloads cannot use the default "}" character.</td>
+			<td>Optional</td>
+			<td>Char</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;/&lt;Set&gt;/&lt;StatusCode&gt; element</h3>
+<p>Sets the status code of the response.</p>
+<pre>
+&lt;Set source='request'&gt;     
+    &lt;StatusCode&gt;404&lt;/StatusCode&gt;      
+&lt;/Set&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">false</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>Boolean</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;FaultResponse&gt;/&lt;Set&gt;/&lt;ReasonPhrase&gt; element</h3>
+<p>Sets the reason phrase of the response.</p>
+<pre>
+&lt;Set source='request'&gt;     
+    &lt;ReasonPhrase&gt;The resource requested was not found.&lt;/ReasonPhrase&gt;     
+&lt;/Set&gt;</pre>
+<table border="0" style="margin: 20px;" width="500">
+	<tbody>
+		<tr>
+			<td style="width:90px">
+				<p><strong>Default:</strong></p>
+			</td>
+			<td width="217">false</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-weight: bold; text-align: center;">Presence:</span></p>
+			</td>
+			<td>Optional</td>
+		</tr>
+		<tr>
+			<td>
+				<p><strong>Type:</strong></p>
+			</td>
+			<td>Boolean</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="flowvariables">Flow variables</h2>
+<p>Flow variables enable dynamic behavior of policies and Flows at runtime, based on HTTP headers, message content, or Flow context. The following predefined Flow variables are available after a Raise Fault policy executes. For more information about Flow variables, see <a href="http://docs.apigee.com/node/243">http://docs.apigee.com/node/243</a>.</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
+	<thead>
+		<tr>
+			<th style="text-align: left;">Variable</th>
+			<th style="text-align: left;">Type</th>
+			<th style="text-align: left;">Permission</th>
+			<th style="text-align: left;">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>fault.name</td>
+			<td>String</td>
+			<td>Read-Only</td>
+			<td>Returns the fault name in the error and if not available, an empty string.</td>
+		</tr>
+		<tr>
+			<td>fault.type</td>
+			<td>String</td>
+			<td>Read-Only</td>
+			<td>Returns the fault type in the error and if not available, an empty string.</td>
+		</tr>
+		<tr>
+			<td>fault.category</td>
+			<td>String</td>
+			<td>Read-Only</td>
+			<td>Returns the fault category in the error and if not available, an empty string.</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="errorcodes">Error reference</h2>
+<p><a href="http://docs.apigee.com/node/21391">Content to be inserted here</a></p>
+<h2 id="schema">Schema</h2>
+<p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
+<h2 id="relatedtopics">Related topics</h2>
+<p>See <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a></p>
+<p>&nbsp;</p>

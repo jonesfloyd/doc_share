@@ -1,0 +1,142 @@
+<h1> Policy reference overview </h1>
+<p>By exposing an API through Apigee Edge, you gain the ability to modify and monitor its behavior using out-of-the-box policies. Edge's out-of-the-box policies enable you to augment your API with sophisticated features to control traffic, enhance performance, enforce security, and increase the utility of your APIs, without requiring you to write any code or to modify any backend services. Extension policies enable you to implement custom logic in the form of JavaScript, Python, Java, and XSLT.</p>
+<!-- Legacy video
+<div class="video">
+	<p><strong>Video: Quota and mediation policies</strong></p>
+	<div class="collapse" id="demo">
+		<div style="text-align: left;">
+			<p>A key benefit of exposing an API via Apigee Edge is the ability to easily track and modify its behavior. The out-of-the-box policies let you add sophisticated features that let you control traffic, add secuirty, and increase the utility of your APIs all without coding or changing your base API in any way.</p>
+			<p><span style="color: rgb(255, 0, 0);">An updated video is in development.</span></p>
+			<div>&nbsp;</div>
+			<p><iframe allowfullscreen="" frameborder="0" height="315" src="http://www.youtube.com/embed/UsQ6-kIkRas" width="560"></iframe></p>
+		</div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
+</div>
+-->
+<p>Following are the categories of policies that Apigee provides.</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th width="25">Traffic management policies</th>
+			<th width="25%">Mediation policies</th>
+			<th width="25%">Security policies</th>
+			<th width="25%">Extension policies</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>Traffic management policies let you configure cache, control traffic quotas and spikes, set concurrent rate limits, and so on.</p>
+				<ul>
+					<li><a href="/api-services/content/optimize-performance-using-cache">Cache policies</a></li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/11646">http://docs.apigee.com/node/11646</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/56">http://docs.apigee.com/node/56</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/420">http://docs.apigee.com/node/420</a></div>
+					</li>
+					<li><a href="http://docs.apigee.com/node/53">http://docs.apigee.com/node/53</a></li>
+				</ul>
+			</td>
+			<td>
+				<p>Mediation policies let you perform message transformation, parsing, and validation, as well as raise faults and alerts.</p>
+				<ul>
+					<li>
+						<div><a href="http://docs.apigee.com/node/422">http://docs.apigee.com/node/422</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/228">http://docs.apigee.com/node/228</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/227">http://docs.apigee.com/node/227</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/61">http://docs.apigee.com/node/61</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/249">http://docs.apigee.com/node/249</a></div>
+					</li>
+					<li><a href="http://docs.apigee.com/node/82">http://docs.apigee.com/node/82</a></li>
+					<li><a href="http://docs.apigee.com/node/125">http://docs.apigee.com/node/125</a></li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/31">http://docs.apigee.com/node/31</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/22">http://docs.apigee.com/node/22</a></div>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<p>Security policies let you control access to your APIs with OAuth, API key validation, and other threat protection features.</p>
+				<ul>
+					<li>
+						<div><a href="http://docs.apigee.com/node/29">http://docs.apigee.com/node/29</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/15441">http://docs.apigee.com/node/15441</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/365">http://docs.apigee.com/node/365</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/15431">http://docs.apigee.com/node/15431</a> *†</div>
+					</li>
+					<li>
+						<div><a href="/api-services/content/authorize-requests-using-oauth-20">OAuth v2.0 policies</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/212">http://docs.apigee.com/node/212</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/261">http://docs.apigee.com/node/261</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/13207">http://docs.apigee.com/node/13207</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/3977">http://docs.apigee.com/node/3977</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/30">http://docs.apigee.com/node/30</a></div>
+					</li>
+				</ul>
+			</td>
+			<td>
+				<p>Extension policies let you provide custom policy functionality, with support for such features as service callout, message data collection, and calling Java, JavaScript, and Python behavior you have created.</p>
+				<ul>
+					<li>
+						<div><a href="http://docs.apigee.com/node/22691">http://docs.apigee.com/node/22691</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/159">http://docs.apigee.com/node/159</a> *</div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/245">http://docs.apigee.com/node/245</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/18">http://docs.apigee.com/node/18</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/242">http://docs.apigee.com/node/242</a>&nbsp;*</div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/156">http://docs.apigee.com/node/156</a></div>
+					</li>
+					<li>
+						<div><a href="http://docs.apigee.com/node/299">http://docs.apigee.com/node/299</a></div>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>* &nbsp;<a href="/developer-vs-edge">Apigee Edge enterprise</a> only<br />
+	† On-premises installations only</p>
+<h3><a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy" target="_blank">Policy schemas</a></h3>
+<div>The policy schemas, available in Github, provide the full set of elements and attributes available for policy configuration.</div>
+<div>&nbsp;</div>
+<p>&nbsp;</p>

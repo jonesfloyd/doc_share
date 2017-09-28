@@ -1,0 +1,38 @@
+<h1> Statistics Collector policy error codes </h1>
+<p>This section describes the error messages and flow variables that are set when this policy triggers an error. This information is important to know if you are developing fault rules for a proxy. To learn more, see <a href="http://docs.apigee.com/node/22676">http://docs.apigee.com/node/22676</a> and <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.</p>
+<h3>Runtime errors</h3>
+<p>Note.</p>
+<h3>Deployment errors</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" width="271">Error name</th>
+      <th scope="col" width="367">Fault string</th>
+      <th scope="col" width="58">HTTP status</th>
+      <th scope="col" width="379">Occurs when</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>UnsupportedDatatype</code></td>
+      <td><code>StatisticsCollection [collection]: Datatype [type] is unsupported . Context [context]</code></td>
+      <td>N/A</td>
+      <td>See fault string. </td>
+    </tr>
+    <tr>
+      <td><code>InvalidName</code></td>
+      <td><code>StatisticsCollection: Name: [name] conflicts with system defined variables. Context [context]</code></td>
+      <td>N/A</td>
+      <td>See fault string.</td>
+    </tr>
+    <tr>
+      <td><code>DatatypeMissing</code></td>
+      <td><code>StatisticsCollection [name]: Datatype of [type] is missing. Context [context]</code></td>
+      <td>N/A</td>
+      <td>See fault string. See the policy doc for more information.</td>
+    </tr>
+  </tbody>
+</table>
+<h3>&nbsp;</h3>
+<h3>Fault variables</h3>
+<p>None.</p>

@@ -1,0 +1,66 @@
+<h1> Debugging and troubleshooting Node.js proxies </h1>
+<p>[toc]</p>
+<p>It's a good practice to make sure any Node.js code you add to a proxy works before you deploy it to Edge. This topic discusses ways to debug and troubleshoot proxies that include Node.js applications after they are deployed.</p>
+<h2>Increasing connection pool size to improve performance</h2>
+<p>If you notice slow performance, you may be able to solve the problem by increasing the default Node.js connection pool size with&nbsp;<a href="http://nodejs.org/docs/v0.10.38/api/http.html#http_agent_maxsockets">maxSockets</a>, or by&nbsp;<a href="http://nodejs.org/docs/v0.10.38/api/http.html#http_class_http_agent">disabling socket pooling</a>&nbsp;altogether. For more information and example code, see&nbsp;<a href="https://community.apigee.com/articles/6490/nodejs-performance-tips-socket-pooling.html">Node.js Performance Tips: Socket Pooling</a>&nbsp;in the Apigee Community.&nbsp;</p>
+<h2>Viewing Node.js logs</h2>
+<p>To view log information about your Node.js application:</p>
+<ol>
+	<li>In the main API proxies page, click on the proxy you wish to view.</li>
+	<li>In the summary page of the selected proxy, click&nbsp;<strong>Node.js Logs</strong>&nbsp;on the right-hand side of the tool bar.&nbsp;</li>
+</ol>
+<div class="note">
+	<p>The Node.js Logs button does not appear for non-Node.js API proxies.&nbsp;</p>
+</div>
+<p>In the Logs page, you can select a time range of logs to view, as shown below. The logs record HTTP method calls, success or failure of calls, console.log messages, and so on. Enter a search string in the search field to display all log entries that contain the string.&nbsp;</p>
+<p>[[{"type":"media","view_mode":"media_original","fid":"2561","attributes":{"alt":"","class":"media-image","height":"481","typeof":"foaf:Image","width":"675"}}]]</p>
+<p>.</p>
+<h2>Using the trace tool</h2>
+<p>The trace tool is useful for general proxy debugging. For detailed information on using the trace tool, see <a href="http://docs.apigee.com/node/14782">http://docs.apigee.com/node/14782</a>.</p>
+<p>&nbsp;</p>
+<h2>Printing console output</h2>
+<p>You can embed console.log statements in your Node.js code and view the output in the trace tool. For example, the following statement prints the username of the user who is logging in to access the proxy:</p>
+<pre>
+console.log('Logging in as %s', config.username);</pre>
+<p>[[{"type":"media","view_mode":"media_original","fid":"2571","attributes":{"alt":"","class":"media-image","height":"349","typeof":"foaf:Image","width":"581"}}]]</p>
+<p>&nbsp;</p>
+<p>You can view the output of this <span style="font-family:courier new,courier,monospace;">console.log</span> message in the trace tool. Simply call your API in the trace tool and open the Script Output panel of the final response, as shown below.&nbsp;</p>
+<p>[[{"type":"media","view_mode":"media_large","fid":"2576","attributes":{"alt":"","class":"media-image","height":"446","typeof":"foaf:Image","width":"480"}}]]</p>
+<p>&nbsp;</p>
+<h2>Configuring Nginix target timeout settings</h2>
+<p>If you are using Nginix as a proxy and see "Bad Gateway" errors, try increasing the Nginix proxy timeout configuration as explained here:</p>
+<ul>
+	<li><a href="http://www.nginxtips.com/504-gateway-time-out-using-nginx">http://www.nginxtips.com/504-gateway-time-out-using-nginx</a></li>
+	<li><a href="http://wiki.nginx.org/HttpProxyModule">http://wiki.nginx.org/HttpProxyModule</a></li>
+</ul>
+<p>For example:</p>
+<pre>
+proxy_connect_timeout       60;
+proxy_read_timeout          120;</pre>
+<p>Depending on how long the server takes to respond can determine your ideal timeout configurations. For example, a read timeout of 45-60 seconds might be ideal to provide a reasonable buffer.&nbsp;</p>
+<p>&nbsp;</p>
+<h2>Configuring Apigee target timout settings</h2>
+<p>You can also configure the Apigee default timeout values in the HttpTargetConnection element in the TargetEndpoint. The default values are:</p>
+<pre>
+connect.timeout.millis - 60 seconds
+io.timeout.millis - 120 seconds</pre>
+<pre>
+&lt;HTTPTargetConnection&gt;
+    &lt;Properties&gt;
+        &lt;Property name="connect.timeout.millis"&gt;5000&lt;/Property&gt;
+        &lt;Property name="io.timeout.millis"&gt;5000&lt;/Property&gt;
+    &lt;/Properties&gt;
+    &lt;URL&gt;http://www.google.com&lt;/URL&gt;
+&lt;/HTTPTargetConnection&gt;</pre>
+<p>See also <a href="http://docs.apigee.com/node/6858">http://docs.apigee.com/node/6858</a>.</p>
+<h2>For more information</h2>
+<p>To learn more about debugging, see:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/14782">http://docs.apigee.com/node/14782</a></li>
+	<li><a href="http://docs.apigee.com/node/14744">http://docs.apigee.com/node/14744</a></li>
+	<li><a href="http://docs.apigee.com/node/14745">http://docs.apigee.com/node/14745</a></li>
+	<li><a href="http://docs.apigee.com/node/13208">http://docs.apigee.com/node/13208</a></li>
+</ul>
+<h2>Next steps</h2>
+<p>For information about Node.js module support in Apigee Edge, including information about support for HTTP/HTTPS, TLS, and other advanced topics, see <a href="http://docs.apigee.com/node/14946">http://docs.apigee.com/node/14946</a>.&nbsp;</p>
+<p>&nbsp;</p>

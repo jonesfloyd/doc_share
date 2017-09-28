@@ -1,0 +1,180 @@
+<h1> Getting started with Node.js on Apigee Edge </h1>
+<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type" />
+<title></title>
+<p>[toc]</p>
+<p>This topic explains the simplest way to wrap a Node.js application in an API proxy using the management UI.</p>
+<h2>Introduction</h2>
+<p>Chances are, the first Node.js app you ever created was an HTTP server that responds to requests with "Hello World!" The simplest way to try out Node.js on Apigee Edge is to do something very similar. With just a few mouse clicks, you'll have a functioning, proxied Node.js HTTP server running on Edge. After that, you can use the code editor in the UI to modify the Node.js app, add additional Node.js files, add policies, and so on.&nbsp;</p>
+<h2>Watch a quick how-to video&nbsp;</h2>
+<div class="video">
+	<p><strong>Video:</strong>&nbsp;For a quick "how to" lesson on creating Node.js proxies in Edge, check out this short presentation from the Four Minute Video For Developers (4MV4D) series</p>
+	<div class="collapse" id="demo1">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/Fv6wtxrAwyg?list=PLIXjuPlujxxxe3iTmLtgfIBgpMo7iD7fk" width="854"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo1">Show/Hide Video</a></div>
+</div>
+<h2>Creating the sample Hello World! API proxy</h2>
+This section explains how to create an Edge API proxy that interacts with a Node.js HTTP server. The Node.js HTTP server code is already written for you and is automatically deployed to Edge when you follow these simple steps.<br />
+<div class="note">
+	<p>If you have not done so, you need to set up an account on <a href="https://accounts.apigee.com/accounts/sign_up">Apigee Edge</a> before you can try out this example.</p>
+</div>
+<ol>
+	<li>In the Build a Proxy wizard, select <strong>Node.js App</strong>.</li>
+	<li>Click <strong>Next</strong>.</li>
+	<li>Follow the Build a Proxy wizard and make the following selections.<br />
+		<table border="1" class="table" style="width: 690px;" width="865">
+			<colgroup>
+				<col width="25%" />
+				<col width="25%" />
+				<col width="50%" /></colgroup>
+			<thead valign="bottom">
+				<tr class="row-odd">
+					<th class="head" width="94">Field</th>
+					<th class="head" width="481">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr colspan="3">
+					<td><strong>Details</strong></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>Proxy Name</td>
+					<td>The name displayed for your API. Enter <code>Hello</code>.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Proxy Base Path</td>
+					<td>If you specified <code>Hello</code>&nbsp;as the display name, then the path <code>/hello&nbsp;</code>is populated automatically.&nbsp;We recommend you add a version number to the path: <code>/v1/hello</code></td>
+				</tr>
+				<tr class="row-odd">
+					<td>Source</td>
+					<td>Select <span style="font-weight: bold;">"Hello World" Sample</span>. (We'll discuss the other options later in this topic.)</td>
+				</tr>
+				<tr class="row-odd">
+					<td>Description</td>
+					<td>The description of the API.</td>
+				</tr>
+			</tbody>
+			<tbody></tbody>
+			<tbody valign="top"></tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Security</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>Pass through (none)</td>
+					<td>Select this if you do not wish to add security to the proxy.</td>
+				</tr>
+				<tr class="row-even">
+					<td>API Key</td>
+					<td>Adds API key-based authentication&nbsp;to your API proxy. When this option is selected, the Impose Quota per Developer option becomes selectable.</td>
+				</tr>
+				<tr class="row-even">
+					<td>OAuth 2.0</td>
+					<td>Adds OAuth 2.0 based authentication&nbsp;to your API proxy. When this option is selected, the Impose Quota per Developer option becomes selectable.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Impose Quota per Developer</td>
+					<td>Adds a policy that limits the number of request messages that can be submitted to your API proxy by an individual app over an interval of time.</td>
+				</tr>
+				<tr class="row-odd">
+					<td>Publish API Product</td>
+					<td>When you select the Secure with API Keys option, the Publish API Product option is automatically selected. For the purposes of this tutorial, be sure to clear this option.</td>
+				</tr>
+				<tr class="row-even">
+					<td>Add CORS headers</td>
+					<td>Enables CORS (cross-origin resource sharing) to allow a browser to make direct requests to another domain.</td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Virtual Hosts</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>default, secure</td>
+					<td>To learn about virtual hosts, see <a href="http://docs.apigee.com/node/15126">http://docs.apigee.com/node/15126</a>.</td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr colspan="3">
+					<td><b>Build</b></td>
+				</tr>
+			</tbody>
+			<tbody valign="top">
+				<tr class="row-even">
+					<td>Deploy Environments</td>
+					<td>Select the environments you wish to deploy to, and review your proxy details.</td>
+				</tr>
+			</tbody>
+		</table>
+	</li>
+	<li>Click <strong>Build and Deploy</strong><br />
+		In response, you should see an acknowledgment that your new API proxy was successfully created and deployed in the 'test' environment.</li>
+	<li>Click<strong>&nbsp;View the &lt;proxy name&gt; proxy in the editor</strong>&nbsp;to display the details page for the API proxy.</li>
+</ol>
+<h2>Invoking the hello proxy</h2>
+When you call the <code>hello</code> proxy, the Node.js application executes automatically, responding with "Hello, World!". Note that unless you specified otherwise, the Node.js application is deployed to the environment called <span style="font-weight: bold;">test</span>. Here's the basic call using Curl (substitute your organization name for <span style="font-style: italic;">myorg</span>).&nbsp;<br />
+<pre class="terminal">
+$ curl http://<span style="font-style: italic;">myorg</span>-test.apigee.net/v1/hello
+Hello, World!
+</pre>
+<h2>Viewing and editing the Node.js code</h2>
+<p>Let's look at the Node.js code that was added to the API proxy. Go to the summary page for the Hello World proxy and click <span style="font-weight: bold;">Develop</span>.</p>
+<p><img alt="" src="sites/docs/files/proxy_editor_develop_tab.png" style="border-width: 1px; border-style: solid;" /><br />
+	<br />
+	This opens the Develop view which includes a code editor. You can edit the code there directly.</p>
+<p><img alt="" src="sites/docs/files/node_hello_world_code.png" style="width: 700px; height: 391px; border-width: 1px; border-style: solid;" /></p>
+<p>For example, change the response from <code>Hello, World!</code> to something else, like <code>Hello, Node!</code>, then click <span style="font-weight: bold;">Save</span>. The proxy is saved and redeployed.</p>
+<p>Finally, re-invoke the proxy to verify the change:</p>
+<pre class="terminal">
+$ curl http://<span style="font-style: italic;">myorg</span>-test.apigee.net/v1/hello
+Hello, Node!</pre>
+<h2>Understanding the Integrated API BaaS sample</h2>
+<p>Now that you've seen the Hello World sample, let's briefly look at the other out-of-the-box selection: the Integrated API BaaS sample.</p>
+<p>The basic steps for creating and invoking this sample are the same as the Hello World! sample. The API BaaS sample is a little more complex, however.&nbsp;</p>
+<p>The Integrated API BaaS sample integrates two Node.js frameworks to create a simple API service. One API call simply returns a string embedded in the code, and the other retrieves data from an external service and returns that data in the response.</p>
+<p>The frameworks used in this sample are <a href="http://expressjs.com/">Express</a> and <a href="https://github.com/argo">Argo</a>. Both are web application frameworks. Express is a web application framework that is very popular among Node.js developers. Argo is another web application framework that is an open source project sponsored by Apigee.</p>
+<p>To create this sample proxy:</p>
+<ul>
+	<li>Follow the same steps for creating the Hello World! proxy, but choose the Node.js application type called <span style="font-weight: bold;">Node.js Sample: "Integrated API BaaS"</span> sample.</li>
+</ul>
+<p><img alt="" src="sites/docs/files/nodejs-apibaas2.png" style="width: 701px; height: 287px; border-width: 1px; border-style: solid;" /></p>
+<p>Here is the source code that is deployed with this proxy:</p>
+<pre>
+var argo = require('argo');
+var express = require('express');
+
+var app = express();
+
+var proxy = argo()
+  .target('https://api.usergrid.com')
+  .build();
+
+app.get('/hello', function(req, res) {
+  res.send('Hello from Express');
+});
+
+app.all('*', proxy.run);
+app.listen(3000);</pre>
+<p>In this code, <a href="http://expressjs.com">Express</a> is used to specify the GET call, which simply sends back text when the API is called with <code>/hello</code>. The Argo method executes as well. It returns data from the site <code>https://api.usergrid.com</code>. The build() method prepares Argo's request event listener. The listener is currently accessible by calling the run method on the object returned from the build method.&nbsp;</p>
+<p>If you call this proxy with the <code>/hello</code> path, it returns "Hello from Express!":</p>
+<pre class="terminal">
+$ curl http://<span style="font-style: italic;">myorg</span>-test.apigee.net/v1/hellonode
+Hello from Express!
+</pre>
+<p>If you call this proxy <em>without</em> <code>/hello</code>, it runs the argo proxy, which grabs information from the <code>api.usergrid.com</code> site:</p>
+<pre class="terminal">
+$ curl http://<span style="font-style: italic;">myorg</span>-test.apigee.net/v1/data-service
+</pre>
+<p>You can read more about the Argo framework at its <a href="https://github.com/argo/argo">repository in GitHub</a>.</p>
+<h2>More about running Node.js applications on Apigee Edge</h2>
+<p>Like all Node.js applications, Node.js applications running on Apigee Edge run in a single thread of control. There is no need (and in fact no ability) to start another thread, or synchronize variables between threads. Since Node.js enforces non-blocking programming, a single script can support thousands of concurrent requests because the script gives up the CPU whenever it has to wait for something, and it is notified later when it happens.</p>
+<p>To use Node.js on Apigee Edge, you need to specify a main Node.js script file. This script must be configured to handle incoming requests, which you typically do by using the&nbsp;<code>http</code>&nbsp;or&nbsp;<code>https</code>&nbsp;modules, creating a client, and so on. (If the main script is not configured this way, it will simply execute and exit after it is deployed.) Within Apigee Edge, each Node.js application script is started from the beginning when the proxy is deployed, and stopped when the proxy is undeployed. In between it will wait for new requests and process them. For more information, see "Invoking an imported Node.js file" in <a href="http://docs.apigee.com/node/14936">http://docs.apigee.com/node/14936</a>.</p>
+<h2>Next Steps</h2>
+<p>You can also create and deploy standalone Node.js applications directly from your file system. The next topic, <a href="http://docs.apigee.com/node/14936">http://docs.apigee.com/node/14936</a>, explains how to use the <code>apigeetool</code> command to deploy a Node.js app from the command line.</p>
+<p>&nbsp;</p>

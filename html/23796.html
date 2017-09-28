@@ -1,0 +1,404 @@
+<h1> Edge deprecated features </h1>
+<p>The following Apigee Products, Services, and features are subject to the <a href="http://docs.apigee.com/node/23096">http://docs.apigee.com/node/23096</a>.</p>
+<ul>
+	<li><strong>Deprecated</strong> - The feature is still in the product but will be removed at a future date. Use alternative functionality, either described here in or in the relevant documentation.</li>
+	<li><strong>Retired</strong> - The feature is no longer in the product.</li>
+	<li>The '~' symbol means estimated.</li>
+</ul>
+<p>For more information about deprecations and retirements in Edge for Private Cloud, see <a href="http://docs.apigee.com/node/23096">http://docs.apigee.com/node/23096</a>.</p>
+<p>For planning a move to Apigee <a href="/api-services/content/api-reference-getting-started#cps" target="_blank">Core Persistence Services</a> (CPS), see <a href="#cps">CPS retirements and changes</a>&nbsp;below.</p>
+<p>Last modification date: 2/15/2017</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Cloud or Private Cloud</th>
+			<th>Announcement Date</th>
+			<th width="40%">Item Description</th>
+			<th>Retirement Date</th>
+			<th>Retired in Private Cloud version</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Cloud</td>
+			<td><a href="/release-notes/content/170213-apigee-edge-public-cloud-release-notes-management" target="_blank">3/6/2017</a></td>
+			<td>Edge classic persistence framework. See&nbsp;<a href="#cps">CPS retirements and changes</a>&nbsp;below.</td>
+			<td>~ 3/6/2018</td>
+			<td>~ 4.18.05</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td><a href="/release-notes/content/170215-apigee-edge-public-cloud-release-notes-ui" target="_blank">2/15/2017</a></td>
+			<td>Paths in proxy Performance tab and Business Transactions dashboard</td>
+			<td>~ 2/15/2018</td>
+			<td>~ 4.18.05</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td><a href="/release-notes/content/170116-apigee-edge-public-cloud-release-notes-management" target="_blank">2/15/2017</a></td>
+			<td>Apigee secure store (vaults)</td>
+			<td>~ 2/15/2018</td>
+			<td>~ 4.18.05</td>
+		</tr>
+		<tr>
+			<td colspan="5"><strong>The following retirements occurred before the Apigee deprecation policy.</strong></td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>API BaaS version 1 (moving to API BaaS 2)</td>
+			<td>12/19/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>router.uuid variable</td>
+			<td>9/7/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Monetization Limits feature</td>
+			<td>10/1/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>API BaaS Mobile App Performance Monitoring</td>
+			<td>7/8/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Monetization Setting limits and sending limit notifications</td>
+			<td>6/27/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Hidden modules in Developer Portal: devconnect_content_admin, devconnect_docgen, devconnect_download, devconnect_multiorg, devportal_updates, devconnect_partner</td>
+			<td>6/22/16</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Node Export and Rubik modules in Developer Portal</td>
+			<td>4/11/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Classic proxy editor</td>
+			<td>4/20/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Display Suite module in Developer Portal</td>
+			<td>3/31/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Edge legacy login</td>
+			<td>3/14/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Various contrib modules in Developer Portal</td>
+			<td>3/7/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>async attribute on policy configurations</td>
+			<td>2/25/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Management API: chargePerUsage attribute on updating monetization prepaid balance</td>
+			<td>1/26/2016</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Management API: Update a KVM (proxy, env, org)</td>
+			<td>When org is updated to <a href="/api-services/content/api-reference-getting-started#cps" target="_blank">CPS</a></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Management API: Get Keys, Apps, Developers, or Companies for an API Product</td>
+			<td>When org is updated to&nbsp;<a href="/api-services/content/api-reference-getting-started#cps" target="_blank">CPS</a></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Management API: List Company App Families</td>
+			<td>When org is updated to&nbsp;<a href="/api-services/content/api-reference-getting-started#cps" target="_blank">CPS</a></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Management API: Create Developer App Family</td>
+			<td>When org is updated to&nbsp;<a href="/api-services/content/api-reference-getting-started#cps" target="_blank">CPS</a></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Private Cloud</td>
+			<td>RETIRED</td>
+			<td>QPID queue check API in Private Cloud</td>
+			<td>12/24/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Custom Reports dashboard</td>
+			<td>10/1/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>X-Forwarded-For header by default</td>
+			<td>10/1/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Private Cloud</td>
+			<td>RETIRED</td>
+			<td>hash.oauth.tokens.enabled property in keymanagement.properties in Private Cloud</td>
+			<td>9/8/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>ProxyEndpoint properties: allow.http10, allow.http11, allow.http.method.*, allow.POST.without.content.length, allow.PUT.without.content.length</td>
+			<td>8/18/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>"Maximum Elements in Memory" property on environment cache resources</td>
+			<td>7/23/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>Aggregation Basis in Monetization</td>
+			<td>5/19/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>devconnect_multiorg module in Developer Portal</td>
+			<td>4/23/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>oauth-login-app Github sample</td>
+			<td>1/29/2015</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>devconnect_docgen module in Developer Portal</td>
+			<td>11/13/2014</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>API BaaS Assets</td>
+			<td>5/2/2014</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>devconnect_apigee, devconnect_validate and devconnect_faq_ext modules in Developer Portal</td>
+			<td>1/29/2014</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>WYSIWYG module in Developer Portal</td>
+			<td>7/25/2013</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>API BaaS Filters</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Cloud</td>
+			<td>RETIRED</td>
+			<td>GetAPIProduct policy</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2 id="cps">CPS retirements and changes</h2>
+<p>With the introduction of <a href="/api-services/content/api-reference-getting-started#cps" target="_blank">Core Persistence Services</a> (CPS), a number of management APIs have changed. If your organization has not yet been moved to CPS, the following details are provided to help you understand the management API changes that will occur when you do move to CPS.</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Management API</th>
+			<th>Change with CPS</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/apis/%7Bapi_name%7D/keyvaluemaps/%7Bmap_name%7D" target="_blank">Update KeyValueMap in an API proxy</a></td>
+			<td>Not available in CPS. Replaced by <a href="/management/apis/post/organizations/%7Borg_name%7D/apis/%7Bapi_name%7D/keyvaluemaps/%7Bmap_name%7D/entries/%7Bentry_name%7D" target="_blank">Update a KeyValueMap entry in an API proxy (CPS)</a>.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/keyvaluemaps/%7Bmap_name%7D" target="_blank">Update KeyValueMap in an Environment</a></td>
+			<td>Not available in CPS. Replaced by <a href="/management/apis/post/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/keyvaluemaps/%7Bmap_name%7D/entries/%7Bentry_name%7D" target="_blank">Update a KeyValueMap entry in an environment (CPS)</a>.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/keyvaluemaps/%7Bmap_name%7D" target="_blank">Update KeyValueMap in an Organization</a></td>
+			<td>Not available in CPS. Replaced by <a href="/management/apis/post/organizations/%7Borg_name%7D/keyvaluemaps/%7Bmap_name%7D/entries/%7Bentry_name%7D" target="_blank">Update a KeyValueMap entry in an organization (CPS)</a>.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/apiproducts" target="_blank">Create API Product</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/apiproducts/%7Bapiproduct_name%7D" target="_blank">Update API Product</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/apiproducts/%7Bapiproduct_name%7D/attributes" target="_blank">Updates all API Product Attributes</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D" target="_blank">Get Developer</a></td>
+			<td>The response returns list of all apps for the developer. With CPS, the response includes only the first 100 apps. Pagination for a developer’s apps is not currently supported. To paginate a list of the developer's apps, use <a href="http://docs.apigee.com/node/16236">http://docs.apigee.com/node/16236</a>.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/developers" target="_blank">Create Developer</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D" target="_blank">Update Developer</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/delete/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D" target="_blank">Delete Developer</a></td>
+			<td>In CPS, associated resources such as apps are deleted asynchronously, which can take up to a few minutes.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/attributes" target="_blank">Update all Developer Attributes</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/apps" target="_blank">Create Developer App</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/apps/%7Bapp_name%7D" target="_blank">Update Developer App</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/delete/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/apps/%7Bapp_name%7D" target="_blank">Delete Developer App</a></td>
+			<td>In CPS, associated resources such as app keys or access tokens are deleted asynchronously, which can take up to a few minutes.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/apps/%7Bapp_name%7D" target="_blank">Get Count of API Resources for Developer App</a></td>
+			<td>Not available in CPS. No replacement API.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/apps/%7Bapp_name%7D/attributes" target="_blank">Update all App Attributes</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/apps-1" target="_blank">List App IDs in an Organization by Key Status</a></td>
+			<td>CPS limits the number of entities returned to 1,000. The non-CPS limit is 10,000.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/apps-0" target="_blank">List App IDs in an App Family</a></td>
+			<td>CPS limits the number of entities returned to 1,000. The non-CPS limit is 10,000.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/apps-2" target="_blank">List App IDs by App Type</a></td>
+			<td>CPS limits the number of entities returned to 1,000. The non-CPS limit is 10,000.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/apps" target="_blank">List App IDs in an Organization</a></td>
+			<td>CPS limits the number of entities returned to 1,000. The non-CPS limit is 10,000.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/companies" target="_blank">Create Company</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/companies/%7Bcompany_name%7D" target="_blank">Update Company</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/companies/%7Bcompany_name%7D/apps" target="_blank">Create Company App</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/put/organizations/%7Borg_name%7D/companies/%7Bcompany_name%7D/apps/%7Bapp_name%7D" target="_blank">Update Company App</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/companies/%7Bcompany_name%7D/appfamilies" target="_blank">List Company App Families</a></td>
+			<td>Not available in CPS. No replacement API.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/companies/%7Bcompany_name%7D/apps-0" target="_blank">List Company Apps</a></td>
+			<td>Not available in CPS. No replacement API.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/appfamilies" target="_blank">Create Developer App Family</a></td>
+			<td>Not available in CPS. No replacement API.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/oauth2/accesstokens/%7Baccess_token%7D-0" target="_blank">Update OAuth 2.0 Access Token</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/oauth1/accesstokens/%7Baccess_token%7D" target="_blank">Update OAuth 1.0a Access Token</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/oauth1/requesttokens/%7Brequest_token%7D" target="_blank">Update OAuth 1.0a Request Token</a></td>
+			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+	</tbody>
+</table>
+<p>&nbsp;</p>
