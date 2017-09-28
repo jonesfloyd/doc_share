@@ -1,0 +1,283 @@
+<h1> Installing Edge using Ops Manager </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.16.09</em></p>
+<p>This section describes how to install Edge using the Ops Manager. During the actual installation, the following events occur:</p>
+<ul>
+	<li>Ops Manager creates a VM for the Apigee Mirror Repo to host the Apigee yum repo, and makes sure that subsequent VMs have access to this repo.</li>
+	<li>Ops Manager then creates VMs and installs the Edge components that do not depend on other components, such as Zookeeper. Each Edge component is installed on its own VM.</li>
+	<li>Ops Manager then creates the next VM and installs the Edge components that do not depend on any other component except the components that have already been installed.</li>
+	<li>The “apigee” user is created on each VM.</li>
+	<li>The <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility is installed on each VM in case you have to log in to the VM to troubleshoot issues.</li>
+</ul>
+<p>After the installation completes, use the Edge management API to provision an organization, and log in to the Edge UI to start creating API proxies.</p>
+<h2>Installing optional Edge components</h2>
+<p>You can optionally choose to install additional Edge components, including:</p>
+<ul>
+	<li>Apigee BaaS</li>
+	<li>Edge Monitoring Dashboard</li>
+	<li>Developer Services portal</li>
+</ul>
+<p>If you choose to install these optional components you might have to perform additional onboarding or configuration steps.&nbsp;</p>
+<p>Apigee BaaS and Developer Services portal both require an SMTP server. If installed, they use the same SMTP server as configured for Edge.&nbsp;</p>
+<h2>Prerequisites</h2>
+<p>Before you can install Edge, you must first meet the following prerequisites.</p>
+<h3>Edge License</h3>
+<p>Each installation of Edge requires a unique license file that you obtain from Apigee. If license file is valid, the management server validates the expiry and allowed Message Processor (MP) count.&nbsp;</p>
+<h3>Ops Manager 1.8</h3>
+<p>Ensure that you are using<a href="https://network.pivotal.io/products/ops-manager"> Ops Manager version 1.8 from Pivotal Software</a>.</p>
+<h3>Define VMs that meet the Edge system requirements</h3>
+<p>Ensure that you have defined VMs that meet the memory, CPU, and disk requirements of Edge components as defined in <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a>.</p>
+<h3>Configure load balancers</h3>
+<p>With Ops Manager, you must predefine load balancers to control access to the servers running Edge. The load balancer defines the domain name and port of the Edge access point, optionally enables TLS, and forwards requests to the appropriate port on an Edge component.</p>
+<div class="note">
+	<p>The specific load balancer you use is defined by your IAAS. For example, configure an ELB for AWS.&nbsp;</p>
+</div>
+<p>When configuring an Edge installation in the Ops Manager, you specify the predefined load balancers used by Edge components. Only a subset of Edge components are externally accessible and therefore require load balancers to control access. The following tables lists the Edge components that require a load balancer, and the requirements on the load balancer for that component:</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<p><strong>Component</strong></p>
+			</th>
+			<th>
+				<p><strong>Load Balancer Requirements</strong></p>
+			</th>
+			<th>
+				<p><strong>TLS</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>Management Server</p>
+			</td>
+			<td>
+				<p>You install two Management Servers when installing Edge. The Management Servers require two load balancers:</p>
+				<ol>
+					<li>Defines the publicly accessible domain name of the Edge UI. For example, <strong>https://edgeui.example.com</strong>.<br />
+						<br />
+						Routes requests to the Edge UI to port 9000 on the Management Servers.<br />
+						<br />
+						Because there are two instances of the UI running, one on each Management Server, you must enable sticky sessions on the load balancer.</li>
+					<li>Defines the publicly accessible domain name of the Edge management API. For example, <strong>https://edgemgmt.example.com</strong>.<br />
+						<br />
+						Routes requests to the Edge API to port 8080 on the Management Servers.</li>
+				</ol>
+			</td>
+			<td>
+				<p>Recommended for both</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Router</p>
+			</td>
+			<td>
+				<p>You install a minimum of two Routers when installing Edge. The Routers require two load balancers:</p>
+				<ol>
+					<li>Defines the publicly accessible domain name of API proxies deployed on Edge. For example, <strong>https://api.example.com</strong>.<br />
+						<br />
+						API proxy request are in the form domain:port which you then route to port on the Router servers. Use this domain name when configuring a virtual host for an organization.</li>
+					<li>Defines the publicly accessible domain name of the test APIs used to validate the installation. For example, <strong>https://test.example.com</strong>.<br />
+						<br />
+						Requests to this domain are forwarded to port 59001 on the Router servers.</li>
+				</ol>
+			</td>
+			<td>
+				<p>Recommended</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Influxdb (Monitor)</p>
+			</td>
+			<td>
+				<p>You install a single Influxdb server. The load balancer defines the publicly accessible domain name of the Edge Monitoring Dashboard. For example, <strong>https://monitor.example.com</strong>.<br />
+					<br />
+					Route Monitoring requests to port 3000 on the Influxdb server.</p>
+			</td>
+			<td>
+				<p>Recommended</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>BaaS Portal</p>
+			</td>
+			<td>
+				<p>You install a single BaaS Portal server. The load balancer defines the publicly accessible domain name of the BaaS Portal. For example, <strong>https://baas_portal.example.com</strong>.<br />
+					<br />
+					The load balancer then routes BaaS Portal requests to port 9000 on the BaaS Portal server.</p>
+			</td>
+			<td>
+				<p>Recommended</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>BaaS Stack</p>
+			</td>
+			<td>
+				<p>You install two BaaS Stack servers. The load balancer defines the publicly accessible domain name of the BaaS API hosted on the BaaS Stack servers. For example, <strong>https://baas_api.example.com</strong>.<br />
+					<br />
+					The load balancer then routes BaaS API requests to port 8080 on the BaaS Stack servers.</p>
+			</td>
+			<td>
+				<p>Recommended</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Developer Services portal</p>
+			</td>
+			<td>
+				<p>You install a single Developer Services portal server. The load balancer defines the publicly accessible domain name of the portal. For example, <strong>https://dev_portal.example.com</strong>.<br />
+					<br />
+					The load balancer then routes Developer Services portal requests to port 8079 on the portal server.</p>
+			</td>
+			<td>
+				<p>Recommended</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Install Edge</h2>
+<p>Use the following procedure to install Edge:</p>
+<ol>
+	<li>Create the required load balancers as defined above in <a href="http://docs.apigee.com/private-cloud/latest/installing-edge#prerequisites-definevmsthatmeettheedgesystemrequirements">Define VMs that meet the Edge system requirements</a>.</li>
+	<li>Import the Edge tile into the Ops Manager.</li>
+	<li>Select the Edge tile. The <strong>Settings</strong> tab is selected.<br />
+		<img alt="" src="../html/sites/docs/files/ops_m_tabs_v1.png" style="width: 213px; height: 500px;" /><br />
+		&nbsp;</li>
+	<li>Under <strong>Assign AZs and Networks</strong>, select the network for the Edge install.<br />
+		<strong>Note:</strong> After this step and the following steps, select the <strong>Save</strong> button to save your changes.</li>
+	<li>Under Apigee Edge on PCF, enter:
+		<ul>
+			<li>System admin's email address and password</li>
+			<li><strong>MP Pod name</strong>: default is "<strong>gateway</strong>"</li>
+			<li><strong>Region</strong>: default is "<strong>dc-1</strong>".</li>
+			<li><strong>Edge license</strong>.</li>
+		</ul>
+	</li>
+	<li>Optionally select <strong>Monitoring</strong> to enable the installation of the Edge monitoring tool (default is disabled).</li>
+	<li>Optionally select <strong>BaaS</strong> to enable the installation of BaaS (default is disabled).<br />
+		<br />
+		If you choose to install Apigee BaaS, it uses the same sys admin credentials, region name, and SMTP server as configured for Edge. It also sets the BaaS sys admin's username to <span style="font-family:courier new,courier,monospace;">sysadmin</span>.&nbsp;</li>
+	<li>Optionally select <strong>Drupal-Devportal</strong> to enable the installation of the Developer Services portal (default is disabled).<br />
+		<br />
+		If you choose to install the Developer Services portal, it uses the same sys admin credentials and SMTP server as configured for Edge.&nbsp;</li>
+	<li>Select <strong>Config Overrides</strong> to enter any configuration overrides to Edge components.
+		<ol style="list-style: lower-alpha outside">
+			<li>You must specify the following overrides under <strong>Apigee Edge Message Processor Config Override</strong>&nbsp;to specify the memory requirements:<br />
+				<span style="font-family:courier new,courier,monospace;">bin_setenv_min_mem=512m?<br />
+				<span style="font-family:arial,helvetica,sans-serif;">and:</span><br />
+				bin_setenv_max_mem=2816m</span><br />
+				<br />
+				You can apply additional overrides now during the installation, or apply them later after the installation complete. For more, see How to Configure Edge.</li>
+			<li>If you are installing BaaS, you must specify the following override under <strong>BaaS Portal Config Overrides</strong>&nbsp;to specify the URL defined by the load balancer for the BaaS Stack nodes:<br />
+				<span style="font-family:courier new,courier,monospace;">baas.portal.config.overrideUrl=<em><strong>url_for_baaS_stack_nodes</strong></em></span></li>
+			<li>Edge requires you to configure an SMTP server, as described in the following step. Some SMTP servers require you to set the sender's email address used when generating emails. For example it is required when installing Edge on AWS. To set the&nbsp;sender's email address, set the following property:
+				<ul>
+					<li>Under <strong>Edge Ui Config Overrides</strong> set:<br />
+						<span style="font-family:courier new,courier,monospace;">conf_apigee_apigee.mgmt.mailfrom="Apigee &lt;sender@example.com&gt;"</span><br />
+						<div><span style="font-family:courier new,courier,monospace;">conf/application.conf+trustxforwarded=true</span></div>
+						<div>&nbsp;</div>
+						<div>The second property specifies to use TLS in the URL sent to the user when resetting their password.</div>
+					</li>
+					<li>If you installed the Developer Services portal, under <strong>Apigee Drupal Devportal Config Overrides</strong>&nbsp;set:<br />
+						<span style="font-family:courier new,courier,monospace;">conf_devportal_default_sender_address="sender@example.com"</span><br />
+						&nbsp;</li>
+					<li>If you installed Apigee BaaS, under <strong>BaaS Usergrid Config Overrides</strong> set:
+						<div><span style="font-family:courier new,courier,monospace;">usergrid-deployment_usergrid.management.mailer="Apigee Baas &lt;sender@example.com&gt;"<br />
+							usergrid-deployment_usergrid.api.url.base=<em><strong>url_for_baaS_stack_nodes</strong></em></span></div>
+						<div>&nbsp;</div>
+					</li>
+				</ul>
+			</li>
+		</ol>
+	</li>
+	<li>Select <strong>SMTP</strong> to configure the email server used for email messages sent from Edge. For example, when a user requests a new password. SMTP email is disabled by default.<br />
+		<br />
+		<strong>Note</strong>: SMTP configuration is required - you must specify an SMTP server when installing Edge.<br />
+		<br />
+		For the SMTP port, the value can be different based on the selected encryption protocol. For example, for Gmail, the port is 465 when using SSL and 587 for TLS.<br />
+		<br />
+		If installed, Apigee BaaS and the Developer Services portal also use this SMTP server. &nbsp;</li>
+	<li>Select <strong>Errands</strong> to ensure that the <strong>Apigee Validation Errand</strong> is enabled. This errand runs a series of tests to validate the installation and enables SmartDocs.</li>
+	<li>Select <strong>Resource Config</strong> to specify the number of Router and Message Processor servers. The default is 2 servers each.<br />
+		<strong>Note</strong>: Do not check any of the INTERNET CONNECTED boxes. All externally accessible Edge components use a load balancer to provide internet access.
+		<ol style="list-style: lower-alpha outside">
+			<li>In Resource Config, ensure that you select a VM TYPE that matches the system requirements of the component as defined at Hardware Requirements.</li>
+			<li>In Resource Config, specify the load balancer names in the LOAD BALANCERS column for the Management Server, Router, and Influxdb components.&nbsp;</li>
+			<li>If you are installing Apigee BaaS, specify the load balancer for the BaaS Portal and BaaS Stack (called BaaS usergrid in Ops Manager) servers.</li>
+			<li>If you are installing the Apigee Developer Services portal (called Drupal Devportal in Ops Manager) &nbsp;specify the load balancer for the server.<br />
+				<img alt="" src="../html/sites/docs/files/bosh_res_config_v1.png" style="width: 700px; height: 369px; border-width: 1px; border-style: solid; margin: 15px;" /><br />
+				<br />
+				See "<em>Configure load balancers</em>" above for information on the requirements of the load balancers.</li>
+		</ol>
+	</li>
+	<li>Select <strong>Stemcell</strong> to see the Apigee stemcell. Edge requires the CentOS stemcell. CentOS stemcells for different platforms can be downloaded from <a href="https://bosh.io/stemcells">https://bosh.io/stemcells</a>. Select and download the matching stemcell for the given infrastructure.&nbsp;<br />
+		<strong>Note</strong>: This release uses the 3262.2 version of the CentOS stemcell. The minor version can be 2 or higher (such as 16, 18, etc.).<br />
+		<br />
+		For example, for AWS infrastructure, use only the HVM Light CentOS 7 stemcell from: <a href="http://bosh.io/stemcells/bosh-aws-xen-hvm-centos-7-go_agent">http://bosh.io/stemcells/bosh-aws-xen-hvm-centos-7-go_agent</a></li>
+	<li>Select <strong>Installation Dashboard</strong> in the upper-left corner to return to the main Ops Manager page.</li>
+	<li>Select <strong>Apply Changes</strong> to start the installation. When the installation completes, you return to the ops Manager.</li>
+</ol>
+<h2>Test the installation</h2>
+<p>This section describes how to test the Edge installation.</p>
+<h3>Log in to the Edge UI</h3>
+<p>The Edge UI lets you perform most of the tasks necessary to create, configure, and manage API proxies, API products, apps, and users. When you installed Edge, you enabled the <strong>Apigee Validation Errand</strong>. This errand creates an organization named VALIDATE on edge.&nbsp;</p>
+<div class="note">
+	<p>The VALIDATE org is used by the Apigee Validation Errand and to test that you can log in to the Edge UI. Do not use the VALIDATE org to develop your APIs. <a href="http://docs.apigee.com/node/23066">http://docs.apigee.com/node/23066</a> describes how to create an organization for development.</p>
+</div>
+<p>After installing Edge, log in to the VALIDATE organization in the Edge UI by using the following procedure:</p>
+<ol>
+	<li>Open the following URL in a browser:&nbsp;<br />
+		<span style="font-family:courier new,courier,monospace;">https://&lt;<em><strong>edge_ui_domain</strong></em>&gt;</span><br />
+		<br />
+		In this URL, &lt;<em><strong>edge_ui_domain</strong></em>&gt; is the domain name of the Edge UI as defined by the load balancer for the Management Server component</li>
+	<li>When prompted, enter the system admin's email address and password that you specified in the Ops Manager when you installed Edge.<br />
+		<br />
+		The Edge UI appears.</li>
+</ol>
+<h3>Log in to the BaaS Portal</h3>
+<div class="note">
+	<p>This step is only required if you chose to install Apigee BaaS.</p>
+</div>
+<p>The BaaS Portal is the UI that you use with BaaS to create apps, add and configure users, add and update collections, and perform many other tasks. After installing BaaS, log in to the TEST organization in the BaaS Portal.</p>
+<div class="note">
+	<p>The TEST org is used to test that you can log in to the BaaS Portal. Do not use the TEST org to develop your BaaS apps. <a href="http://docs.apigee.com/node/23066">http://docs.apigee.com/node/23066</a> describes how to create a BaaS organization for development.</p>
+</div>
+<p>After installing BaaS, log in to the TEST organization in the BaaS Portal by using the following procedure:</p>
+<ol>
+	<li>Open the following URL in a browser:&nbsp;<br />
+		<span style="font-family:courier new,courier,monospace;">http://&lt;<em><strong>baas_portal_domain</strong></em>&gt;</span><br />
+		<br />
+		In this URL, &lt;<em><strong>baas_portal_domain</strong></em>&gt; is the domain name of the BaaS Portal as defined by its load balancer.</li>
+	<li>When prompted, enter the BaaS system admin's email address and password. This is the same as the system admin's email address and password that you specified in the Ops Manager when you installed Edge.<br />
+		<br />
+		The BaaS Portal appears.</li>
+</ol>
+<h3>Make calls the the Edge API</h3>
+<p>Test the installation by making calls to the Edge management API.&nbsp;</p>
+<ol>
+	<li>Create a virtual host by running the following cURL command. This virtual host lets you use API calls to validate the installation:&nbsp;<br />
+		<span style="font-family:courier new,courier,monospace;">curl -X PUT -u &lt;<strong>sysAdminEmail</strong>&gt;:&lt;<strong>passwd</strong>&gt; \<br />
+		https://&lt;<em><strong>ms-api-domain</strong></em>&gt;/v1/o/VALIDATE/e/test/virtualhosts/default \<br />
+		-d '{ &nbsp;"hostAliases" : [ "VALIDATE.apigee.com", "&lt;<em><strong>router-test-domain</strong></em>&gt;" ], &nbsp;"interfaces" : [ ], &nbsp;"name" : "default", &nbsp;"port" : "59001"}' -H "Content-Type: application/json" </span><span style="font-family:courier new,courier,monospace;">-i</span><br />
+		<br />
+		In this call &lt;<em><strong>ms-api-domain</strong></em>&gt; is the domain name of the Edge management API as defined by the load balancer for the Management Servers. &lt;<em><strong>router-test-domain</strong></em>&gt; is the domain name defined by the test load balancer on the Router that forwards requests to port 59001 on the Router.</li>
+	<li>Run the healthcheck API:<br />
+		<span style="font-family:courier new,courier,monospace;">curl https://&lt;<em><strong>ms-api-domain</strong></em>&gt;/v1/apigee/healthCheck</span><br />
+		<br />
+		Where &lt;<em><strong>ms-api-domain</strong></em>&gt; is the domain name of the Edge management API as defined by the load balancer for the Management Servers.<br />
+		<br />
+		This API returns "OK" if it executes successfully.</li>
+	<li>View the central pod. The central pod contains the Management Server, Zookeeper, LDAP, UI, and Qpid components:|<br />
+		<span style="font-family:courier new,courier,monospace;">curl -v -u &lt;<em><strong>sysAdminEmail</strong></em>&gt;:&lt;<em><strong>passwd</strong></em>&gt; https://&lt;<em><strong>ms-api-domain</strong></em>&gt;/v1/servers?pod=central</span><br />
+		<br />
+		The call returns information about the Edge components in the pod, including the UUID of each component. You often need the component's UUID to configure it.<br />
+		<br />
+		See <a href="http://docs.apigee.com/private-cloud/latest/about-planets-regions-pods-organizations-environments-and-virtual-hosts#aboutpods">About pods</a> for more information.</li>
+</ol>
+<div>&nbsp;</div>

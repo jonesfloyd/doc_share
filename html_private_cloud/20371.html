@@ -1,0 +1,43 @@
+<h1> Enabling/Disabling Server (Message Processor/Router) Reachability </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>It is a good practice to disable&nbsp;reachability&nbsp;on a server during maintenance, such as for a server restart or upgrade. When reachability is disabled, no traffic is directed to the server. For example, when reachability is disabled on a Message Processor, Routers will not direct any traffic to that Message Processor.</p>
+<p>For example, to upgrade a Message Processor, you can use the following procedure:</p>
+<ol>
+	<li>Disable&nbsp;reachability&nbsp;on the Message Processor.</li>
+	<li>Upgrade the Message Processor.</li>
+	<li>Enable&nbsp;reachability&nbsp;on the Message Processor.</li>
+</ol>
+<div class="note">
+	<p>In some configurations there may be a number of Routers behind a Load Balancer (ELB). The ELB might be configured to monitor port 15999 on the Routers. If the load balancer cannot access port 15999 on the Router it assumes the Router is down and you can restart the Router.</p>
+</div>
+<h2>Disabling/enabling&nbsp;reachability on a Message Processor</h2>
+<p>To disable reachability on Message Processor, you can just stop the Message&nbsp;Processor:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor stop</pre>
+<p>The Message Processor first processes any pending messages before it shuts down.&nbsp;Any new requests are routed to other available Message Processors.</p>
+<p>To restart the Message Processor, use the following commands:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor start
+?&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor wait_for_ready</pre>
+<p>The <span style="font-family:courier new,courier,monospace;">wait_for_ready</span> command returns the following message when the Message Processor is ready to process messages:</p>
+<pre>
+Checking if message-processor is up: message-processor is up.</pre>
+<h2>Disabling/enabling&nbsp;reachability on a Router</h2>
+<p>In a production environment, you typically have a load balancer in front of the Edge Routers. Load balancers monitor port 15999 on the Routers to ensure that the Route is available. To make a Router unreachable, you can block port 15999 on the Router. If the load balancer is unable to access the Router on port 15999 it no longer forwards requests to the Router.&nbsp;</p>
+<p>For example, you can block the port by using the following iptables command on the Router node:</p>
+<pre>
+&gt; ?sudo iptables -A INPUT -i eth0 -p tcp --dport 15999 -j REJECT</pre>
+<p>To later make the Router available, flush iptables:</p>
+<pre>
+&gt; sudo iptables -F</pre>
+<p>You might be using iptables to manage other ports on the node so you have to take that into consideration when you flush iptables or use iptables&nbsp;to block port 15999. If you are using iptables for other rules, you can use the -D option to reverse the specific change:</p>
+<pre>
+&gt; sudo iptables -D INPUT -i eth0 -p tcp --dport 15999 -j REJECT</pre>
+<h2>Checking reachability status</h2>
+<p>To get the reachable status of a &nbsp;Router, make a request to port 15999 on the Router:</p>
+<pre>
+&gt; curl -v http://&lt;routerIP&gt;:15999/v1/servers/self/up</pre>
+<p>If the Router is reachable, the request returns HTTP 200.</p>
+<p>To get reachable status of a &nbsp;Message Processor:</p>
+<pre>
+&gt; curl http://&lt;mpIP&gt;:8082/v1/servers/self</pre>

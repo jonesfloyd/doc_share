@@ -1,0 +1,69 @@
+<h1> Beta Monitoring Dashboard Installation  </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>The Beta release of the Edge monitoring dashboard helps you understand the health of various components (Routers, Message Processors, ZooKeeper, Cassandra) as well as HTTP error codes for various orgs and environments in your deployment. You can also snapshot these details and share them with Apigee if required for resolving support incidents.</p>
+<h2>Before using the dashboard</h2>
+<div class="note">
+	<p>Before you can install and use the Apigee Monitoring Dashboard, you must complete the <a href="http://docs.apigee.com/sites/docs/files/ApigeeEvaluationAgreeement.pdf">Apigee Monitoring Dashboard Evaluation Agreement (PDF)</a> and return it to Apigee by emailing it to <a href="mailto:orders@apigee.com">orders@apigee.com</a>.</p>
+</div>
+<h2>Dashboard display</h2>
+<p>After installing the dashboard, access it by opening the following URL in a browser:</p>
+<pre>
+http://<em><strong>grafana_IP_or_DNS</strong></em>:3000</pre>
+<p>where <em><strong>grafana_IP_or_DNS</strong></em> is the IP or DNS name of the node running the Apigee <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> component. You will be prompted to enter the administrator's username:password as defined when you installed <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. The default values from the installation instructions below are <span style="font-family:courier new,courier,monospace;">admin:admin</span>.</p>
+<p>After you log in, you see the following screen:</p>
+<p><img alt="" src="../html/sites/docs/files/dashboard_v1.png" style="width: 600px; height: 313px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>Select the logo in the upper-left corner to open the menu bar. In the menu bar, select <strong>Pin</strong> to keep the bar open.</p>
+<p>In the menu bar, select:</p>
+<ul>
+	<li><strong>admin Main Org</strong>. to set administrator details, such a password and email address.</li>
+	<li><strong>Dashboards &gt; Home</strong> to open the screen shown above. Then select <strong>Apigee Cloud</strong>&nbsp;or <strong>Cassandra Dashboard</strong> to see the dashboard.</li>
+	<li><strong>Data Sources</strong> to see the data sources for the apigee-grafana component. Select each data source, and then select the Save &amp; Test button to validate the connection.&nbsp;</li>
+	<li><strong>Plugins</strong> to display the list of installed plugins.&nbsp;</li>
+	<li><strong>Admin</strong> to set information about Grafana.</li>
+</ul>
+<p>After selecting&nbsp;<strong>Dashboards &gt; Home,</strong>&nbsp;selecting A<strong>pigee Cloud</strong> opens the dashboard display shown below:</p>
+<p><img alt="" src="../html/sites/docs/files/cloud_db_v1.png" style="width: 600px; height: 472px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>On this screen, you can see information about the:</p>
+<ul>
+	<li><strong>Router</strong>: status, traffic, errors, load, and more.</li>
+	<li><strong>Message Processor</strong>: status and health, traffic, target latency, target response codes, and more.</li>
+	<li><strong>Node metrics</strong>: CPU usage, disk space, heap usage, and more.</li>
+</ul>
+<p>Notice the buttons across the top of the charts:</p>
+<ul>
+	<li><strong>Color</strong>: set to <strong>All</strong>. <strong>All</strong> is the only supported option.</li>
+	<li><strong>Org</strong>: set to the name of your organization.</li>
+	<li><strong>Env</strong>: Set to the name of an environment in the organization.</li>
+	<li><strong>MPPod</strong> and <strong>RTPod</strong>: set to the pod name of the Message Processors and Routers. By default it is "gateway" unless you changed it at install time.&nbsp;</li>
+	<li><strong>apigee-service</strong>: check to display information about executions of the <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility.</li>
+</ul>
+<p>Some of the charts show information for individual API proxies and all API proxies together. For example, in the chart below, you can see a line for all proxies, identified by the green line for 1<span style="font-family:courier new,courier,monospace;">92.168.56.103()</span>, the IP address of the Message Processor:</p>
+<p><img alt="" src="../html/sites/docs/files/chart_v1.png" style="width: 332px; height: 285px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>There are also individual lines in the chart for different API proxies named <span style="font-family:courier new,courier,monospace;">getUsers</span> and <span style="font-family:courier new,courier,monospace;">testAX</span>, identified in the chart as the orange line for <span style="font-family:courier new,courier,monospace;">192.168.56.103(getUsers)</span> and the blue line for <span style="font-family:courier new,courier,monospace;">192.168.56.103(testax)</span>.</p>
+<p>By default, the dashboard shows information for the last 5 minutes. Select the <strong>Today</strong> at the top-right of the dashboard to select a different interval.</p>
+<h2>Sending a dashboard snapshot to Apigee</h2>
+<p>To help Apigee diagnose and debug an issue, you can send a snapshot of your dashboard to Apigee Support. Apigee can then inspect your dashboard to help determine the cause of the issue.</p>
+<p>To send a dashboard snapshot to Apigee:</p>
+<ol>
+	<li>Select the <strong>Share Dashboard</strong> icon at the top of the dashboard (highlighted in the red box &nbsp;below):<br />
+		<img alt="" src="../html/sites/docs/files/share_db_v1.png" style="width: 416px; height: 44px; border-width: 1px; border-style: solid; margin: 15px;" /></li>
+	<li>In the pop-up window, select <strong>Snapshot Sharing</strong>.</li>
+	<li>Leave all fields as they are, and select the <strong>Publish to snapshot.apigee.net</strong> button.</li>
+	<li>A pop-up window appears containing a link. Copy that link and send it to Apigee.</li>
+</ol>
+<h2>Dashboard components</h2>
+<p>The dashboard relies on several components that you install after installing Edge:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">apigee-telegraf</span><br />
+		A wrapper component for <a href="https://influxdata.com/time-series-platform/telegraf/">telegraf</a>, that gathers metrics from the system and running components and pushes them to the <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> <a href="https://en.wikipedia.org/wiki/Time_series_database">Time Series DataBase (TSDB)</a>.&nbsp;<br />
+		<br />
+		Install this component on all Edge runtime and data components such as the Edge Message Processor, Router, Postgres server, Cassandra, and Zookeeper nodes.</li>
+	<li><span style="font-family:courier new,courier,monospace;">apigee-influxdb</span><br />
+		A wrapper component for <a href="https://influxdb.com">influxdb</a>, that stores the metrics data and exposes it through an API so the data can be rendered in a UI by using <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>.&nbsp;<br />
+		<br />
+		Install this component centrally so it can be accessed by all the <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> components running on individual Edge nodes.</li>
+	<li><span style="font-family:courier new,courier,monospace;">apigee-grafana</span><br />
+		A wrapper component on top of <a href="http://grafana.org/">grafana</a>, that provides a powerful and elegant way to create, explore, and share dashboards and data with your team and Apigee for troubleshooting.<br />
+		<br />
+		Install this component on the node where you want to view the dashboard.</li>
+</ul>

@@ -1,0 +1,16 @@
+<h1> Setting the password hint text in the Edge UI </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>By default, when a user changes password in the Edge UI, a dialog box appears that contains fields to set the password and text describing the password requirements:</p>
+<p><img alt="" src="../html/sites/docs/files/orig_hint.png" style="height: 250px; width: 421px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>You can configure the text by setting the <span style="font-family:courier new,courier,monospace;">conf_apigee-base_apigee.passwordpolicy.pwdhint</span> property in the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/ui.properties</span> file.</p>
+<p>To set this property:</p>
+<ol>
+	<li>Open the <span style="font-family:courier new,courier,monospace;">ui.properties</span> file in an editor. If the file does not exist, create it::<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; vi /opt/apigee/customer/application/ui.properties</span></li>
+	<li>Set <span style="font-family:courier new,courier,monospace;">conf_apigee-base_apigee.passwordpolicy.pwdhint.&nbsp;</span>For example, set <span style="font-family:courier new,courier,monospace;">conf_apigee-base_apigee.passwordpolicy.pwdhint</span> as:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_apigee-base_apigee.passwordpolicy.pwdhint="Password must be 13 characters long and contain at least on special character."</span></li>
+	<li>Save your changes.</li>
+	<li>Restart the Edge UI:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui restart</span></li>
+</ol>
+<div>&nbsp;</div>

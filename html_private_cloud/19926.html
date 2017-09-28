@@ -1,0 +1,13 @@
+<h1> Install SmartDocs </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>SmartDocs is installed automatically when you install and run the installation test scripts described in <a href="http://docs.apigee.com/node/19906">http://docs.apigee.com/node/19906</a>.&nbsp;As part of running the test scripts, you run the following commands:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-validate install
+&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-validate setup -f <em><strong>configFile</strong></em></pre>
+<p>This command installs SmartDocs as part of running the tests.</p>
+<p>To test that SmartDocs is installed, confirm that the <span style="font-family:courier new,courier,monospace;">smartdocs.zip</span>&nbsp;file is located in the following directory:</p>
+<p><span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-validate/bundles/</span></p>
+<p>Or run the following API call on the Management Server node:</p>
+<p><span style="font-family:courier new,courier,monospace;">&gt; curl -v -u <em><strong>adminEmail:adminPword</strong></em>&nbsp;0:8080/v1/o/VALIDATE/apis</span></p>
+<p>This command should return the following if SmartDocs is installed:</p>
+<p><span style="font-family:courier new,courier,monospace;">[ "smartdocs", "passthrough" ]</span></p>

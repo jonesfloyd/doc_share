@@ -1,0 +1,41 @@
+<h1> Configuring the portal to use HTTPS </h1>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.17.05</em></p>
+<p>All Apigee recommended Private Cloud installations of the portal require the portal to be behind a load balancer. Therefore, you configure SSL on the load balancer itself, and not on the portal. The procedure that you use to configure SSL is therefore dependent on the load balancer.</p>
+<p>See <a href="http://docs.apigee.com/node/15391">http://docs.apigee.com/node/15391</a> for an overview of using SSL on the portal.&nbsp;</p>
+<h2>For the portal running on Apache</h2>
+<p>However, if necessary, you can configure SSL on the web server that hosts the portal. By default, Apigee installs the Apache web server.</p>
+<ol>
+	<li>Obtain your SSL key and certificate.</li>
+	<li>Ensure that you install <span style="font-family:courier new,courier,monospace;">mod_ssl</span> as described in <a href="http://docs.apigee.com/node/21166">http://docs.apigee.com/node/21166</a> by using the command:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; yum install mod_ssl</span></li>
+	<li>Update <span style="font-family:courier new,courier,monospace;">/etc/httpd/conf/httpd.conf</span>:
+		<ol style="list-style: lower-alpha outside">
+			<li>If you want to disable HTTP access on port 80, search for '<span style="font-family:courier new,courier,monospace;">Listen 80</span>' and comment it out.</li>
+			<li>Add the following lines at the end of file:<br />
+				<span style="font-family:courier new,courier,monospace;">LoadModule ssl_module modules/mod_ssl.so<br />
+				Listen 443</span></li>
+		</ol>
+	</li>
+	<li>Setup a virtual host by editing <span style="font-family:courier new,courier,monospace;">/etc/httpd/conf/vhosts/devportal.conf</span> to add the following:<br />
+		<span style="font-family:courier new,courier,monospace;">&lt;VirtualHost *:443&gt;<br />
+		&nbsp; ServerName localhost<br />
+		&nbsp; SSLEngine on<br />
+		&nbsp; SSLCertificateFile "&lt;public cert path&gt;"<br />
+		&nbsp; SSLCertificateKeyFile "&lt;private key path&gt;"<br />
+		&nbsp; DocumentRoot "/var/www/html"<br />
+		&nbsp; &lt;Directory "/var/www/html"&gt;<br />
+		&nbsp; &nbsp; Options Indexes FollowSymLinks MultiViews<br />
+		&nbsp; &nbsp; AllowOverride All<br />
+		&nbsp; &nbsp; Order allow,deny<br />
+		&nbsp; &nbsp; Allow from all<br />
+		&nbsp; &lt;/Directory&gt;<br />
+		&lt;/VirtualHost&gt;</span><br />
+		<br />
+		Also, comment out the existing <span style="font-family:courier new,courier,monospace;">VirtualHost</span> definition if you do not want to use HTTP.</li>
+	<li>Because SSL is configured in <span style="font-family:courier new,courier,monospace;">httpd.conf</span>, you do not need <span style="font-family:courier new,courier,monospace;">ssl.conf</span>:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.orig</span></li>
+	<li>Restart Apache:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; service httpd restart</span><br />
+		You might be prompted to enter the passphrase for your key file.&nbsp;</li>
+</ol>
+<p>You should be able to access the portal over SSL.</p>

@@ -1,0 +1,26 @@
+<h1> Setting HTTP request/response header limits </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>The Edge Router and Message Processor have predefined limits to the size of request/response headers and to the line size.&nbsp;</p>
+<p>For the Router, which handles incoming requests from your APIs, edit the following properties in <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/router.properties</span> to change these default values:</p>
+<pre>
+conf_router_HTTP.request.line.limit=4k
+conf_router_HTTP.request.header.limit =8k
+conf_router_HTTP.response.line.limit=4k
+conf_router_HTTP.response.header.limit =8k</pre>
+<p>If that file does not exist, create it.</p>
+<p>You must restart the Router after changing these properties:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart</pre>
+<p>For the Message Processor, which handles outgoing requests to your backend services, edit the following properties in <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/message-processor.properties</span> to change these default values:</p>
+<pre>
+conf/http.properties+HTTPRequest.line.limit=7k
+conf/http.properties+HTTPRequest.headers.limit=25k 
+conf/http.properties+HTTPResponse.line.limit=2k 
+conf/http.properties+HTTPResponse.headers.limit=25k</pre>
+<div class="note">
+	<p>The syntax is slightly different for the Message Processor because the properties are commented out by default.&nbsp;</p>
+</div>
+<p>If that file does not exist, create it.</p>
+<p>You must restart the Message Processor after changing these properties:</p>
+<pre>
+&gt; /opt/apigee/bin/apigee-service message-processor restart</pre>

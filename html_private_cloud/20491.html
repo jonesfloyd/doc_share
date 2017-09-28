@@ -1,0 +1,49 @@
+<h1> Configuring TLS/SSL for Edge On Premises </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>TLS (Transport Layer Security, whose predecessor is SSL) is the standard security technology for for ensuring secure, encrypted messaging across your API environment, from apps to Apigee Edge to your back-end services.&nbsp;</p>
+<div class="note">
+	<p>Because Edge originally supported SSL, you will see some instances in the Edge UI, Edge XML, and Edge properties that use the term "SSL". For example, the menu entry in the Edge UI that you use to view certs is called&nbsp;<strong>SSL Certificates</strong>, the XML tag that you use to configure a virtual host to use TLS is named <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span>, and the property to set the SSL port for the management API is&nbsp;<span style="font-family:courier new,courier,monospace;">conf_webserver_ssl.port</span>.</p>
+</div>
+<p>Regardless of the environment configuration for your management API—for example, whether you’re using a proxy, a router, and/or a load balancer in front of your management API (or not)— Edge lets you enable and configure TLS, giving you control over message encryption in your on-premise API management environment.</p>
+<p>For an on-premises installation of Edge Private Cloud, there are several places where you can configure TLS:</p>
+<ol>
+	<li>Between a Router and Message Processor</li>
+	<li>For access to the Edge management API</li>
+	<li>For access to the Edge management UI</li>
+	<li>For access from an app to your APIs</li>
+	<li>For access from Edge to your backend services</li>
+</ol>
+<p>Configuring TLS for the first three items is described below. All of these procedures assume that you have created a JKS file containing your TLS certification and private key.</p>
+<p>To configure TLS for access from an app to your APIs, #4 above, see <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a>. To configure TLS for access from Edge to your backend services, #5 above, see <a href="http://docs.apigee.com/node/18091">http://docs.apigee.com/node/18091</a>.</p>
+<p>For a complete overview of configuring TLS on Edge, see <a href="http://docs.apigee.com/node/18056">http://docs.apigee.com/node/18056</a>.</p>
+<h2>Creating a JKS file</h2>
+<p>You represent the keystore as a JKS file, where the keystore contains your TLS certificate and private key. There are several ways to create a JKS file, but one way is to use the openssl and keytool utilities.&nbsp;</p>
+<div class="note">
+	<p>If you have a certificate chain, all certs in the chain must be appended in order into a single PEM file, where the last certificate is signed by a CA.&nbsp;</p>
+</div>
+<p>For example, you have a PEM file named <span style="font-family:courier new,courier,monospace;">server.pem</span> containing your TLS certificate and a PEM file named private_key.pem containing your private key. Use the following commands to create the PKCS12 file:</p>
+<pre>
+&gt; openssl pkcs12 -export -clcerts -in server.pem -inkey private_key.pem -out keystore.pkcs12</pre>
+<p>You have to enter the passphrase for the key, if it has one, and an export password. This command creates a PKCS12 file named <span style="font-family:courier new,courier,monospace;">keystore.pkcs12</span>.&nbsp;</p>
+<p>Use the following command to convert it to a JKS file named keystore.jks:</p>
+<pre>
+&gt; keytool -importkeystore -srckeystore keystore.pkcs12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks</pre>
+<p>You are prompted to enter the new password for the JKS file, and the existing password for the PKCS12 file.</p>
+<p>If you have to specify a key alias, such as when configuring TLS between a Router and Message Processor, include the "<span style="font-family:courier new,courier,monospace;">-name"</span> option to the openssl command:</p>
+<pre>
+&gt;? openssl pkcs12 -export -clcerts -in server.pem -inkey private_key.pem -out keystore.pkcs12 <strong>-name devtest</strong></pre>
+<p>Then include the "<span style="font-family:courier new,courier,monospace;">-alias</span>" option to the <span style="font-family:courier new,courier,monospace;">keytool</span>&nbsp;command:</p>
+<pre>
+&gt; keytool -importkeystore -srckeystore keystore.pkcs12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks <strong>-alias devtest</strong></pre>
+<h2>Generating an obfuscated password</h2>
+<p>Some parts of the Edge TLS configuration procedure require you to enter an obfuscated password in a configuration file. An obfuscated password is a more secure alternative to entering your password in plain text.</p>
+<p>You can generate an obfuscated password in Java by using the Jetty .jar files installed with Edge. enerate the obfuscated password by using a command in the form:</p>
+<pre>
+&gt; java -cp /opt/apigee/edge-gateway/lib/thirdparty/jetty-http-<strong>x.y.z</strong>.jar:/opt/apigee/edge-gateway/lib/thirdparty/jetty-util-<strong>x.y.z</strong>.jar org.eclipse.jetty.http.security.Password <strong>yourPassword</strong></pre>
+<p>where <strong>x.y.z</strong> specifies the version number of the Jetty .jar files, such as 8.0.4.v20111024. This command returns the password in the form:</p>
+<pre>
+yourPassword
+OBF:58fh40h61svy156789gk1saj
+MD5:902fobg9d80e6043b394cb2314e9c6</pre>
+<p>Use the obfuscated password specified by OBF when configuring TLS.&nbsp;</p>
+<p>For more information, see <a href="http://docs.oracle.com/cd/E35822_01/server.740/es_admin/src/tadm_ssl_jetty_passwords.html">this article</a>.&nbsp;</p>

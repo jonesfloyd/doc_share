@@ -1,0 +1,92 @@
+<h1> 4.16.05 Rollback Process </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.16.05</em></p>
+<p>There are two scenarios where you might want to perform a rollback:</p>
+<ol>
+	<li>Rollback to an older release. For example from 4.16.05 to 4.16.01.</li>
+	<li>Rollback to an older version in the same release.&nbsp;</li>
+</ol>
+<p>Use the procedure below to perform a rollback for both scenarios.</p>
+<h2>Who can perform the rollback</h2>
+<p>The user performing the rollback should be the same as the user who originally updated Edge, or a user running as root.</p>
+<p>By default, Edge components run as the user "apigee". In some cases, you might be running Edge components as different users. For example, if the Router has to access privileged ports, such as those below 1000, then you have to run the Router as root or as a user with access to those ports. Or, you might run one component as one user, and another component as another user.</p>
+<h2>Which components can be rolled back</h2>
+<p>You should be aware of the following conditions when performing a rollback:</p>
+<ul>
+	<li>To rollback any one of the following five components on a node, you must roll back any of the five installed on the node. For example, if you have the Management Server, Route, and Message Processor installed on the node, to roll back any one of them you must roll back all three.<br />
+		<br />
+		?The five components are:
+		<ul>
+			<li>Management Server</li>
+			<li>Router</li>
+			<li>Message Processor</li>
+			<li>Qpid Server</li>
+			<li>Postgres Server</li>
+		</ul>
+	</li>
+	<li>Do not rollback Cassandra. This release of Edge contains an updated version of Cassandra. If you rollback any components, leave Cassandra at the 4.16.05 version.</li>
+	<li>This release does not contain a new version of postgresql or qpidd. Therefore, you do not have to roll them back.</li>
+</ul>
+<h2>To rollback 4.16.05&nbsp;</h2>
+<p>To rollback Apigee Edge, perform the following rollback steps:</p>
+<ol>
+	<li>Stop the component to rollback:
+		<ol>
+			<li><strong>If you are rolling back any one of the following components, you must stop them all: Management Server, Router, Message Processor, Qpid Server, or Postgres Server:</strong><br />
+				<span style="font-family:courier new,courier,monospace;">&gt; apigee-service edge-management-server stop&nbsp;<br />
+				&gt; apigee-service edge-router stop&nbsp;<br />
+				&gt; apigee-service edge-message-processor stop&nbsp;<br />
+				&gt; apigee-service edge-qpid-server stop&nbsp;<br />
+				&gt; apigee-service edge-postgres-server stop&nbsp;</span></li>
+			<li><strong>If you are rolling back any other component, stop just that component:</strong><br />
+				<span style="font-family:courier new,courier,monospace;">&gt; apigee-service <em><strong>comp</strong></em> stop&nbsp;</span></li>
+		</ol>
+	</li>
+	<li>If you are rolling back Monetization, uninstall it:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; apigee-service edge-mint-gateway uninstall&nbsp;</span></li>
+	<li>Uninstall the component to rollback:
+		<ol>
+			<li><strong>If you are rolling back any of the following components, then uninstall them all: Management Server, Router, Message Processor, Qpid Server, or Postgres Server:</strong><br />
+				<span style="font-family:courier new,courier,monospace;">&gt; apigee-service edge-gateway uninstall&nbsp;</span></li>
+			<li><strong>If you are rolling back any other component, uninstall just that component</strong><br />
+				<span style="font-family:courier new,courier,monospace;">&gt; apigee-service <em><strong>comp</strong></em> uninstall&nbsp;</span></li>
+		</ol>
+	</li>
+	<li><span style="font-family:courier new,courier,monospace;">?</span>If you are rolling back the Router, then you have to delete the contents of <span style="font-family: 'courier new', courier, monospace;">/opt/nginx/conf.d</span>:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; cd /opt/nginx/conf.d&nbsp;<br />
+		&gt; rm -rf *</span></li>
+	<li><strong>To rollback the component to the 4.16.01 release:</strong>
+		<ol>
+			<li>Uninstall the 4.16.05 version of apigee-setup:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-setup uninstall</span></li>
+			<li>Download bootstrap.sh for the 4.16.01 release:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap.sh -o /tmp/bootstrap.sh -u <em><strong>uName:pWord</strong></em></span><br />
+				where <em><strong>uName:pWord</strong></em> are the username and password you received from Apigee. If you omit <em><strong>pWord</strong></em>, you will be prompted to enter it.</li>
+			<li>Install the 4.16.01 Edge apigee-service utility and dependencies:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; sudo bash /tmp/bootstrap.sh apigeeuser=<em><strong>uName</strong></em> apigeepassword=<em><strong>pWord</strong></em>&nbsp;</span><br />
+				where <em><strong>uName</strong></em> and <em><strong>pWord</strong></em> are the username and password you received from Apigee. If you omit <em><strong>pWord</strong></em>, you will be prompted to enter it.</li>
+			<li>Install the 4.16.01 version of <span style="font-family:courier new,courier,monospace;">apigee-setup</span>:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-setup install</span></li>
+			<li>Install the 4.16.01 version of the component:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /&lt;instal_dir&gt;/apigee/apigee-setup/bin/setup.sh -p <em><strong>comp</strong></em> -f <em><strong>configFile</strong></em><br />
+				<span style="font-family:arial,helvetica,sans-serif;">where <em><strong>comp</strong></em> is the component to install and <em><strong>configFile</strong></em> is your 4.16.01 configuration file.</span></span></li>
+		</ol>
+	</li>
+	<li><strong>To rollback the component to a specific version of the 4.16.05 release:&nbsp;</strong>
+		<ol>
+			<li>Download the specific component version:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /&lt;instal_dir&gt;/apigee/apigee-service/bin/apigee-service <em><strong>comp-version</strong></em> install</span><br />
+				where <em><strong>comp-version</strong></em> is the component and version to install. For example:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /&lt;instal_dir&gt;/apigee/apigee-service/bin/apigee-service <strong>edge-ui-4.16.05-0.0.3649</strong> install</span><br />
+				If you are using the Apigee online repo, you can determine the available component versions by using the following command:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; yum --showduplicates list comp</span><br />
+				For example:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; yum --showduplicates list edge-ui</span></li>
+			<li>Use <span style="font-family:courier new,courier,monospace;">apigee-setup</span> to install the component:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /&lt;install_dir&gt;/apigee/apigee-setup/bin/setup.sh -p <em><strong>comp</strong></em> -f <em><strong>configFile</strong></em></span><br />
+				For example:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; /&lt;install_dir&gt;/apigee/apigee-setup/bin/setup.sh -p ui -f configFile</span><br />
+				Note how you only specify the component name when you do the install.</li>
+		</ol>
+	</li>
+</ol>
+<p>Contact&nbsp;<a href="http://support.apigee.com/">Apigee Support</a>&nbsp;if you encounter issues when rolling back.</p>

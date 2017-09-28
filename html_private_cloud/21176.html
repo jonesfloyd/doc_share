@@ -1,0 +1,16 @@
+<h1> Starting, stopping, or restarting the portal </h1>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.17.05</em></p>
+<h2>For the portal running on Nginx</h2>
+<p>To start, stop, or restart the portal components, use the <code>apigee-service</code> command:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service <i>compName</i> <em><strong>stop|start|restart</strong></em></pre>
+<p>Where <code><i>compName</i></code> can be one of the following: <code>apigee-drupal-devportal, apigee-drupal-contrib, apigee-drupal, apigee-drush, apigee-php</code></p>
+<h2>For the portal running on Apache</h2>
+<p>To start, stop, or restart the portal, you actually start, stop, or restart the Apache web server. For example, to restart Apache on RedHat and CentOS, use the following command:</p>
+<pre>
+&gt; service httpd restart</pre>
+<p>To stop or start Apache on RedHat and CentOS, use the commands:</p>
+<pre>
+&gt; service httpd stop
+&gt; service httpd start</pre>
+<p>For more information, see <a href="http://www.apache.org/">http://www.apache.org/</a>.</p>

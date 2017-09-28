@@ -1,0 +1,38 @@
+<h1> Understanding Edge authentication and authorization flows </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>This document explains how authentication and authorization work on Apigee Edge. This information may provide useful context when you configure an external LDAP with Apigee Edge.</p>
+<p>The authentication and authorization flows depend whether a user authenticates through the management UI or through the APIs.&nbsp;</p>
+<h2>When logging in through the UI</h2>
+<p>When you log in to Edge through the UI, Edge performs a separate login step to the Apigee Management Server using the Edge global system administrator credentials.&nbsp;</p>
+<p>The following UI login steps are illustrated in Figure 1:</p>
+<ol>
+	<li>The user enters login credentials in the login UI.</li>
+	<li>Edge logs in to the Management Server using the global system admin credentials.&nbsp;</li>
+	<li>The global system admin credentials are authenticated and authorized. The UI uses these credentials to make certain platform API requests.
+		<ol style="list-style: lower-alpha outside">
+			<li>If external authentication is enabled, the credentials are authenticated against the external LDAP, otherwise, the internal Edge LDAP is used.&nbsp;</li>
+			<li>Authorization is always performed against the internal LDAP.&nbsp;</li>
+		</ol>
+	</li>
+	<li>The credentials entered by the user are authenticated and authorized.
+		<ol style="list-style: lower-alpha outside">
+			<li>If external authentication is enabled, the credentials are authenticated against the external LDAP, otherwise, the internal Edge LDAP is used.&nbsp;</li>
+			<li>Authorization is always performed against the internal LDAP.&nbsp;</li>
+		</ol>
+	</li>
+</ol>
+<p></p>
+<p>The following image shows authorization and authentication through the Edge UI:</p>
+<p><img alt="" src="../html/sites/docs/files/authViaUI_v2.png" style="width: 650px; height: 515px; margin: 15px;" /></p>
+<h2>When logging in through APIs</h2>
+<p>When you log in to Edge through the an API, only the credentials entered with the API are used. Unlike with UI login, a separate login with system admin credentials is not needed.</p>
+<p>The following API login steps are illustrated in Figure 2:</p>
+<ol>
+	<li>The user enters login credentials in the login UI.</li>
+	<li>The credentials entered by the user are authenticated and authorized.&nbsp;</li>
+	<li>If external authentication is enabled, the credentials are authenticated against the external LDAP, otherwise, the internal Edge LDAP is used.&nbsp;</li>
+	<li>Authorization is always performed against the internal LDAP.&nbsp;</li>
+</ol>
+<p>The following image shows authorization and authentication through the Edge APIs:</p>
+<p><img alt="" src="../html/sites/docs/files/authViaAPI_v2.png" style="width: 593px; height: 448px; margin: 15px;" /></p>
+<div>&nbsp;</div>

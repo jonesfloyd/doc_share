@@ -1,0 +1,263 @@
+<h1> Edge Configuration File Reference </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>Shown below is an example of a complete silent configuration file for a 9 node Edge installation. Edit this file as necessary for your configuration. Use the <span style="font-family: &quot;courier new&quot;, courier, monospace;">-f</span> option to <span style="font-family: &quot;courier new&quot;, courier, monospace;">setup.sh</span> to include this file. Also shown below are example configuration files for each Edge topology.</p>
+<div class="note">
+	<p>The definition of the IP# variables for the Router, Message Processor, Qpid, and Postgres nodes are for illustrating the node configuration; they are not actually used.&nbsp;</p>
+</div>
+<pre>
+# IP address or DNS name of nodes.
+IP1=192.168.1.1  # Management Server, OpenLDAP, UI, ZooKeeper, Cassandra
+IP2=192.168.1.2  # ZooKeeper, Cassandra
+IP3=192.168.1.3  # ZooKeeper, Cassandra
+IP4=192.168.1.4  # Router, Message Processor
+IP5=192.168.1.5  # Router, Message Processor
+IP6=192.168.1.6  # Qpid
+IP7=192.168.1.7  # Qpid
+IP8=192.168.1.8  # Postgres
+IP9=192.168.1.9  # Postgres
+
+# Must resolve to IP address or DNS name of host - not to 127.0.0.1 or localhost.
+HOSTIP=$(hostname -i)
+
+# Set Edge sys admin credentials.
+ADMIN_EMAIL=your@email.com
+APIGEE_ADMINPW=yourPassword    # If omitted, you are prompted for it.
+
+# Location of Edge license file.
+LICENSE_FILE=/tmp/license.txt
+
+# Management Server information.
+MSIP=$IP1    # IP or DNS name of Management Server node. 
+# Specify the port the Management Server listens on for API calls.
+# APIGEE_PORT_HTTP_MS=8080    # Default is 8080.
+
+#
+# OpenLDAP information.
+#
+# Set to y if you are connecting to a remote LDAP server. 
+# If n, Edge installs OpenLDAP when it installs the Management Server.
+USE_LDAP_REMOTE_HOST=n 
+
+# If connecting to remote OpenLDAP server, specify the IP/DNS name and port.
+# LDAP_HOST=$IP1    # IP or DNS name of OpenLDAP node.
+# LDAP_PORT=10389   # Default is 10389.
+APIGEE_LDAPPW=yourLdapPassword
+
+# Specify OpenLDAP without replication, 1, or with replication, 2.
+LDAP_TYPE=1 
+
+# Set only if using replication.
+# LDAP_SID=1    # Unique ID for this LDAP server. 
+# LDAP_PEER=    # IP or DNS name of LDAP peer.
+
+BIND_ON_ALL_INTERFACES=y 
+
+# The Message Processor and Router pod.
+MP_POD=gateway 
+
+# The name of the region, corresponding to the data center name.
+REGION=dc-1 # Use dc-1 unless installing in a 
+            # multi-data center environment. 
+
+# ZooKeeper information.
+# See table below if installing in a multi-data center environment.
+ZK_HOSTS="$IP1 $IP2 $IP3"         # IP/DNS names of all ZooKeeper nodes. 
+ZK_CLIENT_HOSTS="$IP1 $IP2 $IP3"  # IP/DNS names of all ZooKeeper nodes.
+
+# Cassandra information.
+CASS_CLUSTERNAME=Apigee    # Default name is Apigee.
+
+# IP (not DNS names) of the Cassandra hosts separated by spaces.
+CASS_HOSTS="$IP1:1,1 $IP2:1,1 $IP3:1,1"
+
+# Set to enable Cassandra authentication.
+# CASS_AUTH=y    # The default value is n.
+# Cassandra uname/pword required if you enabled Cassandra authentication.
+# CASS_USERNAME=
+# CASS_PASSWORD=
+
+# Set Postgres password. Default is postgres.
+PG_PWD=postgres
+
+# Use to enable Postgres master-standby replication
+# when you have multiple Postgres nodes. 
+# PG_MASTER=IPorDNSofNewMaster
+# PG_STANDBY=IPorDNSofOldMaster
+
+# SMTP information.
+SKIP_SMTP=n       # Skip now and configure later by specifying "y".
+SMTPHOST=smtp.gmail.com
+SMTPUSER=your@email.com
+SMTPPASSWORD=yourEmailPassword
+SMTPSSL=y
+SMTPPORT=465      # If no SSL, use a different port, such as 25.
+SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
+<p>The following table contains additional information about these properties:</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<p><strong>Property</strong></p>
+			</th>
+			<th>
+				<p><strong>Note</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>IP/DNS names</p>
+			</td>
+			<td>
+				<p>Do not use a host name mapping to 127.0.0.1 or an IP address of 127.0.0.1 when specifying the IP address of a node.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">ADMIN_EMAIL<br />
+					APIGEE_ADMINPW</span></p>
+			</td>
+			<td>
+				<p>The system administrator's password must be at least 8 characters long and contain one uppercase letter, one lowercase letter, one digit or one special character. If you omit the password, you will be prompted for it.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">LICENSE_FILE</span></p>
+			</td>
+			<td>
+				<p>The location of the license file, which must be accessible to the &nbsp;"apigee" user. For example, store it in the /tmp directory and chmod 777 on the file. The file is copied to the Edge installation directory.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">USE_LDAP_REMOTE_HOST<br />
+					LDAP_HOST<br />
+					LDAP_PORT</span></p>
+			</td>
+			<td>
+				<p>If USE_LDAP_REMOTE_HOST is n, Edge automatically installs OpenLDAP when it installs the Management Server.</p>
+				<p>Set USE_LDAP_REMOTE_HOST to y if you are connecting to a remote LDAP server. OpenLDAP is not installed with the Management Server.</p>
+				<p>If you are connecting to a remote OpenLDAP server, use LDAP_HOST<br />
+					and LDAP_PORT to specify the IP address or DNS name and port number of the host.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">LDAP_TYPE<br />
+					LDAP_SID<br />
+					LDAP_PEER</span></p>
+			</td>
+			<td>
+				<p>Set LDAP_TYPE=1 for OpenLDAP with no replication. LDAP_TYPE=2 corresponds to OpenLDAP with replication.</p>
+				<p>If your Edge topology uses a single OpenLDAP server, specify 1. If your Edge installation uses multiple OpenLDAP nodes, such as in a 13-node production installation, specify 2.</p>
+				<p>If you enable replication, set the following properties:</p>
+				<ul>
+					<li>LDAP_SID=1 - Unique ID for this LDAP server. Each LDAP node uses a different ID. For example, set to 2 for LDAP peer.</li>
+					<li>LDAP_PEER=10.0.0.1 - IP or DNS name of LDAP peer.</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">BIND_ON_ALL_INTERFACES</span></p>
+			</td>
+			<td>
+				<p>If set to "y" then the Router/Message Processor bind (listen) on all interfaces (IPs). If set to “n” then the Router/Message Processor bind (listen) on a specific interface, the IP returned by the "hostname -i" command).</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">MP_POD</span></p>
+			</td>
+			<td>
+				<p>Specify the name of the Message Processor and Router pod. By default, the name is gateway. &nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">REGION</span></p>
+			</td>
+			<td>
+				<p>Region name. By convention, names are typically in the form dc-# where # corresponds to an integer value. For example, dc-1, dc-2, etc. You can use dc-1 unless installing in a multi-data center environment.</p>
+				<p>In a multiple data center installation, the value is dc-1, or dc-2, etc. depending on which data center you are installing. However, you are not restricted to using only names in the form dc-#. You can use any name for the region.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">ZK_HOSTS</span></p>
+			</td>
+			<td>
+				<p>The IP addresses or DNS names of the ZooKeeper nodes. The IP addresses or DNS names must be listed in the same order on all ZooKeeper nodes.</p>
+				<p>In a multi-data center environment, list all ZooKeeper nodes from both data centers.</p>
+				<p>Specify the “:observer” modifier &nbsp;on ZooKeeper nodes only when creating multiple data centers as described in a 12-host installation. In a single data center installation, omit that modifier. See <a href="#orderofcomponentinstallation-12hostclusteredinstallation">12-host clustered installation </a>for more.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">ZK_CLIENT_HOSTS</span></p>
+			</td>
+			<td>
+				<p>The IP addresses or DNS names of the ZooKeeper nodes used by this data center. The IP addresses or DNS names must be listed in the same order on all ZooKeeper nodes.</p>
+				<p>In a single data center installation, these are the same nodes as specified by ZK_HOSTS.</p>
+				<p>In a multi-data center environment, list only the ZooKeeper nodes in this data center. See <a href="#orderofcomponentinstallation-12hostclusteredinstallation">12-host clustered installation </a>for more.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">CASS_HOSTS</span></p>
+			</td>
+			<td>
+				<p>The IP addresses (not DNS names) of the Cassandra nodes. The first two nodes will be used as seed servers. The IP addresses must be listed in the same order on all Cassandra nodes.</p>
+				<p>Cassandra nodes can have an optional “:dc,ra” suffix that specifies the data center and rack of the Cassandra node. Specify this modifier only when creating multiple data centers as described in a 12-host installation. In a single data center installation, omit that modifier.</p>
+				<p>For example '192.168.124.201:1,1 = datacenter 1 and rack/availability zone 1, and '192.168.124.204:2,1 = datacenter 2 and rack/availability zone 1.</p>
+				<p>In a multi-datacenter environment, to overcome firewall issues, CASS_HOSTS have to be ordered in a manner (as shown in above example) such that the nodes of the current datacenter are placed at the beginning. See <a href="#orderofcomponentinstallation-12hostclusteredinstallation">12-host clustered installation </a>for more.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">CASS_AUTH<br />
+					CASS_USERNAME</span></p>
+				<p><span style="font-family:courier new,courier,monospace;">CASS_PASSWORD</span></p>
+			</td>
+			<td>
+				<p>If you enable Cassandra authentication, CASS_AUTH=y, you can pass the Cassandra user name and password by using these properties.</p>
+			</td>
+		</tr>
+		<tr>
+			<td><span style="font-family:courier new,courier,monospace;">PG_PWD</span></td>
+			<td>
+				<p>By default, the PostgreSQL database has two users defined: 'postgres' and 'apigee'. Both users have a default password of 'postgres'. Use <span style="font-family:courier new,courier,monospace;">PG_PWD</span>&nbsp;to set the password to a different value for both users at install time.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">PG_MASTER</span></p>
+				<p><span style="font-family:courier new,courier,monospace;">PG_STANDBY</span></p>
+			</td>
+			<td>
+				<p>Set to enable Postgres master-standby replication, in the form:</p>
+				<p>PG_MASTER=<strong><em>IPorDNSofNewMaster</em></strong></p>
+				<p>PG_STANDBY=<strong><em>IPorDNSofOldMaster</em></strong></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p><span style="font-family:courier new,courier,monospace;">SKIP_SMTP<br />
+					SMTPHOST<br />
+					SMTPUSER<br />
+					SMTPPASSWORD<br />
+					SMTPSSL<br />
+					SMTPPORT<br />
+					SMTPMAILFROM</span></p>
+			</td>
+			<td>
+				<p>Configure SMTP so Edge can send emails for lost passwords and other notifications.</p>
+				<p>If SMTP user credentials are not required, omit <span style="font-family:courier new,courier,monospace;">SMTPUSER</span> and <span style="font-family:courier new,courier,monospace;">SMTPPASSWORD</span>.</p>
+				<p><span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> is required.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>&nbsp;</p>

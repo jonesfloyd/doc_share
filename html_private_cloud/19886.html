@@ -1,0 +1,44 @@
+<h1> Installation Checklist </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.16.09</em></p>
+<p>The checklist covers the preceding prerequisites and provides a list of required files to obtain before proceeding. Here is a summary of the primary requirements covered there.</p>
+<div class="note">
+	<p>If an older version of Apigee Edge for Private Cloud was installed on the machine, ensure that you delete the folder /tmp/java before a new installation.</p>
+	<p>If user "apigee" was created prior to the installation, ensure that "/home/apigee" exists as home directory and is owned by “apigee:apigee”.</p>
+</div>
+<ul>
+	<li><strong>Edge system administrator credentials</strong>: As part of the installation, you are prompted to specify an email address and password used to create the Edge system administrator account. Never use these credentials for anything other than Edge system administration. You can later create different users and user types to create and manage API proxies, apps, and all other user-level tasks. &nbsp;<br />
+		<br />
+		To change the administrator password do not use the Edge UI to change the administrator password. &nbsp;See <a href="http://docs.apigee.com/node/20356">http://docs.apigee.com/node/20356</a>&nbsp;for more information.&nbsp;</li>
+	<li><strong>OS</strong>: For operating system requirements, see <a href="https://apigee.com/docs/api-services/reference/supported-software">https://apigee.com/docs/api-services/reference/supported-software</a>.</li>
+	<li><strong>Java</strong>: Java requirements are covered under Prerequisites above. Refer to <a href="https://apigee.com/docs/api-services/reference/supported-software">https://apigee.com/docs/api-services/reference/supported-software</a>.<br />
+		<br />
+		Ensure that <span style="font-family:courier new,courier,monospace;">JAVA_HOME</span> points to the root of the JDK for the user performing the installation.</li>
+	<li><strong>Firewalls</strong>: Firewall/host requirements are covered under Prerequisites above. See <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> before proceeding.</li>
+	<li><strong>TCP Wrappers</strong>: TCP Wrappers can block communication of some ports and can affect OpenLDAP, Postgres, and Cassandra installation. On those nodes, check <span style="font-family:courier new,courier,monospace;">/etc/hosts.allow</span> and <span style="font-family:courier new,courier,monospace;">/etc/hosts.deny</span> to ensure that there are no port restrictions on the required OpenLDAP, Postgres, and Cassandra ports.</li>
+	<li><strong>SELinux</strong>: Depending on your settings for SELinux, Edge can encounter issues with installing and starting Edge components. If necessary, you can disable SELinux or set it to permissive mode during installation, and then re-enabling it after installation. See <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a> for more.</li>
+	<li><strong>iptables</strong>: Validate that there are no iptables policies preventing connectivity between nodes on the required Edge ports. If necessary, you can stop iptables during installation using the command:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; sudo /etc/init.d/iptables stop</span><br />
+		<br />
+		<div><span style="font-family:courier new,courier,monospace;"><span style="font-family:arial,helvetica,sans-serif;">On CentOS 7.x:</span></span></div>
+		<div><span style="font-family:courier new,courier,monospace;">&gt; systemctl stop firewalld</span></div>
+		<div>&nbsp;</div>
+	</li>
+	<li><strong>License file</strong>: A valid license file must be obtained to install Apigee Edge. Licensing information is covered under Prerequisites above. Refer to <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> before proceeding.</li>
+	<li><strong>Distribution files</strong>: The Apigee Edge distribution files are installed as a set of RPMs and dependencies.</li>
+	<li><strong>System limits</strong>:
+		<ul>
+			<li>On Cassandra nodes, set soft and hard memlock, nofile, and address space (as) limits for installation user (default is “apigee") in <span style="font-family:courier new,courier,monospace;">/etc/security/limits.conf </span>as shown below:<br />
+				<span style="font-family:courier new,courier,monospace;">apigee soft memlock unlimited<br />
+				apigee hard memlock unlimited<br />
+				apigee soft nofile 32768<br />
+				apigee hard nofile 65536<br />
+				apigee soft as unlimited<br />
+				apigee hard as unlimited</span></li>
+			<li>On Message Processor nodes, set the maximum number of open file descriptors to 64K by using the command:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; ulimit -n 65535</span><br />
+				<br />
+				If necessary, you can raise that limit. For example, if you have a large number of temporary files open at any one time.</li>
+		</ul>
+	</li>
+</ul>
+<div>&nbsp;</div>

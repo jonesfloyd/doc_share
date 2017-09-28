@@ -1,0 +1,62 @@
+<h1> Adding or removing Qpid nodes </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>This document describes how to add and remove a Qpid server in an existing Edge installation.</p>
+<h2>Add a Qpid server</h2>
+<p>To add a Qpid server:</p>
+<ol>
+	<li>On the Management Server, determine the name of the analytics and consumer groups.<br />
+		<br />
+		Many of the commands below require that information. By default, the name of the analytics group is <span style="font-family:courier new,courier,monospace;">axgroup-001</span>, and the name of the consumer group is <span style="font-family:courier new,courier,monospace;">consumer-group-001</span>. In the silent config file for a region, you can set the name of the analytics group by using the <span style="font-family:courier new,courier,monospace;">AXGROUP</span> property.<br />
+		<br />
+		If you are unsure of the names of the analytics and consumer groups, use the following command to display them:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; apigee-adminapi.sh analytics groups list --admin adminEmail --pwd adminPword --host localhost</span><br />
+		<br />
+		This command returns the analytics group name in the <span style="font-family:courier new,courier,monospace;">name</span> field, and the consumer group name in the <span style="font-family:courier new,courier,monospace;">consumer-groups</span> field.</li>
+	<li>Install the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility on the node using the internet or non internet procedure as described in <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+	<li>Use <span style="font-family:courier new,courier,monospace;">apigee-setup.sh</span> to install Qpid on the node:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt</span><inst_root><span style="font-family:courier new,courier,monospace;">/apigee/apigee-setup/bin/setup.sh -p qs -f <em><strong>configFile</strong></em> </span><br />
+		<br />
+		The "-p qs" option specifies to install Qpid. See <a href="http://docs.apigee.com/node/19901">http://docs.apigee.com/node/19901</a> for information on creating a <em><strong>configFile</strong></em>.<br />
+		<br />
+		When the installation completes, the script displays the UUID of the Qpid server. If you need to determine the UUID later, use the following cURL command on the host where you installed Qpid:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; curl http://</span><router_ip><span style="font-family:courier new,courier,monospace;">:</span></router_ip><span style="font-family:courier new,courier,monospace;">&lt;<em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>ms_IP</strong></em>&gt;:8083/v1/servers/self</span></inst_root></li>
+	<li>Add Qpid to the analytics group:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;curl -u <em><strong>adminEmail:pword</strong></em> -H "Content-Type: application/json" -X POST "http://&lt;<em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>ms_IP</strong></em>&gt;:8080/v1/analytics/groups/ax/<em><strong>AX_GROUP</strong></em>/servers?uuid=<em><strong>QPID_UUID</strong></em>&amp;type=qpid-server"</span><br />
+		<br />
+		In the output, you see the UUID of the Qpid node added to the <span style="font-family:courier new,courier,monospace;">qpid-server</span> property onder axgroup-001:<br />
+		<span style="font-family:courier new,courier,monospace;">{<br />
+		&nbsp; "name" : "axgroup-001",<br />
+		&nbsp; "properties" : {},<br />
+		&nbsp; "scopes" : [ "VALIDATE~test", "sgilson~prod" ],<br />
+		&nbsp; "uuids" : {<br />
+		&nbsp; &nbsp; "<strong>qpid-server</strong>" : [ "d6d0480f-8393-465d-a2a1-b4a16a033c55", "8398a95c-3640-4bd9-bf7e-1eb89155810a" ],</span></li>
+	<li>Add Qpid to the consumer group:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;curl -u <em><strong>adminEmail:pword</strong></em> -H "Content-Type: application/json" -X POST "http://&lt;<em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>ms_IP</strong></em>&gt;:8080/v1/analytics/groups/ax/<em><strong>AX_GROUP</strong></em>/consumer-groups/<em><strong>CONSUMER_GROUP</strong></em>/consumers?uuid=<em><strong>QPID_UUID</strong></em>"</span><br />
+		<br />
+		In the output, you see the UUID of the Qpid node added to the <span style="font-family:courier new,courier,monospace;">consumer-groups</span> property under <span style="font-family:courier new,courier,monospace;">consumer-group-001</span>.<br />
+		<span style="font-family:courier new,courier,monospace;">"consumer-groups" : [ {<br />
+		&nbsp; "name" : "consumer-group-001",<br />
+		&nbsp; "<strong>consumers</strong>" : [ "d6d0480f-8393-465d-a2a1-b4a16a033c55", "8398a95c-3640-4bd9-bf7e-1eb89155810a" ],</span></li>
+</ol>
+<p>The installation is complete.</p>
+<h2>Remove a Qpid server</h2>
+<p>To remove a Qpid node:</p>
+<ol>
+	<li>On the Management Server, determine the name of the analytics and consumer groups. Many of the commands below require that information.<br />
+		<br />
+		By default, the name of the analytics group is <span style="font-family:courier new,courier,monospace;">axgroup-001</span>, and the name of the consumer group is <span style="font-family:courier new,courier,monospace;">consumer-group-001</span>. In the silent config file for a region, you can set the name of the analytics group by using the <span style="font-family:courier new,courier,monospace;">AXGROUP</span> property.<br />
+		<br />
+		If you are unsure of the names of the analytics and consumer groups, use the following command to display them:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; apigee-adminapi.sh analytics groups list --admin adminEmail --pwd adminPword --host localhost</span><br />
+		<br />
+		This command returns the analytics group name in the name field, and the consumer group name in the consumer-groups field.</li>
+	<li>Remove Qpid from the consumer group:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;curl -u <em><strong>adminEmail:pword</strong></em> -H "Content-Type: application/json" -X DELETE "http://</span><ms_ip><span style="font-family:courier new,courier,monospace;">&lt;<em><strong>ms_IP</strong></em>&gt;:8080/v1/analytics/groups/ax/<em><strong>AX_GROUP</strong></em>/consumer-groups/<em><strong>CONSUMER_GROUP</strong></em>/consumers/<em><strong>QPID_UUID</strong></em>" </span></ms_ip></li>
+	<li>Remove Qpid from the analytics group:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;curl -v -u <em><strong>adminEmail:pword&nbsp;</strong></em>-X DELETE "http://&lt;<em><strong>ms_IP</strong></em>&gt;</span><ms_ip><span style="font-family:courier new,courier,monospace;">:8080/v1/analytics/groups/ax/<em><strong>AX_GROUP</strong></em>/servers?uuid=<em><strong>QPID_UUID</strong></em>&amp;type=qpid-server" </span></ms_ip></li>
+	<li>Deregister the Qpid server from the Edge installation:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; curl -u <em><strong>adminEmail:pword</strong></em>&nbsp;-X POST http://&lt;<em><strong>ms_IP</strong></em>&gt;:8080/v1/servers -d "type=qpid-server&amp;region=dc-1&amp;pod=central&amp;uuid=<em><strong>QPID_UUID</strong></em>&amp;action=remove"</span></li>
+	<li>Remove the Qpid&nbsp;server from the Edge installation:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; curl -u <em><strong>adminEmail:pword</strong></em>&nbsp;-X DELETE http://&lt;<em><strong>ms_IP</strong></em>&gt;:8080/v1/servers/<em><strong>QPID_UUID</strong></em></span></li>
+	<li>Uninstall Qpid as described at <a href="http://docs.apigee.com/node/20406">http://docs.apigee.com/node/20406</a>.</li>
+</ol>

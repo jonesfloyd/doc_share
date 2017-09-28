@@ -1,0 +1,35 @@
+<h1> Edge Installer for Pivotal Cloud Foundry </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.16.09</em></p>
+<p>A deployment environment for Edge for the Private Cloud typically consists of at least nine separate servers, and more commonly 13 or more servers. The interactive installation process of Edge requires you to predefine and preconfigure each server, then install Edge components on each server in a specific order.</p>
+<p>You can optionally choose to install additional Edge components. These components require additional servers:</p>
+<ul>
+	<li>Apigee BaaS requires an additional six or more servers.</li>
+	<li>The Edge Monitoring Dashboard requires an additional server.</li>
+	<li>The Developer Services portal requires an additional server.</li>
+</ul>
+<p>Once installed, you must log in to an individual server to modify or update the installation. If you want to add additional Edge components or servers to the installation, you might have to log in to each existing Edge server to modify it.</p>
+<p>Alternatively, you can use Pivotal Operations Manager (Ops Manager) to install and manage an Edge installation. Pivotal Ops Manager &nbsp;simplifies the installation and management of cloud software by allowing you to install Edge across any number of VMs through a single Ops Manager interface. You can then use Ops Manager to scale up an Edge installation by adding additional VMs to support additional Edge components, modify the properties of an individual Edge component, and perform other maintenance tasks.&nbsp;</p>
+<h2>About Pivotal Ops Manager</h2>
+<p>Pivotal’s Ops Manager is a graphical web interface that you use to install and manage the set of supported pre-configured products and components on Pivotal Supported Cloud Platforms (AWS, vSphere, Openstack, GCP, &nbsp;etc.) in a uniform way.&nbsp;</p>
+<p>Ops Manager relies on an open-source tool, called BOSH, that can handle the deployment, creation and management of a distributed system on the supported cloud infrastructures. Ops Manager hides the complexity of generating cloud specific deployment manifests and configurations involved with BOSH by allowing you to install, configure, and manage products through the Ops Manager UI. Products should conform to a package structure known as a Pivotal Tile that allows Ops Manager to generate the related forms and allow the various components to be configured, linked, scaled, and managed.</p>
+<p>For more details on Pivotal Ops Manager, see:</p>
+<ul>
+	<li><a href="http://docs.pivotal.io/pivotalcf/1-8/customizing/">Ops Manager</a></li>
+	<li><a href="https://network.pivotal.io/products/ops-manager">Download Ops Manager</a></li>
+	<li><a href="https://docs.pivotal.io/partners/tiles.html">Pivotal Tiles</a></li>
+</ul>
+<p>For more on BOSH, see:</p>
+<ul>
+	<li><a href="https://github.com/cloudfoundry/bosh">BOSH GitHup repo</a></li>
+	<li><a href="http://bosh.io/">BOSH web site</a></li>
+</ul>
+<h2>About Edge</h2>
+<p>For more information about Edge, see:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/20741">http://docs.apigee.com/node/20741</a></li>
+	<li><a href="http://docs.apigee.com/node/18021">http://docs.apigee.com/node/18021</a></li>
+	<li><a href="http://docs.apigee.com/node/14794">http://docs.apigee.com/node/14794</a></li>
+	<li><a href="http://docs.apigee.com/node/292">http://docs.apigee.com/node/292</a></li>
+	<li><a href="http://docs.apigee.com/sites/docs/files/EdgeMonitoringDashboardBeta.pdf">Monitoring Dashboard</a></li>
+</ul>
+<div>&nbsp;</div>

@@ -1,0 +1,29 @@
+<h1> API BaaS Installation Overview </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<div class="note">
+	<p>The <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> details the installation prerequisites and provides a list of required files to obtain before proceeding with the installation. Ensure that you have reviewed the requirements before beginning the installation process.&nbsp;</p>
+</div>
+<h2>Using a Load Balancer</h2>
+<p>A production installation of API BaaS uses a load balancer between the API BaaS Portal node and API BaaS Stack nodes. When configuring the Portal, you specify the IP address or DNS name of the load balancer, not of the Stack nodes.</p>
+<p>As an alternative to a load balancer, you could use round-robin DNS. In this scenario, you create a DNS entry with multiple A records corresponding to BaaS stack IP addresses. During a DNS lookup, the DNS server automatically returns A record values in a round robin fashion.</p>
+<div class="note">
+	<p>API BaaS testing and development environments can install all components on a single node, or with a single API BaaS Stack node. If your installation uses a single API BaaS Stack node, the load balancer is not required and you can specify the IP address or DNS name of the API BaaS Stack when configuring the Portal.</p>
+</div>
+<h2>Connecting to Cassandra</h2>
+<p>When installing BaaS, you can choose to connect BaaS and Edge to the same Cassandra cluster, or create a separate Cassandra cluster for BaaS. Smaller BaaS installations, meaning those with lower traffic volumes, often share a Cassandra cluster with Edge.</p>
+<p>For the high throughput and availability, or to separate Cassandra clusters into different network zones, Apigee recommends that you use separate Cassandra clusters. Separate clusters maximize performance if you are experiencing high traffic loads on BaaS. &nbsp;</p>
+<h2>Date synchronization</h2>
+<p>You must have the date/time on all servers synchronized. If not already configured, ‘ntpdate’ utility could serve this purpose, which verifies whether servers are time synchronized. You can use “yum install ntp” to install the utility.&nbsp;</p>
+<h2>Tomcat security</h2>
+<p>The API BaaS installer also installs the Apache Tomcat server on all API BaaS Stack nodes, including the Tomcat administrator UI. The installer leaves the default administrator credentials unchanged from admin:admin.&nbsp;</p>
+<p>If necessary, you can change these credentials as part of securing Tomcat. For more information, see:</p>
+<ul>
+	<li><a href="http://https://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html">https://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html&nbsp;</a></li>
+	<li><a href="https://www.owasp.org/index.php/Securing_tomcat">https://www.owasp.org/index.php/Securing_tomcat</a></li>
+</ul>
+<h2>Installing BaaS in multiple data centers</h2>
+<p>You can install API BaaS across multiple data centers. The typical procedure is:</p>
+<ul>
+	<li>Install the first data center as descrbed at <a href="http://docs.apigee.com/node/19931">http://docs.apigee.com/node/19931</a>.</li>
+	<li>Add the second data center to the first as described at <a href="http://docs.apigee.com/node/23781">http://docs.apigee.com/node/23781</a>.</li>
+</ul>

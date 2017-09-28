@@ -1,0 +1,107 @@
+<h1> Developer Services portal requirements </h1>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.17.05</em></p>
+<div class="note">
+	<p>Do not install Developer Channel Services portal on the same servers as Apigee Edge.</p>
+</div>
+<p>Following are the hardware and software requirements for installation.</p>
+<table class="table">
+	<tbody>
+		<tr>
+			<td>
+				<p><strong>Hardware</strong></p>
+			</td>
+			<td>
+				<p><strong>Requirement</strong></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Operating system</p>
+			</td>
+			<td>
+				<p>These installation instructions and the supplied installation files have been tested on the operating systems listed here: <a href="https://apigee.com/docs/api-services/reference/supported-software">https://apigee.com/docs/api-services/reference/supported-software</a></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>RAM</p>
+			</td>
+			<td>
+				<p>1 GB</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Hard disk</p>
+			</td>
+			<td>
+				<p>10 GB</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Network interface</p>
+			</td>
+			<td>
+				<p>Active internet connection required.</p>
+				<p>As part of the installation process, the installer downloads resources from the web. If your environment is set up to proxy outgoing HTTP and HTTPS requests, then your proxy must be configured to correctly handle redirected requests that might occur during a download.</p>
+				<p>For example, a request to <span style="font-family:courier new,courier,monospace;">https://drupal.org/</span> returns an HTTP 301 status code and redirects to <span style="font-family:courier new,courier,monospace;">https://www.drupal.org/</span>.</p>
+				<p>Your proxy should be configured to return an HTTP 200 status code with the requested content from the redirect.</p>
+				<p>For SAP installations, if your environment is set up to proxy outgoing HTTPS requests, then your proxy must support TLSv1.0. OpenSSL 0.9.8 does not support TLSv1.1 or TLSv1.2, only TLSv1.0.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Red Hat Enterprise Linux (RHEL) Requirements&nbsp;</h2>
+<p>RHEL has extra requirements due to a subscription needed to access software downloads from Red Hat. The server must be able to connect to the Internet to download RPMs via yum. If using RHEL, the server must be registered on the Red Hat Network (RHN) and registered to the server optional channel.&nbsp;</p>
+<p>The Red Hat requirements are checked during the install and the portal installer prompts you if RHEL is not already registered. If you already have Red Hat login credentials, you can use the following command to register RHEL before beginning the installation process:</p>
+<pre>
+&gt; subscription-manager register --username=<em><strong>my_username</strong></em> --password=<em><strong>my_password</strong></em> --auto-attach </pre>
+<p>Replace <em><strong>my_username</strong></em> and <em><strong>my_password</strong></em> with your Red Hat credentials.</p>
+<p>If you have a trial version of RHEL, you can obtain a 30-day trial license. See <a href="https://access.redhat.com/solutions/32790">https://access.redhat.com/solutions/32790</a> for more information.</p>
+<!--<h2>SUSE Enterprise Linux Server Requirements</h2>
+<div class="note">
+	<p>Non-networked installation is not supported for SUSE Linux Enterprise Server at this time.</p>
+</div>
+<p>On SUSE 12 and above, you need to have the following extensions and modules enabled:&nbsp;</p>
+<ul>
+	<li>SUSE Linux Enterprise Software Development Kit&nbsp;</li>
+	<li>Web and Scripting Module &nbsp;</li>
+</ul>
+<p>The extensions and modules can be installed during server installation or by using the YaST tool after the server is installed.</p>-->
+<h2>SMTP requirements</h2>
+<p>Apigee requires that you configure an SMTP server to send email messages from the portal.&nbsp;Therefore, you must ensure that the Drupal can access the necessary port on the SMTP server. For non-TLS SMTP, the port number is typically 25. For TLS-enabled SMTP, it is often 465, but check with your SMTP provider.&nbsp;</p>
+<h2>Additional Requirements&nbsp;</h2>
+<p>In order to perform the installation, the user installing the software must have root access.&nbsp;</p>
+<h2>Deployment Architecture Requirements&nbsp;</h2>
+<p>Developer Channel Services has a single interface with the Apigee Management Server via a REST API in order to store and retrieve information about a user’s applications. Developer Channel Services will need to be able to connect to the Management Server via HTTP or HTTPS, depending on your installation.&nbsp;</p>
+<p><img alt="" src="../html/sites/docs/files/DevPortalconnectionflow.png" style="width: 602px; height: 200px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<h2>Information Required Before You Start the Install</h2>
+<p>Before starting the install, you must have the following information available:</p>
+<ol>
+	<li>Which platform are you configuring: Red Hat or CentOS? If this is a Red Hat install, the machine must be registered on the Red Hat Network to download RPMs.</li>
+	<li>Do you plan on installing MySQL on the local machine? Some HA installations require MySQL to be on a different machine than the one serving the portal web pages. If this is the case, do not install MySQL locally. If you want a simple install with everything on the same machine, then install MySQL locally.</li>
+	<li>If you intend to access a remote MySQL server, the hostname, port, database name, username, and password of the remote MySQL server. The remote MySQL server should already be configured before you start the installation.</li>
+	<li>What is the fully-qualified domain name of the web server? (This information will be added to /etc/hosts.) This should be an IP address or hostname, such as <span style="font-family:courier new,courier,monospace;">portalserver.example.com</span>. The default value is <span style="font-family:courier new,courier,monospace;">localhost</span>.</li>
+	<li>There are three pieces of information that allow your portal to communicate with the Apigee Edge management server. This information is as follows:
+		<ol style="list-style: lower-alpha outside">
+			<li><strong>URL of the Apigee Management API Endpoint</strong>: This will be either a hostname or an IP address. This is the REST endpoint to which all calls are made to create apps and register developers for app keys. The default endpoint is <span style="font-family:courier new,courier,monospace;">https://api.enterprise.apigee.com/v1</span>.&nbsp;<br />
+				<br />
+				For an Edge for Private Cloud installation, the URL is in the form:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">http://<em><strong>EdgeIp</strong></em>:8080/v1</span><br />
+				<br />
+				or:<br />
+				<span style="font-family:courier new,courier,monospace;">https://<em><strong>EdgeIp:SSLport</strong></em>/v1</span><br />
+				<br />
+				Where <em><strong>EdgeIp</strong></em> is the IP address of the Edge management server and <em><strong>SSLport</strong></em> is the SSL port for the Edge management API. For example, 8443.&nbsp;</li>
+			<li><strong>Apigee Organization name</strong>: There is a relationship between portals and Apigee Edge organizations. You will set up the default organization when you set up the Management API Endpoint. The default value is my-org.</li>
+			<li><strong>Username and password for the management API endpoint</strong>: The calls from the portal to Edge must be performed by an administrator for your organization.&nbsp;<br />
+				<br />
+				This username/password is for an administrator on your organization and should be used only for connecting to Edge from the portal. For example, if you specify the credentials of a user, and that user is ever deleted on Edge, then the portal will no longer be able to connect to Edge. Therefore, create an administrator on your organization just for this connection.&nbsp;<br />
+				<br />
+				For example:<br />
+				<span style="font-family:courier new,courier,monospace;">dc_devportal+ORGNAME@apigee.com:MyP@ssw0rd</span></li>
+		</ol>
+	</li>
+</ol>
+<div>&nbsp;</div>

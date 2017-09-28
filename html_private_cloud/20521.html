@@ -1,0 +1,18 @@
+<h1> Apache Zookeeper Maintenance Tasks </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<h2>Four-Letter Commands</h2>
+<p>Apache ZooKeeper has a number of "four-letter commands" that can be helpful in determining the current status of ZooKeeper voter and observer nodes. &nbsp;These commands can be invoked using "<span style="font-family:courier new,courier,monospace;">nc</span>", "<span style="font-family:courier new,courier,monospace;">telnet</span>" or another utility that has the ability to send commands to a specific port. &nbsp;Details on the four-letter commands can be found at:</p>
+<p><a href="http://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_zkCommands.">http://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_zkCommands.</a></p>
+<h2>Removing Old Snapshot Files</h2>
+<p>Apache ZooKeeper also requires periodic maintenance to remove old snapshot files which accumulate as updates to the system are made.&nbsp;You typically remove old snapshot files as part of a regular maintenance task or when you notice that free disk space is below a threshold. &nbsp;</p>
+<p>Instructions on how to clean up old snapshots can be found at&nbsp;</p>
+<p><a href="http://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_maintenance.">http://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_maintenance.</a></p>
+<h2>Log File Maintenance</h2>
+<p>Apache Zookeeper log files are kept in <span style="font-family:courier new,courier,monospace;">/opt/apigee/var/log/zookeeper</span>. Normally, log file maintenance should not be required, but if you find that there are an excessive number of ZooKeeper logs or that the logs are very large you can modify ZooKeeper’s log4j properties to set the maximum file size and file count. &nbsp;</p>
+<ol>
+	<li>Edit <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/zookeeper.properties</span> to set the following properties. If that file does not exist, create it:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_log4j_log4j.appender.rollingfile.maxfilesize=10MB &nbsp;# max file size<br />
+		conf_log4j_log4j.appender.rollingfile.maxbackupindex=50 # max open files</span></li>
+	<li>Restart ZooKeeper by using the commands:<br />
+		<span style="font-family:courier new,courier,monospace;">$ /opt/apigee/apigee-service/bin/apigee-service apigee-zookeeper restart</span></li>
+</ol>

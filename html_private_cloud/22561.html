@@ -1,0 +1,346 @@
+<h1> Uploading API Traffic Data to Apigee - Beta Release </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>All Edge for Private Cloud customers are required to submit to Apigee statistics about API proxy traffic. Apigee recommends that customers upload that information once a day, possibly by creating a cron job.&nbsp;</p>
+<p>You must submit the data for your production API deployments, but not for APIs in development or testing deployments. In most Edge installations, you will define specific organizations or environments for your production APIs. The data that you submit is only for those production organizations and environments.</p>
+<p>To assist in uploading this data, Apigee provides the Beta release of the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command-line utility. This utility &nbsp;sends the API call volume report back to Apigee. Every Edge for the Private Cloud installation can use this utility to retrieve and report traffic data to Apigee.</p>
+<div class="note">
+	<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility requires an external internet connection to upload data to Apigee. If you do not have a machine with external internet connection, you can use the Edge API to gather statistics, transfer that data to a machine with internet access, and then upload the data to Apigee. See <em>Manually uploading data to Apigee</em>&nbsp;below for more.</p>
+</div>
+<p>For additional information on the process of uploading traffic data to Apigee, see the <a href="https://www.npmjs.com/package/apigee-analytics-collector#faq">FAQ</a>.</p>
+<div class="video">
+	<p>Watch a short video to see the tool in action.</p>
+	<iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/wPV15S5azZs" width="854"></iframe></div>
+<h2>Installing apigee-analytics-collector</h2>
+<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility is a Node.js module that you install by using <span style="font-family:courier new,courier,monospace;">npm</span>.</p>
+<h3>Installation requirements</h3>
+<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility requires:</p>
+<ul>
+	<li>npm 2.x or later</li>
+	<li>Node.js 4.x.</li>
+</ul>
+<h3>Where to install</h3>
+<p>The node on which you install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility can be any node that can access the Edge management API on the Edge Management Server. You can install it directly on the Management Server, on another node of the Edge installation, or on a separate node as long as that node can make API requests to the Management Server.&nbsp;</p>
+<h3>Internet access requirements</h3>
+<p>Install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility on a machine with external internet access. Then the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility can upload data directly to Apigee.</p>
+<p>If there is no node with both access to the Edge management API on the Edge Management Server and with external internet access, then you can use the Edge management API to save the traffic data locally. You must then transfer the data to a machine with internet access for upload to Apigee. In this scenario, you do not need to use the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility. See <em>Manually uploading data to Apigee</em>&nbsp;below for more.</p>
+<h3>Installation&nbsp;</h3>
+<p>Use the following command to install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility:</p>
+<pre>
+&gt; npm install apigee-analytics-collector -g</pre>
+<div class="note">
+	<p>The <span style="font-family:courier new,courier,monospace;">-g</span> option places the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command in your <span style="font-family:courier new,courier,monospace;">PATH</span>. On some machines, you might have to use <span style="font-family:courier new,courier,monospace;">sudo</span> with the <span style="font-family:courier new,courier,monospace;">-g</span> option. Typically, the <span style="font-family:courier new,courier,monospace;">-g</span> option places modules in <span style="font-family:courier new,courier,monospace;">/usr/local/lib/node_modules/apigee-analytics-cli</span>. If you omit <span style="font-family:courier new,courier,monospace;">-g</span>, then you must add&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-analytics-cli</span>&nbsp; to your <span style="font-family:courier new,courier,monospace;">PATH</span> manually.&nbsp;</p>
+</div>
+<h2>Running apigee-analytics-collector&nbsp;</h2>
+<p>This section describes how to run the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility.&nbsp;</p>
+<h3>Required information to run apigee-analytics-collector</h3>
+<p>You need the following information to run the apigee-analytics-collector command and to forward data to Apigee:</p>
+<ul>
+	<li><strong>apigee_mgmt_api_uri</strong>: The base URL of the Edge API on your Management Server. This URL is typically in the form:<br />
+		<span style="font-family:courier new,courier,monospace;">http://<em><strong>ms_IP</strong></em>:8080/v1</span><br />
+		<br />
+		Where <em><strong>ms_IP</strong></em> is the IP address or your Management Server and 8080 is the port used by the Edge API. If you created a DNS entry for the Edge API, then the URL is in the form:<br />
+		<span style="font-family:courier new,courier,monospace;">http://<em><strong>ms_DNS</strong></em>/v1</span><br />
+		<br />
+		If you enable TLS on the Edge management API, then it is in the form:<br />
+		<span style="font-family:courier new,courier,monospace;"><strong>https</strong>://ms_IP:8080/v1<br />
+		<strong>https</strong>://ms_DNS/v1</span></li>
+	<li><strong>apigee_mgmt_api_email</strong>: The email address of an account with access to the Edge <span style="font-family:courier new,courier,monospace;">/stats</span> APIs. Often this will be the Edge system administrator's email, or the email of the organization administrator for your production organizations.</li>
+	<li><strong>apigee_mgmt_api_password</strong>: The Edge password for the account specified by <strong>apigee_mgmt_api_email</strong>.</li>
+	<li><strong>apigee_analytics_client_id</strong> and <strong>apigee_analytics_secret</strong>: Your credentials for uploading data to Apigee. Please submit a ticket with <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a> to obtain <strong>apigee_analytics_client_id</strong> and <strong>apigee_analytics_secret</strong>.</li>
+</ul>
+<h3>Example commands</h3>
+<p>Shown below is an example command to retrieve traffic data for all organizations and environments in the Edge installation and upload that data to Apigee:</p>
+<pre>
+&gt; apigee-analytics-collector export traffic \
+--<strong>apigee_mgmt_api_uri</strong> http://192.168.56.103:8080/v1 \
+--<strong>apigee_mgmt_api_email</strong> $ae_username \
+--<strong>apigee_mgmt_api_password</strong> $ae_password \
+--<strong>apigee_analytics_client_id</strong> $apigee_analytics_client_id \
+--apigee_analytics_secret $apigee_analytics_secret</pre>
+<p>Notice that the command contains all required information, such as your <strong>apigee_analytics_client_id</strong> and <strong>apigee_analytics_secret</strong>.&nbsp;</p>
+<p>You should see results in the form:</p>
+<pre>
+[
+  {
+    "org": "myOrg",
+    "env": "prod",
+    "time_range_start": "08/27/2016 00:00",
+    "time_range_end": "08/30/2016 00:00",
+    "response": [
+      {
+        "store_org_env_metrics_hourly_v4": 1
+      }
+    ]
+  },
+  {
+    "org": "VALIDATE",
+    "env": "test",
+    "time_range_start": "08/27/2016 00:00",
+    "time_range_end": "08/30/2016 00:00",
+    "response": [
+      {
+        "store_org_env_metrics_hourly_v4": 1
+      }
+    ]
+  }
+]</pre>
+<p>Use command-line options to the command to control its actions. Use the following options to specify the organizations and environments to include in the generated data:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">-i, --include_orgs &lt;comma-separated list of items&gt;</span></li>
+	<li><span style="font-family:courier new,courier,monospace;">-x, --exclude_orgs &lt;comma-separated list of items&gt;</span></li>
+	<li><span style="font-family:courier new,courier,monospace;">-n, --include_envs &lt;comma-separated list of items&gt;</span></li>
+	<li><span style="font-family:courier new,courier,monospace;">-e, --exclude_envs &lt;comma-separated list of items&gt;</span></li>
+</ul>
+<p>For example, to specify only the production organizations and environments, use the <span style="font-family:courier new,courier,monospace;">-i</span> (or -<span style="font-family:courier new,courier,monospace;">-include_orgs</span>) and <span style="font-family:courier new,courier,monospace;">-n</span> (or <span style="font-family:courier new,courier,monospace;">--include_envs</span>) options:</p>
+<pre>
+&gt; apigee-analytics-collector export traffic <strong>-i myOrg -n prod</strong> \
+--apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
+--apigee_mgmt_api_email $ae_username \
+--apigee_mgmt_api_password $ae_password \
+--apigee_analytics_client_id $apigee_analytics_client_id \
+--apigee_analytics_secret $apigee_analytics_secret</pre>
+<p>In this example, you only collect data from the prod environment of <strong>myOrg</strong>.&nbsp;</p>
+<p>To dump the data to a screen to examine it before sending it to Apigee, use the <span style="font-family:courier new,courier,monospace;">-S</span> option:</p>
+<pre>
+&gt; apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S </strong>\
+--apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
+--apigee_mgmt_api_email $ae_username \
+--apigee_mgmt_api_password $ae_password \
+--apigee_analytics_client_id $apigee_analytics_client_id \
+--apigee_analytics_secret $apigee_analytics_secret </pre>
+<p>The <span style="font-family:courier new,courier,monospace;">-S</span> option omits the data upload to Apigee. You can then rerun the command without the <span style="font-family:courier new,courier,monospace;">-S</span> option to send the data to Apigee.</p>
+<p>One reason to use the <span style="font-family:courier new,courier,monospace;">-S</span> option is so that you can display different types of data locally. Apigee only requires that you upload API traffic data, but the <span style="font-family:courier new,courier,monospace;">-D</span> option lets you display data about API products, developers, apps, or API proxies. The example below uses the <span style="font-family:courier new,courier,monospace;">-D</span> and <span style="font-family:courier new,courier,monospace;">-S</span> options to display developer data locally:</p>
+<pre>
+&gt; apigee-analytics-collector export traffic <strong>-i myOrg -n prod -S -D devs</strong> \
+--apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
+--apigee_mgmt_api_email $ae_username \
+--apigee_mgmt_api_password $ae_password \
+--apigee_analytics_client_id $apigee_analytics_client_id \
+--apigee_analytics_secret $apigee_analytics_secret </pre>
+<p>Include the <span style="font-family:courier new,courier,monospace;">-v</span> option to get verbose output, and the <span style="font-family:courier new,courier,monospace;">-R</span> option to see the curl commands generated by <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span>:</p>
+<pre>
+ &gt; apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S -R -v </strong>\
+--apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
+--apigee_mgmt_api_email $ae_username \
+--apigee_mgmt_api_password $ae_password \
+--apigee_analytics_client_id $apigee_analytics_client_id \
+--apigee_analytics_secret $apigee_analytics_secret </pre>
+<p>The next section contains a complete list of command-line options.</p>
+<h3>Command parameters</h3>
+<p>The following table lists the complete set of options to the apigee-analytics-collector utility:</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<p><strong>Command</strong></p>
+			</th>
+			<th>
+				<p><strong>Use</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<p>-h, --help</p>
+			</td>
+			<td>
+				<p>Output usage information</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-D, --dimension <em>&lt;dimension&gt;</em></p>
+			</td>
+			<td>
+				<p>The traffic dimension to collect. Valid dimensions: <span style="font-family:courier new,courier,monospace;">apiproducts</span>, <span style="font-family:courier new,courier,monospace;">devs</span>, <span style="font-family:courier new,courier,monospace;">apps</span>, <span style="font-family:courier new,courier,monospace;">apiproxy</span> (default)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-d, --days <em>&lt;days&gt;</em></p>
+			</td>
+			<td>
+				<p>The past number of days, starting from the current date, of data to collect. The default is 3.</p>
+				<p>If you specify <span style="font-family:courier new,courier,monospace;">-d</span>, do not also specify <span style="font-family:courier new,courier,monospace;">-s</span> and <span style="font-family:courier new,courier,monospace;">-z</span> to set a time range.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-m, --apigee_mgmt_api_uri <em>&lt;apigee_mgmt_api_uri&gt;</em></p>
+			</td>
+			<td>
+				<p>URL to Edge management API.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-u, --apigee_mgmt_api_email <em>&lt;apigee_mgmt_api_email&gt;</em></p>
+			</td>
+			<td>
+				<p>The email address of an account with access to the Edge <span style="font-family:courier new,courier,monospace;">/stats</span> APIs. Often this will be the Edge system administrator's email, or the email of the organization administrator for your production organizations.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-p, --apigee_mgmt_api_password <em>&lt;apigee_mgmt_api_password&gt;</em></p>
+			</td>
+			<td>
+				<p>Password associated to the Edge management API email account specified by <span style="font-family:courier new,courier,monospace;">-u</span>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-i, --include_orgs<em> &lt;items&gt;</em></p>
+			</td>
+			<td>
+				<p>Comma-separated list of orgs to include in the output.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-x, --exclude_orgs <em>&lt;items&gt;</em></p>
+			</td>
+			<td>
+				<p>Comma-separated list of orgs to exclude from the output.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-n, --include_envs <em>&lt;items&gt;</em></p>
+			</td>
+			<td>
+				<p>Comma-separated list of environments to include in the output.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-e, --exclude_envs <em>&lt;items&gt;</em></p>
+			</td>
+			<td>
+				<p>Comma-separated list of environments to include from the output.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-o, --output <em>&lt;path&gt;</em></p>
+			</td>
+			<td>
+				<p>Path and filename to save output.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-s, --time_range_start <em>&lt;time_range_start&gt;</em></p>
+			</td>
+			<td>
+				<p>Time range to start for querying traffic stats, in the form: "03/01/2016 00:00".</p>
+				<p>If you specify -d, do not also specify -s and -z to set a time range.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-z, --time_range_end <em>&lt;time_range_end&gt;</em></p>
+			</td>
+			<td>
+				<p>Time range end for querying traffic stats, in the form: "04/01/2016 24:00".</p>
+				<p>If you specify -d, do not also specify -s and -z to set a time range.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-t, --time_unit <em>&lt;time_unit&gt;</em></p>
+			</td>
+			<td>
+				<p>Time unit for traffic data. Default week. Default units by hour. Valid time units: second, minute, hour, day, week.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-S, --standard_output</p>
+			</td>
+			<td>
+				<p>Write output to the terminal (stdout), instead of uploading it to Apigee.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-c, --apigee_analytics_client_id <em>&lt;apigee_analytics_client_id&gt;</em></p>
+			</td>
+			<td>
+				<p>Your ID for uploading data to Apigee. Please submit a ticket with <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a> to obtain.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-r, --apigee_analytics_secret <em>&lt;apigee_analytics_secret&gt;</em></p>
+			</td>
+			<td>
+				<p>Your secret for upload data to Apigee. Please submit a ticket with <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a> to obtain.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-R, --include_curl_commands</p>
+			</td>
+			<td>
+				<p>Include the generated cURL commands in the output for debugging.</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>-v, --verbose</p>
+			</td>
+			<td>
+				<p>Display verbose output.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Manually uploading data to Apigee</h2>
+<p>Apigee recommends that you install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility on a machine with external internet access. Then the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility can upload data directly to Apigee.</p>
+<p>However, if the machine does not have external internet access, use the Edge management API to collect traffic data, and then use cURL commands to upload it to Apigee from a machine with internet access. You have to repeat this process for every production organization and environment in your Edge installation.</p>
+<div class="note">
+	<p>In this scenario, you do not use the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility.</p>
+</div>
+<p>Use the following cURL command to gather traffic data for a specific organization and environment for a specified time interval:</p>
+<pre>
+curl -X GET -u <em><strong>apigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> \
+"http://<em><strong>&lt;ms_IP&gt;</strong></em>:8080/v1/organizations/<em><strong>{org_name}</strong></em>/environments/<em><strong>{env_name}</strong></em>/stats/?select=sum(message_count)&amp;timeRange=<em><strong>MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM</strong></em>"</pre>
+<p>This command uses the Edge Get API message count API. In this command:</p>
+<ul>
+	<li><em><strong>apigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> specifies the email address of an account with access to the Edge /stats APIs.&nbsp;</li>
+	<li><em><strong>&lt;ms_IP&gt;</strong></em> is the IP address or DNS name of the Edge Management Server.</li>
+	<li><em><strong>{org_name}</strong></em> and <em><strong>{env_name}</strong></em> specifies the org and environment.</li>
+	<li><em><strong>MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM</strong></em> specifies the time range of the stats to gather. Notice that the cURL command uses the hex code <span style="font-family:courier new,courier,monospace;">%20</span> for the spaces in the time range.</li>
+</ul>
+<p>For example, to gather stats for a 24 hour period, use the following command:</p>
+<pre>
+curl -X GET -u a<em><strong>pigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> \
+"http://192.168.56.103:8080/v1/organizations/<strong>myOrg</strong>/environments/<strong>prod</strong>/stats/?select=sum(message_count)&amp;timeRange=<strong>08/29/2016%2000:00~08/30/2016%2000:00</strong>"</pre>
+<p>You should see a response in the form:</p>
+<pre>
+{
+  "environments" : [ {
+    "metrics" : [ {
+      "name" : "sum(message_count)",
+      "values" : [ "42.0" ]
+    } ],
+    "name" : "prod"
+  } ],
+  "metaData" : {
+    "errors" : [ ],
+    "notices" : [ "query served by:53dab80c-e811-4ba6-a3e7-b96f53433baa", "source pg:6b7bab33-e732-405c-a5dd-4782647ce096", "Table used: myorg.prod.agg_api" ]
+  }
+}</pre>
+<p>To then upload that data to Apigee from a machine with internet access, use the following cURL command:</p>
+<pre>
+curl -X POST -H 'Content-Type:application/json' \
+-u <em><strong>apigee_analytics_client_id:apigee_analytics_secret</strong></em> \
+https://nucleus-api-prod.apigee.com/v1/apigee-analytics-cli-api/traffic/orgs/<em><strong>{org_name}</strong></em>/apis -d '{<em><strong>"environments"...</strong></em>}'</pre>
+<p>where:</p>
+<ul>
+	<li><em><strong>apigee_analytics_client_id:apigee_analytics_secret specify</strong></em> your credentials for uploading data to Apigee that you obtained from Apigee Support.</li>
+	<li><em><strong>{org_name}</strong></em> specifies the org.</li>
+	<li><em><strong>{"environments"...}</strong></em> contains the results of the cURL command that you used to gather stats above.</li>
+</ul>

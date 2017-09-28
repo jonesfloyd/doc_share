@@ -1,0 +1,557 @@
+<h1> How to Monitor </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p>This document describes the monitoring techniques of components supported by an on-premise deployment of Apigee Edge.&nbsp;</p>
+<h2>Enabling JMX authentication and setting the JMX password</h2>
+<p>The monitoring process for the Management Server, Message Processor, Qpid, and Postgres all use JMX. JMX is enabled by default and remote JMX access does not require a password.&nbsp;</p>
+<p>To enable JMX authentication, each component has a <span style="font-family:courier new,courier,monospace;">change_jmx_auth</span> action that you use to enable/disable authentication and to set the JMX credentials.</p>
+<p>To enable JMX authentication, use the following command:</p>
+<pre>
+&gt;  /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service <em><strong>comp</strong></em> change_jmx_auth <em><strong>optionsOrConfigFile</strong></em></pre>
+<p>where:</p>
+<ul>
+	<li><em><strong>comp</strong></em> is either <span style="font-family:courier new,courier,monospace;">edge-management-server, edge-message-processor, edge-router, edge-qpid-server, <span style="font-family:arial,helvetica,sans-serif;">or</span> edge-postgres-server</span>.</li>
+	<li>Options are:
+		<ul>
+			<li><span style="font-family:courier new,courier,monospace;">-u</span>: username</li>
+			<li><span style="font-family:courier new,courier,monospace;">-p</span>: password</li>
+			<li><span style="font-family:courier new,courier,monospace;">-e</span>: y (enable) or n (dsiable)</li>
+		</ul>
+	</li>
+	<li>Config file includes:
+		<ul>
+			<li><span style="font-family:courier new,courier,monospace;">JMX_USERNAME=<em><strong>username</strong></em></span></li>
+			<li><span style="font-family:courier new,courier,monospace;">JMX_ENABLED=y/n&nbsp;</span></li>
+			<li><span style="font-family:courier new,courier,monospace;">JMX_PASSWORD=<em><strong>password</strong></em></span> (if not set or not passed in with <span style="font-family:courier new,courier,monospace;">-p</span>, you are prompted)&nbsp;</li>
+		</ul>
+	</li>
+</ul>
+<p>For example, to use options on the command line:</p>
+<pre>
+&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -u foo -p bar -e y</pre>
+<p>If &nbsp;you have a config file:</p>
+<pre>
+&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -f <em><strong>configFile</strong></em></pre>
+<p>If you are running Edge on multiple nodes, run this command on all nodes, specifying the same username and password.</p>
+<p>To later disable JMX authentication, use the command:</p>
+<pre>
+&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -e n</pre>
+<h2>Management Server</h2>
+<h3>Using ?JConsole to monitor system health check and process information</h3>
+<p>Use JConsole (a JMX compliant tool) to manage and monitor health check and process statistics. Using JConsole, you can consume JMX statistics exposed by Management Server (or any server) and display them in a graphical interface. For more information on JConsole usage, see <a href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html">http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html</a>.</p>
+<p>Use <strong>JConsole</strong> and the following service URL to monitor the JMX attributes (MBeans) offered via JMX.</p>
+<pre>
+service:jmx:rmi:///jndi/rmi://<em><strong>&lt;ip address&gt;</strong></em>:&lt;port&gt;/platform</pre>
+<p>where <strong>&lt;ip address&gt;</strong> is the IP address of Management Server (or respective server). By default the port is 1099 for the Management Server.&nbsp;</p>
+<p>The following table shows the generic&nbsp;JMX statistics:</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<p><strong>JMX MBeans</strong></p>
+			</th>
+			<th>
+				<p><strong>JMX Attributes</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowspan="3">
+				<p>Memory</p>
+			</td>
+			<td>
+				<p>HeapMemoryUsage</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>NonHeapMemoryUsage</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Usage</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<p><strong>Note:</strong> Attribute values will be displayed in four values: committed, init, max, and used.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Using Edge Application &nbsp;API checks</h3>
+<p>You can perform API check on the Management Server (or any server) by invoking the following CURL command:</p>
+<pre>
+curl http://<em><strong>&lt;host&gt;</strong></em>:8080/v1/servers/self/up</pre>
+<p>Where, <em><strong>&lt;host&gt;</strong></em> is the IP address of Management Server.&nbsp;</p>
+<p>This call returns the "true" and "false". If true, that means node is up and Java service is running.</p>
+<p>If you do not receive a HTTP 200 (OK) response, the Edge is unable to respond to port 8080 requests.&nbsp;</p>
+<h4>Troubleshooting</h4>
+<ol>
+	<li>Login to the server and run the following command:<br />
+		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server status</span></li>
+	<li>If the service is not running start the service:<br />
+		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server start</span></li>
+</ol>
+<h3>Using Edge Application – Users, organization and deployment checks</h3>
+<p>Management Server plays a vital role in holding all other parcels together in each on-premises installation. You can check for user, organization and deployment status on the management server by issuing the following commands:</p>
+<pre>
+curl -u userEmail:password http://localhost:8080/v1/users
+curl -u userEmail:password http://localhost:8080/v1/organizations
+curl -u userEmail:password http://localhost:8080/v1/organizations/orgname/deployments</pre>
+<p>The system should display "deployed" status for all calls. If these fail, do the following:</p>
+<ol>
+	<li>Check the Management Server logs (at <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/var/log/edge-management-server</span>) for any errors.</li>
+	<li>Make a call against Management Server to check whether it is functioning properly.&nbsp;</li>
+	<li>Remove the server from the ELB and then restart the Management Server.<br />
+		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server restart</span></li>
+</ol>
+<h2>Router</h2>
+<p>You can perform API check on the Router (or any server) by invoking the following CURL command:</p>
+<pre>
+curl http://&lt;host&gt;:8081/v1/servers/self/up</pre>
+<p>Where, host is the IP address of Router.&nbsp;</p>
+<p>This call returns the "true" and "false". If true, that means node is up and Java service is running.</p>
+<p>If you do not receive a HTTP 200 (OK) response, Edge is unable to respond to port 8081 requests.&nbsp;</p>
+<h3>Troubleshooting</h3>
+<ol>
+	<li>Login to the server and run the following commands:<br />
+		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router status</span></li>
+	<li>If the service is not running start the service<br />
+		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router start</span></li>
+	<li>If the service is running, test that it is functioning. You monitor the cluster status by checking the memberCount against the reachableCount and alert all the instances with 'memberCount != reachableCount'<br />
+		<span style="font-family:courier new,courier,monospace;">curl -v -u &lt;userEmail&gt;:&lt;password&gt; http://localhost:port/v1/cluster</span><br />
+		<br />
+		Where port – 8081 for Router and 8082 for Message Processor.&nbsp;The output of above CURL command is shown below:<br />
+		<span style="font-family:courier new,courier,monospace;">{<br />
+		&nbsp;"memberCount" : 12,<br />
+		&nbsp;"pod" : "rea1gw001",<br />
+		&nbsp;"reachableCount" : 12,<br />
+		&nbsp;"region" : "us-east-1",<br />
+		&nbsp;"types" : [ "management-server" ]<br />
+		* Connection #0 to host ms05apigee left intact<br />
+		* Closing connection #0<br />
+		}</span></li>
+	<li>If it is not functioning, run the following command to examine the failure or find the offending member.<br />
+		<span style="font-family:courier new,courier,monospace;">curl http://localhost:port/v1/cluster/members</span><br />
+		<br />
+		Where port – 8081 for Router and 8082 for Message Processor.&nbsp;The output of above CURL command will like this:<br />
+		<span style="font-family:courier new,courier,monospace;">{<br />
+		&nbsp; "lastChange" : 0,<br />
+		&nbsp; "latency" : 0,<br />
+		&nbsp; "state" : "CONNECTED",<br />
+		&nbsp; "uuid" : "9c4c8bde-0015-4dc5-82d2-59fb326c4074"<br />
+		}, {<br />
+		&nbsp; "address" : "/192.168.5.209:4526",<br />
+		&nbsp; "clusterType" : "router,message-processor",<br />
+		&nbsp; "lastChange" : 1350658037228,<br />
+		&nbsp; "latency" : 3,<br />
+		&nbsp; "pod" : "rea1gw001",<br />
+		&nbsp; "region" : "us-east-1",<br />
+		&nbsp; "serverType" : "message-processor",<br />
+		&nbsp; "state" : "CONNECTED",<br />
+		&nbsp; "uuid" : "f1c663a1-2bb8-469f-b5fd-69a5c5aa91c5"<br />
+		}, {<br />
+		&nbsp; "address" : "/192.168.5.29:4526",<br />
+		&nbsp; "clusterType" : "router,message-processor",<br />
+		&nbsp; "lastChange" : 1350623005057,<br />
+		&nbsp; "latency" : 1,<br />
+		&nbsp; "pod" : "rea1gw001",<br />
+		&nbsp; "region" : "us-east-1",<br />
+		&nbsp; "serverType" : "message-processor",<br />
+		&nbsp; "state" : " DISCONNECTED ",<br />
+		&nbsp; "uuid" : "4cfe932b-f644-4581-b1ae-df338af9c7ce"<br />
+		}, {<br />
+		&nbsp; "address" : "/192.168.4.182:4526",<br />
+		&nbsp; "clusterType" : "router,message-processor",<br />
+		&nbsp; "lastChange" : 1350657730535,<br />
+		&nbsp; "latency" : 1,<br />
+		&nbsp; "pod" : "rea1gw001",<br />
+		&nbsp; "region" : "us-east-1",<br />
+		&nbsp; "serverType" : "message-processor",<br />
+		&nbsp; "state" : "CONNECTED",<br />
+		&nbsp; "uuid" : "cba063d5-b8a4-409f-9e0b-f5d403e02091"<br />
+		}</span></li>
+	<li>Notice that the IP address 192.168.5.29 is disconnected. Restart the server<br />
+		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router restart</span><br />
+		<br />
+		<strong>Note</strong>: If a Router has a disconnected state, remove the router from the ELB and then restart it.</li>
+	<li>After restart check that it is functioning<br />
+		<span style="font-family:courier new,courier,monospace;">curl -v http://localhost:<strong>port</strong>/v1/cluster</span><br />
+		<br />
+		Where <strong>port</strong> is 8081 for Router and 8082 for Message Processor.</li>
+</ol>
+<h2>Message Processor</h2>
+<h3>Using JConsole to monitor system health check and process information</h3>
+<p>Follow the same as described above for the Management Server.</p>
+<p><strong>Note</strong>: Ensure that you use port – 1101.</p>
+<h3>Using Edge Application &nbsp;API checks</h3>
+<p>Follow the same as described above for the Router.</p>
+<p><strong>Note</strong>: Ensure that you use port – 8082.</p>
+<h3>Using JMX message flow checks</h3>
+<p>Follow the same as described above for the Management Server.</p>
+<p><strong>Note</strong>: Ensure that you use port – 1101.</p>
+<h2>Qpid Server</h2>
+<h3>Using JConsole to monitor system health check and process information</h3>
+<p>Follow the same as described above for the Management Server.</p>
+<p><strong>Note</strong>: Ensure that you use port – 1102.</p>
+<h3>Using Edge Application API checks</h3>
+<p>Follow the same as described above for the Management Server.</p>
+<p><strong>Note</strong>: Ensure that you use port – 8083. The following CURL command is also supported for Qpid Server:</p>
+<pre>
+curl http://&lt;qpid_IP&gt;:8083/v1/servers/self</pre>
+<h2>Postgres Server</h2>
+<h3>Using JConsole to monitor system health check and process information</h3>
+<p>Follow the same as described above for the Management Server.</p>
+<p><strong>Note</strong>: Ensure that you use port – 1103.</p>
+<h3>Using Edge Application API checks</h3>
+<p>Follow the same as described above for the Management Server.</p>
+<p><strong>Note</strong>: Ensure that you use port – 8084. The following CURL command is also supported for Postgres Server:</p>
+<pre>
+curl http://&lt;postgres_IP&gt;:8084/v1/servers/self</pre>
+<h3>Using Edge Application organization and environment checks</h3>
+<p>You can check for organization and environment name that are onboarded on the Postgres Server by issuing the following CURL commands:</p>
+<pre>
+curl http:// &lt;postgres_IP&gt;:8084/v1/servers/self/organizations</pre>
+<p><strong>Note</strong>: Ensure that you use port – 8084.</p>
+<p>The system should display the organization and environment name.</p>
+<h3>Using Edge Application axstatus check</h3>
+<p>You can verify the status of the analytics servers by issuing the following CURL command.&nbsp;</p>
+<pre>
+curl -u userEmail:password http://&lt;host&gt;:&lt;port&gt;/v1/organizations/&lt;orgname&gt;/environments/&lt;envname&gt;/provisioning/axstatus</pre>
+<p>The system should display SUCCESS status for all analytics servers. The output of above CURL command is shown below:</p>
+<pre>
+{
+  "environments" : [ {
+    "components" : [ {
+      "message" : "success at Thu Feb 28 10:27:38 CET 2013",
+      "name" : "pg",
+      "status" : "SUCCESS",
+      "uuid" : "[c678d16c-7990-4a5a-ae19-a99f925fcb93]"
+     }, {
+      "message" : "success at Thu Feb 28 10:29:03 CET 2013",
+      "name" : "qs",
+      "status" : "SUCCESS",
+      "uuid" : "[ee9f0db7-a9d3-4d21-96c5-1a15b0bf0adf]"
+     } ],
+    "message" : "",
+    "name" : "prod"
+   } ],
+  "organization" : "acme",
+  "status" : "SUCCESS"
+}</pre>
+<h2>PostgresSQL Database</h2>
+<h3>Using the check_postgres.pl script</h3>
+<p>To monitor the PostgresSQL database, you can use a standard monitoring script, <span style="font-family:courier new,courier,monospace;">check_postgres.pl</span> which is available at <a href="http://bucardo.org/wiki/Check_postgres">http://bucardo.org/wiki/Check_postgres</a>.</p>
+<p><strong>Note</strong>: The script, check_postgres.pl needs to be installed in each Postgres node.</p>
+<p>Before you run the script:</p>
+<ol>
+	<li>Ensure that you have installed <span style="font-family:courier new,courier,monospace;">perl-Time-HiRes.x86_64</span>, a Perl module that implements high resolution alarm, sleep, gettimeofday, and interval timers. For example, you can install it by using the following command:<br />
+		<span style="font-family:courier new,courier,monospace;">yum install perl-Time-HiRes.x86_64</span></li>
+</ol>
+<p>The default output of the API calls using the script, <span style="font-family:courier new,courier,monospace;">check_postgres.pl</span> is Nagios compatible. After you install the script, do the following checks:</p>
+<ol>
+	<li>Database size – check the database size:<br />
+		<span style="font-family:courier new,courier,monospace;">check_postgres.pl -H 10.176.218.202 -db apigee -u apigee -dbpass postgres -include=apigee -action database_size --warning='800 GB' --critical='900 GB'</span></li>
+	<li>Incoming connection to the database – checks the number of incoming connections to the database and compares with maximum allowed connections:<br />
+		<span style="font-family:courier new,courier,monospace;">check_postgres.pl -H 10.176.218.202 -db apigee -u apigee -dbpass postgres -action backends</span></li>
+	<li>Database availability and performance – checks if database is running and available:<br />
+		<span style="font-family:courier new,courier,monospace;">check_postgres.pl -H 10.176.218.202 -db apigee -u apigee -dbpass postgres -action connection</span></li>
+	<li>Disk space – checks the disk space:<br />
+		<span style="font-family:courier new,courier,monospace;">check_postgres.pl -H 10.176.218.202 -db apigee -u apigee -dbpass postgres -action disk_space --warning='80%' --critical='90%'</span></li>
+	<li>Onboarded organizations/environments – checks the number of organization and environment onboarded in a Postgres node:<br />
+		<span style="font-family:courier new,courier,monospace;">check_postgres.pl -H 10.176.218.202 -db apigee -u apigee -dbpass postgres -action=custom_query --query="select count(*) as result from pg_tables where schemaname='analytics' and tablename like '%fact'" --warning='80' --critical='90' --valtype=integer</span></li>
+</ol>
+<p><strong>Note</strong>: Please refer to the <a href="http://bucardo.org/check_postgres/check_postgres.pl.html">http://bucardo.org/check_postgres/check_postgres.pl.html</a> in case you need any help on using the above commands.</p>
+<h3>DB Checks</h3>
+<p>You can verify that the proper tables are created in PostgresSQL database. Login to PostgreSQL database using:</p>
+<pre>
+psql ?-h /opt/apigee/var/run/apigee-postgresql/&nbsp; -U apigee -d apigee</pre>
+<p>and then run:</p>
+<pre>
+\d analytics."&lt;org&gt;.&lt;env&gt;.fact"</pre>
+<h3>Check health status of postgres process</h3>
+<p>You can perform API check on the postgres machine by invoking the following CURL command:</p>
+<pre>
+http://&lt;postgres_IP&gt;:8084/v1/servers/self/health/</pre>
+<p><strong>Note</strong>: Ensure that you use port 8084.</p>
+<p>It returns the ‘ACTIVE’ status when postgres process is active. If the postgres process is not up and running, it returns the ‘INACTIVE’ status.</p>
+<h3>Postgres Resources&nbsp;</h3>
+<ul>
+	<li><a href="http://www.postgresql.org/docs/9.0/static/monitoring.html">http://www.postgresql.org/docs/9.0/static/monitoring.html</a></li>
+	<li><a href="http://www.postgresql.org/docs/9.0/static/diskusage.html">http://www.postgresql.org/docs/9.0/static/diskusage.html</a></li>
+	<li><a href="http://bucardo.org/check_postgres/check_postgres.pl.html">http://bucardo.org/check_postgres/check_postgres.pl.html</a></li>
+</ul>
+<h2>Apache Cassandra</h2>
+<h3>Using JConsole – monitor task statistics</h3>
+<p>Use <strong>JConsole</strong> and the following service URL to monitor the JMX attributes (MBeans) offered via JMX.</p>
+<pre>
+service:jmx:rmi:///jndi/rmi://&lt;<em><strong>ip address</strong></em>&gt;:7199/jmxrmi</pre>
+<p>where <em><strong>&lt;ip address&gt;</strong></em> is the IP of the Cassandra server.&nbsp;</p>
+<p>JMX is enabled by default for Cassandra and remote JMX access to Cassandra does not require a password.&nbsp;</p>
+<p>To enable JMX authentication to add a password:</p>
+<ol>
+	<li>Edit <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/customer/application/cassandra.properties</span>. If the file does not exist, create it.</li>
+	<li>Add the following to the file:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_cassandra-env_com.sun.management.jmxremote.authenticate=true</span></li>
+	<li>Save the file.</li>
+	<li>Copy the following files from your <span style="font-family:courier new,courier,monospace;">$JAVA_HOME</span> directory to /&lt;inst_root&gt;/apigee/data/apigee-cassandra/:<br />
+		<span style="font-family:courier new,courier,monospace;">cp ${JAVA_HOME}/lib/management/jmxremote.password.template $APIGEE_ROOT/data/apigee-cassandra/jmxremote.password<br />
+		<br />
+		cp ${JAVA_HOME}/lib/management/jmxremote.access $APIGEE_ROOT/data/apigee-cassandra/jmxremote.access</span></li>
+	<li>Edit <span style="font-family:courier new,courier,monospace;">jmxremote.password</span> and add username and password to the file:<br />
+		<span style="font-family:courier new,courier,monospace;">cassandra <em><strong>password</strong></em></span><br />
+		<br />
+		where <em><strong>password</strong></em> is the JMX password.&nbsp;</li>
+	<li>Edit <span style="font-family:courier new,courier,monospace;">jmxremote.access</span> and add the following role:<br />
+		<span style="font-family:courier new,courier,monospace;">cassandra &nbsp; &nbsp; readwrite</span></li>
+	<li>Make sure the files are owned by "apigee" and that the file mode is 400:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /&lt;inst_root&gt;/apigee/data/apigee-cassandra/jmxremote.*<br />
+		&gt; chmod 400 /&lt;inst_root&gt;/apigee/data/apigee-cassandra/jmxremote.*</span></li>
+	<li>Run <span style="font-family:courier new,courier,monospace;">configure</span> on Cassandra:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra configure</span></li>
+	<li>Restart Cassandra:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra restart</span></li>
+</ol>
+<p>To later disable authentication:</p>
+<ol>
+	<li>Edit /<span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/customer/application/cassandra.properties</span>.&nbsp;</li>
+	<li>Remove the following line in the file:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_cassandra-env_com.sun.management.jmxremote.authenticate=true</span></li>
+	<li>Run configure on Cassandra:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra configure</span></li>
+	<li>Restart Cassandra:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra restart</span></li>
+</ol>
+<h3>Cassandra JMX statistics</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<p><strong>JMX MBeans</strong></p>
+			</th>
+			<th>
+				<p><strong>JMX Attributes</strong></p>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowspan="15">
+				<p>ColumnFamilies/apprepo/environments</p>
+				<p>ColumnFamilies/apprepo/organizations</p>
+				<p>ColumnFamilies/apprepo/apiproxy_revisions</p>
+				<p>ColumnFamilies/apprepo/apiproxies</p>
+				<p>ColumnFamilies/audit/audits</p>
+				<p>ColumnFamilies/audit/audits_ref</p>
+			</td>
+			<td>
+				<p>PendingTasks</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="height:20px;">
+				<p>MemtableColumnsCount</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>MemtableDataSize</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>ReadCount</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>RecentReadLatencyMicros</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>TotalReadLatencyMicros</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>WriteCount</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>RecentWriteLatencyMicros</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>TotalWriteLatencyMicros</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>TotalDiskSpaceUsed</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>LiveDiskSpaceUsed</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>LiveSSTableCount</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>BloomFilterFalsePositives</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>RecentBloomFilterFalseRatio</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>BloomFilterFalseRatio</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Using nodetool utility to manage cluster nodes</h3>
+<p>The nodetool utility, which is a command line interface for Cassandra, is used to manage cluster nodes. The utility can be found at <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/apigee-cassandra/bin</span>.</p>
+<p>For more info on nodetool utility, see <a href="http://www.datastax.com/docs/1.0/references/nodetool">http://www.datastax.com/docs/1.0/references/nodetool</a>.</p>
+<p>The following calls can be made on all Cassandra cluster nodes:</p>
+<ol>
+	<li><strong>General ring info</strong> (also possible for single Cassandra node): Look for the "Up" and "Normal" for all nodes.<br />
+		<span style="font-family:courier new,courier,monospace;">[host]# nodetool -h localhost ring</span><br />
+		<br />
+		The output of the above command looks as shown below:<br />
+		<span style="font-family:courier new,courier,monospace;">Address &nbsp; &nbsp; &nbsp; &nbsp; DC &nbsp; &nbsp; &nbsp;Rack &nbsp; &nbsp; Status State &nbsp; Load &nbsp; &nbsp; &nbsp; Owns &nbsp; &nbsp;Token &nbsp;<br />
+		192.168.124.201 dc1 &nbsp; &nbsp; ra1 &nbsp; &nbsp; &nbsp;Up &nbsp; &nbsp; Normal &nbsp;1.67 MB &nbsp; &nbsp;33,33% &nbsp;0<br />
+		192.168.124.202 dc1 &nbsp; &nbsp; ra1 &nbsp; &nbsp; &nbsp;Up &nbsp; &nbsp; Normal &nbsp;1.68 MB &nbsp; &nbsp;33,33% &nbsp;56713727820156410577229101238628035242<br />
+		192.168.124.203 dc1 &nbsp; &nbsp; ra1 &nbsp; &nbsp; &nbsp;Up &nbsp; &nbsp; Normal &nbsp;1.67 MB &nbsp; &nbsp;33,33% &nbsp;113427455640312821154458202477256070484</span></li>
+	<li><strong>General info about nodes</strong> (call per node)<br />
+		<span style="font-family:courier new,courier,monospace;">nodetool -h localhost info</span><br />
+		<br />
+		The output of the above command looks as shown below:<br />
+		<span style="font-family:courier new,courier,monospace;">Token &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: 0<br />
+		Gossip active &nbsp; &nbsp;: true<br />
+		Load &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : 1.67 MB<br />
+		Generation No &nbsp; &nbsp;: 1361968765<br />
+		Uptime (seconds) : 78108<br />
+		Heap Memory (MB) : 46,80 / 772,00<br />
+		Data Center &nbsp; &nbsp; &nbsp;: dc1<br />
+		Rack &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : ra1<br />
+		Exceptions &nbsp; &nbsp; &nbsp; : 0</span></li>
+	<li><strong>Status of the thrift server</strong> (serving client API)<br />
+		<span style="font-family:courier new,courier,monospace;">host]# nodetool -h localhost statusthrift</span><br />
+		<br />
+		The output of the above command displays status as "running".</li>
+	<li><strong>Status of data streaming operations</strong>: Observe traffic for cassandra nodes<br />
+		<span style="font-family:courier new,courier,monospace;">nodetool -h localhost netstats 192.168.124.203</span><br />
+		<br />
+		The output of the above command looks as shown below:<br />
+		<span style="font-family:courier new,courier,monospace;">Mode: NORMAL<br />
+		Nothing streaming to /192.168.124.203<br />
+		Nothing streaming from /192.168.124.203<br />
+		Pool Name &nbsp; &nbsp;Active &nbsp; &nbsp;Pending &nbsp; &nbsp;Completed<br />
+		Commands &nbsp; &nbsp; n/a &nbsp; &nbsp; &nbsp; &nbsp; 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;1688<br />
+		Responses &nbsp; &nbsp;n/a &nbsp; &nbsp; &nbsp; &nbsp; 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;292277</span></li>
+</ol>
+<h3>Cassandra Monitoring (UI)</h3>
+<p>Refer to the datastax opscenter URL: <a href="http://www.datastax.com/products/opscenter">http://www.datastax.com/products/opscenter</a>.</p>
+<h3>Cassandra Resource</h3>
+<p>Refer to the following URL: <a href="http://www.datastax.com/docs/1.0/operations/monitoring">http://www.datastax.com/docs/1.0/operations/monitoring</a>.</p>
+<h2>Apache ZooKeeper</h2>
+<h3>Checking ZooKeeper status</h3>
+<ol>
+	<li>Ensure the ZooKeeper process is running. ZooKeeper writes a PID file to <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/var/run/apigee-zookeeper/apigee-zookeeper.pid</span>.</li>
+	<li>Test ZooKeeper ports to ensure that you can establish a TCP connection to ports 2181 and 3888 on every ZooKeeper server.</li>
+	<li>Ensure that you can read values from the ZooKeeper database. Connect using a ZooKeeper client library (or <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-zookeeper/bin/zkCli.sh</span>) and read a value from the database.</li>
+	<li>Check the status:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-zookeeper status</span></li>
+</ol>
+<h3>Using ZooKeeper Four Letter Words</h3>
+<p>ZooKeeper can be monitored via a small set of commands (four-letter words) that are sent to the port 2181 using netcat (nc) or telnet.</p>
+<p>For more info on ZooKeeper commands, see: <a href="http://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_zkCommands">http://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_zkCommands</a>.</p>
+<p>For example:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">srvr</span>: Lists full details for the server.</li>
+	<li><span style="font-family:courier new,courier,monospace;">stat</span>: Lists brief details for the server and connected clients.</li>
+</ul>
+<p>The following commands can be issued to the ZooKeeper port:</p>
+<ol>
+	<li>Run the four-letter command ruok to test if server is running in a non-error state. A successful response returns "imok".<br />
+		<span style="font-family:courier new,courier,monospace;">echo ruok | nc &lt;host&gt; 2181</span><br />
+		<br />
+		Returns:<br />
+		<span style="font-family:courier new,courier,monospace;">imok</span></li>
+	<li>Run the four-letter command, stat to list server performance and connected clients statistics.<br />
+		<span style="font-family:courier new,courier,monospace;">echo stat | nc &lt;host&gt; 2181</span><br />
+		<br />
+		Returns:<br />
+		<span style="font-family:courier new,courier,monospace;">Zookeeper version: 3.4.5-1392090, built on 09/30/2012 17:52 GMT<br />
+		Clients:<br />
+		/0:0:0:0:0:0:0:1:33467[0](queued=0,recved=1,sent=0)<br />
+		/192.168.124.201:42388[1](queued=0,recved=8433,sent=8433)<br />
+		/192.168.124.202:42185[1](queued=0,recved=1339,sent=1347)<br />
+		/192.168.124.204:39296[1](queued=0,recved=7688,sent=7692)<br />
+		Latency min/avg/max: 0/0/128<br />
+		Received: 26144<br />
+		Sent:<span class="Apple-tab-span" style="white-space:pre"> </span>26160<br />
+		Connections: 4<br />
+		Outstanding: 0<br />
+		Zxid: 0x2000002c2<br />
+		<strong>Mode: follower</strong><br />
+		Node count: 283</span><br />
+		<strong>Note</strong>: It is sometimes important to see whether a ZooKeeper is in Mode: leader, follower or observer.</li>
+	<li>If netcat (nc) is not available, you can use the python as an alternative. Create a file named <span style="font-family:courier new,courier,monospace;">zookeeper.py</span> that contains the following:<br />
+		<span style="font-family:courier new,courier,monospace;">import time, socket,&nbsp;<br />
+		sys c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br />
+		c.connect((sys.argv[1], 2181))<br />
+		c.send(sys.argv[2])<br />
+		time.sleep(0.1)<br />
+		print c.recv(512)</span><br />
+		<br />
+		Now run the following python lines:<br />
+		<span style="font-family:courier new,courier,monospace;">python zookeeper.py 192.168.124.201 ruok<br />
+		python zookeeper.py 192.168.124.201 stat &nbsp;</span></li>
+</ol>
+<h2>OpenLDAP</h2>
+<h3>LDAP Level Test</h3>
+<p>You can monitor the OpenLDAP to see whether the specific requests are served properly. In other words, check for a specific search that returns the right result.</p>
+<ol>
+	<li>Use <span style="font-family:courier new,courier,monospace;">ldapsearch</span> (<span style="font-family:courier new,courier,monospace;">yum install openldap-clients</span>) to query the entry of the system admin. This entry is used to authenticate all API calls.<br />
+		<span style="font-family:courier new,courier,monospace;">ldapsearch -b "uid=admin,ou=users,ou=global,dc=apigee,dc=com" -x -W -D "cn=manager,dc=apigee,dc=com" -H ldap://localhost:10389 -LLL</span><br />
+		<br />
+		You are then prompted for the LDAP admin password:<br />
+		<span style="font-family:courier new,courier,monospace;">Enter LDAP Password:</span><br />
+		<br />
+		After entering the password, you see a response in the form:<br />
+		<span style="font-family:courier new,courier,monospace;">dn: uid=admin,ou=users,ou=global,dc=apigee,dc=com<br />
+		objectClass: organizationalPerson<br />
+		objectClass: person<br />
+		objectClass: inetOrgPerson<br />
+		objectClass: top<br />
+		uid: admin<br />
+		cn: admin<br />
+		sn: admin<br />
+		userPassword:: e1NTSEF9bS9xbS9RbVNXSFFtUWVsU1F0c3BGL3BQMkhObFp2eDFKUytmZVE9PQ=<br />
+		&nbsp;=<br />
+		mail: opdk@google.com</span></li>
+	<li>Check whether Management Server is still connected to LDAP issue:<br />
+		<span style="font-family:courier new,courier,monospace;">curl -u &lt;userEMail&gt;:&lt;password&gt; http://localhost:8080/v1/users/&lt;ADMIN&gt;</span><br />
+		<br />
+		Returns:<br />
+		<span style="font-family:courier new,courier,monospace;">{<br />
+		&nbsp;"emailId" : &lt;ADMIN&gt;,<br />
+		&nbsp;"firstName" : "admin",<br />
+		&nbsp;"lastName" : "admin"<br />
+		}</span></li>
+</ol>
+<p>You can also monitor the OpenLDAP caches, which help in reducing the number of disk accesses and hence improve the performance of the system. Monitoring and then tuning the cache size in the OpenLDAP server can heavily impact the performance of the directory server. You can view the log files (<span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/var/log</span>) to obtain information about cache.</p>
