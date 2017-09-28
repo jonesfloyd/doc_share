@@ -197,7 +197,9 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
 &lt;/TargetEndpoint&gt;</pre>
 <p><strong>The MaxFailures default is 0.</strong>&nbsp;This means that Edge always tries to connect to the target for each request and never removes the target server from the rotation.</p>
 <div class="warning">
-	<p>If you configure MaxFailures &gt; 0 without also configuring a HealthMonitor, the TargetServer will be removed from rotation when the target fails the number of times you indicate. Edge does not automatically put the TargetServer back in rotation even after the target is up and running again. To have Edge put the TargetServer back in rotation, <a href="/api-services/content/deploying-proxies-ui">redeploy the API proxy</a>.</p>
+	<p>If you configure MaxFailures &gt; 0, the TargetServer is removed from rotation when the target fails the number of times you indicate. Edge does not automatically put the TargetServer back in rotation even after the target is up and running again. You must&nbsp;<a href="/api-services/content/deploying-proxies-ui">redeploy the API proxy</a>&nbsp;before Edge puts the TargetServer back into rotation.</p>
+	<p>&nbsp;</p>
+	<p>Alternatively, you can define a HealthMonitor. A HealthMonitor&nbsp;puts the TargetServer&nbsp;back into rotation after it becomes available again. See <a href="#healthmonitoring">Health monitoring</a> below for more information.</p>
 </div>
 <h3>Retry</h3>
 <p>Retry the request once to a different server after an I/O error (not an HTTP status code 500).</p>
@@ -255,14 +257,23 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
 <h3>Schema</h3>
 <p>See the schema for TargetServer and other entities on <a href="https://github.com/apigee/api-platform-samples/blob/master/schemas/configuration/configuration_schemas.xsd">Github</a>.</p>
 <h2>Health monitoring</h2>
-<p>Health monitoring enables you to enhance load balancing configurations by actively polling the backend service URLs defined in the TargetServer configurations. The HealthMonitor acts as a simple client that invokes a backend service over TCP or HTTP. A TCP client simply ensures that a socket can be opened. You configure the HTTP client to submit a valid HTTP request to the backend service. You can define HTTP GET, PUT, POST, or DELETE operations. Typically, you define a simple GET request that simply shows that the backend service is available.&nbsp;</p>
+<p>As mentioned above in <a href="#settingloadbalanceroptions-maximumfailures">Maximum failures</a>, you can use <span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span> to set the number of failed requests from the API proxy to the TargetServer that results in the request being redirected to another TargetServer. The failing TargetServer is then taken out of rotation until you redeploy the proxy.</p>
+<p>Health monitoring enables you to enhance load balancing configurations by actively polling the backend service URLs defined in the TargetServer configurations. The HealthMonitor acts as a simple client that invokes a backend service over TCP or HTTP.</p>
+<ul>
+	<li>A TCP client simply ensures that a socket can be opened.</li>
+	<li>You configure the HTTP client to submit a valid HTTP request to the backend service. You can define HTTP GET, PUT, POST, or DELETE operations. Typically, you define a simple GET request that simply shows that the backend service is available.&nbsp;</li>
+</ul>
+<p>With <span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span> set to a non-zero value and HealthMonitor enabled (either HTTP or TCP), a failed&nbsp;TargetServer is put back to rotation and no proxy re-deployments are required when:</p>
+<ul>
+	<li><strong>HTTP monitoring</strong>: When the response of the HTTP monitor call matches the configured settings in the <span style="font-family:courier new,courier,monospace;">SuccessResponse</span> block.&nbsp;</li>
+	<li><strong>TCP monitoring</strong>: When the connection succeeds.</li>
+</ul>
+<h3>Enabling a HealthMonitor</h3>
 <p>You create a HealthMonitor by setting one up in a TargetEndpoint's HTTPConnection configuration for a proxy.</p>
 <div class="note">
 	<p>Health monitors must be configured on a per-proxy basis. If you have multiple proxies that call the same target server, you must configure a Health Monitor for each proxy.</p>
 </div>
-<div class="note">
-	<p>A simple HealthMonitor defines an IntervalInSec combined with either a TCPMonitor or an HTTPMonitor. The <span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span> tag specifies maximum number of failed requests from the API proxy to the TargetServer that results in the request being redirected to another TargetServer. By default MaxFailures is 0, which means Edge performs no corrective action. When configuring a health monitor, ensure that you set <a href="http://docs.apigee.com/api-services/content/load-balancing-across-backend-servers#settingloadbalanceroptions-maximumfailures"><span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span></a> in the <span style="font-family:courier new,courier,monospace;">&lt;HTTPTargetConnection&gt;</span> tag of the <span style="font-family:courier new,courier,monospace;">&lt;TargetEndpoint&gt;</span> tag.&nbsp;</p>
-</div>
+<p>A simple HealthMonitor defines an <span style="font-family:courier new,courier,monospace;">IntervalInSec</span> combined with either a TCPMonitor or an HTTPMonitor. The <span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span> tag specifies maximum number of failed requests from the API proxy to the TargetServer that results in the request being redirected to another TargetServer. By default&nbsp;<span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span>&nbsp;is 0, which means Edge performs no corrective action. When configuring a health monitor, ensure that you set <span style="font-family:courier new,courier,monospace;">&lt;MaxFailures&gt;</span> in the <span style="font-family:courier new,courier,monospace;">&lt;HTTPTargetConnection&gt;</span> tag of the <span style="font-family:courier new,courier,monospace;">&lt;TargetEndpoint&gt;</span> tag to a non-zero value.&nbsp;</p>
 <h3>TCPMonitor</h3>
 <p>The configuration below defines a HealthMonitor that polls each TargetServer by opening a connection on port 80 every 5 seconds. (Port is optional. If not specified, the TCPMonitor port is the TargetServer port.)</p>
 <ul>
@@ -290,7 +301,7 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
       &lt;/HealthMonitor&gt;
   &lt;/HTTPTargetConnection&gt;
 . . .</pre>
-<h3>HealthMonitor with TCPMonitor Configuration Elements</h3>
+<h4>HealthMonitor with TCPMonitor Configuration Elements</h4>
 <table border="1" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
 	<thead>
 		<tr>
@@ -328,7 +339,7 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
 	</tbody>
 </table>
 <h3>HTTPMonitor</h3>
-<p>A sample HealthMonitor that uses an HTTPMonitor will submit a GET request to the backend service once every five seconds. The sample below adds an HTTP Basic Authorization header to the request message. The Response configuration defines settings that will be compared against actual response from the backend service. In the example below, the expected response is an HTTP response code <code>200</code> and a custom HTTP header <code>ImOK</code> whose value is <code>YoureOK</code>. If the response does not match, then the request will treated as a failure by the load balancer configuration.</p>
+<p>A sample HealthMonitor that uses an HTTPMonitor will submit a GET request to the backend service once every five seconds. The sample below adds an HTTP Basic Authorization header to the request message. The Response configuration defines settings that will be compared against actual response from the backend service. In the example below, the expected response is an HTTP response code <code>200</code> and a custom HTTP header <code>ImOK</code> whose value is <code>YourOK</code>. If the response does not match, then the request will treated as a failure by the load balancer configuration.</p>
 <p>The HTTPMonitor&nbsp;supports backend services configured to use HTTP and one-way HTTPS protocols. However, it does not support two-way HTTPS, also called two-way TLS/SSL.&nbsp;</p>
 <p>Note that all of the Request and Response settings in an HTTP monitor will be specific to the backend service that must be invoked.</p>
 <pre>
@@ -346,11 +357,11 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
     &lt;/Request&gt;
     &lt;SuccessResponse&gt; 
       &lt;ResponseCode&gt;200&lt;/ResponseCode&gt;
-      &lt;Header name=”ImOK”&gt;YoureOK&lt;/Header&gt;
+      &lt;Header name=”ImOK”&gt;YourOK&lt;/Header&gt;
     &lt;/SuccessResponse&gt;
   &lt;/HTTPMonitor&gt; 
 &lt;/HealthMonitor&gt;</pre>
-<h3>HealthMonitor with HTTPMonitor Configuration Elements</h3>
+<h4>HealthMonitor with HTTPMonitor Configuration Elements</h4>
 <table border="1" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
 	<thead>
 		<tr>

@@ -22,29 +22,29 @@
 	<li><b>Level 1 is an in-memory cache (L1)</b> for fast access. Each message processing node has its own in-memory cache (implemented from Ehcache) for the fastest response to requests.
 		<ul>
 			<li>On each node, a certain percentage of memory is reserved for use by the cache.</li>
-			<li>As the memory limit is reached, Apigee Edge removes cache entries from memory (though they are still kept in the data store) to ensure that memory remains available for other processes.</li>
+			<li>As the memory limit is reached, Apigee Edge removes cache entries from memory (though they are still kept in the L2 data store) to ensure that memory remains available for other processes.</li>
 			<li>Entries are removed in the order of time since last access, with the oldest entries removed first.</li>
 			<li>These caches are also limited by the number of entries in the cache.</li>
 		</ul>
 	</li>
 	<li><b>Level 2 is a persistent cache (L2)</b> beneath the in-memory cache. All message processing nodes share a cache data store (Cassandra) for persisting cache entries.
 		<ul>
-			<li>Cache entries persist here as they're removed from in-memory caches, such as when in-memory limits are reached.</li>
+			<li>Cache entries persist here even after they're removed from L1 cache, such as when in-memory limits are reached.</li>
 			<li>Because the persistent cache is shared across message processors (even in different regions), cache entries are available regardless of which node receives a request for the cached data.</li>
-			<li>This cache is limited in that only entries of a certain size may be cached.</li>
+			<li>This cache is limited in that only entries of a certain size may be cached. See <a href="#cachelimits">Managing cache limits</a>.</li>
 			<li>There is no limit on the number of cache entries. The entries are expired in the persistent cache only on the basis of expiration settings.</li>
 		</ul>
 	</li>
 </ul>
-<div class="note">For HIPAA (Health Insurance Portability and Accountability Act) and Payment Card Industry (PCI) organizations, caching is in-memory only.</div>
+<div class="note">For HIPAA (Health Insurance Portability and Accountability Act) and Payment Card Industry (PCI) organizations, cached data is encrypted.</div>
 <div class="note">You might also be interested in <a href="http://community.apigee.com/articles/1620/apigee-edge-caching-in-detail.html"> Apigee Edge Caching In Detail</a>, on the <a href="http://community.apigee.com/">Apigee community</a>.</div>
 <h2>How policies use the cache</h2>
 <p>The following describes how Apigee Edge handles cache entries as your caching policies do their work.</p>
 <ul>
 	<li>When a policy <strong>writes a new entry</strong> to the cache (PopulateCache or ResponseCache policy):
 		<ol>
-			<li>The entry is written to the in-memory L1 cache on only the message processor that handled the request.</li>
-			<li>As L1 memory limits are reached, the entry is moved to L2 cache in Cassandra, where it is accessible by all of the message processors. Only entries that are 512 kb or less are moved to L2. Anything larger disappears from cache.</li>
+			<li>The entry is written to the in-memory L1 cache on only the message processor that handled the request. If the memory limits on the message processor are reached before the entry expires, the entry is removed from L1 cache.</li>
+			<li>The entry is also written to L2 cache, as long as it is no larger than 512 kb. Any entry larger than that is not written to L2 cache.</li>
 		</ol>
 	</li>
 	<li>When a policy <strong>reads</strong> from the cache (LookupCache or ResponseCache policy):
@@ -64,16 +64,16 @@
 			<li>The message processor receiving the request sends a broadcast to update or delete the entry in L1 cache on itself and all other message processors in all regions.
 				<ul class="circle">
 					<li>If the broadcast succeeds, each receiving message processor updates or removes the entry in L1 cache.</li>
-					<li>If the broadcast doesn't succeed, the invalidated cache value remains in L1 cache on the message processors that didn't receive the broadcast. Those message processors will have stale data until the entry's time-to-live expires. After expiration, those message processors retrieve the value from L2 cache if the entry exists there.</li>
+					<li>If the broadcast fails, the invalidated cache value remains in L1 cache on the message processors that didn't receive the broadcast. Those message processors will have stale data in L1 cache until the entry's time-to-live expires or is removed when message processor memory limits are reached.</li>
 				</ul>
 			</li>
-			<li>The broadcast also updates or deletes the entry in L2 cache, which all message processors share.</li>
+			<li>The broadcast also updates or deletes the entry in L2 cache.</li>
 		</ol>
 	</li>
 </ul>
 <h2 id="cachelimits">Managing cache limits</h2>
 <p>Through configuration, you can manage some aspects of the cache.</p>
-<div class="note">The in-memory overall maximum is limited by system resources, and is not configurable. The overall capacity of the persistent cache is effectively unlimited, though the maximum size for each cached object is <strong>512 kb</strong>. (While you can add an object larger than 512 kb to in-memory L1 cache, that object won't be moved to the more persistent L2 database cache.)</div>
+<div class="note">The in-memory overall maximum is limited by system resources, and is not configurable. The overall capacity of the persistent cache is effectively unlimited, though the maximum size for each cached object is <strong>512 kb</strong>. (While you can add an object larger than 512 kb to in-memory L1 cache, that object won't be added to the more persistent L2 database cache.)</div>
 <ul>
 	<li><b>In-memory (L1) cache.</b> Memory limits for your cache are not configurable. Limits are set by Apigee for each message processor that hosts caches for multiple customers.
 		<p>In a hosted environment*, where in-memory caches for all customer deployments are hosted across multiple shared message processors, each processor features an Apigee-configurable memory percentage threshold to ensure that caching does not consume all of the application's memory. As the threshold is crossed for a given message processor, cache entries are evicted from memory on a least-recently-used basis. Entries evicted from memory remain in L2 cache until they expire or are invalidated.</p>

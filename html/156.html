@@ -74,9 +74,8 @@
 <ul class="nav nav-tabs" id="myTab">
 	<li class="active"><a data-toggle="tab" href="#tab_1">Local call to an internal proxy</a></li>
 	<li><a data-toggle="tab" href="#tab_2">URL as a variable</a></li>
-	<li><a data-toggle="tab" href="#tab_3">Define request inline</a></li>
-	<li><a data-toggle="tab" href="#tab_4">Google geocoding</a></li>
-	<li><a data-toggle="tab" href="#tab_5">Call target servers</a></li>
+	<li><a data-toggle="tab" href="#tab_3">Google geocoding / define request</a></li>
+	<li><a data-toggle="tab" href="#tab_4">Call target servers</a></li>
 </ul>
 <!-- End tab list --><!-- Begin tabbed region -->
 <div class="tab-content active"><!-- Tab 1 begin. -->
@@ -99,7 +98,7 @@
 	<!-- Tab 2 end. --><!-- Tab 3 begin. -->
 	<div class="tab-pane" id="tab_3">
 		<pre>
-&lt;ServiceCallout name='ServiceCallout-GetBaasToken'&gt;
+&lt;ServiceCallout name="ServiceCallout-GeocodingRequest1"&gt;
     &lt;DisplayName&gt;Inline request message&lt;/DisplayName&gt;
     &lt;Request variable="authenticationRequest"&gt;
       &lt;Set&gt;
@@ -116,12 +115,11 @@
       &lt;URL&gt;http://maps.googleapis.com/maps/api/geocode/json&lt;/URL&gt;
     &lt;/HTTPTargetConnection&gt;
 &lt;/ServiceCallout&gt;</pre>
+		This policy submits a request to the Google Geocoding API at <code>http://maps.googleapis.com/maps/api/geocode/json</code>.
 		<p>Instead of using a policy such as Assign Message to create the request object, you can define it directly in the Service Callout policy. In this example, the Service Callout policy sets the values of three query parameters passed to the external service. You can create an entire request message in the Service Callout policy that specifies a payload, encoding type such as <span style="font-family:courier new,courier,monospace;">application/xml</span>, headers, form parameters, etc.</p>
-	</div>
-	<!-- Tab 3 end. --><!-- Tab 4 begin. -->
-	<div class="tab-pane" id="tab_4">
+		<p>Here's another example where the request is formed before reaching the Service Callout policy.</p>
 		<pre>
-&lt;ServiceCallout name="GeoCodeClient"&gt;
+&lt;ServiceCallout name="ServiceCallout-GeocodingRequest2"&gt;
     &lt;Request clearPayload="false" variable="GeocodingRequest"/&gt;
     &lt;Response&gt;GeocodingResponse&lt;/Response&gt;
     &lt;Timeout&gt;30000&lt;/Timeout&gt;
@@ -129,11 +127,11 @@
       &lt;URL&gt;http://maps.googleapis.com/maps/api/geocode/json&lt;/URL&gt;
     &lt;/HTTPTargetConnection&gt;
 &lt;/ServiceCallout&gt;</pre>
-		<p>This policy submits a request to the Google Geocoding API at <span style="font-family:courier new,courier,monospace;">http://maps.googleapis.com/maps/api/geocode/json</span>. The content of the request message is extracted from a variable called <span style="font-family:courier new,courier,monospace;">GeocodingRequest</span> (which could be populated, for example, by an AssignMessage policy). The response message is assigned to the variable called <span style="font-family:courier new,courier,monospace;">GeocodingResponse</span>, where it is a available to be parsed by an Extract Variables policy or by custom code written in JavaScript or Java. The policy waits 30 seconds for the response from the Google Geocoding API before timing out.</p>
+		<p>The content of the request message is extracted from a variable called <span style="font-family:courier new,courier,monospace;">GeocodingRequest</span> (which could be populated, for example, by an AssignMessage policy). The response message is assigned to the variable called <span style="font-family:courier new,courier,monospace;">GeocodingResponse</span>, where it is a available to be parsed by an Extract Variables policy or by custom code written in JavaScript or Java. The policy waits 30 seconds for the response from the Google Geocoding API before timing out.</p>
 		<p>For a complete sample API proxy that uses this example Service Callout, along with the Assign Message and Extract Variables policies, see <a href="http://docs.apigee.com/node/3974">http://docs.apigee.com/node/3974</a>.&nbsp;</p>
 	</div>
-	<!-- Tab 4 end. --><!-- Tab  4 end. --><!-- Tab 5 begin. -->
-	<div class="tab-pane" id="tab_5">
+	<!-- Tab 3 end. --><!-- Tab  4 begin. -->
+	<div class="tab-pane" id="tab_4">
 		<pre>
 <servicecallout async="false" continueonerror="false" enabled="true" name="service-callout"></servicecallout>&lt;ServiceCallout async="false" continueOnError="false" enabled="true" name="service-callout"&gt;
     &lt;DisplayName&gt;service-callout&lt;/DisplayName&gt;
@@ -154,7 +152,7 @@
 		<p>This policy uses the LoadBalancer attribute to call target servers and do load balancing across them. In this example, load is distributed across two target servers named "httpbin" and "yahoo". For information about setting up Target Servers for your proxy and configuring load balancing, see <a href="http://docs.apigee.com/node/14726">http://docs.apigee.com/node/14726</a>.</p>
 	</div>
 </div>
-<!-- Tab 5 end. --><!-- End tabbed region. -->
+<!-- End tabbed region. -->
 <hr />
 <h2 id="usage">About the Service Callout policy</h2>
 <p>There are many scenarios where you can use a Service Callout policy in your API proxy. For example, you can configure an API proxy to make calls to an external service to deliver geolocation data, customer reviews, items from a partner’s retail catalog, and so on.</p>
@@ -233,7 +231,7 @@
         &lt;URL&gt;http://example.com&lt;/URL&gt;
         &lt;LoadBalancer/&gt;
         &lt;SSLInfo/&gt;
-        &lt;Properties&gt;
+        &lt;Properties/&gt;
     &lt;/HTTPTargetConnection&gt;
     &lt;LocalTargetConnection&gt;
         &lt;APIProxy/&gt;
@@ -395,7 +393,7 @@
 	</tbody>
 </table>
 <h2 id="timeout">&lt;Timeout&gt; element</h2>
-<p>The time in milliseconds that the Service Callout policy will wait for a response from the target. If the Service Callout hits a timeout, an HTTP 500 is returned, the policy fails, and the API proxy goes into an error state, as described in <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.</p>
+<p>The time in milliseconds that the Service Callout policy will wait for a response from the target. You cannot set this value dynamically at runtime. If the Service Callout hits a timeout, an HTTP 500 is returned, the policy fails, and the API proxy goes into an error state, as described in <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.</p>
 <pre>
 &lt;Timeout&gt;60000&lt;/Timeout&gt;</pre>
 <table class="pd-table">

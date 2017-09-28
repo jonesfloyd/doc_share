@@ -126,7 +126,7 @@
 <p>&nbsp;</p>
 <p>Next, we use the "<code>[abc]</code>" or "grouping" style of regex expression. It matches the characters "<code>a</code>" or "<code>b</code>" or "<code>c</code>".</p>
 <pre>
-&lt;Condition&gt;(proxy.pathsuffix JavaRegex "/[cbr]at)&lt;/Condition&gt;
+&lt;Condition&gt;(proxy.pathsuffix JavaRegex "/[cbr]at")&lt;/Condition&gt;
 </pre>
 <p><strong>API call:</strong></p>
 <p><code>GET http://artomatic-test.apigee.net/matchtest/cat</code></p>
@@ -155,7 +155,7 @@
     &lt;PreFlow name="PreFlow"&gt;
         &lt;Request&gt;
             &lt;Step&gt;
-                &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/animals/*)&lt;/Condition&gt;
+                &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/animals/*")&lt;/Condition&gt;
                 &lt;Name&gt;SomePolicy&lt;/Name&gt;
             &lt;/Step&gt;
         &lt;/Request&gt;
@@ -180,7 +180,7 @@
     &lt;PreFlow name="PreFlow"&gt;
         &lt;Request&gt;
             &lt;Step&gt;
-                &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/animals/**)&lt;/Condition&gt;
+                &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/animals/**")&lt;/Condition&gt;
                 &lt;Name&gt;SomePolicy&lt;/Name&gt;
             &lt;/Step&gt;
         &lt;/Request&gt;
@@ -206,7 +206,7 @@
     &lt;PreFlow name="PreFlow"&gt;
         &lt;Request&gt;
             &lt;Step&gt;
-                &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/animals/*/wild/**)&lt;/Condition&gt;
+                &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/animals/*/wild/**")&lt;/Condition&gt;
                 &lt;Name&gt;SomePolicy&lt;/Name&gt;
             &lt;/Step&gt;
         &lt;/Request&gt;

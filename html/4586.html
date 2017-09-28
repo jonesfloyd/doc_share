@@ -1,5 +1,13 @@
 <h1> OAuth HTTP error response reference </h1>
 <p>[toc]</p>
+<div class="note"><strong>This topic is deprecated.</strong> The error names and HTTP response codes associated with the OAuthV2 policies are described in each policy's reference documentation:
+	<ul>
+		<li><a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a></li>
+		<li><a href="http://docs.apigee.com/node/14901">http://docs.apigee.com/node/14901</a></li>
+		<li><a href="http://docs.apigee.com/node/14906">http://docs.apigee.com/node/14906</a></li>
+		<li><a href="http://docs.apigee.com/node/18496">http://docs.apigee.com/node/18496</a></li>
+	</ul>
+</div>
 <p>This topic provides HTTP status codes and their related reason phrases you may encounter when an OAuth policy throws errors in Apigee Edge.&nbsp;</p>
 <p>For guidance on handling errors, see <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>.</p>
 <p>For policy-specific error codes, see:</p>
@@ -62,26 +70,31 @@ HTTP/1.1 400 Bad Request
 HTTP/1.1 400 Bad Request
 {"ErrorCode" : "invalid_request", "Error" :"Invalid redirect_uri : oob"}</pre>
 </div>
-<h3>Invalid Client ID</h3>
+<h3>Invalid Client ID when GenerateResponse is false</h3>
+<p>This error is returned when the <code>&lt;GenerateResponse&gt;</code> property is set to <strong>false</strong> and the client credentials are invalid. </p>
 <div id="well">
 	<pre>
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "InvalidClientIdentifier", "Error" :"Client identifier is required"}</pre>
+{
+    "fault": {
+        "faultstring": "Invalid client identifier {0}",
+        "detail": {
+            "errorcode": "oauth.v2.InvalidClientIdentifier"
+        }
+    }
+}</pre>
 </div>
 <div class="warning">
-	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>" for certain policy configurations. This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
 </div>
-<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
-<h3>No Client ID</h3>
-<div id="well">
-	<pre>
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "invalid_client", "Error" :"Client identifier is required"}</pre>
+<h3>Invalid Client ID when GenerateResponse is true</h3>
+<p>This error is returned when the <code>&lt;GenerateResponse&gt;</code> property is set to <strong>true</strong> and the client credentials are invalid. </p>
+<div id="well2">
+  <pre>
+{"ErrorCode" : "invalid_client", "Error" :"ClientId is Invalid"}</pre>
 </div>
 <div class="warning">
-	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+  <p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>" for certain policy configurations. This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
 </div>
-<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
 <h3>Invalid GrantType</h3>
 <div id="well">
 	<pre>
@@ -168,26 +181,31 @@ HTTP/1.1 400 Bad Request
 HTTP/1.1 400 Bad Request
 {"ErrorCode" : "invalid_request", "Error" :"Invalid Scope"}</pre>
 </div>
-<h3>Invalid Client ID</h3>
-<div id="well">
-	<pre>
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "invalid_client", "Error" :"Client identifier is required"}</pre>
+<h3>Invalid Client ID when GenerateResponse is false</h3>
+<p>This error is returned when the GenerateResponse property is set to <strong>false</strong> and the client credentials are invalid. </p>
+<div id="well3">
+  <pre>
+{
+    "fault": {
+        "faultstring": "Invalid client identifier {0}",
+        "detail": {
+            "errorcode": "oauth.v2.InvalidClientIdentifier"
+        }
+    }
+}</pre>
 </div>
 <div class="warning">
-	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+  <p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>" for certain policy configurations (when GenerateResponse is false). This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
 </div>
-<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
-<h3>No Client ID</h3>
-<div id="well">
-	<pre>
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "invalid_client", "Error" :"Client identifier is required"}</pre>
+<h3>Invalid Client ID when GenerateResponse is true</h3>
+<p>This error is returned when the GenerateResponse property is set to <strong>true</strong> and the client credentials are invalid. </p>
+<div id="well4">
+  <pre>
+{"ErrorCode" : "invalid_client", "Error" :"ClientId is Invalid"}</pre>
 </div>
 <div class="warning">
-	<p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>". This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
+  <p>In Edge Cloud Release 16.09.21, the error code "<code>invalid_client</code>" was changed to "<code>InvalidClientIdentifier</code>" for certain policy configurations (when GenerateResponse is false). This change could affect fault rules that trap the old code. For details on this change, see the description of <a href="http://docs.apigee.com/node/22696#bugsfixed">bug fix APIRT-3390</a> in <a href="http://docs.apigee.com/node/22696">http://docs.apigee.com/node/22696</a>.</p>
 </div>
-<p><strong>Troubleshooting</strong>: <a href="http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html">http://community.apigee.com/questions/1810/drives-me-mad-errorcode-invalid-client-error-clien.html</a></p>
 <h2>Verify AccessToken</h2>
 <h3>Invalid AccessToken</h3>
 <div id="well">

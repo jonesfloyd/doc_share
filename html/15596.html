@@ -249,8 +249,6 @@
 </table>
 <h2 id="ExpirySettingsElement">&lt;ExpirySettings&gt; element</h2>
 <p class="summary">Specifies when a cache entry should expire. When present,&nbsp;<code>&lt;TimeoutInSec&gt;</code>&nbsp;overrides both&nbsp;<code>&lt;TimeOfDay&gt;</code>&nbsp;and&nbsp;<code>&lt;ExpiryDate&gt;</code>.</p>
-<p class="summary">As described in&nbsp;<a href="http://docs.apigee.com/node/18281">http://docs.apigee.com/node/18281</a>, an entry is first created in in-memory cache (L1)&nbsp;and is moved to persistent database cache (L2) when in-memory limits are hit. The expiration coundown starts when the entry enters L1 cache. When the entry is moved to L2 cache, the expiration countdown restarts.</p>
-<p class="summary">For example, let's say a new entry with a 5-minute expiration is added to L1 cache. After 2 minutes, the message processor in-memory limits are reached, and the entry is moved to L2 cache. The entry's expiration countdown restarts, and it now has 5 minutes until it expires. So in this case, the entry actually remains in cache for 7 minutes.</p>
 <pre>
 &lt;ExpirySettings&gt;
   &lt;TimeOfDay ref="time_variable"&gt;expiration_time&lt;/TimeOfDay&gt;

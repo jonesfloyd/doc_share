@@ -1,0 +1,152 @@
+<h1> What's new in the docs </h1>
+<p>This page describes notable changes we made in the Apigee documentation over the past (and prior) periods.</p>
+<p>In addition to this page, keep an eye on the <a href="http://docs.apigee.com/node/8408">http://docs.apigee.com/node/8408</a> for documentation updates that correspond to specific Apigee releases.</p>
+<h2 class="landing">August 11, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Analytics: Download charts from Analytics dashboards in CSV format</strong><br />
+		You can now download all of the charts on the <a href="http://docs.apigee.com/analytics-services/content/analytics-dashboards" target="_blank">analytics dashboards</a> using CSV format. On each analytics dashboard, click <strong>Combined CSV</strong> to download a single CSV file that contains a combined set of data from all charts on the page. Alternatively, click <strong>CSV</strong> adjacent to a chart to download data specific to that chart only. (DOC-2318)</li>
+	<li><strong>17.07.31 API Management and API Runtime release notes</strong><br />
+		<a href="http://docs.apigee.com/release-notes/content/170731-apigee-edge-public-cloud-release-notes-api-management-and-runtime">http://docs.apigee.com/release-notes/content/170731-apigee-edge-public-cloud-release-notes-api-management-and-runtime</a></li>
+	<li><strong>17.08.02 UI release</strong><br />
+		<a href="http://docs.apigee.com/release-notes/content/170802-apigee-edge-public-cloud-release-notes-ui" target="_blank">http://docs.apigee.com/release-notes/content/170802-apigee-edge-public-cloud-release-notes-ui</a>&nbsp;and <a href="https://docs-new.apigee.com/release-notes#release17080200">https://docs-new.apigee.com/release-notes#release17080200</a></li>
+</ul>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Location for setting max number of open file descriptors</strong><br />
+		On Message Processor nodes, set the maximum number of open file descriptors to 64K in /etc/security/limits.conf, not by using the ulimit command as was previously shown at <a href="http://docs.apigee.com/private-cloud/latest/installation-requirements#systemlimits" target="_blank">http://docs.apigee.com/private-cloud/latest/installation-requirements#systemlimits</a>. (DOC-2296)</li>
+</ul>
+<h2 class="landing">July 28, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Document API for managing monetization scheduled jobs</strong><br />
+		In the section, <a href="http://docs.apigee.com/monetization/content/schedule-monetization-jobs#api" target="_blank">Manage the monetization job schedule using the API</a>, we added a note saying that&nbsp;Apigee Edge Private Cloud customers with system admin privileges can manage the monetization job schedule using the API. Apigee Edge Cloud customers should contact their Apigee Support representative for assistance with managing the monetization job schedule. (DOC-2269)</li>
+</ul>
+<h2 class="landing">July 14, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>ConcurrentRateLimit performance overhead</strong><br />
+		Added a note to the <a href="http://docs.apigee.com/node/11646">http://docs.apigee.com/node/11646</a> topic saying that use of the policy has performance overhead. (DOC-2228)</li>
+</ul>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Port for Developer Services portal on Apache</strong><br />
+		Updated the procedure to change the port used by the Developer Services portal when deployed on Apache. You must also update /etc/httpd/conf/vhosts/devportal.conf when changing the port number. See <a href="http://docs.apigee.com/private-cloud/latest/set-http-port-used-portal" target="_blank">http://docs.apigee.com/private-cloud/latest/set-http-port-used-portal</a>. (DOC-2209)</li>
+	<li><strong>Stop and start order for Private Cloud components</strong><br />
+		Updated the order that you use to stop and start Edge for Private Cloud components. See <a href="http://docs.apigee.com/private-cloud/latest/starting-stopping-and-restarting-apigee-edge" target="_blank">http://docs.apigee.com/private-cloud/latest/starting-stopping-and-restarting-apigee-edge</a> for the updated order. (DOC-2176)</li>
+</ul>
+<h2 class="landing">June 30, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>HIPAA &amp; PCI compliance</strong><br />
+		Published documentation on HIPPA and PCI compliance.
+		<ul class="circle">
+			<li>HIPPA: <a href="/api-services/content/hipaa-configuration-guide-edge-public-cloud">http://docs.apigee.com/api-services/content/hipaa-configuration-guide-edge-public-cloud</a></li>
+			<li>PCI: <a href="/api-services/content/pci-configuration-guide-edge-public-cloud">http://docs.apigee.com/api-services/content/pci-configuration-guide-edge-public-cloud</a></li>
+		</ul>
+		(DOC-2027)</li>
+	<li><strong>The default timeout on MPs is 55s seconds, not 120s</strong><br />
+		The value default of <code>io.timeout.millis</code> on message processors was incorrectly listed as 120000 (120 seconds). The actual default value is 55000 (55 seconds). See <a href="/api-services/reference/endpoint-properties-reference#targetendpointtransportproperties">http://docs.apigee.com/api-services/reference/endpoint-properties-reference#targetendpointtransportproperties</a> for more. (DOC-2104)</li>
+	<li><strong>Javadocs on GitHub now include definition of dependent classes and/or interfaces</strong><br />
+		For classes that can be used in Java Callouts, we updated the <a href="https://github.com/apigee/api-platform-samples/tree/master/docs">Javadoc</a> to include dependent classes. We also updated the java* samples in <a href="https://github.com/apigee/api-platform-samples/tree/master/doc-samples/">GitHub</a> and the <a href="http://docs.apigee.com/node/159">http://docs.apigee.com/node/159</a> topic. (DOC-225)</li>
+	<li><strong>17.05.22 Management API release notes</strong><br />
+		Published release notes for the <a href="/release-notes/content/170522-apigee-edge-public-cloud-release-notes-api-management">17.05.22 API Management cloud release</a>. (DOC-2122)</li>
+	<li><strong>Update to consumer key and secret naming rules</strong><br />
+		Per Apigee for Public Cloud release <a href="/release-notes/content/170522-apigee-edge-public-cloud-release-notes-api-management">17.05.22 for API management</a>, consumer key and secret naming rules have changed in the <a href="/management/apis/post/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D/apps/%7Bapp_name%7D/keys/create">management API documentation</a>. The docs now say, "Consumer keys and secrets can contain letters, numbers, underscores, and hyphens. No other special characters are allowed." (DOC-2042)</li>
+</ul>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Unpublish external-role-mapping topic</strong><br />
+		Removed documentation for the External Role Mapping feature of the external authentication mechanism pending updates to this feature. (DOC-2056)</li>
+	<li><strong>Drupal developer portal root directory in Private Cloud 4.17.05</strong><br />
+		The root directory of Drupal for the Developer Service portal for the 4.17.05 Private Cloud Release now uses <code>/opt/apigee/apigee-drupal/wwwroot</code> as the root directory, replacing <code>/opt/apigee/apigee-drupal</code>. (DOC-2181)</li>
+	<li><strong>Edge 4.17.05 installer for Pivotal Cloud Foundry</strong><br />
+		On Tuesday, June 20, 2017, we released the Apigee Edge for Private Cloud Installer for Pivotal Cloud Foundry. See <a href="/private-cloud/v4.17.05/edge-installer-pivotal-cloud-foundry" target="_blank">http://docs.apigee.com/private-cloud/v4.17.05/edge-installer-pivotal-cloud-foundry</a> for more information. (DOC-2023)</li>
+</ul>
+<h2 class="landing">June 16, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Analytics: Update metrics and dimension definitions</strong><br />
+		Updated the <a href="http://docs.apigee.com/node/8409">http://docs.apigee.com/node/8409</a> with definitions of analytics metrics and dimensions. (DOC-377)</li>
+	<li><strong>Drupal Dev Portal Default URL: *.devportal.apigee.io</strong><br />
+		The default URL for Drupal developer portals has changed from:<br />
+		<br />
+		http://{environment}-{your-org-name}.devportal.apigee.<strong>com</strong>/<br />
+		to:<br />
+		http://{environment}-{your-org-name}.devportal.apigee.<strong>io</strong>/<br />
+		<br />
+		For more information, see <a href="/developer-services/content/creating-developer-portal" target="_blank">Creating a developer portal</a>. (DOC-2108)</li>
+	<li><strong>Fix 'XSLT pagination' sample proxy</strong><br />
+		Fixed the <a href="https://github.com/apigee/api-platform-samples/tree/master/sample-proxies/pagination" target="_blank">XSLT pagination</a> sample proxy to use a local proxy as a target, replacing the broken target. (DOC-2107)</li>
+	<li><strong>Added documentation on Router troubleshooting</strong><br />
+		The Edge Router is implemented by using the Nginx router. We have added new documentation on troubleshooting the Router during configuration and update. See <a href="/private-cloud/latest/troubleshooting-edge-router" target="_blank">http://docs.apigee.com/private-cloud/latest/troubleshooting-edge-router</a>. (DOC-2018)</li>
+</ul>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Document requirement to disable IPv6 on Google Cloud Platform for RedHat/CentOS 7</strong><br />
+		If you are installing Edge on RedHat 7 or CentOS 7 on Google Cloud Platform, then you must disable IPv6 on all Qpid nodes. See the RedHat or CentOS documentation for your specific OS version for instructions on disabling IPv6. (DOC-2047)</li>
+	<li><strong>New installer and command syntax for the apigee-analytics-collector utility</strong><br />
+		Added documentation for the new installation instructions and command syntax for the apigee-analytics-collector utility. You now use <code>apigee-service</code> to install the apigee-analytics-collector utility, instead of <code>npm</code>, and invoke the apigee-analytics-collector utility through <code>apigee-service</code>. See <a href="/private-cloud/latest/uploading-api-traffic-data-apigee-beta-release" target="_blank">http://docs.apigee.com/private-cloud/latest/uploading-api-traffic-data-apigee-beta-release</a>. (DOC-2060)</li>
+	<li><strong>Updated doc for enabling JMX</strong><br />
+		The Edge for Private Cloud doc incorrectly specified that JMX was enabled by default for Edge components. However, JMX is only enabled by default for Cassandra. To enable JMX for other components, see the updated documentation at <a href="/private-cloud/latest/how-monitor#enablingjmxauthenticationandsettingthejmxpassword" target="_blank">http://docs.apigee.com/private-cloud/latest/how-monitor#enablingjmxauthenticationandsettingthejmxpassword</a>. (DOC-2055)</li>
+</ul>
+<h2 class="landing">June 2, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Private Cloud 4.17.05 documentation</strong><br />
+		We released the documentation for Apigee Edge for Private Cloud <a href="http://docs.apigee.com/node/20741">http://docs.apigee.com/node/20741</a>. See the release notes at <a href="http://docs.apigee.com/node/25236">http://docs.apigee.com/node/25236</a>. (DOC-2058)</li>
+</ul>
+<h2 class="landing">May 19, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Set isEnabled default to true for Update TargetServer API</strong></li>
+	<li>The default value for <code>isEnabled</code> is now correctly shown as 'true' in the property descriptions of the <a href="/management/apis/put/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/targetservers/%7Btargetserver%7D">Update TargetServer API</a>. (DOC-1889)</li>
+	<li><strong>Offset parameter on the /stats API ignored on raw "fact" queries</strong><br />
+		With the <a href="/management/apis/get/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/stats/%7Bdimension_name%7D-0">/stats management API</a>, which gets metrics for a dimension, the <code>offset</code> pagination query parameter description includes a new note that the parameter is ignored if the Spark engine is used to process a "fact" query. (DOC-1977)</li>
+	<li>
+		<p><strong>Managing the audience for your portal and its contents</strong></p>
+		<p>The New Edge UI documentation contains a new section on managing the audience for your portal and its contents. Specifically, you can:</p>
+		<ul>
+			<li>Restrict the audience for your portal by identifying the individual email addresses (developer@some-company.com) or email domains (@some-company.com) that can create accounts. See <a href="https://docs-new.apigee.com/portal-audience" target="_blank">Managing the audience for your portal</a>.</li>
+			<li>Manage the audience for your page in your portal by allowing access to all users or registered users only. See <a href="https://docs-new.apigee.com/page-editor#audience" target="_blank">Managing the audience for a page in your portal</a>.</li>
+			<li>Manage the audience for an API product on your portal by allowing access to all users or registered users only. See <a href="https://docs-new.apigee.com/publish-apis#audience" target="_blank">Managing the audience for an API product on your portal</a>.</li>
+		</ul>
+		<p>(DOC-1993)</p>
+	</li>
+</ul>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Add MP ports to multi-Data Centers image</strong><br />
+		The port diagram for multiple data centers now shows that port 4528 must be open on all Message Processors across data centers. See <a href="/private-cloud/latest/installation-requirements#firewallsandvirtualhosts-edgeportrequirements">http://docs.apigee.com/private-cloud/latest/installation-requirements#firewallsandvirtualhosts-edgeportrequirements</a>. (DOC-1997)</li>
+</ul>
+<h2 class="landing">May 5, 2017</h2>
+<p>Following are notable doc updates between the previous period and the date above.</p>
+<h3>Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Create docs for Acquia Drupal (for EU customers)</strong><br />
+		Apigee now uses Acquia, a web site management service, for hosting cloud-based versions of the Developer Services portal in the European Union (EU). Acquia is designed to work with Drupal to let you develop, test, and publish your portal in a secure environment. For more information, see <a href="/developer-services/content/working-acquia" target="_blank">Working with Acquia</a>. (DOC-1952)</li>
+	<li><strong>Clarify the description of cache behavior</strong><br />
+		In the <a href="http://docs.apigee.com/node/18281">http://docs.apigee.com/node/18281</a> topic, we corrected some information and clarified caching behavior between message processors. (DOC-1973)</li>
+	<li><strong>Mark Apigee Test as an Apigee Labs project</strong><br />
+		Apigee Test is an Apigee Labs product. We've added a banner to the Apigee Test topics indicating this, and we moved the Apigee Test topics to a new <a href="/apigee-labs/about-apigee-labs" target="_blank">Apigee Labs</a> section in the docs. (DOC-1884)</li>
+</ul>
+<h3>Private Cloud</h3>
+<ul class="checkmark">
+	<li><strong>Update Message Logging policy reference to describe Edge Private Cloud directory structure</strong><br />
+		Updated the doc for the <a href="/api-services/reference/message-logging-policy" target="_blank">Message Logging policy</a> to describe the log file location for Edge for Private Cloud and how to configure it. (DOC-1844)</li>
+	<li><strong>Use IP addresses when configuring Cassandra nodes</strong><br />
+		Updated multiple Edge for Private Cloud topics to indicate that you must use IP addresses in the config files to identify Cassandra nodes. You cannot use DNS names. (DOC-1985)</li>
+	<li><strong>Replace metadata size with permgen size</strong><br />
+		Updated <a href="http://docs.apigee.com/node/20446">http://docs.apigee.com/node/20446</a> to note that permgen size was replaced in Java 1.8 with class metadata size. (DOC-1962)</li>
+	<li><strong>10MB as default message payload size</strong><br />
+		Updated the Edge Private Cloud docs to show 10MB as the default message payload size. For example, see the 4.17.01 doc here: <a href="/api-services/content/best-practices-api-proxy-design-and-development#size">http://docs.apigee.com/api-services/content/best-practices-api-proxy-design-and-development#size</a>. (DOC-1933)</li>
+	<li><strong>Property ws.acceptAnyCertificate changed to play.ws.ssl.loose.acceptAnyCertificate</strong><br />
+		In the Edge Private Cloud 4.17.01 doc for <a href="/private-cloud/latest/configuring-ssl-management-api#configuretheedgeuitousetlstoaccesstheedgeapi" target="_blank">Configure the Edge UI to use TLS to access the Edge API</a>, the <code>conf/application.conf+ws.acceptAnyCertificate</code> property has been changed to <code>conf/application.conf+play.ws.ssl.loose.acceptAnyCertificate</code>. (DOC-1926)</li>
+</ul>

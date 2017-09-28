@@ -78,8 +78,9 @@
 <p>You can use the <a href="http://docs.apigee.com/node/16861">http://docs.apigee.com/node/16861</a> API call to see which roles have <code>get</code> and <code>put</code> permissions for the <code>oauth2</code> resource.</p>
 <p>If you need to add or remove any permissions, contact <a href="http://community.apigee.com/content/apigee-customer-support" target="new">Apigee Support</a> to have them perform the updates.</p>
 <h3>Step 3:&nbsp;Copy existing OAuth 2.0 access tokens to your Cassandra nodes</h3>
-<div class="note">
-	<p>This task is optional if you do not need to retrieve and revoke existing OAuth 2.0 access tokens by end user ID. Contact <a href="http://community.apigee.com/content/apigee-customer-support" target="new">Apigee Support</a> to have them perform this step for you.</p>
+<div class="note"><!-- The not-required-with-CPS line added per DBS-1676 -->
+	<p>This step is not required if&nbsp;<a href="/api-services/content/api-reference-getting-started#cps" target="_blank">Core Persistence Services (CPS)</a>&nbsp;is enabled for your organization.</p>
+	<p>For non-CPS organizations, this task is optional if you do not need to retrieve and revoke existing OAuth 2.0 access tokens by end user ID. Contact <a href="http://community.apigee.com/content/apigee-customer-support" target="new">Apigee Support</a> to have them perform this step for you.</p>
 </div>
 <p><strong>Performed by Apigee Support</strong>: In this task, copies of existing OAuth 2.0 access tokens in impacted orgs will be copied and stored in your Cassandra nodes. This procedure will be performed on the Cassandra nodes for each of your Apigee Edge pods. This will allow the retrieve and revoke API calls to run against all of your OAuth 2.0 access tokens, existing and newly generated.</p>
 <h3>Step 4:&nbsp;Add the oauth_max_search_limit property to your management server and message processor</h3>

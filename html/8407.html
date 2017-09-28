@@ -365,6 +365,13 @@
   &lt;LocalTargetConnection/&gt;
 &lt;/TargetEndpoint&gt;</pre>
 <h3>TargetEndpoint Configuration Elements</h3>
+<p>A TargetEndpoint can call a target in one of the following ways:</p>
+<ul>
+	<li>HTTPTargetConnection for HTTP(S) calls</li>
+	<li>LocalTargetConnection for local proxy-to-proxy <a href="/api-services/content/connecting-proxies-other-proxies" target="_blank">chaining</a></li>
+	<li>ScriptTarget for calls to an Edge-hosted <a href="/api-services/content/overview-nodejs-apigee-edge" target="_blank">Node.js script</a></li>
+</ul>
+<p>Configure only one of these in a TargetEndpoint.</p>
 <table border="1" cellpadding="1" cellspacing="1" class="table">
 	<thead>
 		<tr>
@@ -409,7 +416,10 @@
 		</tr>
 		<tr>
 			<td><b><code>HTTPTargetConnection</code> </b></td>
-			<td colspan="3">With its child elements, specifies a backend resource reach via HTTP.</td>
+			<td colspan="3">
+				<p>With its child elements, specifies a backend resource reach via HTTP.</p>
+				<p>If you use HTTPTargetConnection, don't configure other types of target connections (ScriptTarget or LocalTargetConnection).</p>
+			</td>
 		</tr>
 		<tr>
 			<td><code>URL</code></td>
@@ -444,6 +454,7 @@
 			<td colspan="3">With its child elements, specifies a resource to be reached locally, bypassing network characteristics such as load balancing and message processors.
 				<p>To specify the target resource, include either the APIProxy child element (with the ProxyEndpoint element) or the Path child element.</p>
 				<p>For more information, see <a href="http://docs.apigee.com/node/19591">http://docs.apigee.com/node/19591</a>.</p>
+				<p>If you use LocalTargetConnection, don't configure other types of target connections (HTTPTargetConnection or ScriptTarget).</p>
 			</td>
 		</tr>
 		<tr>
@@ -495,8 +506,8 @@
 			<td>
 				<p>Defines the resource type (node) and the name of the main Node.js script that implements TargetEndpoint functionality.</p>
 				<p><span style="font-family:courier new,courier,monospace;">&lt;ResourceURL&gt;node://server.js&lt;/ResourceURL&gt;</span></p>
-				<p>ScriptTarget is an alternative to HTTPTargetConnection. (A TargetEndpoint can define either an HTTPTargetConnection or a ScriptTarget, but not both.)</p>
-				<p>See <a href="http://docs.apigee.com/node/14941">http://docs.apigee.com/node/14941</a>.</p>
+				<p>The script needs to be included with your API proxy's resource files. See <a href="http://docs.apigee.com/node/14941">http://docs.apigee.com/node/14941</a>.</p>
+				<p>If you use ScriptTarget, don't configure other types of target connections (HTTPTargetConnection or LocalTargetConnection).</p>
 			</td>
 			<td>N/A</td>
 			<td>Yes</td>

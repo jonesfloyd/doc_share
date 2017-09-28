@@ -1,5 +1,5 @@
 <h1> Quota policy </h1>
-<img alt="" src="sites/docs/files/icon_policy_quota.jpg" />
+<img src="sites/docs/files/icon_policy_quota.jpg" />
 <h3>What</h3>
 <p>Use the Quota policy to configure the number of request messages that an API proxy allows over a period of time, such as a minute, hour, day, week, or month. You can set the quota to be the same for all apps accessing the API proxy, or you can set the quota based on:</p>
 <ul>
@@ -117,9 +117,9 @@
 <p>These policy code samples illustrate how to start and end quota periods by:</p>
 <ul class="nav nav-tabs" id="samplesTab">
 	<li class="active"><a data-toggle="tab" href="#serviceplan">More Dynamic Quota</a></li>
+	<li><a data-toggle="tab" href="#calendar_type">Start Time</a></li>
+	<li><a data-toggle="tab" href="#flowvariables">Access Counter</a></li>
 	<li><a data-toggle="tab" href="#first">First Request</a></li>
-	<li><a data-toggle="tab" href="#calendar">Start Time</a></li>
-	<li><a data-toggle="tab" href="#flowvars">Access Counter</a></li>
 	<li><a data-toggle="tab" href="#identifier">Set identifier</a></li>
 	<li><a data-toggle="tab" href="#class">Class</a></li>
 </ul>
@@ -134,7 +134,7 @@
 		<p>Dynamic quotas enable you to configure a single Quota policy that enforces different Quota settings based on information passed to the Quota policy. Another term for Quota settings in this context is "Service Plan". The dynamic Quota checks the apps' "Service Plan" and then enforces those settings.</p>
 		<p><strong>Note</strong>: If you specify both a value and a&nbsp;reference for an element, then reference gets the priority. If reference does not resolve at runtime, then the value is used.</p>
 		<p>For example, when you create an API product, you can optionally set the allowed quota limit, time unit, and interval. However, setting these value on the API product does not enforce their use in an API proxy. You must also add a Quota policy to the API proxy that reads these values. See <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a> for more.</p>
-		<p>In the example above, the API proxy containing the Quota policy uses a VerifyAPIKey policy, named <span style="font-family:courier new,courier,monospace;">verify-api-key</span>, to validate the API key passed in a request. The Quota policy then accesses the flow variables from the VerifyAPIKey policy to read the quota values set on the API product. For more on VerifyAPIKey&nbsp;flow variables, see <a href="http://docs.apigee.com/node/3977">http://docs.apigee.com/node/3977</a>.</p>
+		<p>In the example above, the API proxy containing the Quota policy uses a VerifyAPIKey policy, named <code>verify-api-key</code>, to validate the API key passed in a request. The Quota policy then accesses the flow variables from the VerifyAPIKey policy to read the quota values set on the API product. For more on VerifyAPIKey&nbsp;flow variables, see <a href="http://docs.apigee.com/node/3977">http://docs.apigee.com/node/3977</a>.</p>
 		<p>Another option is to set custom attributes on individual developers or apps, and then read those values in the Quota policy. For example, you want to set different quota values per developer. In this case, you set custom attributes on the developer containing the limit, time unit, and interval. You then reference these values in the Quota policy as shown below:</p>
 		<pre>
 &lt;Quota name="DeveloperQuota"&gt; 
@@ -153,34 +153,20 @@
 		</ul>
 		<p>For each API proxy, you can add a Quota policy that either references the same variable as all the other Quota policies in al the other proxies, or the Quota policy can reference variables unique for that policy and proxy.</p>
 	</div>
-	<!--First request tab start-->
-	<div class="tab-pane" id="first">
-		<pre>
-&lt;Quota name="MyQuota"&gt;
-  &lt;Interval&gt;1&lt;/Interval&gt;
-  &lt;TimeUnit&gt;hour&lt;/TimeUnit&gt;
-  &lt;Allow count="10000"/&gt;
-&lt;/Quota&gt;</pre>
-		<p>Use this sample code to enforce a quota of 10,000 calls per one hour. The policy resets the quota counter at the top of each hour. If the counter reaches the 10,000-call quota before the end of the hour, calls beyond 10,000 are rejected.&nbsp;</p>
-		<p>For example, if the counter starts at <code>2014-07-08 07:00:00</code>, then it resets to 0 at <code>2014-07-08 08:00:00</code> (1 hour from the start time). If the first message is received at <code>2014-07-08 07:35:28</code> and the message count reaches 10,000 before&nbsp;<code>2014-07-08 08:00:00</code>, calls beyond that count are rejected until the count resets at the top of the hour.</p>
-		<p>The counter reset time is based on the combination of <code>&lt;Interval&gt;</code> and <code>&lt;TimeUnit&gt;</code>.&nbsp;For example, if you set <span style="font-family:courier new,courier,monospace;">&lt;Interval&gt;</span> to 12 for a <span style="font-family:courier new,courier,monospace;">&lt;TimeUnit&gt;</span> of hour, then the counter resets every twelve hours. You can set <span style="font-family:courier new,courier,monospace;">&lt;TimeUnit&gt;</span> to minute, hour, day, week, or month.&nbsp;</p>
-		<p>You can reference this policy in multiple places in your API proxy. For example, you could place it on the Proxy&nbsp;PreFlow so it is executed on on every request. Or, you could place it on multiple flows in the API proxy. If you use this policy in multiple places in the proxy, it maintains a single counter that is updated by all instances of the policy. &nbsp;</p>
-		<p>Alternatively, you can define multiple Quota policies in your API proxy. Each Quota policy maintains its own counter, based on the <span style="font-family:courier new,courier,monospace;">name</span> attribute of the policy.</p>
-	</div>
 	<!--This is the Calendar tab-->
-	<div class="tab-pane" id="calendar">
+	<div class="tab-pane" id="calendar_type">
 		<pre>
 &lt;Quota name="QuotaPolicy" type="calendar"&gt;
-  &lt;StartTime&gt;2014-02-18 10:30:00&lt;/StartTime&gt;
+  &lt;StartTime&gt;2017-02-18 10:30:00&lt;/StartTime&gt;
   &lt;Interval&gt;5&lt;/Interval&gt;
   &lt;TimeUnit&gt;hour&lt;/TimeUnit&gt;
   &lt;Allow count="99"/&gt;
 &lt;/Quota&gt;</pre>
-		<p>For a Quota with <code>type</code> set to <code>calendar</code>, you must define an explicit <code>&lt;StartTime&gt;</code> value. The time value is the GMT time, not local time. If you do not provide a <code>&lt;StartTime&gt;</code> value for a policy of type <span style="font-family:courier new,courier,monospace;">calendar</span>, Edge issues an error.</p>
-		<p>The Quota counter for each app is refreshed based on the <span style="font-family:courier new,courier,monospace;">&lt;StartTime&gt;</span>, &nbsp;<span style="font-family:courier new,courier,monospace;">&lt;Interval&gt;</span>, and <span style="font-family:courier new,courier,monospace;">&lt;TimeUnit&gt;</span> values. For this example, the Quota begins counting at 10:30 am GMT on February 18, 2014, and refreshes every 5 hours. Therefore, the next refresh is at 3:30 pm GMT on February 18, 2014.&nbsp;</p>
+		<p>For a Quota with <code>type</code> set to <code>calendar</code>, you must define an explicit <code>&lt;StartTime&gt;</code> value. The time value is the GMT time, not local time. If you do not provide a <code>&lt;StartTime&gt;</code> value for a policy of type <code>calendar</code>, Edge issues an error.</p>
+		<p>The Quota counter for each app is refreshed based on the <code>&lt;StartTime&gt;</code>, &nbsp;<code>&lt;Interval&gt;</code>, and <code>&lt;TimeUnit&gt;</code> values. For this example, the Quota begins counting at 10:30 am GMT on February 18, 2017, and refreshes every 5 hours. Therefore, the next refresh is at 3:30 pm GMT on February 18, 2017.&nbsp;</p>
 	</div>
 	<!--This is the Reference Flow Vars tab-->
-	<div class="tab-pane" id="flowvars">
+	<div class="tab-pane" id="flowvariables">
 		<pre>
 &lt;Quota name="QuotaPolicy"&gt;
   &lt;Interval&gt;5&lt;/Interval&gt;
@@ -188,11 +174,11 @@
   &lt;Allow count="99"/&gt;
 &lt;/Quota&gt;</pre>
 		<p>An API proxy has access to the flow variables set by the Quota policy. You can access these flow variables in the API proxy to perform conditional processing, monitor the policy as it gets close to the quota limit, return the current quota counter to an app, or for other reasons.</p>
-		<p>Because access the flow variables for the policy is based on the policies <span style="font-family:courier new,courier,monospace;">name</span> attribute, for the policy above named&nbsp;<span style="font-family:courier new,courier,monospace;">QuotaPolicy</span> you access its flow variables in the form:</p>
+		<p>Because access the flow variables for the policy is based on the policies <code>name</code> attribute, for the policy above named&nbsp;<code>QuotaPolicy</code> you access its flow variables in the form:</p>
 		<ul>
-			<li><span style="font-family:courier new,courier,monospace;">ratelimit.QuotaPolicy.allowed.count</span>: Allowed count.</li>
-			<li><span style="font-family:courier new,courier,monospace;">ratelimit.QuotaPolicy.used.count</span>: Current counter value.</li>
-			<li><span style="font-family:courier new,courier,monospace;">ratelimit.QuotaPolicy.expiry.time</span>: UTC time when the counter resets.</li>
+			<li><code>ratelimit.QuotaPolicy.allowed.count</code>: Allowed count.</li>
+			<li><code>ratelimit.QuotaPolicy.used.count</code>: Current counter value.</li>
+			<li><code>ratelimit.QuotaPolicy.expiry.time</code>: UTC time when the counter resets.</li>
 		</ul>
 		<p>There are many other flow variables that you can access, as described below.</p>
 		<p>For example, you can use the following AssignMessage policy to return the values of Quota flow variables as response headers:</p>
@@ -207,27 +193,41 @@
         &lt;/Headers&gt;
     &lt;/Set&gt;
     &lt;IgnoreUnresolvedVariables&gt;false&lt;/IgnoreUnresolvedVariables&gt;
-&lt;/AssignMessage&gt;<span style="font-family: Arial, Verdana, sans-serif;">&nbsp;&nbsp;</span></pre>
+&lt;/AssignMessage&gt;</pre>
+	</div>
+	<!--First request tab start-->
+	<div class="tab-pane" id="first">
+		<pre>
+&lt;Quota name="MyQuota"&gt;
+  &lt;Interval&gt;1&lt;/Interval&gt;
+  &lt;TimeUnit&gt;hour&lt;/TimeUnit&gt;
+  &lt;Allow count="10000"/&gt;
+&lt;/Quota&gt;</pre>
+		<p>Use this sample code to enforce a quota of 10,000 calls per one hour. The policy resets the quota counter at the top of each hour. If the counter reaches the 10,000-call quota before the end of the hour, calls beyond 10,000 are rejected.&nbsp;</p>
+		<p>For example, if the counter starts at <code>2017-07-08 07:00:00</code>, then it resets to 0 at <code>2017-07-08 08:00:00</code> (1 hour from the start time). If the first message is received at <code>2017-07-08 07:35:28</code> and the message count reaches 10,000 before&nbsp;<code>2017-07-08 08:00:00</code>, calls beyond that count are rejected until the count resets at the top of the hour.</p>
+		<p>The counter reset time is based on the combination of <code>&lt;Interval&gt;</code> and <code>&lt;TimeUnit&gt;</code>.&nbsp;For example, if you set <code>&lt;Interval&gt;</code> to 12 for a <code>&lt;TimeUnit&gt;</code> of hour, then the counter resets every twelve hours. You can set <code>&lt;TimeUnit&gt;</code> to minute, hour, day, week, or month.&nbsp;</p>
+		<p>You can reference this policy in multiple places in your API proxy. For example, you could place it on the Proxy&nbsp;PreFlow so it is executed on on every request. Or, you could place it on multiple flows in the API proxy. If you use this policy in multiple places in the proxy, it maintains a single counter that is updated by all instances of the policy. &nbsp;</p>
+		<p>Alternatively, you can define multiple Quota policies in your API proxy. Each Quota policy maintains its own counter, based on the <code>name</code> attribute of the policy.</p>
 	</div>
 	<!--This is the Identifier tab-->
 	<div class="tab-pane" id="identifier">
 		<pre>
 &lt;Quota name="QuotaPolicy" type="calendar"&gt;
   &lt;Identifier ref="request.header.clientId"/&gt; 
-  &lt;StartTime&gt;2014-02-18 10:00:00&lt;/StartTime&gt;
+  &lt;StartTime&gt;2017-02-18 10:00:00&lt;/StartTime&gt;
   &lt;Interval&gt;5&lt;/Interval&gt;
   &lt;TimeUnit&gt;hour&lt;/TimeUnit&gt;
   &lt;Allow count="99"/&gt;
 &lt;/Quota&gt;</pre>
-		<p>By default, a Quota policy defines a single counter for the API proxy, regardless of the origin of a request. Alternatively, you can use the <span style="font-family: 'courier new', courier, monospace;">&lt;Identifier&gt;</span> attribute with a Quota policy to&nbsp;maintain separate counters based on the value of the <span style="font-family: 'courier new', courier, monospace;">&lt;Identifier&gt;</span> attribute.</p>
-		<p>For example, use the <span style="font-family:courier new,courier,monospace;">&lt;Identifier&gt;</span> tag to define separate counters for every client ID. On a request to your proxy, the client app then passes a header containing the <span style="font-family:courier new,courier,monospace;">clientID</span>, as shown in the example above.</p>
-		<p>You can specify any flow variable to the <span style="font-family:courier new,courier,monospace;">&lt;Identifier&gt;</span> attribute. For example, you could specify that a query param named <span style="font-family:courier new,courier,monospace;">id</span> contains the unique identifier:</p>
+		<p>By default, a Quota policy defines a single counter for the API proxy, regardless of the origin of a request. Alternatively, you can use the <code>&lt;Identifier&gt;</code> attribute with a Quota policy to&nbsp;maintain separate counters based on the value of the <code>&lt;Identifier&gt;</code> attribute.</p>
+		<p>For example, use the <code>&lt;Identifier&gt;</code> tag to define separate counters for every client ID. On a request to your proxy, the client app then passes a header containing the <code>clientID</code>, as shown in the example above.</p>
+		<p>You can specify any flow variable to the <code>&lt;Identifier&gt;</code> attribute. For example, you could specify that a query param named <code>id</code> contains the unique identifier:</p>
 		<pre>
 &lt;Identifier ref="request.queryparam.id"/&gt;</pre>
-		<p>If you use the VerifyAPIKey&nbsp;policy to validate the API key, or the OAuthV2 policies with OAuth tokens, you can use information in the API key or token to define individual counters for the same Quota policy. &nbsp;For example, the following <span style="font-family:courier new,courier,monospace;">&lt;Identifier&gt;</span> tag uses the <span style="font-family:courier new,courier,monospace;">client_id</span> flow variable of a VerifyAPIKey policy named <span style="font-family:courier new,courier,monospace;">verify-api-key</span>:</p>
+		<p>If you use the VerifyAPIKey&nbsp;policy to validate the API key, or the OAuthV2 policies with OAuth tokens, you can use information in the API key or token to define individual counters for the same Quota policy. &nbsp;For example, the following <code>&lt;Identifier&gt;</code> tag uses the <code>client_id</code> flow variable of a VerifyAPIKey policy named <code>verify-api-key</code>:</p>
 		<pre>
 &lt;Identifier ref="verifyapikey.verify-api-key.client_id"&gt;&lt;/Identifier&gt;</pre>
-		<p>Each unique <span style="font-family:courier new,courier,monospace;">client_id</span> value now defines its own counter in the Quota policy.</p>
+		<p>Each unique <code>client_id</code> value now defines its own counter in the Quota policy.</p>
 	</div>
 	<!--This is the Class tab-->
 	<div class="tab-pane" id="class">
@@ -242,13 +242,13 @@
     &lt;/Class&gt;
   &lt;/Allow&gt;
 &lt;/Quota&gt;</pre>
-		<p>You can set Quota limits dynamically by using a class-based Quota count. In this example, the quota limit is determined by the value of the <span style="font-family:courier new,courier,monospace;">developer_segment</span> header&nbsp;passed with each request. That variable can have a value of <span style="font-family:courier new,courier,monospace;">platinum</span> or <span style="font-family:courier new,courier,monospace;">silver</span>. If the header has an invalid value, the policy returns a quota violation error.</p>
+		<p>You can set Quota limits dynamically by using a class-based Quota count. In this example, the quota limit is determined by the value of the <code>developer_segment</code> header&nbsp;passed with each request. That variable can have a value of <code>platinum</code> or <code>silver</code>. If the header has an invalid value, the policy returns a quota violation error.</p>
 		<div class="note">
-			<p>You cannot use both the <span style="font-family:courier new,courier,monospace;">&lt;Class&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;Identifier&gt;</span> elements in the same Quota&nbsp;policy.&nbsp;</p>
+			<p>You cannot use both the <code>&lt;Class&gt;</code> and <code>&lt;Identifier&gt;</code> elements in the same Quota&nbsp;policy.&nbsp;</p>
 		</div>
 	</div>
 </div>
-<hr />
+<hr /><!-- end of Samples -->
 <h2 id="usagenotes">About the Quota policy</h2>
 <p>A Quota is an allotment of request messages that an API proxy can handle over a time period, such as minute, hour, day, week, or month. The policy maintains counters that tally the number of requests received by the API proxy. This capability enables API providers to enforce limits on the number of API calls made by apps over an interval of time. Using Quota policies you can, for example, limit apps to 1 request per minute, or to 10,000 requests per month.</p>
 <div class="note">
@@ -258,7 +258,7 @@
 <p>A variation on Quota called&nbsp;SpikeArrest&nbsp;prevents traffic spikes (or bursts) that can be caused by a sudden increase in usage, buggy clients, or malicious attacks. For more information on&nbsp;SpikeArrest, see <a href="http://docs.apigee.com/node/53">http://docs.apigee.com/node/53</a>.</p>
 <p>Quotas apply to individual API proxies and are not distributed among API proxies. For example, if you have three API proxies in an API product, a single quota is not shared across all three even if all three use the same quota policy configuration.</p>
 <h2>Quota policy types</h2>
-<p>The Quota policy supports several different types of policies: default, <span style="font-family:courier new,courier,monospace;">calendar</span>, <span style="font-family:courier new,courier,monospace;">flexi</span>, and <span style="font-family:courier new,courier,monospace;">rollingwindow</span>. Each type defines when the quota counter starts and when it resets, as shown in the following table:</p>
+<p>The Quota policy supports several different types of policies: default, <code>calendar</code>, <code>flexi</code>, and <code>rollingwindow</code>. Each type defines when the quota counter starts and when it resets, as shown in the following table:</p>
 <table class="table">
 	<thead>
 		<tr>
@@ -302,13 +302,13 @@
 	</tbody>
 </table>
 <p>For <code>type="calendar"</code>, you must specify the value of <code>&lt;StartTime&gt;</code>.</p>
-<p>The table does not list the value for the <span style="font-family:courier new,courier,monospace;">rollingwindow</span> type. Rolling window quotas work by setting the size of a quota "window", such as a one hour or one day window. When a new request comes in, the policy determines&nbsp;if the quota has been exceeded in the past "window" of time.</p>
+<p>The table does not list the value for the <code>rollingwindow</code> type. Rolling window quotas work by setting the size of a quota "window", such as a one hour or one day window. When a new request comes in, the policy determines&nbsp;if the quota has been exceeded in the past "window" of time.</p>
 <p>For example, you define a two hour window that allows 1000 requests. A new request comes&nbsp;in at 4:45 PM.The policy calculates the quota count for the past two hour window, meaning the number of requests since 2:45 PM. If the quota limit has not been exceeded in that two-hour window, then the request is allowed.</p>
 <p>One minute later, at 4:46 PM, another request comes in. Now the policy calculates the quota&nbsp;count&nbsp;since 2:46 PM to determine if the limit has been exceeded.&nbsp;</p>
-<p>For the&nbsp;<span style="font-family: 'courier new', courier, monospace;">rollingwindow</span>&nbsp;type, the counter never resets, but is recalculated&nbsp;on each request.&nbsp;</p>
+<p>For the&nbsp;<code>rollingwindow</code>&nbsp;type, the counter never resets, but is recalculated&nbsp;on each request.&nbsp;</p>
 <h2>Understanding quota counters</h2>
-<p>By default, a Quota policy maintains a single counter, regardless of how many times you reference it in an API proxy. The name of the quota counter is based on the&nbsp;<span style="font-family: 'courier new', courier, monospace;">name</span>&nbsp;attribute of the policy.</p>
-<p>For example, you create a Quota policy named <span style="font-family: 'courier new', courier, monospace;">MyQuotaPolicy</span>&nbsp;with a limit of 5 requests and place it on multiple flows (Flow A, B, and C) in the API proxy. Even though it is used in multiple flows, it maintains a single counter that is updated by all instances of the policy:</p>
+<p>By default, a Quota policy maintains a single counter, regardless of how many times you reference it in an API proxy. The name of the quota counter is based on the&nbsp;<code>name</code>&nbsp;attribute of the policy.</p>
+<p>For example, you create a Quota policy named <code>MyQuotaPolicy</code>&nbsp;with a limit of 5 requests and place it on multiple flows (Flow A, B, and C) in the API proxy. Even though it is used in multiple flows, it maintains a single counter that is updated by all instances of the policy:</p>
 <ul>
 	<li>&nbsp;Flow A is executed -&gt; MyQuotaPolicy is executed and its counter = 1</li>
 	<li>&nbsp;Flow B is executed -&gt; MyQuotaPolicy is executed and its counter = 2</li>
@@ -317,8 +317,9 @@
 	<li>&nbsp;Flow A is executed -&gt; MyQuotaPolicy is executed and its counter = 5</li>
 </ul>
 <p>The next request to any of the three flows is rejected because the quota counter has reached its limit.</p>
-<p>Alternatively, you can define multiple Quota policies in your API proxy and use a different policy in each flow. Each Quota policy maintains its own counter, based on the&nbsp;<span style="font-family: 'courier new', courier, monospace;">name</span>&nbsp;attribute of the policy.</p>
-<p>Or, use the &nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Class&gt;</span>&nbsp;or&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Identifier&gt;</span>&nbsp;elements in the Quota&nbsp;policy to define multiple, unique counters in a single policy. By using these elements, a single policy can maintain different counters based on the app making the request, the app developer making the request, a client ID or other client identifier, and more. See the examples above for more information&nbsp;on using the &nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Class&gt;</span>&nbsp;or&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Identifier&gt;</span>&nbsp;elements.</p>
+<p>Using the same Quota policy in more than one place in an API proxy flow, which can unintentially cause Quota to run out faster than you expected, is an anti-pattern described in <a href="https://community.apigee.com/content/kbentry/44662/the-book-of-apigee-edge-antipatterns.html" target="_blank">The Book of Apigee Edge Antipatterns</a>.</p>
+<p>Alternatively, you can define multiple Quota policies in your API proxy and use a different policy in each flow. Each Quota policy maintains its own counter, based on the&nbsp;<code>name</code>&nbsp;attribute of the policy.</p>
+<p>Or, use the &nbsp;<code>&lt;Class&gt;</code>&nbsp;or&nbsp;<code>&lt;Identifier&gt;</code>&nbsp;elements in the Quota&nbsp;policy to define multiple, unique counters in a single policy. By using these elements, a single policy can maintain different counters based on the app making the request, the app developer making the request, a client ID or other client identifier, and more. See the examples above for more information&nbsp;on using the &nbsp;<code>&lt;Class&gt;</code>&nbsp;or&nbsp;<code>&lt;Identifier&gt;</code>&nbsp;elements.</p>
 <div class="note">
 	<p>Quota counters are scoped to the API proxy that contains the Quota policy. If multiple API proxies contain Quota policies with the same name, the counters are maintained separately.</p>
 </div>
@@ -350,7 +351,7 @@
    &lt;/Allow&gt;
    &lt;Interval ref="verifyapikey.VerifyAPIKey.apiproduct.developer.quota.interval"&gt;1&lt;/Interval&gt; 
    &lt;TimeUnit ref="verifyapikey.VerifyAPIKey.apiproduct.developer.quota.timeunit"&gt;month&lt;/TimeUnit&gt;
-   &lt;StartTime&gt;2014-7-16 12:00:00&lt;/StartTime&gt; 
+   &lt;StartTime&gt;2017-7-16 12:00:00&lt;/StartTime&gt; 
    &lt;Distributed&gt;false&lt;/<wbr />Distributed&gt; 
    &lt;Synchronous&gt;false&lt;/<wbr />Synchronous&gt; 
    &lt;AsynchronousConfiguration&gt; 
@@ -376,10 +377,10 @@
 			<td>type</td>
 			<td>
 				<p>Use to set when the quota counter starts counting usage. See the table above for more information.</p>
-				<p>If you omit a <span style="font-family:courier new,courier,monospace;"><code>type</code></span> value, the default counter begins when the first request message is received from an app.&nbsp;</p>
+				<p>If you omit a <code><code>type</code></code> value, the default counter begins when the first request message is received from an app.&nbsp;</p>
 				<p>Valid values include:</p>
 				<ul>
-					<li><code>calendar</code>: Configure a quota based on an explicit start time. The Quota counter for each app is refreshed based on the <span style="font-family:courier new,courier,monospace;">&lt;StartTime&gt;</span>,&nbsp;<code>&lt;Interval&gt;,&nbsp;</code>and <code>&lt;TimeUnit&gt;</code> values that you set.&nbsp;</li>
+					<li><code>calendar</code>: Configure a quota based on an explicit start time. The Quota counter for each app is refreshed based on the <code>&lt;StartTime&gt;</code>,&nbsp;<code>&lt;Interval&gt;,&nbsp;</code>and <code>&lt;TimeUnit&gt;</code> values that you set.&nbsp;</li>
 					<li><code>rollingwindow</code>: Configure a quota that uses a "rolling window" counter that advances by the time interval that you specify. The counter starts when the first message is received from the client plus the interval that you define.&nbsp;</li>
 					<li><code>flexi</code>: Configure a quota that causes the counter to begin when the first request message is received from an app, and resets based on the&nbsp;<code>&lt;Interval&gt;,&nbsp;</code>and&nbsp;<code>&lt;TimeUnit&gt;</code>&nbsp;values.</li>
 				</ul>
@@ -392,14 +393,14 @@
 <a href="http://docs.apigee.com/node/18471">Content to be inserted here</a>
 <h2 id="allow">&lt;Allow&gt; element</h2>
 <p>Specifies the count limit for the quota. If the counter for the policy reaches this limit value, subsequent calls are rejected until the counter resets.&nbsp;</p>
-<p>Shown below are three ways to set the <span style="font-family:courier new,courier,monospace;">&lt;Allow&gt;</span> element:</p>
+<p>Shown below are three ways to set the <code>&lt;Allow&gt;</code> element:</p>
 <pre>
 &lt;Allow count="2000"/&gt;&nbsp;</pre>
 <pre>
 &lt;Allow countRef="verifyapikey.VerifyAPIKey.apiproduct.developer.quota.limit"/&gt;&nbsp;</pre>
 <pre>
 &lt;Allow count="2000" countRef="verifyapikey.VerifyAPIKey.apiproduct.developer.quota.limit"/&gt;&nbsp;</pre>
-<p>If you specify both <span style="font-family:courier new,courier,monospace;">count</span> and <span style="font-family:courier new,courier,monospace;">countRef</span>, then <span style="font-family:courier new,courier,monospace;">countRef</span> gets the priority. If <span style="font-family:courier new,courier,monospace;">countRef</span> does not resolve at runtime, then the value of <span style="font-family:courier new,courier,monospace;">count</span> is used.</p>
+<p>If you specify both <code>count</code> and <code>countRef</code>, then <code>countRef</code> gets the priority. If <code>countRef</code> does not resolve at runtime, then the value of <code>count</code> is used.</p>
 <table class="pd-table">
 	<tbody>
 		<tr>
@@ -437,7 +438,7 @@
 		<tr>
 			<td>countRef</td>
 			<td>
-				<p>Use to specify a flow variable containing the message count for a quota. <span style="font-family:courier new,courier,monospace;">countRef</span> takes precedence over the <code>count</code> attribute.</p>
+				<p>Use to specify a flow variable containing the message count for a quota. <code>countRef</code> takes precedence over the <code>count</code> attribute.</p>
 			</td>
 			<td>none</td>
 			<td>Optional</td>
@@ -445,8 +446,8 @@
 	</tbody>
 </table>
 <h3>&lt;Allow&gt;/&lt;Class&gt; element</h3>
-<p>The&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Class&gt;</span>&nbsp;element lets you&nbsp;conditionalize&nbsp;the value of the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Allow&gt;</span>&nbsp;element based on the value of a flow variable. For each different&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Allow&gt;</span>&nbsp;child tag of&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Class&gt;</span>, the policy maintains a different counter.</p>
-<p>To use the<span style="font-family: 'courier new', courier, monospace;">&nbsp;&lt;Class&gt;</span>&nbsp;element, specify a flow variable using the <span style="font-family:courier new,courier,monospace;">ref</span> attribute to the <span style="font-family:courier new,courier,monospace;">&lt;Class&gt;</span> tag. Edge then uses the value of the flow variable to select one of the <span style="font-family:courier new,courier,monospace;">&lt;Allow&gt;</span> child tags to determine the allowed count of the policy. Edge matches the value of the flow variable to the <span style="font-family:courier new,courier,monospace;">class</span> attribute of the <span style="font-family:courier new,courier,monospace;">&lt;Allow&gt;</span> tag, as shown below:</p>
+<p>The&nbsp;<code>&lt;Class&gt;</code>&nbsp;element lets you&nbsp;conditionalize&nbsp;the value of the&nbsp;<code>&lt;Allow&gt;</code>&nbsp;element based on the value of a flow variable. For each different&nbsp;<code>&lt;Allow&gt;</code>&nbsp;child tag of&nbsp;<code>&lt;Class&gt;</code>, the policy maintains a different counter.</p>
+<p>To use the<code>&nbsp;&lt;Class&gt;</code>&nbsp;element, specify a flow variable using the <code>ref</code> attribute to the <code>&lt;Class&gt;</code> tag. Edge then uses the value of the flow variable to select one of the <code>&lt;Allow&gt;</code> child tags to determine the allowed count of the policy. Edge matches the value of the flow variable to the <code>class</code> attribute of the <code>&lt;Allow&gt;</code> tag, as shown below:</p>
 <pre>
 &lt;Allow&gt;
   &lt;Class ref="request.queryparam.time_variable"&gt;
@@ -454,9 +455,9 @@
     &lt;Allow class="off_peak_time" count="1000"/&gt;
   &lt;/Class&gt;
 &lt;/Allow&gt;</pre>
-<p>In this example, the current quota counter is determined by the value of the <span style="font-family:courier new,courier,monospace;">time_variable</span> query param passed with each request. That variable can have a value of <span style="font-family:courier new,courier,monospace;">peak_time</span> or <span style="font-family:courier new,courier,monospace;">off_peak_time</span>. If the query param contains an invalid value, the policy returns a quota violation error.</p>
+<p>In this example, the current quota counter is determined by the value of the <code>time_variable</code> query param passed with each request. That variable can have a value of <code>peak_time</code> or <code>off_peak_time</code>. If the query param contains an invalid value, the policy returns a quota violation error.</p>
 <div class="note">
-	<p>You cannot use both the <span style="font-family:courier new,courier,monospace;">&lt;Class&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;Identifier&gt;</span> elements in the same Quota&nbsp;policy.&nbsp;</p>
+	<p>You cannot use both the <code>&lt;Class&gt;</code> and <code>&lt;Identifier&gt;</code> elements in the same Quota&nbsp;policy.&nbsp;</p>
 </div>
 <table class="pd-table">
 	<tbody>
@@ -494,7 +495,7 @@
 	</tbody>
 </table>
 <h3>&lt;Allow&gt;/&lt;Class&gt;/&lt;Allow&gt; element</h3>
-<p>The&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Allow&gt;</span>&nbsp;element specifies the limit for a quota counter defined by the <span style="font-family:courier new,courier,monospace;">&lt;Class&gt;</span> element. For each different&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Allow&gt;</span>&nbsp;child tag of&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Class&gt;</span>, the policy maintains a different counter.</p>
+<p>The&nbsp;<code>&lt;Allow&gt;</code>&nbsp;element specifies the limit for a quota counter defined by the <code>&lt;Class&gt;</code> element. For each different&nbsp;<code>&lt;Allow&gt;</code>&nbsp;child tag of&nbsp;<code>&lt;Class&gt;</code>, the policy maintains a different counter.</p>
 <p>For example:</p>
 <pre>
 &lt;Allow&gt;
@@ -503,7 +504,7 @@
     &lt;Allow class="off_peak_time" count="1000"/&gt;
   &lt;/Class&gt;
 &lt;/Allow&gt;</pre>
-<p>In this example, the Quota policy maintains two quota counters&nbsp;named of&nbsp;<span style="font-family: 'courier new', courier, monospace;">peak_time</span>&nbsp;and&nbsp;<span style="font-family: 'courier new', courier, monospace;">off_peak_time</span>.</p>
+<p>In this example, the Quota policy maintains two quota counters&nbsp;named of&nbsp;<code>peak_time</code>&nbsp;and&nbsp;<code>off_peak_time</code>.</p>
 <table class="pd-table">
 	<tbody>
 		<tr>
@@ -578,7 +579,7 @@
 		<tr>
 			<td>ref</td>
 			<td>
-				<p>Use to specify a flow variable containing the interval for a quota.&nbsp;<span style="font-family: 'courier new', courier, monospace;">ref</span>&nbsp;takes precedence over an explicit interval value.&nbsp;If both reference and value are specified, then reference gets the priority. If &nbsp;<span style="font-family:courier new,courier,monospace;">ref</span> does not resolve at runtime, then the value is used.</p>
+				<p>Use to specify a flow variable containing the interval for a quota.&nbsp;<code>ref</code>&nbsp;takes precedence over an explicit interval value.&nbsp;If both reference and value are specified, then reference gets the priority. If &nbsp;<code>ref</code> does not resolve at runtime, then the value is used.</p>
 			</td>
 			<td>none</td>
 			<td>Optional</td>
@@ -603,7 +604,7 @@
 		<tr>
 			<td class="pd-td-left">Type:</td>
 			<td class="pd-td-right">
-				<p>String. Select from <code>minute</code>, <code>hour</code>, <code>day</code>, <span style="font-family:courier new,courier,monospace;">week</span>, or <code>month</code>.</p>
+				<p>String. Select from <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, or <code>month</code>.</p>
 			</td>
 		</tr>
 	</tbody>
@@ -619,9 +620,7 @@
 		</tr>
 		<tr>
 			<td>ref</td>
-			<td>
-				<div>Use to specify a flow variable containing the time unit for a quota. <span style="font-family:courier new,courier,monospace;">ref</span> takes precedence over an explicit interval value. If the&nbsp;<span style="font-family: 'courier new', courier, monospace;">ref</span>&nbsp;does not resolve at runtime, then the value is used.</div>
-			</td>
+			<td>Use to specify a flow variable containing the time unit for a quota. <code>ref</code> takes precedence over an explicit interval value. If the&nbsp;<code>ref</code>&nbsp;does not resolve at runtime, then the value is used.</td>
 			<td>none</td>
 			<td>Optional</td>
 		</tr>
@@ -632,7 +631,7 @@
 <p>You must provide an explicit <code>StartTime</code> when <code>type</code> is explicitly set to <code>calendar,</code>&nbsp;you cannot use a reference to a flow variable, If you specify a&nbsp;<code>StartTime</code> value when no <code>type</code> value is set, then you receive an error.</p>
 <p>For example:</p>
 <pre>
-&lt;StartTime&gt;2014-7-16 12:00:00&lt;/StartTime&gt;
+&lt;StartTime&gt;2017-7-16 12:00:00&lt;/StartTime&gt;
 </pre>
 <table class="pd-table">
 	<tbody>
@@ -642,7 +641,7 @@
 		</tr>
 		<tr>
 			<td class="pd-td-left">Presence:</td>
-			<td class="pd-td-right">Required when <span style="font-family:courier new,courier,monospace;">type</span> is set to <span style="font-family:courier new,courier,monospace;">calendar</span>.</td>
+			<td class="pd-td-right">Required when <code>type</code> is set to <code>calendar</code>.</td>
 		</tr>
 		<tr>
 			<td class="pd-td-left">Type:</td>
@@ -659,10 +658,10 @@
 	<p>If you are an Edge for Private Cloud customer, contact your Edge system administrator to determine the number of Message Processors.</p>
 	<p>For example, if the quota limit is 10 messages per hour, and two Message Processors are being used, the quota count total is continuously updated by both Message Processors.</p>
 </div>
-<p>If you use the default value of <span style="font-family:courier new,courier,monospace;">false</span>, then you might exceed your quota because the count for each Message Processor is not shared:</p>
+<p>If you use the default value of <code>false</code>, then you might exceed your quota because the count for each Message Processor is not shared:</p>
 <pre>
 &lt;Distributed&gt;true&lt;/Distributed&gt;</pre>
-<p>To guarantee that the counters are synchronized, and updated on every request, set <span style="font-family:courier new,courier,monospace;">&lt;Distributed&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;Synchronous&gt;</span> to true:</p>
+<p>To guarantee that the counters are synchronized, and updated on every request, set <code>&lt;Distributed&gt;</code> and <code>&lt;Synchronous&gt;</code> to true:</p>
 <pre>
 &lt;Distributed&gt;true&lt;/Distributed&gt;
 &lt;Synchronous&gt;true&lt;/Synchronous&gt;
@@ -709,9 +708,7 @@
 	</tbody>
 </table>
 <h2 id="asyncconfig">&lt;AsynchronousConfiguration&gt; element</h2>
-<p>Configures the synchronization interval amongst distributed quota counters when the policy configuration element <span style="font-family:courier
-new,courier,monospace;">&lt;Synchronous&gt;</span> is either not present or present and set to <span style="font-family:courier
-new,courier,monospace;">false</span>.</p>
+<p>Configures the synchronization interval amongst distributed quota counters when the policy configuration element <code>&lt;Synchronous&gt;</code> is either not present or present and set to <code>false</code>.</p>
 <p>You can synchronize either after a time period or a message count, using either the <code>SyncIntervalInSeconds</code>&nbsp;or&nbsp;<code>SyncMessageCount</code> child elements. They are mutually exclusive. For example,</p>
 <pre>
 &lt;AsynchronousConfiguration&gt;
@@ -766,7 +763,7 @@ new,courier,monospace;">false</span>.</p>
 </table>
 <h3>&lt;AsynchronousConfiguration&gt;/&lt;SyncMessageCount&gt; element</h3>
 <p>Use this to override the default behavior in which asynchronous updates are performed after an interval of 10 seconds.</p>
-<p><span style="font-family: 'courier new', courier, monospace;">SyncMessageCount</span>&nbsp;specifies the number of requests across all Apigee message processors between quota updates.</p>
+<p><code>SyncMessageCount</code>&nbsp;specifies the number of requests across all Apigee message processors between quota updates.</p>
 <pre>
 &lt;AsynchronousConfiguration&gt;
    &lt;SyncMessageCount&gt;5&lt;/SyncMessageCount&gt;
@@ -798,7 +795,7 @@ new,courier,monospace;">false</span>.</p>
 &lt;Identifier ref="verifyapikey.verify-api-key.client_id"/&gt;
 </pre>
 <div class="note">
-	<p>You cannot use both the <span style="font-family:courier new,courier,monospace;">&lt;Class&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;Identifier&gt;</span> elements in the same Quota&nbsp;policy.&nbsp;</p>
+	<p>You cannot use both the <code>&lt;Class&gt;</code> and <code>&lt;Identifier&gt;</code> elements in the same Quota&nbsp;policy.&nbsp;</p>
 </div>
 <table class="pd-table">
 	<tbody>
@@ -841,8 +838,8 @@ new,courier,monospace;">false</span>.</p>
 </table>
 <h2 id="messageweight">&lt;MessageWeight&gt; element</h2>
 <p>Use to specify the weight assigned to each message. Use message weight to increase impact of request messages that, for example, consume more computational resources than others.</p>
-<p>For example, you want to count POST messages as being twice as "heavy" or expensive, as GET messages. Therefore, you set the&nbsp;<span style="font-family: monospace;">MessageWeight</span>&nbsp;to 2 for a POST and 1 for a GET. You can even set the&nbsp;<span style="font-family: monospace;">MessageWeight</span>&nbsp;to 0 so the request does not affect the counter. &nbsp;In this example, if the quota is 10 messages per minute and the&nbsp;<code>MessageWeight</code>&nbsp;for POST requests is <code>2</code>, then the quota will permits 5 POST requests in any 10 minute interval. Any additional&nbsp;request, POST or GET, before the counter resets are rejected.</p>
-<p>A value representing&nbsp;<code>MessageWeight</code>&nbsp;must be specified by a flow variable, and can be extracted from HTTP headers, query parameters, an XML or JSON request payload, or any other flow variable. For example, you set it in a header named <span style="font-family:courier new,courier,monospace;">weight</span>:</p>
+<p>For example, you want to count POST messages as being twice as "heavy" or expensive, as GET messages. Therefore, you set the&nbsp;<code>MessageWeight</code>&nbsp;to 2 for a POST and 1 for a GET. You can even set the&nbsp;<code>MessageWeight</code>&nbsp;to 0 so the request does not affect the counter. &nbsp;In this example, if the quota is 10 messages per minute and the&nbsp;<code>MessageWeight</code>&nbsp;for POST requests is <code>2</code>, then the quota will permits 5 POST requests in any 10 minute interval. Any additional&nbsp;request, POST or GET, before the counter resets are rejected.</p>
+<p>A value representing&nbsp;<code>MessageWeight</code>&nbsp;must be specified by a flow variable, and can be extracted from HTTP headers, query parameters, an XML or JSON request payload, or any other flow variable. For example, you set it in a header named <code>weight</code>:</p>
 <pre>
 &lt;MessageWeight ref="message_weight"/&gt;</pre>
 <table class="pd-table">
@@ -903,7 +900,7 @@ new,courier,monospace;">false</span>.</p>
 			<td class="rteleft">ratelimit.{policy_name}.total.exceed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
-			<td>Returns the total number of requests that exceeded the quota across all intervals, so it is the sum of <span style="font-family:courier new,courier,monospace;">ratelimit.exceed.count</span>&nbsp;for all quota intervals.</td>
+			<td>Returns the total number of requests that exceeded the quota across all intervals, so it is the sum of <code>ratelimit.exceed.count</code>&nbsp;for all quota intervals.</td>
 		</tr>
 		<tr>
 			<td class="rteleft">ratelimit.{policy_name}.expiry.time</td>
@@ -911,7 +908,7 @@ new,courier,monospace;">false</span>.</p>
 			<td>Read-Only</td>
 			<td>
 				<p>Returns the UTC time in milliseconds which determines when the quota expires and new quota interval starts.</p>
-				<p>When the Quota policy type is <span style="font-family:courier new,courier,monospace;">rollingwindow</span>, this value is not valid because&nbsp;the quota interval never expires.</p>
+				<p>When the Quota policy type is <code>rollingwindow</code>, this value is not valid because&nbsp;the quota interval never expires.</p>
 			</td>
 		</tr>
 		<tr>
@@ -954,7 +951,7 @@ new,courier,monospace;">false</span>.</p>
 			<td class="rteleft">ratelimit.{policy_name}.class.total.exceed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
-			<td>Returns the total count of requests that exceeds the limit in the class across all quota intervals,&nbsp;so it is the sum of&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">class.exceed.count</span>&nbsp;for all quota intervals.</td>
+			<td>Returns the total count of requests that exceeds the limit in the class across all quota intervals,&nbsp;so it is the sum of&nbsp;<code>class.exceed.count</code>&nbsp;for all quota intervals.</td>
 		</tr>
 		<tr>
 			<td>ratelimit.{policy_name}.failed</td>
@@ -967,7 +964,7 @@ new,courier,monospace;">false</span>.</p>
 	</tbody>
 </table>
 <h2 id="errors">Error reference</h2>
-<p><span style="font-size: 12px;"><a href="http://docs.apigee.com/node/21381">Content to be inserted here</a></span></p>
+<p><code><a href="http://docs.apigee.com/node/21381">Content to be inserted here</a></code></p>
 <div class="note">
 	<p>Currently, the Quota policy returns a status code of 500 when it enforces a rate limit. Apigee will soon modify the behavior of the policy so that it returns HTTP Status of 429 in that case. If you use the Apigee-managed Edge service, and you would like to have your Quota policy return 429, contact <a href="https://community.apigee.com/content/apigee-customer-support" target="_blank">Apigee Support</a> to have the <code>features.isHTTPStatusTooManyRequestEnabled</code> property enabled. See <a href="https://community.apigee.com/content/kbentry/23852/http-429-as-default-status-code-for-quota-policy-v.html">this community article</a> for guidance on the upcoming change.</p>
 </div>
@@ -992,3 +989,4 @@ curl -u email:password -X POST -H "Content-type:application/xml" \
 <p><a href="http://docs.apigee.com/node/420">http://docs.apigee.com/node/420</a></p>
 <p><a href="http://docs.apigee.com/node/53">http://docs.apigee.com/node/53</a></p>
 <p><a href="http://docs.apigee.com/node/17896">http://docs.apigee.com/node/17896</a></p>
+<p>&nbsp;</p>

@@ -2,7 +2,9 @@
 <p>This topic describes the structure of policy errors and the kinds of flow variables that are set when a policy error occurs. This information is essential if you're designing and implementing fault handling for your proxies.</p>
 <p>This topic assumes you have a general understanding of how fault handling works in Edge, and that you know what fault rules are. If you need a review, see <a href="http://docs.apigee.com/node/8401">http://docs.apigee.com/node/8401</a>. The information here will also help you navigate and use the <a href="http://docs.apigee.com/node/21241">http://docs.apigee.com/node/21241</a>.</p>
 <h2>About the default policy error response</h2>
-<p>When a policy throws an error, Edge immediately enters the error flow and generates an error message. This system-generated message is a JSON object that includes two bits of information: an <strong>errorcode</strong> and a <strong>faultstring</strong>. For example:</p>
+<p>When a policy throws an error, Edge immediately enters the error flow and generates an error message. This system-generated message is a JSON object that includes two bits of information: an <strong>errorcode</strong> and a <strong>faultstring</strong>.</p>
+<div class="note">It's helpful to know that in the parts of an error as shown below are available as flow variables. You can restructure and customize error messages through these variables. The variable <strong>fault.name</strong> is the value of the <strong>errorcode</strong> attribute and <strong>error.message</strong> is the value of the <strong>faultstring</strong> attribute. These variables are discussed in more detail in the following sections of this topic. &nbsp;</div>
+<p>For example:</p>
 <pre>
 {  
    "fault":{  

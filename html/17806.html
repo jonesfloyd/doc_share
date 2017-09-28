@@ -15,7 +15,7 @@ http://myorg-test.apigee.net/weather/oauth/authorizationcode?client_id=123456&am
 </ul>
 <p>Edge does not support specifying multiple callback URLs or using wildcard characters when a developer app is registered. To accomplish this use case, you can specify an empty callback URL when you register a developer app, and then put a logic in a JavaScript policy to validate incoming redirect URIs.&nbsp;</p>
 <h2>Changing the default return behavior of a GenerateAuthCode operation</h2>
-<p>By default, the GenerateAuthCode operation of the OAuthV2 policy returns a 304 redirect to the callback URL with a ?code query parameter containing the authorization code.&nbsp;</p>
+<p>By default, the GenerateAuthCode operation of the OAuthV2 policy returns a 302 redirect to the callback URL with a ?code query parameter containing the authorization code.&nbsp;</p>
 <p>In some cases, you may wish to change this behavior. For example, you may want to return a 200 response with structured JSON containing the code.&nbsp;</p>
 <p>To accomplish this use case, use an ExtractVariable policy to retrieve the code, and an AssignMessage policy to return the code in a JSON payload with a status of 200.&nbsp;</p>
 <h2>Auditing app end user consent</h2>

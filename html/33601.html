@@ -1,0 +1,49 @@
+<h1> Incorporating procedural code </h1>
+<p>You can add code in procedural languages such as JavaScript, Java, and Python, then call out to that code from other parts of an API proxy. Support for procedural code is designed to make it easier for you to implement complex handling of flow variables, faults, and request and response bodies.</p>
+<p>With procedural code, you can:</p>
+<ul>
+	<li>Create or manipulate complex body values, such as request and response values.</li>
+	<li>Rewrite URLs, such as to mask a target endpoint URL.</li>
+	<li>Add other logic not available with included policies.</li>
+</ul>
+<h2>How it works</h2>
+<p>You use a policy specific to the language in order to make calls from a proxy flow to your included code. For each of the supported languages, Apigee Edge includes a separate policy: <a href="http://docs.apigee.com/node/245">http://docs.apigee.com/node/245</a>, <a href="http://docs.apigee.com/node/159">http://docs.apigee.com/node/159</a>, and <a href="http://docs.apigee.com/node/242">http://docs.apigee.com/node/242</a>.</p>
+<p>The following describes, at a high level, one way this works. Be sure to see the policy references for more details.</p>
+<ol>
+	<li>In a separate file, write the code you're going to use.</li>
+	<li>In your code, put the result of the code's processing into an Apigee Edge flow variable.
+		<p>You'll retrieve the variable value elsewhere in your API proxy. For more about flow variables, see <a href="http://docs.apigee.com/node/15211">http://docs.apigee.com/node/15211</a>.</p>
+	</li>
+	<li>Add your file (or JAR) as a resource file to your API proxy.
+		<p>For more about resource files, see <a href="http://docs.apigee.com/node/11972">http://docs.apigee.com/node/11972</a>.</p>
+	</li>
+	<li>Add the policy corresponding to the language you're using.
+		<p>Configure the policy to make a call to your code from the desired place in your API proxy's flow.</p>
+	</li>
+	<li>Use a policy to retrieve the code's value from the flow variable.</li>
+</ol>
+<h2>Limitations</h2>
+<p>The Apigee Edge security model does not permit system calls such as network I/O, filesystem read/writes, current user info, process list, and CPU/memory utilization. Although some such calls may be functional, they are unsupported and liable to be actively disabled at any time. For forward compatibility, you should avoid making such calls in your code.</p>
+<p>Other limitations may exist for each supported language, as described in the language's corresponding policy reference.</p>
+<h2>Supported languages</h2>
+<h3>JavaScript</h3>
+<p>Support for JavaScript includes a full object model for handling variables and values specific to an API proxy. For more, see <a href="http://docs.apigee.com/node/3976">http://docs.apigee.com/node/3976</a>.</p>
+<p>For policy reference information and examples, see <a href="http://docs.apigee.com/node/245">http://docs.apigee.com/node/245</a>.</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/3971">http://docs.apigee.com/node/3971</a></li>
+	<li><a href="http://docs.apigee.com/node/3975">http://docs.apigee.com/node/3975</a></li>
+	<li><a href="http://docs.apigee.com/node/14951">http://docs.apigee.com/node/14951</a></li>
+</ul>
+<p>For sample code, search <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a> for those with JavaScript included.</p>
+<h3>Java</h3>
+<p>Use the <a href="http://docs.apigee.com/node/159">http://docs.apigee.com/node/159</a> to make calls to Java code from your proxy's flow. The policy reference topic includes examples.</p>
+<p>You might also be interested in the following topics:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/25281">http://docs.apigee.com/node/25281</a></li>
+	<li><a href="http://docs.apigee.com/node/25441">http://docs.apigee.com/node/25441</a></li>
+	<li><a href="http://docs.apigee.com/node/25361">http://docs.apigee.com/node/25361</a></li>
+</ul>
+<p>For sample code, search <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a> for those with Java included.</p>
+<h3>Python</h3>
+<p>Use the <a href="http://docs.apigee.com/node/242">http://docs.apigee.com/node/242</a> to call out to Python code.</p>
+<p>For sample code, search <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a> for those with Python included.</p>

@@ -371,23 +371,49 @@
 <p>If the write rate to the buffer increases beyond the read rate, the buffer overflows and logging will fail. If this happens, you might find a message containing the following in the log file:</p>
 <pre>
 Log message size exceeded. Increase the max message size setting</pre>
-<p>If you encounter this issue in an Edge for Private Cloud deployment, locate the <code>message-logging.properties</code> and use this solution:</p>
+<p>If you encounter this issue in Edge for Private Cloud 4.15.07 and earlier, locate the <code>message-logging.properties</code>&nbsp;file and use this solution:</p>
 <p>Increase the <code>max.log.message.size.in.kb</code> property (default value = 128 KB) in the <code>message-logging.properties</code> file.</p>
+<p>For Edge for Private Cloud 4.16.01 and later, set the&nbsp;<code>conf_message-logging_max.log.message.size.in.kb</code>&nbsp;property in the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/message-processor.properties</span> file and restart the Message Processor.</p>
 <p><strong>Note:</strong>&nbsp;The&nbsp;<a href="http://docs.apigee.com/api-services/reference/variables-reference#response">response message variables</a>&nbsp;in Edge are not available from the Error Flow. These variables are also not available in PostClientFlow if the preceding flow was the Error Flow. If you want to log response information from the PostClientFlow, use the&nbsp;<strong>message</strong>&nbsp;object. You can use this object to get at headers and other information from the response whether or not there was an error. See&nbsp;<a href="http://docs.apigee.com/api-services/reference/variables-reference#messagevariables">Message variables</a>&nbsp;for more information and an example.</p>
 <h3 id="location">Log file location in Edge for Private Cloud</h3>
+<h4>Edge for Private Cloud 4.16.01 and later</h4>
+<p>By default, message logs are located in the following location on Message Processors:&nbsp;</p>
+<pre>
+/opt/apigee/var/log/messagelogging/{org}/{environment}/{api_proxy_name}/{revision}/{logging_policy_name}/</pre>
+<p>You can change the default log location by modifying properties in the message-logging.properties file on the Message Processors:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_data_dir</span>&nbsp;- Sets the root path for log file storage. For example, <code>bin_setenv_data_dir=/opt/apigee/var/log</code></li>
+	<li><span style="font-family:courier new,courier,monospace;">conf_message-logging_log.root.dir</span>&nbsp;- If you set this to a relative path, such as&nbsp;<code><code>conf/message-logging.properties+logging_log.root.dir=custom/folder/</code><span style="font-family: Arial, Verdana, sans-serif;">, the path is appended to the </span><span style="font-family: &quot;courier new&quot;, courier, monospace;">bin_setenv_data_dir</span><span style="font-family: Arial, Verdana, sans-serif;"> location.</span></code><br />
+		<br />
+		If you set this to an absolute path, such as <code>conf/message-logging.properties+logging_log.root.dir=/opt/apigee/var/log/messages</code>, message logs will be stored in <code>/opt/apigee/var/log/messages/messagelog/</code>. An absolute path takes precedence over <code>bin_setenv_data_dir</code>.<br />
+		<br />
+		Note that you have to reference the property as <span style="font-family:courier new,courier,monospace;">conf/message-logging.properties+logging_log.root.dir</span> because it is commented out be default. See <a href="http://docs.apigee.com/private-cloud/latest/how-configure-edge#settingatokenthatiscurrentlycommentedout">Setting a token that is currently commented out</a> for more.&nbsp;</li>
+</ul>
+<p>If you want to store log files in a flat file structure so that all log files are put in the same directory, set the <span style="font-family:courier new,courier,monospace;">conf/message-logging.properties+enable.flat.directory.structure</span>&nbsp;to true in the message-logging.properties file. Messages are stored in the directory specified by the properties above, and the file names take the form of <code>{org}_{environment}_{api_proxy_name}_{revision}_{logging_policy_name}_{filename}</code>.</p>
+<p>To set these properties:</p>
+<ol>
+	<li>Open the&nbsp;<span style="font-family:courier new,courier,monospace;">message-processor.properties</span> file in an editor. If the file does not exist, create it:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; vi /&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span></li>
+	<li>Set the properties as desired:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf/message-logging.properties+logging_log.root.dir=</span><span style="font-family:courier new,courier,monospace;">/opt/apigee/var/log/messages</span></li>
+	<li>Save your changes.</li>
+	<li>Make sure the properties file is owned by the 'apigee' user:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span></li>
+	<li>Restart the Edge component:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-message-processor restart</span></li>
+</ol>
+<h4>Edge for Private Cloud 4.15.07 and earlier</h4>
 <p>By default, message logs are located in the following location on message processors:&nbsp;</p>
-<p>/opt/apigee/var/log/apigee/message-processor/messagelog/<br />
-	{org}/{environment}/{api_proxy_name}/{revision}/{logging_policy_name}/</p>
+<pre>
+/opt/apigee4/var/log/apigee/message-processor/messagelog/{org}/{environment}/{api_proxy_name}/{revision}/{logging_policy_name}/</pre>
 <p>You can change the default log location by modifying the following properties in the message-logging.properties file on the message processors:</p>
 <ul>
-	<li><strong><code>data.dir</code></strong> - Sets the root path for log file storage. For example, <code>data.dir=/opt/apigee/var/log</code></li>
-	<li><strong><code>log.root.dir</code></strong> - If you set this to a relative path, such as <code>log.root.dir=custom/folder/</code>, the path is appended to the data.dir location.<br />
-		<br />
-		For example, the combination of the two properties would set the logging directory at <code>/opt/apigee/var/log/custom/folder/messagelog/</code> (note that /messagelog is added automatically).<br />
-		<br />
-		If you set this to an absolute path, such as <code>log.root.dir=/opt/apigee/var/log/messages</code>, message logs will be stored in <code>/opt/apigee/var/log/messages/messagelog/</code>. An absolute path in <code>log.root.dir</code> takes precedence over <code>data.dir</code>.</li>
+	<li><span style="font-family:courier new,courier,monospace;">data.dir</span> - Sets the root path for log file storage. For example, data.dir=/opt/apigee4/var/log</li>
+	<li><span style="font-family:courier new,courier,monospace;">log.root.dir</span> - If you set this to a relative path, such as log.root.dir=custom/folder/, the path is appended to the data.dir location.</li>
 </ul>
-<p>If you want to store log files in a flat file structure so that all log files are put in the same directory, set the&nbsp;<code>enable.flat.directory.structure</code>&nbsp;property to true in the message-logging.properties file on message processors. Messages are stored in the directory specified by the properties above, and the file names take the form of <code>{org}_{environment}_{api_proxy_name}_{revision}_{logging_policy_name}_{filename}</code>.</p>
+<p>For example, the combination of the two properties would set the logging directory at /opt/apigee4/var/log/custom/folder/messagelog/ (note that /messagelog is added automatically).</p>
+<p>If you set this to an absolute path, such as <span style="font-family:courier new,courier,monospace;">log.root.dir=/opt/apigee4/var/log/messages</span>, message logs will be stored in /opt/apigee4/var/log/messages/messagelog/. An absolute path in log.root.dir takes precedence over <span style="font-family:courier new,courier,monospace;">data.dir</span>.</p>
+<p>If you want to store log files in a flat file structure so that all log files are put in the same directory, set the <span style="font-family:courier new,courier,monospace;">enable.flat.directory.structure property</span> to true in the <span style="font-family:courier new,courier,monospace;">message-logging.properties</span> file on Message Processors. Messages are stored in the directory specified by the properties above, and the file names take the form of <span style="font-family:courier new,courier,monospace;">{org}_{environment}_{api_proxy_name}_{revision}_{logging_policy_name}_{filename}</span>.</p>
 <h3>Default values for variables in message template</h3>
 <p>Default values can be specified for each variable in message template separately. For example, if the variable <code>request.header.id</code> cannot be resolved, then its value is replaced with the value <code>unknown</code>.</p>
 <pre>

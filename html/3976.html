@@ -15,7 +15,7 @@ if (context.flow=="PROXY_REQ_FLOW") {
 <p>These methods interact directly with <a href="http://apigee.com/docs/api-services/reference/variables-reference">flow variables</a>. The&nbsp;<code>context.flow</code>&nbsp;property value is the current flow scope. In the proxy request flow, it's set to the constant&nbsp;<code>PROXY_REQ_FLOW</code>. If in the target response flow, it's set to&nbsp;<code>TARGET_RESP_FLOW</code>. This constant is handy for executing scope-specific code. The getter lets you get flow variables and the setter lets you set flow variables. These variables are generally available in the proxy flow and can be consumed by other policies.</p>
 <p>See "<a href="#contextObj">context object reference</a>" below for more details and examples.</p>
 <h3>The crypto object</h3>
-<p>The crypto object adds basic, highly performant cryptographic support to the JavaScript Object Model. See <a href="#crypto">crypto object reference</a> below for more details and examples.</p>
+<p>The crypto object adds basic, high performance cryptographic support to the JavaScript Object Model. See <a href="#crypto">crypto object reference</a> below for more details and examples.</p>
 <h3>The request and response objects</h3>
 <p>The <code>request</code> and <code>response</code> objects are "shorthand" references to the ambient request and response, either the proxy request and response or the target request and response. The objects these variables refer to depend upon the context in which the JavaScript policy executes. If the JavaScript runs in the flow of a proxy endpoint, then the request and response variables refer to <code>context.proxyRequest</code> and <code>context.ProxyResponse</code>. If the JavaScript runs in a target flow, then the variables refer to the <code>context.targetRequest</code> and <code>context.targetResponse</code>.</p>
 <h3>The print() function</h3>
@@ -273,7 +273,7 @@ try {
 		<tr>
 			<td><code>context.session</code></td>
 			<td>A map of name/value pairs that you can use to pass objects between two different steps executing in the same context. For example: context.session['key'] = 123.</td>
-			<td>See <a href="#session">context.session</a> below.</td>
+			<td>For more information on when and when not to use this object, see this <a href="https://community.apigee.com/questions/34449/what-is-the-difference-between-contextsessionhello.html?childToView=37790#answer-37790">Apigee Community discussion</a>.</td>
 		</tr>
 	</tbody>
 </table>
@@ -331,6 +331,7 @@ if (context.flow=="PROXY_RESP_FLOW") {
 }</pre>
 <p><b><a id="session" name="session"></a>context.session</b></p>
 <p>A map of name/value pairs that can be used to pass objects between two policies executing within the same message context.</p>
+<div class="note">It is important to understand the difference between using <code>context.session</code> to get/set variables versus using <code>context.getVariable()</code> and <code>context.setVariable()</code>. See this <a href="https://community.apigee.com/questions/34449/what-is-the-difference-between-contextsessionhello.html?childToView=37790#answer-37790">Apigee Community discussion</a>&nbsp;for more details.&nbsp;</div>
 <p><strong>Example</strong></p>
 <p>Set a value in the session:</p>
 <pre>
@@ -636,6 +637,9 @@ if (context.flow=="TARGET_REQ_FLOW") {
 <h3>About httpClient</h3>
 <p>The <code>httpClient</code> object is exposed to custom JavaScript code running on Apigee Edge through the JavaScript object model. To attach custom JavaScript to an API proxy, you use the <a href="http://apigee.com/docs/api-services/reference/javascript-policy">JavaScript policy</a>. When the policy runs, the custom JavaScript code executes.</p>
 <p>The <code>httpClient</code> object is useful for developing <a href="http://apigee.com/docs/api-services/cookbook/implementing-http-clients-javascript">composite services or mashups</a>. For example, you can consolidate multiple backend calls into a single API method. This object is commonly used as an alternative to the ServiceCallout policy.</p>
+<div class="note">
+	<p>One use case we don't recommend for the JavaScript policy is logging. The <a href="http://docs.apigee.com/node/18">http://docs.apigee.com/node/18</a> is much better suited for logging to third-party logging platforms such as Splunk, Sumo, and Loggly, and you improve API proxy performance by executing the Message Logging policy in the PostClientFlow, which executes after the response has been sent back to the client.</p>
+</div>
 <p>Here's a basic usage pattern. Instantiate a Request object, assign to it a URL (e.g., to a backend service you wish to call), and call <code>httpClient.send</code> with that request object.</p>
 <pre>
 var myRequest = new Request();
@@ -808,5 +812,6 @@ if (response) { // retrieve the pending request from the context variable
 <h2>Apigee Community articles</h2>
 <p>You can find these related articles on the&nbsp;<a href="https://community.apigee.com/">Apigee Community</a>:</p>
 <ul>
-	<li><a href="https://community.apigee.com/articles/2319/how-to-handle-multi-value-headers-in-javascript.html">How to handle multi-value headers in Javascript</a>?</li>
+	<li><a href="https://community.apigee.com/articles/2319/how-to-handle-multi-value-headers-in-javascript.html" target="_blank">How to handle multi-value headers in Javascript</a>?</li>
+	<li><a href="https://community.apigee.com/content/kbentry/44662/the-book-of-apigee-edge-antipatterns.html" target="_blank">The Book of Apigee Edge Antipatterns</a></li>
 </ul>

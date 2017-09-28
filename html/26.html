@@ -43,6 +43,9 @@
 	</div>
 	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
 </div>
+<div class="tipstricks">
+	<p>For a discussion of antipatterns for the Response Cache policy, see <a href="https://community.apigee.com/content/kbentry/44662/the-book-of-apigee-edge-antipatterns.html" target="_blank">this community post</a>.</p>
+</div>
 <h3>Where</h3>
 <p>The ResponseCache policy type is unique in that it must be attached to both the request and response flow in an API proxy (PreFlow, Flow, or PostFlow). See the samples for specific attachment guidance in different situations.</p>
 <div class="note">You are limited to attaching this policy once in the proxy request flow and once in the response flow. For a video tutorial, see <a href="https://community.apigee.com/articles/17971/implementing-responsecaching-within-edge.html">this Apigee Community post</a>. See also <a href="#ErrorCodes">Error Codes</a> below.&nbsp;</div>
@@ -317,6 +320,7 @@ http://{org_name}-test.apigee.net/weather/forecastrss?w=23424778</pre>
 <h2 id="Ca">&lt;ExcludeErrorResponse&gt; element</h2>
 <p>Currently, by default, this policy caches HTTP responses with <strong>any</strong> possible Status code. That means both success and error responses are cached. For example, responses with both 2xx and 3xx status codes are cached by default.</p>
 <p>Set this element to <code>true</code> if you do&nbsp;<i>not</i>&nbsp;wish to cache target responses with HTTP error status codes; only responses with status codes from 200 to 205 will be cached if this element is true. These are the only HTTP status codes that Edge counts as "success" codes, and you cannot change this association.</p>
+<p>For a discussion of Response Cache patterns in which this element is useful, see&nbsp;<a href="https://community.apigee.com/content/kbentry/44662/the-book-of-apigee-edge-antipatterns.html" target="_blank">this community post</a>.</p>
 <p><strong>Note:</strong> In a future release (to be determined), the default setting of this element will change to true. See <a href="http://docs.apigee.com/node/8408">http://docs.apigee.com/node/8408</a> for details.</p>
 <pre>
 &lt;ExcludeErrorResponse&gt;true&lt;/ExcludeErrorResponse&gt;
@@ -405,8 +409,6 @@ http://{org_name}-test.apigee.net/weather/forecastrss?w=23424778</pre>
 </table>
 <h2 id="ExpirySettingsElement">&lt;ExpirySettings&gt; element</h2>
 <p class="summary">Specifies when a cache entry should expire. When present, <code>&lt;TimeoutInSec&gt;</code> overrides both <code>&lt;TimeOfDay&gt;</code> and <code>&lt;ExpiryDate&gt;</code>.</p>
-<p class="summary">As described in&nbsp;<a href="http://docs.apigee.com/node/18281">http://docs.apigee.com/node/18281</a>, an entry is first created in in-memory cache (L1)&nbsp;and is moved to persistent database cache (L2) when in-memory limits are hit. The expiration coundown starts when the entry enters L1 cache. When the entry is moved to L2 cache, the expiration countdown restarts.</p>
-<p class="summary">For example, let's say a new entry with a 5-minute expiration is added to L1 cache. After 2 minutes, the message processor in-memory limits are reached, and the entry is moved to L2 cache. The entry's expiration countdown restarts, and it now has 5 minutes until it expires. So in this case, the entry actually remains in cache for 7 minutes.</p>
 <pre>
 &lt;ExpirySettings&gt;
   &lt;TimeOfDay ref="time_variable"&gt;expiration_time&lt;/TimeOfDay&gt;

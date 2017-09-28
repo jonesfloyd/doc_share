@@ -34,11 +34,6 @@
 			</td>
 		</tr>
 		<tr>
-			<td><code>ErrorResponseCode</code></td>
-			<td>500</td>
-			<td>The backend target service returns an error status (by default, 4xx or 5xx).</td>
-		</tr>
-		<tr>
 			<td><code>InvalidExecutionState</code></td>
 			<td>500</td>
 			<td>&nbsp;</td>
@@ -81,8 +76,10 @@
 		</tr>
 		<tr>
 			<td width="324"><code>[prefix].[policy_name].failed </code></td>
-			<td width="428"><p>The <code>[prefix]</code> is <code><strong>servicecallout</strong></code>.<br />
-				<code>[policy_name]: </code>The name of the policy to check.</td>
+			<td width="428">
+				<p>The <code>[prefix]</code> is <code><strong>servicecallout</strong></code>.<br />
+					<code>[policy_name]: </code>The name of the policy to check.</p>
+			</td>
 			<td width="428"><code>servicecallout.SC-GetUserData.failed = true</code></td>
 		</tr>
 		<tr>

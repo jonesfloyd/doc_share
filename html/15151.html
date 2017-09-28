@@ -1,13 +1,9 @@
 <h1> Adding CORS support to an API proxy </h1>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
-<title></title>
-<p>This topic discusses adding CORS (Cross-origin resource sharing) support, including preflight support, to an API proxy.&nbsp;</p>
-<p>[toc]</p>
-<h2>Adding CORS support to an API proxy</h2>
 <p>CORS (Cross-origin resource sharing) is a standard mechanism that allows JavaScript XMLHttpRequest (XHR) calls executed in a web page to interact with resources from non-origin domains. CORS is a commonly implemented solution to the "<a href="http://en.wikipedia.org/wiki/Same-origin_policy">same-origin policy</a>" that is enforced by all browsers. For example, if you make an XHR call to the Twitter API from JavaScript code executing in your browser, the call will fail. This is because the domain serving the page to your browser is not the same as the domain serving the Twitter API. CORS provides a solution to this problem by allowing servers to "opt-in" if they wish to provide cross-origin resource sharing.&nbsp;</p>
 <div class="note">
 	<p>Most modern browsers support CORS. You can find a comprehensive list of supported browsers&nbsp;<a href="http://caniuse.com/cors">here</a>.&nbsp;For an in-depth description of CORS, see the&nbsp;<a href="http://www.w3.org/TR/cors/">Cross-Origin Resource Sharing W3C Recommendation</a>.</p>
 	<p>If you are using a <a href="http://docs.apigee.com/node/18586">cache policy</a>&nbsp;on your API proxy, you must ensure that the response of the CORS policy is not cached.</p>
+	<p>[toc]</p>
 </div>
 <h2>Typical use case for CORS</h2>
 <p>The following JQuery code calls a fictitious target service. If executed from within the context of a browser (a web page), the call will fail because of the same-origin policy:</p>
@@ -71,7 +67,7 @@ $(document).ready(function(){
     &lt;Add&gt;
         &lt;Headers&gt;
             &lt;Header name="Access-Control-Allow-Origin"&gt;{request.header.origin}&lt;/Header&gt;
-            &lt;Header name="Access-Control-Allow-Headers"&gt;origin, x-requested-with, accept&lt;/Header&gt;
+            &lt;Header name="Access-Control-Allow-Headers"&gt;origin, x-requested-with, accept, content-type&lt;/Header&gt;
             &lt;Header name="Access-Control-Max-Age"&gt;3628800&lt;/Header&gt;
             &lt;Header name="Access-Control-Allow-Methods"&gt;GET, PUT, POST, DELETE&lt;/Header&gt;
         &lt;/Headers&gt;
@@ -116,7 +112,7 @@ $(document).ready(function(){
         &lt;VirtualHost&gt;secure&lt;/VirtualHost&gt;
     &lt;/HTTPProxyConnection&gt;
     <strong>&lt;RouteRule name="NoRoute"&gt;
-        &lt;Condition&gt;request.verb == "OPTIONS" AND request.header.origin != null AND request.header.origin != null request.header.Access-Control-Request-Method != null&lt;/Condition&gt;
+        &lt;Condition&gt;request.verb == "OPTIONS" AND request.header.origin != null AND request.header.origin != null AND request.header.Access-Control-Request-Method != null&lt;/Condition&gt;
     &lt;/RouteRule&gt;</strong>
     &lt;RouteRule name="default"&gt;
         &lt;TargetEndpoint&gt;default&lt;/TargetEndpoint&gt;

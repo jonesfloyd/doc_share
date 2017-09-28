@@ -50,6 +50,9 @@
 <ul>
 	<li>Stream requests and responses. Note that when you stream, policies no longer have access to the message content.&nbsp;See <a href="http://docs.apigee.com/node/15776">http://docs.apigee.com/node/15776</a>.&nbsp;</li>
 	<li>In Edge for Private Cloud version 4.15.07 and earlier, edit the message processor <code>http.properties</code> file to increase the limit in the <code>HTTPResponse.body.buffer.limit</code> parameter. Be sure to test before deploying the change to production.</li>
+	<li>
+		<div>In Edge for Private Cloud version 4.16.01 and later, requests with a payload must include the Content-Length header, or in case of streaming the "Transfer-Encoding: chunked" header. For a POST to an API proxy with an empty payload, you must pass a Content-Length of 0.</div>
+	</li>
 	<li>In Edge for Private Cloud version 4.16.01 and later, set the following properties in /opt/apigee/router.properties or message-processor.properties to change the limits. See <a href="http://docs.apigee.com/node/24681">http://docs.apigee.com/node/24681</a> for more.<br />
 		<br />
 		Both properties have a default value of "10m" corresponding to 10MB:
@@ -92,6 +95,12 @@
 	</li>
 	<li>The response cache policy to lookup the cache entry should occur in the ProxyEndpoint request PreFlow. Avoid implementing too much logic, other than cache key generation, before returning a cache entry. Otherwise, the benefits of caching are minimized.</li>
 	<li>In general, you should always keep the response cache lookup as close to the client request as possible. Conversely, you should keep the response cache population as close to the client response as possible.</li>
+	<li>When using multiple, different response cache policies in a proxy, follow these guidelines to ensure discrete behavior for each:
+		<ul>
+			<li>Execute each policy based on mutually exclusive conditions. This will help ensure that only one of multiple response cache policies executes.</li>
+			<li>Define different cache resources for each response cache policy. You specify the cache resource in the policy's &lt;CacheResource&gt; element.</li>
+		</ul>
+	</li>
 </ul>
 <p>See <a href="http://docs.apigee.com/node/26">http://docs.apigee.com/node/26</a>.</p>
 <h2>Policy and custom code</h2>
@@ -181,7 +190,7 @@
 <p>See <a href="http://docs.apigee.com/node/14782">http://docs.apigee.com/node/14782</a>.</p>
 <h2>Security</h2>
 <ul>
-	<li>Use IP address restriction policies to limit access to your test environment. Whitelist the IP addresses of you development machines or environments. <a href="http://docs.apigee.com/node/29">http://docs.apigee.com/node/29</a>.</li>
+	<li>Use IP address restriction policies to limit access to your test environment. Whitelist the IP addresses of your development machines or environments. <a href="http://docs.apigee.com/node/29">http://docs.apigee.com/node/29</a>.</li>
 	<li>Always apply content protection policies (JSON and or XML) to API proxies that are deployed to production. <a href="http://docs.apigee.com/node/365">http://docs.apigee.com/node/365</a>.</li>
 	<li>See the following topics for more security best practices:
 		<ul>

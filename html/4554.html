@@ -68,7 +68,7 @@ xmlns:yweather="http://xml.weather.yahoo.com/ns/rss/1.0</pre>
 			<a href="https://www.postgresql.org/docs/8.1/static/sql-keywords-appendix.html" target="_blank">https://www.postgresql.org/docs/8.1/static/sql-keywords-appendix.html</a></li>
 	</ul>
 </div>
-<p>The Extract Variables policy below shows how to exrtract data fromt he XML response and write it to custom variables. The <span style="font-family:courier new,courier,monospace;">&lt;VariablePrefix&gt;</span> tag specifies that the variable names are prefixed by&nbsp;<code>weather.</code>&nbsp;Each <span style="font-family:courier new,courier,monospace;">&lt;Variable&gt;</span> tag uses the <span style="font-family:courier new,courier,monospace;">name</span> attribute that specifies the name of the custom variables and the&nbsp;associated XPath expression.</p>
+<p>The Extract Variables policy below shows how to exrtract data from the XML response and write it to custom variables. The <span style="font-family:courier new,courier,monospace;">&lt;VariablePrefix&gt;</span> tag specifies that the variable names are prefixed by&nbsp;<code>weather.</code>&nbsp;Each <span style="font-family:courier new,courier,monospace;">&lt;Variable&gt;</span> tag uses the <span style="font-family:courier new,courier,monospace;">name</span> attribute that specifies the name of the custom variables and the&nbsp;associated XPath expression.</p>
 <p>Add this policy to your API proxy in the Edge UI or, if you are building the API proxy in XML, add a file under <code>/apiproxy/policies</code>&nbsp;named&nbsp;<code>ParseWeatherReport.xml,</code> with the following content:</p>
 <pre>
 &lt;ExtractVariables name="ParseWeatherReport"&gt;
@@ -94,7 +94,7 @@ xmlns:yweather="http://xml.weather.yahoo.com/ns/rss/1.0</pre>
 &lt;/ExtractVariables&gt;</pre>
 <h4>Using the Statistics Collector policy to write data to the Analytics Service</h4>
 <p>The next step is to create another policy that reads the custom variables created by the Extract Variables policy and writes them to the Analytics Services for processing. The Statistics Collector&nbsp;policy is used for this operation. See <a href="http://docs.apigee.com/node/299">http://docs.apigee.com/node/299</a> for more.</p>
-<p>In the Statistics Collector&nbsp;policy, the <span style="font-family:courier new,courier,monospace;">ref</span> attribute of the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Statistics&gt;</span>&nbsp;tag specifies the name of the variable for which you want to collect statistics. The&nbsp;<span style="font-family: 'courier new', courier, monospace;">name</span>&nbsp;attribute &nbsp;specifies the name of the collection of statistical data for that variable stored by the Analytics Server, and the <span style="font-family:courier new,courier,monospace;">type</span> atribute specifies the data type of the recorded data. You can then query that collection to view the collected statistics about the corresponding variable.</p>
+<p>In the Statistics Collector&nbsp;policy, the <span style="font-family:courier new,courier,monospace;">ref</span> attribute of the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;Statistics&gt;</span>&nbsp;tag specifies the name of the variable for which you want to collect statistics. The&nbsp;<span style="font-family: 'courier new', courier, monospace;">name</span>&nbsp;attribute &nbsp;specifies the name of the collection of statistical data for that variable stored by the Analytics Server, and the <span style="font-family:courier new,courier,monospace;">type</span> attribute specifies the data type of the recorded data. You can then query that collection to view the collected statistics about the corresponding variable.</p>
 <p>Optionally provide a default value for a custom variable, which will be forwarded to Analytics Services if the variables cannot be resolved or the variable is undefined. In the example below, the default values are <code>Earth</code>, <code>Sunny</code>, <code>Rainy</code>, and <code>Balmy</code>.</p>
 <p>Add this policy to your API proxy in the Edge UI or, if you are building the API proxy in XML, add a file under <code>/apiproxy/policies</code>&nbsp;named&nbsp;<code>AnalyzeWeatherReport.xml,</code> with the following content:</p>
 <pre>
@@ -171,7 +171,7 @@ $ curl http://{org_name}-test.apigee.net/weather/forecastrss?w=2520841</pre>
 <pre class="terminal">
 $ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/location?"select=sum(message_count)&amp;timeRange=11/19/2015%2000:00~11/21/2015%2000:00&amp;timeUnit=day"
 -u email:password</pre>
-<p>You should see a response inthe form:</p>
+<p>You should see a response in the form:</p>
 <pre>
 {
   "environments" : [ {
@@ -226,7 +226,7 @@ $ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats
 <pre class="terminal">
 $ curl https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/location?"select=sum(message_count)&amp;timeRange=11/19/2015%2000:00~11/21/2015%2000:00&amp;timeUnit=day&amp;filter=(location%20in%20'London','Shanghai')" \
 -u email:password</pre>
-<p>You should see a response inthe form:</p>
+<p>You should see a response in the form:</p>
 <pre>
 {
   "environments" : [ {

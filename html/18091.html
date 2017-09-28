@@ -18,9 +18,8 @@
 <p>To use the Edge management UI to edit the TargetEndpoint:</p>
 <ol>
 	<li>Login to the Edge management UI at&nbsp;<a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a>.</li>
-	<li>In the Edge management UI menu, select&nbsp;<strong>APIs</strong>.</li>
 	<li>Select the name of the API proxy to update.</li>
-	<li>Select the&nbsp;<strong>Development</strong>&nbsp;tab.</li>
+	<li>Select the&nbsp;<strong>Develop</strong>&nbsp;tab.</li>
 	<li>Under&nbsp;<strong>Target Endpoints</strong>, select&nbsp;<strong>default</strong>.</li>
 	<li>In the code area, the TargetEndpoint definition appears, similar to below:<br />
 		<div><span style="font-family:courier new,courier,monospace;">&lt;TargetEndpoint <strong>name="default"</strong>&gt;</span></div>
@@ -66,6 +65,11 @@
   ...
 &lt;/TargetEndpoint&gt;</pre>
 <p>See <a href="http://docs.apigee.com/node/14726">http://docs.apigee.com/node/14726</a> for more.</p>
+<h2>Using a reference to a keystore or&nbsp;truststore&nbsp;in a&nbsp;TargetEndpoint or TargetServer</h2>
+<p>Many of the example below shown&nbsp;how to configure a TargetEndpoint or TargetServer to support TLS. As part of configuring TLS, you might have to specify a keystore or truststore&nbsp;as part of&nbsp;a TargetEndpoint or TargetServer definition.</p>
+<p>One option is to specify the literal name of the keystore and truststore in the TargetEndpoints or TargetServer&nbsp;definition. With this type of configuration, you have to restart the Message Processors when you update the cert in the keystore or truststore. See <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a> for more. &nbsp;&nbsp;</p>
+<p>As an alternative, Apigee reccomends that you use a&nbsp;<em>reference</em>&nbsp;to the&nbsp;keystore and truststore in the&nbsp;TargetEndpoints&nbsp;or&nbsp;TargetServer&nbsp;definition.&nbsp;The advantage to using a reference is that you can update the reference to point to a different keystore or truststore to update the TLS cert without having to restart the Message Processor.</p>
+<p>References to&nbsp;keystores and truststores in the&nbsp;TargetEndpoints&nbsp;or&nbsp;TargetServer&nbsp;definition work the same way as they do for virtual hosts. See&nbsp;<a href="http://docs.apigee.com/api-services/content/creating-virtual-host#usingreferencestoakeystoreortruststore">Using references to a keystore or truststore</a>&nbsp;to create an use a reference.</p>
 <h2>Configuring one-way TLS to the backend server</h2>
 <p>When using a TargetEndpoint definition, configuring one-way TLS access from Edge (TLS client) to the backend server (TLS server) does not require any additional configuration on Edge. It is up to the backend server to configure TLS correctly. You only need to make sure that the <span style="font-family: 'courier new', courier, monospace;">&lt;URL&gt;</span> element in the TargetEndpoint definition&nbsp;references the backend service by the HTTPS protocol and that you enable TLS:</p>
 <pre>
@@ -96,7 +100,7 @@
  &lt;HTTPTargetConnection&gt;
 <strong>   &lt;SSLInfo&gt;
        &lt;Enabled&gt;true&lt;/Enabled&gt;
-       &lt;TrustStore&gt;myTrustStore&lt;/TrustStore&gt;
+       &lt;TrustStore&gt;ref://myTrustStoreRef&lt;/TrustStore&gt;
    &lt;/SSLInfo&gt;
 </strong>   &lt;URL&gt;https://myservice.com&lt;/URL&gt;
  &lt;/HTTPTargetConnection&gt;
@@ -110,7 +114,7 @@
   &lt;IsEnabled&gt;true&lt;/IsEnabled&gt;
   <strong>&lt;SSLInfo&gt; 
       &lt;Enabled&gt;true&lt;/Enabled&gt; 
-      &lt;TrustStore&gt;myTrustStore&lt;/TrustStore&gt;
+      &lt;TrustStore&gt;ref://myTrustStoreRef&lt;/TrustStore&gt;
   &lt;/SSLInfo&gt; </strong>
 &lt;/TargetServer&gt; </pre>
 <h2>Configuring two-way TLS to the backend server</h2>
@@ -127,10 +131,32 @@
 <ol>
 	<li>Create the keystore on Edge, and upload the cert and private key, by using the procedure described here: <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.<br />
 		<br />
-		When you create the keystore, you specify the keystore name and key alias. You need that information to configure the TargetEndpoint.&nbsp;</li>
-	<li>If the backend server uses a self-signed certificate, or a certificate that is not signed by a trusted CA, create a truststore on Edge, and upload the cert and CA chain, as described here: <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.<br />
+		For this example, create a keystore named <strong>myTestKeystore</strong>&nbsp;that uses an alias name of <strong>myKey</strong>&nbsp;for the cert and private key.</li>
+	<li>
+		<p>Use the following POST API call to create the reference named&nbsp;<strong>keystoreref</strong>&nbsp;to the keystore you created above:</p>
+		<pre>
+curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.com/v1/o/{org_name}/e/{env_name}/references \
+-d '&lt;ResourceReference name="<strong>keystoreref</strong>"&gt;
+    &lt;Refers&gt;<strong>myTestKeystore</strong>&lt;/Refers&gt;
+    &lt;ResourceType&gt;<strong>KeyStore</strong>&lt;/ResourceType&gt;
+&lt;/ResourceReference&gt;' -u <em><strong>email:password</strong></em></pre>
+		<p>The reference specifies the name of the keystore and the reference type as <span style="font-family:courier new,courier,monospace;">KeyStore</span>.</p>
+		<p>Use the following GET API call to view the reference:</p>
+		<pre>
+curl -X GET https://api.enterprise.apigee.com/v1/o/[org_name}/e/{env_name}/references/keystoreref -u uname:password</pre>
+	</li>
+	<li><strong>If the backend server uses a self-signed certificate</strong>, or a certificate that is not signed by a trusted CA, create a truststore on Edge, and upload the cert and CA chain, as described here: <a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.<br />
 		<br />
-		When you create the truststore, you specify the truststore name. You need that information to configure the TargetEndpoint.&nbsp;</li>
+		For this example, if you have to create a truststore name it <strong>myTrustStore</strong>.&nbsp;</li>
+	<li>
+		<p><strong>If you created a truststore,</strong> use the following POST API call to create the reference named&nbsp;<strong>truststoreref</strong>&nbsp;to the truststore you created above:</p>
+		<pre>
+curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.com/v1/o/{org_name}/e/{env_name}/references \
+-d '&lt;ResourceReference name="<strong>truststoreref</strong>"&gt;
+    &lt;Refers&gt;<strong>myTrustKeystore</strong>&lt;/Refers&gt;
+    &lt;ResourceType&gt;<strong>KeyStore</strong>&lt;/ResourceType&gt;
+&lt;/ResourceReference&gt;' -u <em><strong>email:password</strong></em></pre>
+	</li>
 	<li>Use the Edge management UI to update the TargetEndpoint definition for the API proxy (or, if you define the API proxy in XML, edit the XML files for the proxy):
 		<ol style="list-style: lower-alpha outside">
 			<li>Login to the Edge management UI at&nbsp;<a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a>.</li>
@@ -146,7 +172,7 @@
 				&nbsp; &nbsp; <strong>&lt;SSLInfo&gt;<br />
 				&nbsp; &nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;<br />
 				&nbsp; &nbsp; &nbsp; &lt;ClientAuthEnabled&gt;true&lt;/ClientAuthEnabled&gt;<br />
-				&nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;myKeystore&lt;/KeyStore&gt;<br />
+				&nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;ref://keystoreref&lt;/KeyStore&gt;<br />
 				&nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;myKey&lt;/KeyAlias&gt;</strong></span><br />
 				<span style="font-family:courier new,courier,monospace;"><strong>&nbsp; &nbsp; &lt;/SSLInfo&gt;</strong><br />
 				&nbsp; &nbsp; &lt;URL&gt;https://myservice.com&lt;/URL&gt;<br />
@@ -164,7 +190,7 @@
 						&nbsp; &nbsp; &nbsp; &lt;ClientAuthEnabled&gt;true&lt;/ClientAuthEnabled&gt;<br />
 						&nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;myKeystore&lt;/KeyStore&gt;<br />
 						&nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;myKey&lt;/KeyAlias&gt;</span></p>
-					<div><span style="font-family:courier new,courier,monospace;"><strong>&nbsp; &nbsp; &nbsp; &lt;TrustStore&gt;myTrustStore&lt;/TrustStore&gt;</strong></span></div>
+					<div><span style="font-family:courier new,courier,monospace;"><strong>&nbsp; &nbsp; &nbsp; &lt;TrustStore&gt;ref://truststoreref&lt;/TrustStore&gt;</strong></span></div>
 					<span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/SSLInfo&gt;<br />
 					&nbsp; &nbsp; &lt;URL&gt;https://myservice.com&lt;/URL&gt;<br />
 					&nbsp; &lt;/HTTPTargetConnection&gt;<br />
@@ -178,7 +204,7 @@
 					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;SSLInfo&gt;</span></strong></div>
 					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;&nbsp;</span></strong></div>
 					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;ClientAuthEnabled&gt;true&lt;/ClientAuthEnabled&gt;&nbsp;</span></strong></div>
-					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;myKeystore&lt;/KeyAlias&gt;&nbsp;</span></strong></div>
+					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;<strong>ref://keystoreref</strong>&lt;/KeyAlias&gt;&nbsp;</span></strong></div>
 					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;myKey&lt;/KeyStore&gt;&nbsp;</span></strong></div>
 					<div><strong><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/SSLInfo&gt;&nbsp;</span></strong></div>
 					<div><span style="font-family:courier new,courier,monospace;">&lt;/TargetServer&gt;</span></div>
@@ -192,7 +218,7 @@
 					<div><span style="font-family:courier new,courier,monospace;"><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;ClientAuthEnabled&gt;true&lt;/ClientAuthEnabled&gt;&nbsp;</span></span></div>
 					<div><span style="font-family:courier new,courier,monospace;"><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;myKeystore&lt;/KeyAlias&gt;&nbsp;</span></span></div>
 					<div><span style="font-family:courier new,courier,monospace;"><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;myKey&lt;/KeyStore&gt;&nbsp;</span></span></div>
-					<div><strong style="font-family: 'courier new', courier, monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;TrustStore&gt;myTrustStore&lt;/TrustStore&gt;</strong></div>
+					<div><strong style="font-family: 'courier new', courier, monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;TrustStore&gt;<strong>ref://truststoreref</strong>&lt;/TrustStore&gt;</strong></div>
 					<div><span style="font-family:courier new,courier,monospace;"><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/SSLInfo&gt;&nbsp;</span></span></div>
 					<div><span style="font-family:courier new,courier,monospace;"><span style="font-family:courier new,courier,monospace;">&lt;/TargetServer&gt;<br />
 						<br />
@@ -204,10 +230,6 @@
 	</li>
 </ol>
 <p>For more information on the options available in the TargetEndpoint, including using variables to supply TargetEndpoint <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> values, see <a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a>.&nbsp;</p>
-<h2>Using a reference to a keystore or truststore</h2>
-<p>The examples above for configuring a TargetEndpoint for one-way or two-way TLS to the backend all specify the name of the keystore and truststore in the TargetEndpoints or TargetServer&nbsp;definition. With this type of configuration, you have to restart the Message Processors when you update the cert in the keystore or truststore. See <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a> for more. &nbsp;&nbsp;</p>
-<p>As an alternative, you can use a <em>reference</em> to the&nbsp;keystore and truststore in the&nbsp;TargetEndpoints&nbsp;or&nbsp;TargetServer&nbsp;definition.&nbsp;The advantage to using a reference is that you can update the reference to point to a different keystore or truststore to update the TLS cert without having to restart the Message Processor.</p>
-<p>References to&nbsp;keystores and truststores in the&nbsp;TargetEndpoints&nbsp;or&nbsp;TargetServer&nbsp;definition work the same way as they do for virtual hosts. See how <a href="http://docs.apigee.com/api-services/content/creating-virtual-host#usingreferencestoakeystoreortruststore">Using references to a keystore or truststore</a> to create an use a reference.</p>
 <h2>Enabling SNI</h2>
 <p>Edge supports the use of Server Name Indication (SNI) from message processors to target endpoints in Apigee Edge for Cloud and for Private Cloud deployments. If you want to use SNI in the Cloud, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>.</p>
 <div class="note">

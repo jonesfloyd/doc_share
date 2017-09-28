@@ -55,9 +55,9 @@
 <p>You can use the REST API when you need to automate certain analytics functions, such as retrieving metrics periodically using an automation client or script. You can also use the API to build your own visualizations in the form of custom widgets that you can embed in portals or custom apps. The API can also be used to provide custom analytics to certain app developers or communities of app developers.&nbsp;</p>
 <p>Here's an example analytics REST API call:</p>
 <pre class="terminal">
-$ curl  https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/apis?"select=sum(message_count)&amp;timeRange=8/24/2013%2000:00~9/25/2013%2000:00&amp;timeUnit=day" \
+$ curl  https://api.enterprise.apigee.com/v1/o/{org_name}/environments/test/stats/apiproxy?"select=sum(message_count)&amp;timeRange=6/24/2017%2000:00~6/24/2017%2023:59&amp;timeUnit=hour" \
 -u email:password</pre>
-<p>This call tells you how many request messages were received on a daily basis by all API proxies between 8/24/2013 and 9/25/2013.&nbsp;The response provides a snapshot of the request message throughput to all APIs for traffic received between 8/24/2013 and 9/25/2013</p>
+<p>This call tells you how many request messages were received on an hourly basis, grouped by all API proxies, on 6/24/2017 (00:00 to 23:59 UTC time). (%20 is a URL-encoded space.)</p>
 <p>To read all about the REST API for analytics, see <a href="http://docs.apigee.com/node/428">http://docs.apigee.com/node/428</a>.</p>
 <h2>Share data with app developers</h2>
 <p>When you think of app developers as your customers, you'll want to make sure they have the tools and information available to them to make the best use of your API. Ultimately, you want the people who use their apps (and your products and services) to be happy.</p>

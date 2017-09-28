@@ -1,0 +1,256 @@
+<h1> Use plugins </h1>
+<em style="text-align: right;">Edge Microgateway v. 2.3.x</em>
+<h2>Audience</h2>
+<p>This topic is intended for Edge Microgateway operators who wish to use existing plugins that are installed with the microgateway.&nbsp;It also discusses the spike arrest and quota plugins in detail (both are included with the installation). If you're a developer who wants to develop new plugins, see <a href="http://docs.apigee.com/node/25316">http://docs.apigee.com/node/25316</a>.</p>
+<h2>What is an Edge Microgateway plugin?</h2>
+<p>A plugin is a Node.js module that adds functionality to Edge Microgateway. Plugin modules follow a consistent pattern and are stored in a location known to Edge Microgateway, enabling the microgateway to discover and load them automatically. Edge Microgateway includes several existing plugins and&nbsp;you can also create custom plugins, as explained in <a href="http://docs.apigee.com/node/25316">http://docs.apigee.com/node/25316</a>.</p>
+<h2>Existing plugins bundled with Edge Microgateway</h2>
+<p>Several existing plugins are provided with Edge Microgateway at installation. These include:</p>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="col" width="156">Plugin</th>
+			<th scope="col" width="60">Enabled by default</th>
+			<th scope="col" width="986">Description</th>
+		</tr>
+		<tr>
+			<td><strong>analytics</strong></td>
+			<td>Yes</td>
+			<td>Sends analytics data from Edge Microgateway to Apigee Edge.</td>
+		</tr>
+		<tr>
+			<td><strong>oauth</strong></td>
+			<td>Yes</td>
+			<td>Adds OAuth token and API Key validation to Edge Microgateway. See&nbsp;<a href="http://docs.apigee.com/node/25296">http://docs.apigee.com/node/25296</a>.</td>
+		</tr>
+		<tr>
+			<td><strong>quota</strong></td>
+			<td>No</td>
+			<td>Enforces quota on requests to Edge Microgateway. Uses Apigee Edge to store and manage the quotas. See&nbsp;<a href="#Using the quota plugin">Using the quota plugin</a>.</td>
+		</tr>
+		<tr>
+			<td><strong>spikearrest</strong></td>
+			<td>No</td>
+			<td>Protects against traffic spikes and DoS attacks. See&nbsp;<a href="#Using the spike arrest plugin">Using the spike arrest plugin</a>.</td>
+		</tr>
+		<tr>
+			<td><strong>header-uppercase</strong></td>
+			<td>No</td>
+			<td>A commented, sample proxy intended as a guide to help developers write custom plugins. See&nbsp;<a href="#Edge Microgateway sample plugin">Edge Microgateway sample plugin</a>.</td>
+		</tr>
+		<tr>
+			<td><strong>accumulate-request</strong></td>
+			<td>No</td>
+			<td>Accumulates request data into a single object before passing the data to the next handler in the plugin chain. Useful for writing transform plugins that need to operate on a single, accumulated request content object.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>accumulate-response</strong></td>
+			<td>No</td>
+			<td>Accumulates response data into a single object before passing the data to the next handler in the plugin chain. Useful for writing transform plugins that need to operate on a single, accumulated response content object.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>transform-uppercase</strong></td>
+			<td>No</td>
+			<td>Transforms request or response data. This plugin represents a best practice implementation of a transform plugin. The example plugin performs a trivial transform (converts request or response data to uppercase); however, it can easily be adapted to perform other kinds of transformations, such as XML to JSON.</td>
+		</tr>
+		<tr>
+			<td><strong>json2xm</strong>l</td>
+			<td>No</td>
+			<td>Transforms request or response data based on accept or content-type headers. For details,&nbsp;<a href="https://github.com/apigee/microgateway-plugins/tree/master/json2xml">refer to the plugin documentation in GitHub</a>.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>quota-memory</strong></td>
+			<td>No</td>
+			<td>Enforces quota on requests to Edge Microgateway. Stores and manages quotas in local memory.&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>healthcheck</strong></td>
+			<td>No</td>
+			<td>Returns information about the Edge Microgateway process -- memory usage, cpu usage, etc. To use the plugin, call the URL&nbsp;<strong>/healthcheck</strong>&nbsp;on your Edge Microgateway instance. This plugin is intended to be an example that you can use to implement your own health checking plugin.&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Where to find existing plugins</h2>
+<p>Existing plugins bundled with Edge Microgateway are located here, where&nbsp;<code>[prefix]</code>&nbsp;is the&nbsp;<code>npm</code>&nbsp;prefix directory. See&nbsp;<a href="https://docs.apigee.com/microgateway/v2.3.x/installing-edge-microgateway-v2.3.x#whereisedgemicrogatewayinstalled">Where is Edge Microgateway installed</a>.</p>
+<pre>
+[prefix]/lib/node_modules/edgemicro/node_modules/microgateway-plugins
+</pre>
+<h2><a id="Adding and configuring plugins" name="Adding and configuring plugins"></a>Adding and configuring plugins</h2>
+<p>Follow this pattern to add and configure plugins:</p>
+<ol>
+	<li>Stop Edge Microgateway.</li>
+	<li>Open an Edge Microgateway configuration file. For details, see&nbsp;<a href="https://docs.apigee.com/microgateway/operation-and-configuration-reference-edge-microgateway#makingconfigurationchanges">Making configuration changes</a>&nbsp;for options.</li>
+	<li>Add the plugin to the&nbsp;<code>plugins:sequence</code>&nbsp;element of the config file, as follows. Plugins are executed in the order they appear in this list.</li>
+</ol>
+<pre style="margin-left: 40px;">
+edgemicro:
+  home: ../gateway
+  port: 8000
+  max_connections: -1
+  max_connections_hard: -1
+  logging:
+     level: info
+     dir: /var/tmp
+     stats_log_interval: 60
+  <strong>plugins:</strong>
+     <strong>dir:</strong> ../plugins
+     <strong>sequence:</strong>   
+     - oauth
+     - plugin-name
+</pre>
+<ol start="4">
+	<li>Configure the plugin. Some plugins have optional parameters that you can configure in the config file. For example, you can add the following stanza to configure the spike arrest plugin. See&nbsp;<a href="#Using the spike arrest plugin">Using the spike arrest plugin</a>&nbsp;for more information.
+		<pre>
+edgemicro:
+  home: ../gateway
+  port: 8000
+  max_connections: -1
+  max_connections_hard: -1
+  logging:
+    level: info
+    dir: /var/tmp
+    stats_log_interval: 60
+  plugins:
+    dir: ../plugins
+    sequence:
+      - oauth
+      - spikearrest
+<strong>spikearrest:
+   timeUnit: minute
+   allow: 10</strong></pre>
+		<div class="note">
+			<p>You can also create a plugin-specific configuration file. See&nbsp;<a href="#Plugin-specific configuration">Plugin-specific configuration</a>.</p>
+		</div>
+	</li>
+</ol>
+<ol start="5">
+	<li>Save the file.</li>
+	<li>Restart or reload Edge Microgateway, depending on which configuration file you edited, as explained in&nbsp;<a href="https://docs.apigee.com/microgateway/operation-and-configuration-reference-edge-microgateway#makingconfigurationchanges">Making configuration changes</a>.</li>
+</ol>
+<h2><a id="Plugin-specific configuration" name="Plugin-specific configuration"></a>Plugin-specific configuration</h2>
+<p>You can override the plugin parameters specified in the config file by creating a plugin-specific configuration in this directory:</p>
+<pre>
+[prefix]/lib/node_modules/edgemicro/node_modules/microgateway-plugins/config
+</pre>
+<p>where&nbsp;<code>[prefix]</code>&nbsp;is the&nbsp;<code>npm</code>&nbsp;prefix directory. See&nbsp;<a href="https://docs.apigee.com/microgateway/v2.3.x/installing-edge-microgateway-v2.3.x#whereisedgemicrogatewayinstalled">Where is Edge Microgateway installed</a>.</p>
+<p><code>plugins/&lt;plugin_name&gt;/config/default.yaml</code>. For example, you could put this block in&nbsp;<code>plugins/spikearrest/config/default.yaml</code>, and they will override any other config settings.</p>
+<pre style="margin-left: 40px;">
+spikearrest:
+   timeUnit: hour   
+   allow: 10000   
+   buffersize: 0
+</pre>
+<h2><a id="Using the spike arrest plugin" name="Using the spike arrest plugin"></a>Using the spike arrest plugin</h2>
+<p>This section discusses the spike arrest plugin.</p>
+<h3>About spike arrest</h3>
+<p>Spike Arrest protects against traffic spikes. It throttles the number of requests processed by an Edge Microgateway instance. For more information, see&nbsp;<a href="#usingthespikearrestplugin-howdoesspikearrestwork">How does spike arrest work</a>? See also&nbsp;<a href="#usingthequotaplugin-whatsthedifferencebetweenspikearrestandquota">What's the difference between spike arrest and quota?</a>.</p>
+<h3>Adding the spike arrest plugin</h3>
+<p>For the basic steps to follow for any plugin, see&nbsp;<a href="#Adding and configuring plugins">Adding and configuring plugins</a>.</p>
+<h3>Sample configuration for spike arrest</h3>
+<pre>
+edgemicro:
+  home: ../gateway
+  port: 8000
+  max_connections: -1
+  max_connections_hard: -1
+  logging:
+    level: info
+    dir: /var/tmp
+    stats_log_interval: 60
+  plugins:
+    dir: ../plugins
+    <strong>sequence:</strong>
+      - oauth
+      <strong>- spikearrest</strong>
+<strong>spikearrest:
+   timeUnit: minute
+   allow: 10</strong>
+   <strong>bufferSize: 5
+</strong></pre>
+<h3>Configuration options for spike arrest</h3>
+<ul>
+	<li><strong>timeUnit</strong>: How often the spike arrest execution window resets. Valid values are second&nbsp;or minute.</li>
+	<li><strong>allow</strong>: The maximum number of requests to allow during the timeUnit.</li>
+	<li><strong>bufferSize</strong>: (optional, default = 0) if bufferSize &gt; 0, spike arrest stores this number of requests in a buffer. As soon as the next execution "window" occurs, the buffered requests will be processed first. See also<a href="#Adding a buffer">&nbsp;Adding a buffer</a>.</li>
+</ul>
+<h3>How does spike arrest work?</h3>
+<p>Think of spike arrest as a way to generally protect against traffic spikes rather than as a way to limit traffic to a specific number of requests. Your APIs and backend can handle a certain amount of traffic, and the spike arrest policy helps you smooth traffic to the general amounts you want.</p>
+<p>The runtime spike arrest behavior differs from what you might expect to see from the literal per-minute or per-second values you enter.</p>
+<p>For example, say you specify a rate of 30 requests per minute, like this:</p>
+<pre>
+spikearrest:
+   timeUnit: minute
+   allow: 30</pre>
+<p>In testing, you might think you could send 30 requests in 1 second, as long as they came within a minute. But that's not how the policy enforces the setting. If you think about it, 30 requests inside a 1-second period could be considered a mini spike in some environments.</p>
+<p>What actually happens, then? To prevent spike-like behavior, spike arrest smooths the allowed traffic by dividing your settings into smaller intervals, as follows:</p>
+<h4>Per-minute rates</h4>
+<p>Per-minute rates get smoothed into requests allowed intervals of seconds. For example, 30 requests per minute gets smoothed like this:</p>
+<p>60 seconds (1 minute) / 30 = 2-second intervals, or about 1 request allowed every 2 seconds. A second request inside of 2 seconds will fail. Also, a 31st request within a minute will fail.</p>
+<h4>Per-second rates</h4>
+<p>Per-second rates get smoothed into requests allowed in intervals of milliseconds. For example, 10 requests/second gets smoothed like this:</p>
+<p>1000 milliseconds (1 second) / 10 = 100-millisecond intervals, or about 1 request allowed every 100 milliseconds . A second request inside of 100ms will fail. Also, an 11th request within a second will fail.</p>
+<h4>When the limit is exceeded</h4>
+<p>If the number of requests exceeds the limit within the specified time interval, spike alert returns this error message with an HTTP 503 status:</p>
+<pre>
+{"error": "spike arrest policy violated"}</pre>
+<h4><a id="Adding a buffer" name="Adding a buffer"></a>Adding a buffer</h4>
+<p>You have an option of adding a buffer to the policy. Let's say you set the buffer to 10. You'll see that the API does not return an error immediately when you exceed the spike arrest limit. Instead, requests are buffered (up to the number specified), and the buffered requests are processed as soon as the next appropriate execution window is available. The default&nbsp;<strong>bufferSize</strong>&nbsp;is 0.</p>
+<h2><a id="Using the quota plugin" name="Using the quota plugin"></a>Using the quota plugin</h2>
+<p>This section discusses the quota plugin.</p>
+<div class="note">
+	<p>To use quota, OAuth authentication must&nbsp;be enabled in the Edge Microgateway config&nbsp;file&nbsp;<strong>AND</strong>&nbsp;the quota plugin must be placed&nbsp;<strong>after</strong>&nbsp;the oauth plugin in the sequence list. Quotas are only enforced when client authentication is enabled.&nbsp;The <a href="http://docs.apigee.com/node/25296">http://docs.apigee.com/node/25296</a> covers all the steps required to make authenticated API calls.</p>
+</div>
+<h3>About the quota plugin</h3>
+<p>A quota specifies the number of request messages that an app is allowed to submit to an API over the course of an hour, day, week, or month. When an app reaches its quota limit, subsequent API calls are rejected. See also&nbsp;<a href="#usingthequotaplugin-whatsthedifferencebetweenspikearrestandquota">What's the difference between spike arrest and quota</a>?.</p>
+<h3>Adding the quota plugin</h3>
+<p>For the basic steps to follow for any plugin, see&nbsp;<a href="#Adding and configuring plugins">Adding and configuring plugins</a>.</p>
+<h3>Product configuration in Apigee Edge</h3>
+<p>You configure quotas in the Apigee Edge UI where you configure API products. You need to know which product contains the microgateway-aware proxy that you want to limit with a quota. This product must be added to a developer app. When you make API calls that are authenticated using keys in the developer app, the quota will be applied to those API calls.</p>
+<ol>
+	<li>Log in to your Apigee Edge organization account.</li>
+	<li>In the Edge UI, open the product&nbsp;associated with the microgateway-aware proxy to which you want to apply the quota.
+		<ol start="1" type="a">
+			<li>In the UI, select&nbsp;<strong>Products</strong>&nbsp;from the Publish menu.</li>
+			<li>Open the product containing the API to which you want to apply the quota.</li>
+			<li>Click&nbsp;<strong>Edit</strong>.</li>
+			<li>In the Quota&nbsp;field, specify the quota interval. For example, 100 requests every one minute. Or 50000 requests every 2 hours.<br />
+				<br />
+				<img alt="" src="sites/docs/files/em-admin-fig-7.png" style="width: 436px; height: 41px; border-width: 1px; border-style: solid;" /></li>
+		</ol>
+	</li>
+</ol>
+<ol start="3">
+	<li>Click&nbsp;<strong>Save</strong>.</li>
+	<li>Be sure the product is added to a developer app. You'll need the keys from this app to make authenticated API calls.</li>
+</ol>
+<h3>Sample configuration for quota</h3>
+<div class="note">
+	<p>You must place the&nbsp;<strong>quota</strong>&nbsp;plugin&nbsp;<strong>after</strong>&nbsp;the&nbsp;<strong>oauth</strong>&nbsp;plugin in the sequence list.</p>
+</div>
+<pre>
+edgemicro:
+  home: ../gateway
+  port: 8000
+  max_connections: -1
+  max_connections_hard: -1
+  logging:
+    level: info
+    dir: /var/tmp
+    stats_log_interval: 60
+  plugins:
+    dir: ../plugins
+    <strong>sequence:</strong>
+      - oauth
+      <strong>- quota</strong><strong>
+</strong></pre>
+<h3>Configuration options for quota</h3>
+<p>There are no additional configuration options for the quota plugin.</p>
+<h3>Testing the quota plugin</h3>
+<p>When the quota is exceeded, an HTTP 403 status is returned to the client, along with the following message:</p>
+<pre>
+{"error": "exceeded quota"}
+</pre>
+<h3>What's the difference between spike arrest and quota?</h3>
+<p>It’s important to choose the right tool for the job at hand. Quota policies configure the number of request messages that a client app is allowed to submit to an API over the course of an hour, day, week, or month. The quota policy enforces consumption limits on client apps by maintaining a distributed counter that tallies incoming requests.</p>
+<p>Use a quota policy to enforce business contracts or SLAs with developers and partners, rather than for operational traffic management. For example, a quota might be used to limit traffic for a free service, while allowing full access for paying customers. See also&nbsp;<a href="#Using the quota plugin">Using the quota plugin</a>.</p>
+<p>Use spike arrest to protect against sudden spikes in API traffic. Typically, spike arrest is used to head off possible DDoS or other malicious attacks.</p>

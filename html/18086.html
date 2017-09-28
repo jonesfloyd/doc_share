@@ -13,7 +13,7 @@
 	<li><a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a></li>
 </ul>
 <div class="note">
-	<p>If your installation uses a load balancer, and the load balancer is responsible for handling encrypted traffic, then you still need to create the virtual host. However, your network configuration will determine whether or not the virtual host has to support TLS between the load balancer and the Router. See <a href="http://docs.apigee.com/node/18076">http://docs.apigee.com/node/18076</a> for more.</p>
+	<p>If your installation uses a load balancer, and the load balancer is responsible for handling encrypted traffic, then you still need to create the virtual host. However, your network configuration will determine whether or not the virtual host has to support TLS between the load balancer and the Router. See <a href="http://docs.apigee.com/node/18076">http://docs.apigee.com/node/18076</a> for more.&nbsp;</p>
 </div>
 <h2>What you need to create a virtual host</h2>
 <p>Before you create a virtual host, you should have the following information:</p>
@@ -21,8 +21,8 @@
 	<li>The publicly facing domain name of the virtual host.&nbsp;For example, you should know if the publicly facing name is <span style="font-family:courier new,courier,monospace;">api.myCompany.com</span>, <span style="font-family:courier new,courier,monospace;">myapi.myCompany.com</span>, etc. That information is used when you create the virtual host and also when you create the DNS record for the virtual host.</li>
 	<li><strong>For one-way TLS</strong>, you need to create a keystore where the keystore contains the following:
 		<ul>
-			<li>TLS certificate as a PEM file - either a certificate signed by a certificate authority (CA), or a chain of certificates where the last certificate is signed by a CA.</li>
-			<li>Private key as a PEM file. Edge supports key sizes up to 2048 bits. A passphrase is optional.</li>
+			<li>TLS certificate&nbsp;- either a certificate signed by a certificate authority (CA), or a chain of certificates where the last certificate is signed by a CA.</li>
+			<li>Private key - Edge supports key sizes up to 2048 bits. A passphrase is optional.</li>
 		</ul>
 	</li>
 	<li><strong>For two-way TLS</strong>, you need a keystore and you need a truststore to hold the client's certificate and, optionally, certificate's CA chain. You need the truststore even if the cert is signed by a CA.</li>
@@ -88,7 +88,7 @@ http://&lt;routerIP&gt;:&lt;port&gt;/{proxy-base-path}/{resource-path}<span styl
 </span>https://&lt;routerIP&gt;:&lt;port&gt;/{proxy-base-path}/{resource-path}</pre>
 <p>where:</p>
 <ul>
-	<li><span style="font-family:courier new,courier,monospace;">http</span> or <span style="font-family:courier new,courier,monospace;">https</span>: If the virtual host is configured to supports TLS, use HTTPS. If the virtual host does not support TLS, use HTTP.&nbsp;</li>
+	<li><span style="font-family:courier new,courier,monospace;">http</span> or <span style="font-family:courier new,courier,monospace;">https</span>: If the virtual host is configured to support TLS, use HTTPS. If the virtual host does not support TLS, use HTTP.&nbsp;</li>
 	<li><span style="font-family:courier new,courier,monospace;">&lt;routerIP&gt;:&lt;port&gt;</span> is the IP address and port number of the virtual host.</li>
 	<li><span style="font-family:courier new,courier,monospace;">{proxy-base-path}</span> and <span style="font-family:courier new,courier,monospace;">{resource-path}</span> are defined when you create the API proxy.</li>
 </ul>
@@ -105,6 +105,7 @@ http://api.myCompany.com/{proxy-base-path}/{resource-path}
     &lt;Interfaces/&gt;
     &lt;Port&gt;9005&lt;/Port&gt;
 &lt;/VirtualHost&gt;</pre>
+<h3>Configuring a virtual host for TLS</h3>
 <p>The next XML object uses the <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> element to define a virtual host for a one-way TLS configuration over HTTPS:</p>
 <pre>
 &lt;VirtualHost name="myTLSVHost"&gt; 
@@ -116,7 +117,7 @@ http://api.myCompany.com/{proxy-base-path}/{resource-path}
     <strong>&lt;SSLInfo&gt; 
         &lt;Enabled&gt;true&lt;/Enabled&gt; 
         &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt; 
-        &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt; 
+        &lt;KeyStore&gt;ref://myTestKeystoreRef&lt;/KeyStore&gt; 
         &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt; 
     &lt;/SSLInfo&gt;</strong>
 &lt;/VirtualHost&gt;</pre>
@@ -125,6 +126,19 @@ http://api.myCompany.com/{proxy-base-path}/{resource-path}
 </div>
 <p>In this example, the <span style="font-family:courier new,courier,monospace;">&lt;Enabled&gt;</span> element is set to true to enable one-way TLS, and the <span style="font-family:courier new,courier,monospace;">&lt;KeyStore&gt;</span> and &lt;<span style="font-family:courier new,courier,monospace;">KeyAlias&gt;</span> elements specify the keystore and key used by the TLS connection.&nbsp;</p>
 <p>To enable two-way TLS, set the <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> element to <span style="font-family:courier new,courier,monospace;">true</span>, and specify a truststore using the <span style="font-family: 'courier new', courier, monospace;">&lt;TrustStore&gt;</span> element. The truststore&nbsp;holds the client's certificate and, optionally, certificate's CA chain.</p>
+<h3>Deciding how to specify the keystore and truststore name in the virtual host</h3>
+<p>In the virtual host example above, you specified the keystore by using a <em>reference</em>. A reference is a variable that contains the name of the keystore, rather than specifying the keystore&nbsp;name directly.</p>
+<p>The advantage to using a reference is that you can change the value of the reference to change the keystore used by the virtual host, usually because the cert in the current keystore is expiring in the near future. Changing the value of the reference does not require you to restart the Edge Router.&nbsp;</p>
+<div class="note">
+	<p>You can only use a reference to the keystore and truststore; you cannot use a reference to the alias. When you change the reference to a keystore, ensure that the alias name of the cert is the same as in the old keystore.</p>
+</div>
+<p>Alternatively, you can use a literal keystore name in the virtual host. However, if you ever modify the virtual host to change the keystore name, you have to restart the Edge Routers.</p>
+<h4><strong>Restrictions in using references to keystores and truststore</strong></h4>
+<p>You must take into account the following restriction when using references to keystores and truststores:</p>
+<ul>
+	<li>You can only use keystore and truststore references in virtual hosts if you support SNI and you terminate SSL on the Apigee Routers.</li>
+	<li>If you have a load balancer in front of the Apigee Routers, and you terminate TLS on the load balancer, then you cannot use keystore and truststore references in virtual hosts.&nbsp;</li>
+</ul>
 <h3>Setting the TLS ciphers and protocols supported by the virtual host for Edge 4.15.07 and earlier</h3>
 <p>If you are using Edge version 4.15.07 and earlier, then you set the TLS protocol and ciphers used by the virtual host by using the <span style="font-family:courier new,courier,monospace;">&lt;Ciphers&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;Protocols&gt;</span> child tags of the <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> tag. These tags are described in the table below.</p>
 <p>For example:</p>
@@ -140,14 +154,15 @@ http://api.myCompany.com/{proxy-base-path}/{resource-path}
             &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt;
             &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt;
             <strong>&lt;Ciphers&gt;
-                &lt;Cipher&gt;TLS_RSA_WITH_3DES_EDE_CBC_SHA&lt;/Cipher&gt;    
-                &lt;Cipher&gt;TLS_RSA_WITH_DES_CBC_SHA&lt;/Cipher&gt;
+                &lt;Cipher&gt;TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA&lt;/Cipher&gt;    
+                &lt;Cipher&gt;TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256&lt;/Cipher&gt;
             &lt;/Ciphers&gt;
             &lt;Protocols&gt;
                 &lt;Protocol&gt;TLSv1.2&lt;/Protocol&gt;
             &lt;/Protocols&gt;</strong>
         &lt;/SSLInfo&gt;
    &lt;/SSLInfo&gt;</pre>
+<p>The <span style="font-family:courier new,courier,monospace;">&lt;Cipher&gt;</span> tag uses the Java and JSSE name of the cipher. For example, for Java 8 see <a href="http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#ciphersuites">http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#ciphersuites</a>.&nbsp;</p>
 <h3>Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 to 4.16.09</h3>
 <p>In Edge 4.16.01 through 4.16.09, you set the default ciphers and protocols for virtual hosts globally on the Router. These defaults then apply to all virtual hosts.</p>
 <div class="note">
@@ -173,7 +188,7 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 	<li>Exclude cipher suites using DH (including anonymous DH, ephemeral DH and fixed DH) AND triple DES (<span style="font-family:courier new,courier,monospace;">!DH+3DES</span>)</li>
 	<li>Exclude cipher suites using RSA key exchange AND triple DES (<span style="font-family: &quot;courier new&quot;, courier, monospace;">!RSA+3DES</span>)</li>
 </ul>
-<p>For information on the syntax and values allowed&nbsp;by this token, see <a href="https://www.openssl.org/docs/man1.0.2/apps/ciphers.html">https://www.openssl.org/docs/man1.0.2/apps/ciphers.html</a>. Note that this token uses the&nbsp;OpenSSL cipher names, such as&nbsp;AES128-SHA256, and not the standard cipher name,&nbsp;TLS_RSA_WITH_AES_128_CBC_SHA256.</p>
+<p>For information on the syntax and values allowed&nbsp;by this token, see <a href="https://www.openssl.org/docs/man1.0.2/apps/ciphers.html">https://www.openssl.org/docs/man1.0.2/apps/ciphers.html</a>. Note that this token uses the&nbsp;OpenSSL cipher names, such as&nbsp;AES128-SHA256, and not the Java/JSSE cipher names, such as&nbsp;TLS_RSA_WITH_AES_128_CBC_SHA256.</p>
 <p>To set the token for the Router:</p>
 <ol>
 	<li>Edit the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/router.properties</span> file. If that file does not exist, create it.</li>
@@ -203,21 +218,43 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
     &lt;SSLInfo&gt;
         &lt;Enabled&gt;true&lt;/Enabled&gt;
         &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt;
-        &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt;
+        &lt;KeyStore&gt;ref://myTestKeystoreRef&lt;/KeyStore&gt;
         &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt;
     &lt;/SSLInfo&gt;
 <strong>    &lt;Properties&gt;
         &lt;Property name="proxy_read_timeout"&gt;50&lt;/Property&gt;
         &lt;Property name="keepalive_timeout"&gt;300&lt;/Property&gt;
-        &lt;Property name="proxy_buffering"&gt;false&lt;/Property&gt;
-        &lt;Property name="proxy_buffering"&gt;false&lt;/Property&gt;
+        &lt;Property name="proxy_request_buffering"&gt;off&lt;/Property&gt;
+        &lt;Property name="proxy_buffering"&gt;off&lt;/Property&gt;
         &lt;Property name="ssl_protocols"&gt;TLSv1.2 TLSv1.1&lt;/Property&gt;
         &lt;Property name="ssl_ciphers"&gt;HIGH:!aNULL:!MD5:!DH+3DES:!kEDH&lt;/Property&gt;
     &lt;/Properties&gt;
 </strong>&lt;/VirtualHost&gt;</pre>
+<p>For information on the syntax and values allowed&nbsp;by the <span style="font-family:courier new,courier,monospace;">ssl_ciphers</span>&nbsp;token, see&nbsp;<a href="https://www.openssl.org/docs/man1.0.2/apps/ciphers.html">https://www.openssl.org/docs/man1.0.2/apps/ciphers.html</a>. Note that this token uses the&nbsp;OpenSSL&nbsp;cipher names, such as&nbsp;AES128-SHA256, and not the Java/JSSE&nbsp;cipher names, such as&nbsp;TLS_RSA_WITH_AES_128_CBC_SHA256.</p>
+<h3>Setting the base URL&nbsp;displayed by the Edge UI for an API proxy</h3>
+<p>The Edge UI displays the URL of an API proxy based on settings in the virtual host corresponding to where the proxy is deployed. This display can include the Router port number of the virtual host.</p>
+<p>In most cases, the URL displayed in the Edge UI is the correct URL for making external requests to the proxy. However, for some configurations, the displayed&nbsp;URL is not correct. For example, any one of the following configurations can cause the displayed URL displayed to not correspond to the actual URL used to make external requests to the proxy:</p>
+<ul>
+	<li>SSL termination occurs at a load balancer&nbsp;</li>
+	<li>Port mapping occurs between a load balancer and Apigee routers&nbsp;</li>
+	<li>A load balancer configured with path rewriting</li>
+</ul>
+<p>Edge for Private Cloud 4.17.05 and later support an attribute on the virtual host called <span style="font-family:courier new,courier,monospace;">&lt;BaseUrl&gt;</span> that lets you override the URL displayed by the Edge UI. Here's an example showing the virtual host object with the new <span style="font-family:courier new,courier,monospace;">&lt;BaseURL&gt;</span> attribute. In this example, the value "<span style="font-family:courier new,courier,monospace;">http://myCo.com</span>" appears in the Edge UI:</p>
+<pre>
+&lt;VirtualHost name="myVHost"&gt;
+   &lt;HostAliases&gt;
+     &lt;HostAlias&gt;<em>DNS_name_or_IP</em>:9005&lt;/HostAlias&gt; 
+   &lt;/HostAliases&gt; 
+<strong>   &lt;BaseUrl&gt;http://myCo.com&lt;/BaseUrl&gt;     
+</strong>   &lt;Interfaces/&gt;
+   &lt;Port&gt;9005&lt;/Port&gt; 
+&lt;/VirtualHost&gt;
+</pre>
+<p>If <span style="font-family:courier new,courier,monospace;">&lt;BaseUrl&gt;</span> is not set, the default, then the default URL rendered by the Edge UI will appear as: "<span style="font-family:courier new,courier,monospace;">http://<em>DNS_name_or_IP</em>:9005/</span>", whereas actual host alias setup is "<span style="font-family:courier new,courier,monospace;">http://myCo.com</span>".&nbsp;</p>
+<p>You can also set the base URL when creating an organization by using the <span style="font-family:courier new,courier,monospace;">VHOST_BASEURL</span>&nbsp;property with the&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-provision</span> utility. See <a href="http://docs.apigee.com/node/19911">http://docs.apigee.com/node/19911</a> for more.</p>
 <h3>Virtual host configuration parameters</h3>
 <p>The following table lists the XML elements that you use to configure a virtual host:</p>
-<table border="0" cellpadding="0" cellspacing="0" class="table">
+<table class="table" width="100%">
 	<thead>
 		<tr>
 			<th>
@@ -267,6 +304,12 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 			<td>
 				<p>Yes</p>
 			</td>
+		</tr>
+		<tr>
+			<td>BaseUrl</td>
+			<td>Overrides the URL displayed by the Edge UI for an API proxy deployed to the virtual host. Useful when you have an external load balancer in front of the Edge Routers.</td>
+			<td>None</td>
+			<td>No</td>
 		</tr>
 		<tr>
 			<td>
@@ -363,7 +406,10 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 				<p>See the section "<em>Specifying the TLS ciphers and protocols supported by the virtual host for Edge 4.16.01 and later</em>" above for information on setting this property. It uses the same syntax as the token&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers</span>.&nbsp;</p>
 			</td>
 			<td>
-				<p><span style="font-family:courier new,courier,monospace;">HIGH:!aNULL:!MD5:!DH+3DES:!kEDH</span></p>
+				<p>HIGH:!aNULL:<br />
+					!MD5:<br />
+					!DH+3DES:<br />
+					!kEDH</p>
 			</td>
 			<td>
 				<p>No</p>
@@ -450,6 +496,7 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 			</td>
 			<td>
 				<p>The name of the keystore on Edge.</p>
+				<p>Apigee recommends&nbsp;that you use a reference to specify the keystore name so that you can change the keystore without having to restart Routers.</p>
 			</td>
 			<td>
 				<p>None</p>
@@ -463,7 +510,7 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 				<p>KeyAlias</p>
 			</td>
 			<td>
-				<p>The alias specified when you uploaded the cert and private key to the keystore.</p>
+				<p>The alias specified when you uploaded the cert and private key to the keystore. You must specify the alias name literally; you cannot use a reference.</p>
 			</td>
 			<td>
 				<p>None</p>
@@ -478,6 +525,7 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 			</td>
 			<td>
 				<p>The name of the truststore on Edge that contains the certificate or certificate chain used for two-way TLS. Required if <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> is <span style="font-family:courier new,courier,monospace;">true</span>.</p>
+				<p>Apigee recommends&nbsp;that you use a reference to specify the truststore name so that you can change the truststore without having to restart Routers.</p>
 			</td>
 			<td>
 				<p>None</p>
@@ -505,8 +553,8 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 				<p>To restrict ciphers, add the following elements:</p>
 				<pre>
 &lt;Ciphers&gt;
-&lt;Cipher&gt;TLS_RSA_WITH_3DES_EDE_CBC_SHA&lt;/Cipher&gt;    
-&lt;Cipher&gt;TLS_RSA_WITH_DES_CBC_SHA&lt;/Cipher&gt;
+  &lt;Cipher&gt;TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA&lt;/Cipher&gt;    
+  &lt;Cipher&gt;TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256&lt;/Cipher&gt;
 &lt;/Ciphers&gt;</pre>
 			</td>
 			<td>
@@ -569,14 +617,26 @@ http://api.myCompany.com/v1/{project-base-path}/{resource-path}</pre>
 <pre>
 http://api.myCompany.com/v1/weather/forecastrss?w=12797282</pre>
 <h2>Creating a virtual host that uses HTTPS</h2>
+<p>This example specifies&nbsp;the keystore to the virtual host by using a reference. Using a reference allows you to change the keystore without having to restart Routers.&nbsp;</p>
 <p>Use the following procedure to create the virtual host:</p>
 <ol>
-	<li>Create and configure the keystore by using the procedure described here:&nbsp;<a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.<br />
-		<br />
-		When you create the keystore, you specify the keystore name and key alias. You need that information to create the virtual host.&nbsp;</li>
+	<li>Create and configure a keystore named <strong>myTestKeystore</strong> by using the procedure described here:&nbsp;<a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>. Ensure that the keystore uses an alias name of&nbsp;<strong>myKeyAlias</strong>&nbsp;for the cert and private key.</li>
+	<li>
+		<p>Use the following POST API call to create the reference named&nbsp;<strong>keystoreref</strong>&nbsp;to the keystore you created above:</p>
+		<pre>
+curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.com/v1/o/{org_name}/e/{env_name}/references \
+-d '&lt;ResourceReference name="<strong>keystoreref</strong>"&gt;
+    &lt;Refers&gt;<strong>myTestKeystore</strong>&lt;/Refers&gt;
+    &lt;ResourceType&gt;<strong>KeyStore</strong>&lt;/ResourceType&gt;
+&lt;/ResourceReference&gt;' -u email:password</pre>
+		<p>The reference specifies the name of the keystore and the reference type as <span style="font-family:courier new,courier,monospace;">KeyStore</span>.</p>
+		<p>Use the following GET API call to view the reference:</p>
+		<pre>
+curl -X GET https://api.enterprise.apigee.com/v1/o/[org_name}/e/{env_name}/references/keystoreref -u uname:password</pre>
+	</li>
 	<li>Create the virtual host &nbsp;by using the <a href="http://docs.apigee.com/node/18046">http://docs.apigee.com/node/18046</a> API, where&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;ms-IP&gt;</span>&nbsp;is the IP address or domain name of the Management Server node.<br />
 		<br />
-		Make sure to specify the correct keystore and key alias:<br />
+		Make sure to specify the correct keystore reference and key alias:<br />
 		<br />
 		<span style="font-family:courier new,courier,monospace;">$ curl -X POST -H "Content-Type:application/xml" \<br />
 		http://&lt;ms-IP&gt;:8080/v1/o/{org_name}/environments/{env_name}/virtualhosts \<br />
@@ -589,12 +649,13 @@ http://api.myCompany.com/v1/weather/forecastrss?w=12797282</pre>
 		<strong>&nbsp; &nbsp; &nbsp; &lt;SSLInfo&gt;<br />
 		&nbsp; &nbsp; &nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;<br />
 		&nbsp; &nbsp; &nbsp; &nbsp; &lt;ClientAuthEnabled&gt;false&lt;/ClientAuthEnabled&gt;<br />
-		&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;myTestKeystore&lt;/KeyStore&gt;<br />
+		&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyStore&gt;ref://keystoreref&lt;/KeyStore&gt;<br />
 		&nbsp; &nbsp; &nbsp; &nbsp; &lt;KeyAlias&gt;myKeyAlias&lt;/KeyAlias&gt;<br />
 		&nbsp; &nbsp; &nbsp; &lt;/SSLInfo&gt;</strong><br />
 		&nbsp; &lt;/VirtualHost&gt;' \<br />
 		-u email:</span><span style="font-family:courier new,courier,monospace;">password</span><br />
-		<div class="note">If you are performing two-way TLS with the client, then set <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> to <span style="font-family:courier new,courier,monospace;">true</span>&nbsp;and specify the truststore using the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;TrustStore&gt;</span>&nbsp;element. The client must be configured correctly for two-way TLS, meaning Edge has a truststore containing the client's cert and certificate chain. Create the truststore by using the procedure described here:&nbsp;<a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.&nbsp;</div>
+		<div class="note"><br />
+			If you are performing two-way TLS with the client, then set <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> to <span style="font-family:courier new,courier,monospace;">true</span>&nbsp;and specify the truststore using the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;TrustStore&gt;</span>&nbsp;element. The client must be configured correctly for two-way TLS, meaning Edge has a truststore containing the client's cert and certificate chain. Create the truststore by using the procedure described here:&nbsp;<a href="http://docs.apigee.com/node/14779">http://docs.apigee.com/node/14779</a>.&nbsp;</div>
 	</li>
 	<li>Create a DNS record for the virtual host &nbsp;that matches the host alias.</li>
 	<li>If you have any existing API proxies, add the virtual host to the <span style="font-family:courier new,courier,monospace;">&lt;HTTPConnection&gt;</span> element in the ProxyEndpoint. The virtual host is added automatically to all new API proxies.<br />
@@ -609,12 +670,13 @@ https://apiTLS.myCompany.com/v1/{project-base-path}/{resource-path}</pre>
 <p>For example:</p>
 <pre>
 https://apiTLS.myCompany.com/v1/weather/forecastrss?w=12797282</pre>
-<h2>Using references to a keystore or truststore</h2>
-<p>When configuring a virtual host that uses HTTPS, you have to consider the case when the TLS cert expires, or a change to the system configuration requires you to update the cert. The examples shown so far have all used the explicit names of the keystore and truststore when configuring TLS. With this technique, you might have to restart a Router on Edge to update an TLS cert.&nbsp;</p>
-<p>For more, see <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a>.</p>
-<p>However, you can optionally configure the virtual host to use a <em>reference</em> to the keystore or truststore instead. The advantage to using a reference is that you can update the reference to point to a different keystore or truststore to update the TLS cert without having to restart a Router. &nbsp; &nbsp;</p>
+<h2>Creating and modifying references to a keystore or truststore</h2>
+<p>You can optionally configure the virtual host to use a <em>reference</em> to the keystore or truststore instead. The advantage to using a reference is that you can update the reference to point to a different keystore or truststore to update the TLS cert without having to restart a Router. &nbsp; &nbsp;</p>
 <div class="note">
 	<p>You can only use a reference to the keystore and truststore; you cannot use a reference to the alias. When you change the reference to a keystore, ensure that the alias name of the cert is the same as in the old keystore.</p>
+</div>
+<div class="note">
+	<p>If your virtual host currently uses literal keystore or truststore names, you can convert the virtual hosts to use references. However, after you update the virtual hosts to use references, you must restart the Edge Routers, one at a time.&nbsp;</p>
 </div>
 <p>For example, shown below is a virtual host that uses a reference to the keystore:</p>
 <pre>
@@ -651,7 +713,10 @@ curl -X PUT -H "Content-Type:application/xml" https://api.enterprise.apigee.com/
 &lt;/ResourceReference&gt;' -u email:password</pre>
 <h2>Modifying a virtual host</h2>
 <div class="note">
-	<p>If you change the TLS settings of an existing virtual host, and do not change the port number of the virtual host, then you have to stop the Router and remove any cached configuration files. After removing the files, you can restart the Router.</p>
+	<p>Use this procedure to modify the virtual host settings except those that specify the keystore, alias, and&nbsp;truststore. Changing those properties can require a Router restart depending on how you specified them. See <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a> for more.&nbsp;</p>
+</div>
+<div class="note">
+	<p>If you change the TLS settings of an existing virtual host for <strong>Edge for Private Cloud versions 4.16.01 and 4.16.05 only</strong>, and do not change the port number of the virtual host, then you have to stop the Router and remove any cached configuration files. After removing the files, you can restart the Router.</p>
 </div>
 <p>To modify a virtual host, perform the following:</p>
 <ol>
@@ -670,11 +735,11 @@ curl -X PUT -H "Content-Type:application/xml" https://api.enterprise.apigee.com/
 	<li><strong>For Edge for Private Cloud versions 4.16.01 and 4.16.05 only</strong>, If you modify an existing virtual host, and you either enable TLS or disable TLS without changing the port number, then:
 		<ol style="list-style: lower-alpha outside">
 			<li>Stop the Router:<br />
-				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router stop</span></li>
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router stop</span></li>
 			<li>Delete any files in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/nginx/conf.d</span>:&nbsp;<br />
 				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;rm&nbsp;-f /opt/nginx/conf.d/*</span></li>
 			<li>Start the Router:<br />
-				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router start</span></li>
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router start</span></li>
 			<li>Repeat for all Routers.</li>
 		</ol>
 	</li>

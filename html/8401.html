@@ -1,4 +1,4 @@
-<h1> Fault handling </h1>
+<h1> Handling faults </h1>
 <p>Many error conditions can arise while API proxies are servicing requests from apps. For example, API proxies might encounter network issues when communicating with backend services, apps might present expired credentials, request messages might be incorrectly formatted, and so on.</p>
 <p>When an error occurs after a client app calls an API proxy, an error message gets returned to the client. By default, the client receives an often cryptic error message with no details or guidance. But if you want to replace default error messages with more useful custom messages, and even enrich them with things like additional HTTP headers, you need to set up custom fault handling in Edge.</p>
 <p>Custom fault handling also lets you add functionality such as message logging whenever an error occurs.</p>
@@ -31,7 +31,7 @@
   &lt;/Response&gt;
 </pre>
 <p>This is just to show you that custom errors can be thrown. We go into more detail about the Raise Fault policy in the <a href="#rulesvraisefault">FaultRules vs. the Raise Fault policy</a> section.</p>
-<p>You can also throw an error with JavaScript. See <a href="https://community.apigee.com/questions/29325/how-to-raise-fault-from-javascript-instead-of-rais.html" target="_blank">this Apigee Community thread</a>&nbsp;for more information.</p>
+<p>You can also throw an error with JavaScript. See <a href="https://community.apigee.com/questions/38535/how-to-use-javascript-variable-in-raise-fault.html" target="_blank">this Apigee Community thread</a>&nbsp;for more information.</p>
 <h2>What API proxies do when errors occur</h2>
 <p>Here's what happens when a proxy throws an error.</p>
 <h3>Exit the proxy pipeline</h3>

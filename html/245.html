@@ -66,6 +66,7 @@
 </table>
 <h3>About</h3>
 <p>There are many use cases for the JavaScript policy. For example, you can get and set flow variables, execute custom logic and perform fault handling, extract data from requests or responses, dynamically edit the backend target URL, and much more. This policy allows you to implement custom behavior that is not covered by any other standard Edge policies. In fact, you can use a JavaScript policy to achieve many of the same behaviors implemented by other policies, like AssignMessage and ExtractVariable.</p>
+<p>One use case we don't recommend for the JavaScript policy is logging. The <a href="http://docs.apigee.com/node/18">http://docs.apigee.com/node/18</a> is much better suited for logging to third-party logging platforms such as Splunk, Sumo, and Loggly, and you improve API proxy performance by executing the Message Logging policy in the PostClientFlow, which executes after the response has been sent back to the client.</p>
 <p>Basically, the JavaScript policy specifies the name of the JavaScript source file to execute when the step to which the policy is attached executes. The source file is always stored in a standard location within the proxy bundle: <code>apiproxy/resources/jsc</code>. Or, you can also store the source code in a resource file at the environment or organization level. For instructions, see <a href="http://docs.apigee.com/node/11972">http://docs.apigee.com/node/11972</a>. You can also upload your JavaScript through the management UI proxy editor.</p>
 <p>JavaScript source files must always have a <code>.js</code> extension.</p>
 <p>See <a href="http://docs.apigee.com/node/17221">http://docs.apigee.com/node/17221</a> for the currently supported version of JavaScript.</p>
@@ -74,6 +75,7 @@
 <ul class="nav nav-tabs" id="myTab">
 	<li class="active"><a data-toggle="tab" href="#tab_1">Rewrite the target URL</a></li>
 	<li><a data-toggle="tab" href="#properties">Retrieve property value from JavaScript</a></li>
+    <li><a data-toggle="tab" href="#errors">Handling errors</a></li>
 </ul>
 <!-- End tab list --><!-- Begin tabbed region -->
 <div class="tab-content active"><!-- Tab 1 begin. -->
@@ -147,6 +149,11 @@ context.setVariable("response.header.x-target-response-code", value);</pre>
 			</li>
 		</ul>
 	</div>
+    <!-- Tab 1 end. --><!--Tab 2 begin. -->
+	<div class="tab-pane" id="errors">
+		<p>For examples and a discussion of error handling techniques that you can use in a JavaScript callout, see <a href="https://community.apigee.com/questions/11381/correct-way-to-return-error-from-javascript-policy.html">this post in the Apigee Community</a>. Suggestions offered in the Apigee Community are for information only and do not necessarily represent best practices recommended by Apigee.  </p>
+  </div>
+	<!-- Tab 2 end. --><!--Tab 3 begin. -->
 	<!-- Tab 2 end. --><!--Tab 3 begin. --></div>
 <!-- End tabbed region. -->
 <hr />

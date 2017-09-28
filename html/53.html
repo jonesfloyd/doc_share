@@ -5,13 +5,13 @@
 <div class="tipstricks">
 	<p>Need help deciding which rate limiting policy to use? See <a href="http://docs.apigee.com/node/17896">http://docs.apigee.com/node/17896</a>.</p>
 </div>
-<div class="video">
+<!--<div class="video">
 	<p>Watch this video for an introduction to the Spike Arrest policy.</p>
 	<div class="collapse" id="demo">
 		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/3Gi-GGTqllg" width="560"></iframe></div>
 	</div>
 	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
-</div>
+</div>-->
 <h3>Where</h3>
 <p>While you can attach this policy anywhere in the flow, we recommend that you attach it in the following location so that it can provide spike protection at the immediate entry point of your API proxy. For more guidance on Spike Arrest policy placement, see&nbsp;<a href="https://community.apigee.com/articles/8285/spike-arrest-tip.html">https://community.apigee.com/articles/8285/spike-arrest-tip.html</a>.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
@@ -74,21 +74,47 @@
 		</tr>
 	</tbody>
 </table>
+<h3 id="videos">Videos</h3>
+<p>These videos show you how to protect your APIs against traffic spikes using the Spike Arrest policy:</p>
+<ul class="nav nav-tabs" id="videosTab">
+	<li class="active"><a data-toggle="tab" href="#intro">Why You Need It</a></li>
+	<li><a data-toggle="tab" href="#how">How to Configure</a></li>
+	<li><a data-toggle="tab" href="#attach">Attach Policy</a></li>
+	<li><a data-toggle="tab" href="#persec">Per Second Rate Limiting</a></li>
+	<li><a data-toggle="tab" href="#permin">Per Minute Rate Limiting</a></li>
+	<li><a data-toggle="tab" href="#unique">Unique Rate Limiting</a></li>
+	<li><a data-toggle="tab" href="#quota">Compare Quota Policy</a></li>
+	<li><a data-toggle="tab" href="#flowvars">Flow Variables</a></li>
+</ul>
+<div class="tab-content active"><!-- intro tab start-->
+	<div class="tab-pane active" id="intro"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/7ysABsE-dWw" width="640"></iframe></div>
+	<!-- intro tab end --><!--how works tab start-->
+	<div class="tab-pane" id="how"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/XlB3S5hJyWY" width="640"></iframe></div>
+	<!-- how works tab end --><!--attach tab start-->
+	<div class="tab-pane" id="attach"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/3Gi-GGTqllg" width="640"></iframe></div>
+	<!-- attach tab end --><!--per second tab start-->
+	<div class="tab-pane" id="persec"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/4iqM_Ofmwws" width="640"></iframe></div>
+	<!-- per second tab end --><!--per minute tab start-->
+	<div class="tab-pane" id="permin"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/wnZyVHfeDM0" width="640"></iframe></div>
+	<!-- per minute tab end --><!--unique tab start-->
+	<div class="tab-pane" id="unique"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/XY3AwAp_Xt4" width="640"></iframe></div>
+	<!-- unique tab end --><!--quota tab start-->
+	<div class="tab-pane" id="quota"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/zerXp-hDrL8" width="640"></iframe></div>
+	<!-- quota tab end --><!-- flow variables tab start-->
+	<div class="tab-pane" id="flowvars"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/l-3qKBOssPs" width="640"></iframe></div>
+	<!-- flow variables tab end --></div>
 <h3 id="samples">Samples</h3>
 <!-- Begin tab list -->
-<ul class="nav nav-tabs" id="myTab">
-	<li class="active"><a data-toggle="tab" href="#tab_a">Video</a></li>
-	<li><a data-toggle="tab" href="#tab_1">Per second</a></li>
+<ul class="nav nav-tabs" id="myTab"><!--<li class="active"><a data-toggle="tab" href="#tab_a">Video</a></li>-->
+	<li class="active"><a data-toggle="tab" href="#tab_1">Per second</a></li>
 	<li><a data-toggle="tab" href="#tab_2">Per minute</a></li>
 	<li><a data-toggle="tab" href="#tab_3">With message weight</a></li>
 	<li><a data-toggle="tab" href="#tab_4">Rate from variable</a></li>
 	<li><a data-toggle="tab" href="#tab_5">Rate from product</a></li>
 </ul>
 <!-- End tab list --><!-- Begin tabbed region -->
-<div class="tab-content active"><!-- Tab a begin. -->
-	<div class="tab-pane active" id="tab_a"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/XlB3S5hJyWY" width="640"></iframe></div>
-	<!-- Tab a end. --><!-- Tab 1 begin. -->
-	<div class="tab-pane" id="tab_1">
+<div class="tab-content active"><!--<div class="tab-pane" id="tab_a"><iframe allowfullscreen="" frameborder="0" height="390" src="https://www.youtube.com/embed/XlB3S5hJyWY" width="640"></iframe></div>--><!-- Tab 1 begin. -->
+	<div class="tab-pane active" id="tab_1">
 		<pre>
 &lt;SpikeArrest name="SpikeArrest"&gt;
   &lt;Rate&gt;5ps&lt;/Rate&gt;

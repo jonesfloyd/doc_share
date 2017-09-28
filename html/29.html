@@ -223,12 +223,13 @@
 <pre>
 111.222.333.444,111.111.111.111,73.153.16.114</pre>
 <p>then the last value, <code>73.153.16.114</code>, is the trusted IP that's auto-populated by Edge.</p>
-<!-- Temporarily commenting out. Waiting on resolution of MGMT-3347
-<p>By default, Edge removes the&nbsp;<code>X-Forwarded-For</code>&nbsp;header before it reaches an API proxy and replaces it with the IP address it received from the last external TCP handshake. The removal of&nbsp;<code>X-Forwarded-For</code>&nbsp;header is for security reasons,&nbsp;so that blacklisted IPs can't spoof valid IPs by sending valid IPs in the&nbsp;<code>X-Forwarded-For</code>&nbsp;header.</p>
-<p>However, you can configure Edge to allow the original&nbsp;<code>X-Forwarded-For</code>&nbsp;headers to reach your API proxies. You'd want to do this in an architecture where you trust the IP addresses in&nbsp;<code>X-Forwarded-For</code>. Configuring Edge to allow <code>X-Forwarded-For</code> IP addresses involves setting the&nbsp;<code>feature.enableMultipleXForwardCheckForACL</code>&nbsp;property in your organization. To set the property in the cloud, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>. To enable it on-premises in Edge for Private Cloud, see the API call below.</p>
-<div class="opdk">
-	<p>Apigee Edge for Private Cloud customers can set the&nbsp;<code>feature.enableMultipleXForwardCheckForACL</code>&nbsp;property with the following API call. If there are other properties set on your organization, be sure to include those as well. Otherwise, they'll be removed.</p>
-	<pre>
+<!-- See also MGMT-3347 about enableMultipleXForwardCheckForACL -->
+<p>By default, Edge ignores any&nbsp;<code>X-Forwarded-For</code>&nbsp;IPs in the header except the last address, which is the IP address Edge received from the last external TCP handshake. This feature is for security reasons, so that blacklisted IPs can't spoof valid IPs by sending valid IPs in the&nbsp;<code>X-Forwarded-For</code>&nbsp;header.</p>
+<div class="warning">
+	<p>However, you can configure Edge to consider all IPs in the&nbsp;<code>X-Forwarded-For</code>&nbsp;header. You'd want to do this in an architecture where you trust the IP addresses in&nbsp;<code>X-Forwarded-For</code>. Configuring Edge to allow <code>X-Forwarded-For</code> IP addresses involves setting the&nbsp;<code>feature.enableMultipleXForwardCheckForACL</code>&nbsp;property in your organization. To set the property in the cloud, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>. To enable it on-premises in Edge for Private Cloud, see the API call below.</p>
+	<div class="opdk">
+		<p>Apigee Edge for Private Cloud customers can set the&nbsp;<code>feature.enableMultipleXForwardCheckForACL</code>&nbsp;property with the following API call. If there are other properties set on your organization, be sure to include those as well. Otherwise, they'll be removed.</p>
+		<pre>
 curl -u email:password -X POST -H "Content-type:application/xml" http://host:8080/v1/o/myorg -d \
 "&lt;Organization type="trial" name="MyOrganization"&gt;
     &lt;DisplayName&gt;MyOrganization&lt;/DisplayName&gt;
@@ -239,8 +240,8 @@ curl -u email:password -X POST -H "Content-type:application/xml" http://host:808
     &lt;/Properties&gt;
 &lt;/Organization&gt;"
 </pre>
+	</div>
 </div>
--->
 <h3 id="cidr">About IP masking with CIDR notation</h3>
 <p>CIDR notation (Classless Inter-Domain Routing) is a way of indicating a range of IP addresses through masking. It applies to both IPv4 and IPv6. Here's how it works. We'll use IPv4 in our examples for simplicity.</p>
 <p>IP addresses are groups of numbers separated by periods. In binary terms, each group is a specific number of bits (8 for IPv4 and 16 for IPv6). The IPv4 address 10.20.30.40 looks like this in binary:</p>
@@ -449,10 +450,10 @@ curl -u email:password -X POST -H "Content-type:application/xml" http://host:808
 	</tbody>
 </table>
 <h2 id="validatebasedon">&lt;ValidateBasedOn&gt; element</h2>
-<p>If the <code>X-Forwarded-For</code> HTTP header contains&nbsp;<strong>multiple</strong> IP addresses, use this <code>ValidateBasedOn</code> element to control which of the IP addresses is checked.</p>
 <div class="note">
-	<p>The last IP address listed in&nbsp;<code>X-Forwarded-For</code>&nbsp;is always the trusted, auto-populated IP address set by Edge. For more information, see&nbsp;<a href="#xforwardedfor">About the X-Forwarded-For HTTP header</a>.</p>
+	<p>To use this element, you need to change Edge's default behavior. The default behavior and how to change it are described in&nbsp;<a href="#xforwardedfor">About the X-Forwarded-For HTTP header</a>.</p>
 </div>
+<p>When the <code>X-Forwarded-For</code> HTTP header contains&nbsp;<strong>multiple</strong> IP addresses, use this <code>ValidateBasedOn</code> element to control which IP addresses are checked.</p>
 <p>The value you enter in this element lets you determine whether to check all IP addresses in the header (default), only the first IP address, or only the last IP address.</p>
 <pre>
 &lt;ValidateBasedOn&gt;X_FORWARDED_FOR_ALL_IP&lt;/ValidateBasedOn&gt;</pre>

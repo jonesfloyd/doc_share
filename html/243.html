@@ -606,7 +606,25 @@ var req_url = req_scheme + "://" + req_host + req_request_uri;
 				<p><strong>Scope begins</strong>: Target request<br />
 					<strong>Type</strong>: String<br />
 					<strong>Permission</strong>: Read</p>
-				<p>Returns basepath of TargetEndpoint</p>
+				<p>The resource path (not including the domain) to the target service, excluding query parameters, that is defined in the proxy's TargetEndpoint.</p>
+				<p>For example, say an API proxy calls the following target:</p>
+				<pre>
+&lt;TargetEndpoint name="default"&gt;
+...
+    &lt;HTTPTargetConnection&gt;
+        &lt;URL&gt;http://mocktarget.apigee.net/user?user=Dude&lt;/URL&gt;
+    &lt;/HTTPTargetConnection&gt;
+  </pre>
+				<p>In this example, the target.basepath is <code>/user</code>.</p>
+				<p>If the target were this:</p>
+				<pre>
+&lt;TargetEndpoint name="default"&gt;
+...
+    &lt;HTTPTargetConnection&gt;
+        &lt;URL&gt;http://mocktarget.apigee.net&lt;/URL&gt;
+    &lt;/HTTPTargetConnection&gt;
+  </pre>
+				<p>the target.basepath would be null.</p>
 			</td>
 		</tr>
 		<tr>
@@ -1116,7 +1134,7 @@ context.setVariable('error.header.FOO-1', 'error_header');
 
 context.setVariable('message.header.FOO-2', 'message_header');
 </pre>
-<p>This expression, however, will not work. The response object is out of scope in the error flow. (Note that, in a trace, this is visually indicated by variables shown with a sign showing an equals sign with a slash through it.)</p>
+<p>The following expression, however, will not work. The response object is out of scope in the error flow. (Note that, in a trace, this is visually indicated by variables shown with a sign showing an equals sign with a slash through it.)</p>
 <pre>
 context.setVariable('response.header.FOO-3', 'response_header');
 </pre>
@@ -2127,7 +2145,9 @@ context.setVariable('message.header.FOO-1', 'the header value');</pre>
 end no longer available with Nginx -->
 <h2>Variables for API proxy flows</h2>
 <p>The following variables contain information about API proxy flows.</p>
-<p>To see these variables in the API proxy editor's Trace view (in the Edge management UI), select the "Show All FlowInfos" view option.</p>
+<div class="note">
+	<p>Select&nbsp;<b>Show All FlowInfos</b> under View Options in the left pane to see these variables in the API proxy editor's Trace view (in the Edge management UI). This view is disabled by default.</p>
+</div>
 <table class="table">
 	<thead>
 		<tr>
@@ -2154,6 +2174,7 @@ end no longer available with Nginx -->
 				<p>The description (<code>&lt;Description&gt;</code> element value) of the currently executed flow.</p>
 			</td>
 		</tr>
+		<!--
 		<tr>
 			<td>proxy.flow.name</td>
 			<td>
@@ -2190,7 +2211,7 @@ end no longer available with Nginx -->
 				<p>The description (<code>&lt;Description&gt;</code> element value) of the most recently executed TargetEndpoint flow.</p>
 			</td>
 		</tr>
-	</tbody>
+--></tbody>
 </table>
 <h2>Policy variables<a class="jumplink" name="policy"></a></h2>
 <p>Each Policy type defines a set of policy-specific variables. For details, see each Policy type under the <a href="http://docs.apigee.com/node/14795">http://docs.apigee.com/node/14795</a>.</p>

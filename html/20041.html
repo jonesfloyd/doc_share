@@ -11,6 +11,9 @@
 <div class="note">
 	<p>If you configured the virtual host or the TargetEndpoint&nbsp;to use a reference to the keystore or truststore, you can update the reference to point to a different keystore or truststore to update the TLS cert. That means Cloud customers do not have to contact Apigee Support and Private Cloud customers do not need to restart a Router or Message Processor. However, Cloud customers must contact Apigee Support if they require an update to the virtual host. See <a href="http://docs.apigee.com/node/18086">http://docs.apigee.com/node/18086</a> for more on using a reference in a virtual host or TargetEndpoint.</p>
 </div>
+<div class="note">
+	<p><b>Self-service TLS/SSL Beta</b>: The Beta release of self-service TLS does let you update your own certs. For details, see <a href="http://docs.apigee.com/release-notes/content/170508-apigee-edge-public-cloud-release-notes-ui#newfeaturesandupdates">self-service TLS/SSL Beta release</a>.</p>
+</div>
 <h2>Determine when a cert is due to expire</h2>
 <p>Typically, you create a new keystore&nbsp;before the current certificate expires, and then update your virtual hosts or target endpoints to use the new keystore so that you can continue to service requests without interruption due to an expired certificate. You can then delete the old keystore after ensuring that the new keystore is working correctly.</p>
 <p>To check when a certificate is due to expire, go to the&nbsp;<strong>Admin &gt; SSL Certificates</strong>&nbsp;menu in the Edge management UI. You can also configure that page to indicate if a certificate is due to expire in 10, 15, 30, or 90 days.&nbsp;</p>

@@ -1,7 +1,8 @@
 <h1> Get OAuth V2 Info policy </h1>
 <img src="sites/docs/files/icon_policy_security.jpg" />
 <h3>What</h3>
-<p>Gets attributes of access tokens, refresh tokens, and authorization codes and populates variables with the values of those attributes. This policy type can be useful when you need to configure dynamic, conditional behavior based on a value in a token or code. Whenever token validation occurs, variables are automatically populated with the values of token attributes. However, in cases where token validation has not occured, you can use this feature to explicity populate variables with the attribute values of a token. &nbsp;See also <a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a>.</p>
+<p>Gets attributes of access tokens, refresh tokens, authorization codes, and client app attributes and populates variables with the values of those attributes. This policy type can be useful when you need to configure dynamic, conditional behavior based on a value in a token or code. Whenever token validation occurs, variables are automatically populated with the values of token attributes. However, in cases where token validation has not occured, you can use this feature to explicity populate variables with the attribute values of a token. &nbsp;See also <a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a>.</p>
+<div class="note">An access token that you pass to this policy must be valid or the policy will throw an invalid_access_token error. Also, the resource path that is used to call a proxy with this policy must be included in the Product that was used to generate the original token. In other words, if you call the proxy with the path /tokeninfo, then the /tokeninfo resource path must be included in the Product that was used to generate the token. If not, you will receive an&nbsp;InvalidAPICallAsNoApiProductMatchFound error. For more information, see this <a href="https://community.apigee.com/questions/42994/getoauthv2info-fails-if-token-generated-using-prod.html">Apigee Community post</a>.&nbsp;</div>
 <h3>Where</h3>
 <p>This policy can be attached in the following locations. See the Samples section below&nbsp;for specific attachment guidance in different situations.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
@@ -71,6 +72,7 @@
 	<li><a data-toggle="tab" href="#tab_2">Auth code</a></li>
 	<li><a data-toggle="tab" href="#tab_3">Refresh token</a></li>
 	<li><a data-toggle="tab" href="#tab_4">Static</a></li>
+	<li><a data-toggle="tab" href="#tab_5">Client ID</a></li>
 </ul>
 <!-- End tab list --><!-- Begin tabbed region -->
 <div class="tab-content active"><!-- Tab 1 begin. -->
@@ -102,7 +104,7 @@ var scope = context.getVariable(â€˜oauthv2accesstoken.GetTokenAttributes.scopeâ€
 	<!-- Tab 2 end. --><!--Tab 2 begin. -->
 	<div class="tab-pane active" id="tab_3">
 		<h3>Retrieving refresh token attributes</h3>
-		<p>As with access tokens (described in the Access Code example), you can retrieve refresh token attributes by using the&nbsp;<code>AuthorizationCode</code>&nbsp;element in the policy as follows:</p>
+		<p>As with access tokens (described in the Access Code example), you can retrieve refresh token attributes by using the&nbsp;<code>RefreshToken</code>&nbsp;element in the policy as follows:</p>
 		<pre>
 &lt;GetOAuthV2Info name="GetTokenAttributes"&gt;
     &lt;RefreshToken ref="{variable name}"/&gt;
@@ -121,6 +123,17 @@ var scope = context.getVariable(â€˜oauthv2accesstoken.GetTokenAttributes.scopeâ€
   &lt;AccessToken&gt;shTUmeI1geSKin0TODcGLXBNe9vp&lt;/AccessToken&gt;
 &lt;/GetOAuthV2Info&gt;</pre>
 		<p>You can do this with all other token types (client ID, authorization code, and refresh tokens) as well.</p>
+	</div>
+	<div class="tab-pane active" id="tab_5">
+		<p>This example shows how to retrieve information about the client app using the client ID. Upon execution, the policy populates a set of variables with client information. In this case, the policy expects to find the access token in a query parameter called&nbsp;<code>client_id</code>. Given the client ID, the policy looks up the client's profile and populates a set of variables with the profile data. The variables will be prefixed with&nbsp;<code>oauthv2client.&nbsp;</code></p>
+		<pre>
+&lt;GetOAuthV2Info name="GetClientAttributes"&gt;
+  &lt;ClientId ref="request.queryparam.client_id"&gt;&lt;/ClientId&gt;
+&lt;/GetOAuthV2Info&gt;</pre>
+		<p>You can then access the variables using JavaScript or another means. For example, to get the developer app name and developer email associated with the client app using JavaScript:</p>
+		<pre>
+context.getVariable("oauthv2client.GetClientAttributes.developer.email");
+context.getVariable("oauthv2client.GetClientAttributes.developer.app.name");</pre>
 	</div>
 	<!-- Tab 2 end. --></div>
 <!-- End tabbed region. -->
@@ -311,7 +324,7 @@ var scope = context.getVariable(â€˜oauthv2accesstoken.GetTokenAttributes.scopeâ€
 <h2 id="flowvariables"><a id="flowvariables" name="flowvariables"></a>Flow variables</h2>
 <p>The GetOAuthV2Info policy populates these variables, and is typically used in cases where you need the profile data, but where a grant or validation has not occurred yet. .</p>
 <h3>Client ID variables</h3>
-<p>These variables are populated when the &lt;ClientId&gt; operation executes:</p>
+<p>These variables are populated when the ClientId element is set:</p>
 <pre>
 oauthv2client.{policy_name}.client_id
 oauthv2client.{policy_name}.client_secret
@@ -321,46 +334,58 @@ oauthv2client.{policy_name}.developer.app.name
 oauthv2client.{policy_name}.developer.id
 oauthv2client.{policy_name}.{developer_app_custom_attribute_name}</pre>
 <h3>Access token variables</h3>
-<p>These variables are populated when the &lt;AccessToken&gt; operation executes:</p>
+<p>These variables are populated when the AccessToken element is set:</p>
 <pre>
-oauthv2accesstoken.{policy_name}.access_token
-oauthv2accesstoken.{policy_name}.scope
-oauthv2accesstoken.{policy_name}.refresh_token
-oauthv2accesstoken.{policy_name}.accesstoken.{custom_attribute_name}
 oauthv2accesstoken.{policy_name}.developer.id
 oauthv2accesstoken.{policy_name}.developer.app.name
+oauthv2accesstoken.{policy_name}.developer.app.id
+oauthv2accesstoken.{policy_name}.developer.email
+
+oauthv2accesstoken.{policy_name}.organization_name
+oauthv2accesstoken.{policy_name}.api_product_list
+
+oauthv2accesstoken.{policy_name}.access_token
+oauthv2accesstoken.{policy_name}.scope
 oauthv2accesstoken.{policy_name}.expires_in
-oauthv2accesstoken.{policy_name}.status</pre>
+oauthv2accesstoken.{policy_name}.status
+oauthv2accesstoken.{policy_name}.client_id
+oauthv2accesstoken.{policy_name}.accesstoken.{custom_attribute_name}
+
+oauthv2accesstoken.{policy_name}.refresh_token
+oauthv2accesstoken.{policy_name}.refresh_token_status
+oauthv2accesstoken.{policy_name}.refresh_token_expires_in
+oauthv2accesstoken.{policy_name}.refresh_count
+oauthv2accesstoken.{policy_name}.refresh_token_issued_at</pre>
 <h3>Authorization code variables</h3>
-<p>These variables are populated when the &lt;AuthorizationCode&gt; operation executes:</p>
+<p>These variables are populated when the AuthorizationCode element is set:</p>
 <pre>
+oauthv2authcode.{policy_name}.code
+oauthv2authcode.{policy_name}.scope       
+oauthv2authcode.{policy_name}.redirect_uri 
 oauthv2authcode.{policy_name}.client_id
-oauthv2authcode.{policy_name}.organization_id
-oauthv2authcode.{policy_name}.issued_at
-oauthv2authcode.{policy_name}.expires_in
-oauthv2authcode.{policy_name}.redirect_uri
-oauthv2authcode.{policy_name}.status
-oauthv2authcode.{policy_name}.state
-oauthv2authcode.{policy_name}.scope
-oauthv2authcode.{policy_name}.id
 oauthv2authcode.{policy_name}.{auth_code_custom_attribute_name}</pre>
 <h3>Refresh token variables</h3>
-<p>These variables are populated when the &lt;RefreshToken&gt; operation executes:</p>
+<p>These variables are populated when the RefreshToken element is set:</p>
 <pre>
-oauthv2refreshtoken.{policy_name}.access_token
-oauthv2refreshtoken.{policy_name}.refresh_token
-oauthv2refreshtoken.{policy_name}.client_id
-oauthv2refreshtoken.{policy_name}.refresh_count
-oauthv2refreshtoken.{policy_name}.organization_name
-oauthv2refreshtoken.{policy_name}.refresh_token_expires_in
-oauthv2refreshtoken.{policy_name}.refresh_token_issued_at
-oauthv2refreshtoken.{policy_name}.refresh_token_status
-oauthv2refreshtoken.{policy_name}.developer.email
 oauthv2refreshtoken.{policy_name}.developer.id
 oauthv2refreshtoken.{policy_name}.developer.app.name
 oauthv2refreshtoken.{policy_name}.developer.app.id
+oauthv2refreshtoken.{policy_name}.developer.email
+oauthv2refreshtoken.{policy_name}.organization_name
+oauthv2refreshtoken.{policy_name}.api_product_list
+
+oauthv2refreshtoken.{policy_name}.access_token
+oauthv2refreshtoken.{policy_name}.scope
+oauthv2refreshtoken.{policy_name}.expires_in
+oauthv2refreshtoken.{policy_name}.status
+oauthv2refreshtoken.{policy_name}.client_id
 oauthv2refreshtoken.{policy_name}.accesstoken.{custom_attribute_name}
-</pre>
+
+oauthv2refreshtoken.{policy_name}.refresh_token
+oauthv2refreshtoken.{policy_name}.refresh_token_status
+oauthv2refreshtoken.{policy_name}.refresh_token_expires_in
+oauthv2refreshtoken.{policy_name}.refresh_count
+oauthv2refreshtoken.{policy_name}.refresh_token_issued_at</pre>
 <h2 id="schema">Schema</h2>
 <p>Each policy type is defined by an XML schema (<code>.xsd</code>). For reference, <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">policy schemas</a> are available on GitHub.</p>
 <h2>Error reference</h2>

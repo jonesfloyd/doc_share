@@ -17,9 +17,11 @@
 		<tr>
 			<td><code>InvalidClientIdentifier</code></td>
 			<td>500</td>
-			<td>The client indentifier sent from the client is invalid or missing. Check to be sure you are using the correct client key and secret values for the Developer App associated with your proxy. Typically, these values are sent as a Base64 encoded Basic Authorization header.<br />
-				<br />
-				<strong>Important:</strong> This error name used to be called <code>invalid_client</code>. It is recommended that you change existing fault rule conditions to catch both the old and new names. See the <a href="http://docs.apigee.com/release-notes/content/160921-apigee-edge-public-cloud-release-notes">16.09.21 Release Notes</a> for more information and an example.</td>
+			<td>
+				<p>This error name is returned when the <code>&lt;GenerateResponse&gt;</code> property of the policy is set to <strong>false</strong> and the client ID sent in the request is invalid. Check to be sure you are using the correct client key and secret values for the Developer App associated with your proxy. Typically, these values are sent as a Base64 encoded Basic Authorization header.<br />
+					<br />
+					<strong>Note:</strong> In this situation, this error used to be called <code>invalid_client</code>. It is recommended that you change existing fault rule conditions to catch both the <code>invalid_client</code> and <code>InvalidClientIdentifier</code> names. See the <a href="http://docs.apigee.com/release-notes/content/160921-apigee-edge-public-cloud-release-notes">16.09.21 Release Notes</a> for more information and an example.</p>
+			</td>
 			<td>
 				<p>GenerateAccessToken<br />
 					RefreshAccessToken</p>
@@ -28,7 +30,10 @@
 		<tr>
 			<td><code>invalid_client</code></td>
 			<td>401</td>
-			<td>This error name is no longer used. It was replaced by <code>InvalidClientIdentifier</code>. It is recommended that you change existing fault rule conditions to catch both the old and new names. See the <a href="http://docs.apigee.com/release-notes/content/160921-apigee-edge-public-cloud-release-notes">16.09.21 Release Notes</a> for more information and an example.</td>
+			<td>
+				<p>This error name is returned when the <code>&lt;GenerateResponse&gt;</code> property of the policy is set to <strong>true</strong> and and the client ID sent in the request is invalid.&nbsp;Check to be sure you are using the correct client key and secret values for the Developer App associated with your proxy. Typically, these values are sent as a Base64 encoded Basic Authorization header.</p>
+				<p><strong>Note:</strong> It is recommended that you change existing fault rule conditions to catch both the <code>invalid_client</code> and <code>InvalidClientIdentifier</code> names. See the <a href="http://docs.apigee.com/release-notes/content/160921-apigee-edge-public-cloud-release-notes">16.09.21 Release Notes</a> for more information and an example.</p>
+			</td>
 			<td>GenerateAccessToken<br />
 				RefreshAccessToken</td>
 		</tr>
@@ -45,6 +50,18 @@
 			<td><code>invalid_access_token</code></td>
 			<td>401</td>
 			<td>The access token sent from the client is invalid.</td>
+			<td>VerifyAccessToken</td>
+		</tr>
+		<tr>
+			<td><code>InvalidAccessToken</code></td>
+			<td>401</td>
+			<td>The authorization header does not have the word "Bearer", which is required. For example: <code>Authorization: Bearer your_access_token</code></td>
+			<td>VerifyAccessToken</td>
+		</tr>
+		<tr>
+			<td><code>apiresource_doesnot_exist</code></td>
+			<td>401</td>
+			<td>The requested resource does not exist any of the API products associated with the access token.</td>
 			<td>VerifyAccessToken</td>
 		</tr>
 		<tr>
@@ -103,7 +120,8 @@
 				InvalidateToken</td>
 		</tr>
 		<tr>
-			<td><code>InvalidAPICallAsNoApiProductMatchFound</code></td>
+			<td><code>InvalidAPICallAsNo\<br />
+				ApiProductMatchFound</code></td>
 			<td>401</td>
 			<td>
 				<p>The API proxy is not in the Product associated with the access token.</p>
@@ -116,6 +134,18 @@
 			<td><code>InsufficientScope</code></td>
 			<td>403</td>
 			<td>The access token presented in the request has a scope that does not match the scope specified in the verify access token policy. To learn about scope, see <a href="http://docs.apigee.com/node/17911">http://docs.apigee.com/node/17911</a>.</td>
+			<td>VerifyAccessToken</td>
+		</tr>
+		<tr>
+			<td><code>access_token_expired</code></td>
+			<td>401</td>
+			<td>The access token is expired.</td>
+			<td>VerifyAccessToken</td>
+		</tr>
+		<tr>
+			<td><code>access_token_not_approved</code></td>
+			<td>401</td>
+			<td>The access token was revoked.</td>
 			<td>VerifyAccessToken</td>
 		</tr>
 		<tr>

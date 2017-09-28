@@ -43,14 +43,15 @@
 		</tr>
 		<tr>
 			<td><code>io.timeout.millis</code></td>
-			<td>120000</td>
+			<td>55000</td>
 			<td>
 				<p>If there is no data to read for the specified number of milliseconds, or if the socket is not ready to write data for specified number of milliseconds, then the transaction is treated as a timeout.</p>
 				<ul>
 					<li>If a timeout happens while reading HTTP request, <code>408, Request Timeout</code> is returned.</li>
 					<li>If a timeout happens while reading HTTP response, <code>504, Gateway Timeout </code> is returned.</li>
 				</ul>
-				<p>Changes to the default can be discussed by raising a support ticket with <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>.&nbsp;</p>
+				<p>For Cloud customers, changes to the default to set it larger than 55000 can be discussed by raising a support ticket with <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>.&nbsp;</p>
+				<p>For Private Cloud customers, this value should be less than the timeout used by the Router for communicating with the Message Processor. See <a href="http://docs.apigee.com/node/20476">http://docs.apigee.com/node/20476</a> for more.&nbsp;&nbsp;</p>
 			</td>
 		</tr>
 		<tr>
@@ -164,7 +165,6 @@
   &lt;HTTPProxyConnection&gt;
     &lt;BasePath&gt;/v1/weather&lt;/BasePath&gt;
     &lt;Properties&gt;
-      &lt;Property name="allow.http10"&gt;true&lt;/Property&gt;
       &lt;Property name="request.streaming.enabled"&gt;true&lt;/Property&gt;
     &lt;/Properties&gt;
     &lt;VirtualHost&gt;default&lt;/VirtualHost&gt;

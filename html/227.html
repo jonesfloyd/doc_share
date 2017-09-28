@@ -181,7 +181,7 @@
    &lt;VariablePrefix&gt;queryinfo&lt;/VariablePrefix&gt;
  &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
 &lt;/ExtractVariables&gt;</pre>
-		<p>Suppose your API design allows you to specify multiple query paramaters with the same name. You can use this policy to extract the value of multiple instances of the query parameter "w".&nbsp;​To reference these query parameters in the Extract Variables policy, you use indexes, where the first instance of the query parameter has no index, the second is at index 2, the third at index 3, etc.</p>
+		<p>Suppose your API design allows you to specify multiple query parameters with the same name. You can use this policy to extract the value of multiple instances of the query parameter "w".&nbsp;​To reference these query parameters in the Extract Variables policy, you use indexes, where the first instance of the query parameter has no index, the second is at index 2, the third at index 3, etc.</p>
 		<p>Consider the sample policy code above working with the following incoming request:</p>
 		<p><code>GET http://org1-test.apigee.net/weather?w=Boston&amp;w=Chicago</code></p>
 		<p>When Apigee Edge applies the Extract Variables policy code above to this incoming request, it sets the variable <code>queryinfo.firstWeather</code> to <code>Boston</code> and the variable <code>queryInfo.secondWeather</code> to <code>Chicago</code>.&nbsp;</p>

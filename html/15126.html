@@ -1,6 +1,6 @@
-<h1> Virtual hosts </h1>
+<h1> About virtual hosts </h1>
 <p>[toc]</p>
-<p>Virtual hosts are the base URLs of an API proxy. They include the protocol (http or https), along with the hostname of the API proxy, which maps to a router address and port through DNS.</p>
+<p>Virtual hosts define the base URLs of an API proxy. They include the protocol (http or https), along with the hostname of the API proxy, which maps to a router address and port through DNS.</p>
 <p>In Edge, a virtual host is identified by a name. By default, when you first create an Edge organization, you get two virtual hosts in each environment:</p>
 <ul>
 	<li><code>default</code>&nbsp;- <strong>http</strong>://[org]-[environment].apigee.net (port 80)</li>
@@ -76,7 +76,7 @@ https://{org-name}-<strong>test</strong>.apigee.net/{proxy-base-path}/{resource-
 <div class="note">
 	<p>When creating a virtual host, you specify the Router port used by the virtual host. For example, port 9001. As of Edge for Private Cloud version 4.16.01, by default, the Router runs as the user "apigee" which does not have access to privileged ports, typically ports 1024 and below. If you want to create a virtual host that binds the Router to a protected port then you have to configure the Router to run as a user with access to those ports. &nbsp;See <a href="http://docs.apigee.com/node/22951">http://docs.apigee.com/node/22951</a> for more. &nbsp;</p>
 </div>
-<p>After running the&nbsp;onboarding&nbsp;script, you can later add any number of organizations, environments, and virtual hosts to your on-premises version of Edge. For more information, see the <em>Apigee Edge for Private Cloud Operations Guide</em>.</p>
+<p>After running the&nbsp;onboarding&nbsp;script, you can later add any number of organizations, environments, and virtual hosts to your on-premises version of Edge. For more information, see <a href="http://docs.apigee.com/node/20541">http://docs.apigee.com/node/20541</a>.</p>
 <p>Virtual hosts are opened on the Edge Router node. Therefore, you have to ensure that the port that you specify for the virtual host is open on the Router node. You can use a command in the form below to open a port:</p>
 <pre>
 $ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 9001 -j ACCEPT --verbose </pre>

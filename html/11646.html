@@ -3,6 +3,9 @@
 <h3>What</h3>
 <p>Throttles inbound connections from your API proxies running on Apigee Edge to your backend services.</p>
 <p>Need help deciding which rate limiting policy to use? See <a href="http://docs.apigee.com/node/17896">http://docs.apigee.com/node/17896</a>.</p>
+<div class="note"><!-- per APIRT-1397 -->
+	<p>Use of the Concurrent Rate Limit policy is known to impact performance and will result in lower throughputs.</p>
+</div>
 <h3>Where</h3>
 <p>This policy has specific placement requirements. It must be attached in the on <strong>both</strong> the Request and Response flows in the <strong>Target Endpoint</strong>. In addition, it is recommended that you place it in a DefaultFaultRule (this ensures that, in the event of an error, the rate limit counters are maintained correctly). A validation error will be thrown at deployment time if the policy is attached to any flows in the Proxy Endpoint. For details, see <a href="#usagenotes">Usage notes</a>.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
@@ -65,6 +68,14 @@
 		</tr>
 	</tbody>
 </table>
+<h2 id="video">Video</h2>
+<div class="video">
+	<p>To learn how to restrict concurrent connections to the backend using the Concurrent Rate Limit policy, watch this video.</p>
+	<div class="collapse" id="demo">
+		<div style="text-align: left;"><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/lv9XQklW03E" width="560"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo">Show/Hide Video</a></div>
+</div>
 <h2 id="sample">Sample</h2>
 <pre>
 &lt;ConcurrentRatelimit name="ConnectionThrottler" &gt;
@@ -233,15 +244,8 @@
 	<p>See our <a href="https://github.com/apigee/api-platform-samples/tree/master/schemas/policy">GitHub repository</a>&nbsp;samples for the most recent schemas.</p>
 </div>
 <h2 id="usagenotes">Usage notes</h2>
-<p>In distributed environments, app traffic may be managed by many replicated API proxies. 
-While each API proxy might be handling just a few connections, collectively, a set of API proxies, 
-running in redundant message processors across multiple datacenters, 
-all of which point to the same backend service, might swamp the capacity of that backend service.
-Use this policy to limit the aggregate traffic to a manageable number of connections.
-</p>
-<p>
-When the number of requests being processed by Apigee Edge exceeds the connection limit configured in the policy, Apigee Edge will return  
-the HTTP response code 503: Service Unavailable.</p>
+<p>In distributed environments, app traffic may be managed by many replicated API proxies. While each API proxy might be handling just a few connections, collectively, a set of API proxies, running in redundant message processors across multiple datacenters, all of which point to the same backend service, might swamp the capacity of that backend service. Use this policy to limit the aggregate traffic to a manageable number of connections.</p>
+<p>When the number of requests being processed by Apigee Edge exceeds the connection limit configured in the policy, Apigee Edge will return the HTTP response code 503: Service Unavailable.</p>
 <h3>Policy attachment details</h3>
 <p>The ConcurrentRatelimit policy must be attached as a Step to three Flows on a TargetEndpoint: request, response, and DefaultFaultRule. (A validation error will be thrown at deployment time if the policy is attached to any other Flows, including any ProxyEndpoint Flows.) See also this <a href="https://community.apigee.com/questions/4366/why-concurrent-rate-limit-policy-in-response-pre-f.html">Apigee Community post</a>.&nbsp;</p>
 <p>For example to attach a ConcurrentRatelimit policy called ConnectionThrottler to a TargetEndpoint called MyTargetEndpoint, create the following TargetEndpoint configuration:</p>

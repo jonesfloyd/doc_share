@@ -23,7 +23,7 @@
 	<li>Add support for <strong>API keys</strong>. Your API product would be associated with a developer app, where the key is generated. For enforcement, you'd use policies in your API proxies to verify incoming API keys. API keys are provisioned for API products,&nbsp;not for APIs themselves.
 		<p>By default, all key requests to an API product from an app are automatically approved. You can instead choose to approve keys manually. If you set this option in the Edge management UI when creating the product, you will have to approve key requests that come in from any app that adds the API product. See <a href="http://docs.apigee.com/node/158">http://docs.apigee.com/node/158</a> for more.</p>
 	</li>
-	<li>Add support for <strong>access quotas</strong>, such as to limit the number of requests allowed per second. Your API product configuration would specify a default, while quota policies in your API proxies handle the details.
+	<li>Add support for <strong>access quotas</strong>, such as to limit the number of requests allowed per minute. Your API product configuration would specify a default, while quota policies in your API proxies handle the details.
 		<p>For information on configuring quota, see <a href="http://docs.apigee.com/node/56">http://docs.apigee.com/node/56</a>. For information on on using product quota settings in quota policies, see <a href="https://community.apigee.com/questions/1488/how-do-the-quota-settings-on-an-api-product-intera.html">https://community.apigee.com/questions/1488/how-do-the-quota-settings-on-an-api-product-intera.html</a>.</p>
 	</li>
 	<li>Add support for <strong>OAuth scopes</strong>. Your API product would specify OAuth scopes that requests must include in their OAuth token in order to proceed to a bundled API proxy.
@@ -68,7 +68,7 @@
   ],
   "quota": "1000000",
   "quotaInterval": "1",
-  "quotaTimeUnit": "second",
+  "quotaTimeUnit": "minute",
   "scopes": [
     "owner.read",
     "owner.create",

@@ -256,7 +256,7 @@ http://docs-test.apigee.net/cats?name=Penny
 <p>After you trace an API call made to a target server, you can view the request as a cURL command. This is particularly useful for debugging for a couple of reasons:</p>
 <ul>
 	<li>The API proxy may modify the request, so it's useful to see how request from the proxy to the target server differs from the original request. The cURL command represents the modified request.</li>
-	<li>For larger message payloads, the cURL allows you to see the HTTP headers and message content in a single place.</li>
+	<li>For larger message payloads, the cURL allows you to see the HTTP headers and message content in a single place. (There's currently a limit of about 1,000 characters. For a tip on getting past this limit, see <a href="https://community.apigee.com/content/kbentry/41114/how-to-trace-a-soap-message-on-apigee.html" target="_blank">this community post</a>.)</li>
 </ul>
 <p>For security, the cURL feature masks the HTTP Authorization header.</p>
 <div class="note">

@@ -1,0 +1,98 @@
+<h1> Getting started with the Apigee Sense Console </h1>
+<p>Use this topic to get an introduction to the Sense console. In the console, you can view the results of the Sense analysis of traffic to your API proxies. When you identify clients that are part of a bot attack, you can use the console to take action by blocking or flagging requests from that client's IP address.</p>
+<p>As described in <a href="http://docs.apigee.com/node/22061">http://docs.apigee.com/node/22061</a>, Sense collects and analyzes data about requests to your APIs. Through this analysis, Sense identifies patterns that might represent bot attacks. With the Sense console, you can view and act on request analysis results.</p>
+<ol>
+	<li>To log in to the Sense console, go to the <a href="https://login.apigee.com">login page</a>.</li>
+	<li>On the <strong>Sense</strong> page, you'll see a graphical snapshot of request activity, including requests that might be from bots.</li>
+	<li>In the upper-right corner of the console, select the Apigee Edge <strong>organization</strong> for which you want to view request data.
+		<p>This is the organization containing API proxies for which Sense is collecting request data.</p>
+	</li>
+	<li>In the upper-left corner, select a date for which you have Sense analysis data.
+		<p>With a date selected, the graphs on this page provides a very high-level overview of Sense analysis, including request traffic from suspected bots.</p>
+		<p><img src="sites/docs/files/sense-sense-page2.png" style="height: 537px; width: 750px;" /></p>
+	</li>
+</ol>
+<h2>View the bot analysis summary</h2>
+<p>You can get a high-level view of suspected bot activity. Using this, you can drill down for more detail.</p>
+<ol>
+	<li>At the top of the page, click the <strong>Detection</strong> menu to view data about what kind of suspected bots were found among requests.
+		<p>On the <strong>Detection</strong> page, the <strong>Suspected Bot Traffic</strong> table at the top summarizes the traffic, with bot-specific measurements.</p>
+		<p>The Detection page also provides two views of suspected bot activity.</p>
+		<ul>
+			<li>Partition View groups suspected bots by the reason Sense is presenting them as bots, but the country of request client, and by ISP of request client.&nbsp;</li>
+			<li>List View lists the request clients by their IP address.</li>
+		</ul>
+	</li>
+	<li>In the <strong>Partition View</strong>, you can view traffic categorized into patterns that signify bot activity. (For more about patterns, see <a href="http://docs.apigee.com/node/22066">http://docs.apigee.com/node/22066</a>. Request traffic grouped into these patterns is a product of Sense analysis of your request data.
+		<p>Not all requests conforming to a pattern are bots. You're looking for very high bot count and/or traffic numbers.</p>
+		<p>For example, the <strong>Login Attempter</strong> pattern represents a large number of attempts to reach a login proxy in a 24-hour window. In the following image, a very high <strong>Bot Count</strong> number (relative to other patterns) indicates that a large number of clients are attempting -- in a single day -- to reach the login proxy. That makes this pattern worth investigating.</p>
+		<p><img src="sites/docs/files/sense-detection-partition-view.png" style="height: 438px; width: 750px;" /></p>
+	</li>
+</ol>
+<h2>Investigate using analysis details</h2>
+<p>Once you've identified a set of requests that might comprise a bot attack, you can get a more detailed view of the requests. Isolating genuine bot attacks will require combining Sense analysis with your own knowledge of clients calling your APIs.</p>
+<ol>
+	<li>In the <strong>Partition View</strong> on the <strong>Detection</strong> page, locate a pattern you're interested in -- such as one with a very high bot count -- and click its <strong>View</strong> button to see details about what the pattern represents.
+		<p>Here, you have a drill-down view of activity conforming to the pattern you selected. There are a few noteworthy pieces of data from the list shown here:</p>
+		<p><img src="sites/docs/files/sense-detection-list-view3.png" style="height: 408px; width: 750px;" /></p>
+		<ul>
+			<li>There's a large number of IP addresses -- almost a thousand in 24 hours.</li>
+			<li>There's a comparatively small number of ISPs behind those IPs -- ISPs that are widely distributed, geographically.</li>
+			<li>The bot traffic count is pretty consistent at around 250 - 260 each across IPs. This is represented also by the <strong>% of bot traffic</strong> measurement.</li>
+		</ul>
+		<p>Taken together, this information suggests that requests from these IPs represent a coordinated, mechanized attack on the login URI.</p>
+	</li>
+	<li>To view even more detail about a single client, click one of the IP addresses in the left column.</li>
+	<li>In the <strong>Detailed View</strong> dialog, on the left side, click the dropdown and select a category to further filter requests.
+		<p><img src="sites/docs/files/sense-detailed-view.png" style="height: 320px; width: 500px;" /></p>
+		<p>Use the categories in the dropdown to decide whether the requests coming from an IP address should be handled as bot by Apigee Edge. For example, the following value categories can help you figure out whether the IP address represents a bot:</p>
+		<ul>
+			<li><strong>Response status code</strong>. A list dominated by a high number of error codes such as 500 suggests a client trying repeatedly with the wrong request. In other words, a client that's simply sending the request repeatedly without being aware of an error result.</li>
+			<li><strong>Request URI</strong>. Some URI are especially significant as attack points. A login URI is one of them.</li>
+		</ul>
+		<p>After you've confirmed that an IP likely represents a bot, you can act to prevent further attacks.</p>
+	</li>
+	<li>In the <strong>Detailed View</strong>, click the <strong>Close</strong> button.</li>
+</ol>
+<h2>Take action against bots</h2>
+<p>Confident you've got a bot attack on your hands? Compose a rule to block or flag the attackers from Apigee Edge -- before the request reaches your proxies.</p>
+<ol>
+	<li>On the <strong>Detection</strong> page, in the <strong>Bot Analysis Report</strong>, click the <strong>Partition View</strong> tab to go back to viewing the pattern list.
+		<p>In the <strong>Partition View</strong>, note that the pattern list has been shortened to include only the pattern you selected to view earlier. That's because when you selected to view the pattern, you began filtering the full list of results to only that pattern. The patterns you're filtering for are shown in the <strong>Filters</strong> box near the top of the page.</p>
+	</li>
+	<li>In the row for the pattern, click the <strong>Act</strong> button to specify an action to take for requests from IPs that match the pattern.</li>
+	<li>In the <strong>Compose Rule</strong> dialog, define how Apigee Edge will respond to requests from IPs making calls in the pattern you selected.
+		<p><img src="sites/docs/files/sense-compose-rule.png" style="height: 274px; width: 500px;" /></p>
+		<p>Here, you'll specify a rule that Apigee Edge uses when requests are received from an IP in the pattern.</p>
+		<ol>
+			<li>Enter a name for the new rule, such as <code>Block login attempters</code>.</li>
+			<li>In the <strong>Filter List</strong>, select the action you want Apigee Edge to take:
+				<ul>
+					<li><strong>Allow</strong> the request to proceed into your proxy as before.</li>
+					<li><strong>Block</strong> the request completely before you proxy begins to process it.</li>
+					<li><strong>Flag</strong> the request by having Apigee Edge add a special HTTP header that your proxy can look for. Apigee Edge will add an <code>X-SENSE-BOT-DETECTED</code> header with a value of <code>SENSE</code>.
+						<p>For example, you might want to set up your proxy so that when you receive a request from a client you've identified as a bot, you can send back dummy data to mislead them. In your proxy, you'd examine the headers of incoming requests, then respond appropriately when a flagged request is received.</p>
+					</li>
+				</ul>
+			</li>
+			<li>In the <strong>Rules</strong> box, confirm that the rules displayed are those you want Sense to use when creating the rule.</li>
+			<li>For <strong>Active</strong>, select <strong>Yes</strong> to turn the rule on.</li>
+			<li>Select a period after which you want the rule to expire (for Apigee Edge to stop enforcing it).</li>
+		</ol>
+	</li>
+	<li>Click <strong>Create</strong> to send the rule to Apigee Edge.</li>
+</ol>
+<h2>Review rules you've created</h2>
+<p>If you've acted to put rules in place to respond to bots, you can manage the rules on the Protection page.</p>
+<ol>
+	<li>At the top of the page, click the <strong>Protection</strong> menu to see a list of the rules you have in place.
+		<p><img src="sites/docs/files/sense-protection-page.png" style="height: 215px; width: 750px;" /></p>
+	</li>
+	<li>In the Rules tab, you can view the list of rules you've created. From here you can:
+		<ul>
+			<li>View the details of a rule, or find out which IPs you're taking action on.</li>
+			<li>Click a value in the <strong>Filter Rules</strong> column to see what makes up the rule there.</li>
+			<li>Enable or disable rules.</li>
+		</ul>
+	</li>
+</ol>

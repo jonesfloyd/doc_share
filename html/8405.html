@@ -38,7 +38,7 @@ $ curl -u email:password -H "Accept: application/json" https://api.enterprise.ap
 	<p>Don't confuse the <i>version</i> of an API (that is, the public interface) with the <i>revision</i> of an API proxy (that is, the internal number associated with a configuration). The two numbers are unrelated, and the revision number of an API proxy is totally opaque to apps that consume your API.</p>
 </div>
 <p>The API <i>version</i> (for example, <code>api.company.com/v1</code>) should change very infrequently. When you do increment the API version, it signifies to developers that there has been a significant change in the signature of the external interface exposed by the API.</p>
-<p>The API proxy <i>revision</i> is an incremented number associated with an API proxy configuration. API Services maintains revisions of your configurations so that you can revert a configuration when something goes wrong. By default, an API proxy's revision is automatically incremented every time you deploy an API proxy. If you don't want to increment an API proxy's revision, use the <a href="http://docs.apigee.com/node/19491">http://docs.apigee.com/node/19491</a> API. If you're using Maven to deploy, use the <code>clean</code> or <code>update</code> options, as described in the <a href="https://github.com/apigee/apigee-deploy-maven-plugin" target="_blank">Maven plugin readme</a>.</p>
+<p>The API proxy <i>revision</i> is an incremented number associated with an API proxy configuration. API Services maintains revisions of your configurations so that you can revert a configuration when something goes wrong. By default, an API proxy's revision is automatically incremented every time you import an API proxy by using the <a href="http://docs.apigee.com/node/16206">http://docs.apigee.com/node/16206</a> API. If you don't want to increment an API proxy's revision, use the <a href="http://docs.apigee.com/node/19491">http://docs.apigee.com/node/19491</a> API. If you're using Maven to deploy, use the <code>clean</code> or <code>update</code> options, as described in the <a href="https://github.com/apigee/apigee-deploy-maven-plugin" target="_blank">Maven plugin readme</a>.</p>
 <div class="bestpractice">
 	<p>To obtain the detailed profile of an API proxy configuration, you call the GET method on a specific revision number.</p>
 </div>
@@ -94,18 +94,18 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
 </div>
 <p>Only one revision of an API proxy can be deployed in an environment at a given time. Therefore the deployed revision needs to be undeployed. You can control whether the new bundle is deployed as a new revision or whether it overwrites the existing revision.</p>
 <p><a href="http://docs.apigee.com/node/23886">Content to be inserted here</a></p>
-<p>First undeploy the existing revision. Using query parameters, specify the environment name and the revision number of the API proxy you want to undeploy:</p>
+<p>First undeploy the existing revision. Specify the environment name and the revision number of the API proxy you want to undeploy:</p>
 <pre class="terminal">
 $ curl -X DELETE \
 https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env-name}/apis/{api_name}/revisions/{revision_number}/deployments \
 -u email:password</pre>
-<p>Then deploy the new revision. (You can deploy using the same revision number, or you can increment it.)</p>
+<p>Then deploy the new revision. The new revision of the API proxy must already exist:&nbsp;</p>
 <pre class="terminal">
 $ curl -X POST -H "Content-type:application/x-www-form-urlencoded" \
 https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env-name}/apis/{api_name}/revisions/{revision_number}/deployments \
 -u email:password</pre>
 <div class="warning">
-	<p>Using this approach, there will inevitably be some lag between the time when the first package is undeployed and the next one is deployed. During this interval, calls from apps may be rejected with an HTTP code 5xx. If this is a problem, as it usually is in production deployments, use the seamless deployment option, described below.</p>
+	<p>Using this approach, there will inevitably be some lag between the time when the first revision is undeployed and the new revision is deployed. During this interval, calls from apps may be rejected with an HTTP code 5xx. If this is a problem, as it usually is in production deployments, use the seamless deployment option, described below.</p>
 </div>
 <h3 id="seamless">Seamless deployment (zero downtime)</h3>
 <p>To minimize the potential for downtime during deployment, use the <code>override</code> option on the deployment method, and set it to <code>true</code>.</p>
@@ -155,7 +155,7 @@ https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env-name}/apis/{
 <h3>See all deployments of an API Revision</h3>
 <p>Sometimes it's necessary to fetch a list of all of the currently deployed revisions of an API proxy.</p>
 <pre class="terminal">
-$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/apis/weatherapi/revision/1/deployments \
+$ curl https://api.enterprise.apigee.com/v1/o/{org_name}/apis/weatherapi/revisions/1/deployments \
 -u email:password </pre>
 <pre>
 {
