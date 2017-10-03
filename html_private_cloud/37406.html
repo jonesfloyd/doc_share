@@ -1,0 +1,10 @@
+<h1> Installation and configuration of SAML for Edge </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p>The process for installing and configuring SAML support on Edge for Private Cloud requires that you perform some tasks on your SAML IDP and some on Edge. The general process is:</p>
+<ol>
+	<li>Install Edge and ensure that your installation is working properly. See <a href="http://docs.apigee.com/node/19951">http://docs.apigee.com/node/19951</a>.</li>
+	<li>Configure your SAML IDP. This process requires that you configure your IDP to use email addresses as the user ID, and specify the redirect URL to the Edge UI which is used after a successful login. See <a href="http://docs.apigee.com/node/37416">http://docs.apigee.com/node/37416</a>.</li>
+	<li>Install and configure <span style="font-family:courier new,courier,monospace;">apigee-sso</span>, the Edge SSO module. Configuring <span style="font-family:courier new,courier,monospace;">apigee-sso</span> enables SAML on the Edge management API. As part of configuring <span style="font-family:courier new,courier,monospace;">apigee-sso</span>, you can optionally enable TLS access. See <a href="http://docs.apigee.com/node/37421">http://docs.apigee.com/node/37421</a>.</li>
+	<li>Enable SAML on the Edge UI. See <a href="http://docs.apigee.com/node/37431">http://docs.apigee.com/node/37431</a>.</li>
+	<li>For each user in the IDP that corresponds to an Edge user, create an Edge user account and assign that user a role in an Edge organization. The Edge user must have the same email address as is stored for the user in the IDP. See <a href="http://docs.apigee.com/node/37411">http://docs.apigee.com/node/37411</a>.</li>
+</ol>

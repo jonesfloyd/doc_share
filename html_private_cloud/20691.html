@@ -1,5 +1,5 @@
 <h1> Backup and Restore </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>This section describes the backup and restore tasks in an on-premises installation of Apigee Edge. It is recommended that you should always create a backup of Apigee Edge components, i.e. configuration and data, at regular intervals and ensure that recovery is performed in an event of a system failure. Backup and restore procedures enable you to restore the state of an entire system (including all components), without affecting other parts of the system.</p>
 <h2>What to Backup</h2>
 <p>In an on-premises deployment of Apigee Edge, you must backup the following Edge components:</p>
@@ -24,7 +24,7 @@
 <h2>Before You Start: Useful Facts</h2>
 <p>You may observe that installation data is distributed across several systems, for example organizations are in LDAP, ZooKeeper and Cassandra. Make sure that you take care of the following notes about backup and restore:</p>
 <ul>
-	<li>If you have multiple Cassandra nodes, back them up one at a time. The backup process temporarily shuts down Cassandra, so you do not want to run it at the same time for all Cassandra nodes.</li>
+	<li>If you have multiple Cassandra nodes, back them up one at a time.&nbsp;</li>
 	<li>If you have multiple ZooKeeper nodes, back them up one at a time. The backup process temporarily shuts down ZooKeeper.</li>
 	<li>If you have multiple Postgres nodes, back them up one at a time.&nbsp;</li>
 	<li>You can back up all other Edge components at the same time on all nodes by using tools such as Ansible or Chef.</li>

@@ -1,5 +1,5 @@
 <h1> Edge Configuration File Reference </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>Shown below is an example of a complete silent configuration file for a 9 node Edge installation. Edit this file as necessary for your configuration. Use the <span style="font-family: &quot;courier new&quot;, courier, monospace;">-f</span> option to <span style="font-family: &quot;courier new&quot;, courier, monospace;">setup.sh</span> to include this file. Also shown below are example configuration files for each Edge topology.</p>
 <div class="note">
 	<p>The definition of the IP# variables for the Router, Message Processor, Qpid, and Postgres nodes are for illustrating the node configuration; they are not actually used.&nbsp;</p>
@@ -18,6 +18,15 @@ IP9=192.168.1.9  # Postgres
 
 # Must resolve to IP address or DNS name of host - not to 127.0.0.1 or localhost.
 HOSTIP=$(hostname -i)
+
+# Specify "y" to check that the system meets the CPU and memory requirements 
+# for the component being installed. See <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> for requirements for each component.
+# Default value is "n" to disable check.   
+ENABLE_SYSTEM_CHECK=n
+
+# When "hostname -i" returns multiple IP addresses,  
+# set to "y", to have the installer prompt you to select the IP address to use. 
+ENABLE_DYNAMIC_HOSTIP=n
 
 # Set Edge sys admin credentials.
 ADMIN_EMAIL=your@email.com
@@ -111,6 +120,21 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 			</td>
 			<td>
 				<p>Do not use a host name mapping to 127.0.0.1 or an IP address of 127.0.0.1 when specifying the IP address of a node.</p>
+			</td>
+		</tr>
+		<tr>
+			<td><span style="font-family:courier new,courier,monospace;">ENABLE_SYSTEM_CHECK</span></td>
+			<td>
+				<p>If "y", check that the system meets the CPU and memory requirements for the component being installed. See <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> for requirements for each component.</p>
+				<p>Default value is "n" to disable check. &nbsp;&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td><span style="font-family:courier new,courier,monospace;">ENABLE_DYNAMIC_HOSTIP</span></td>
+			<td>
+				<p>If a server has multiple interface cards, the "hostname -i" command returns a space-separated list of IP addresses's. By default, the Edge installer uses the first IP address returned, which might not be correct in all situations. As an alternative, you can set the following property in the installation configuration file.</p>
+				<p>When set to "y", the installer prompts you to select the IP address to use in the install. The default value is "n".</p>
+				<p><strong>Caution: </strong>If you set <span style="font-family:courier new,courier,monospace;">ENABLE_DYNAMIC_HOSTIP=y</span>, ensure that your property file does not set <span style="font-family:courier new,courier,monospace;">HOSTIP</span>.</p>
 			</td>
 		</tr>
 		<tr>

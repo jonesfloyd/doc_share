@@ -1,5 +1,5 @@
 <h1> Configuration required for different sysadmin credentials </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>When you first installed Edge, a special kind of user was created called a sysadmin user, and at the same time some additional config files were updated with this user’s details. If you configure your external LDAP to authenticate using a non-email address username and / or you have a different password in your external LDAP for this sysadmin user, then you will need to make the changes described in this section.</p>
 <p>There are two locations that need to be updated:</p>
 <ul>
@@ -22,7 +22,8 @@
 		SMTPPORT=465<br />
 		SMTPUSER=foo@gmail.com<br />
 		SMTPPASSWORD=bar<br />
-		SMTPSSL=y</span><br />
+		SMTPSSL=y<br />
+		SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span><br />
 		<br />
 		Note that you have to include the SMTP properties when passing the new password because all properties on the UI are reset.</li>
 	<li>Use the apigee-setup utility to reset the password on the Edge UI from the config file:<br />

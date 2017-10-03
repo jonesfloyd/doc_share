@@ -1,5 +1,5 @@
 <h1> How to Restore a Component to an Existing Environment </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>This document covers restoration of any Edge component to an existing environment without having to re-install the component. This means the node where you are restoring the component has the same IP address or DNS name as when you performed the backup.</p>
 <p>If you have to re-install the component see <a href="http://docs.apigee.com/node/20706">http://docs.apigee.com/node/20706</a>.</p>
 <h2>Apache ZooKeeper</h2>
@@ -26,9 +26,8 @@
 <h2>Apache Cassandra</h2>
 <h3>Restore one standalone node</h3>
 <ol>
-	<li>Remove old Cassandra directories:<br />
-		<span style="font-family:courier new,courier,monospace;">/opt/apigee/data/apigee-cassandra<br />
-		/opt/apigee/etc/apigee-cassandra.d</span></li>
+	<li>Remove old Cassandra directory:<br />
+		<span style="font-family:courier new,courier,monospace;">/opt/apigee/data/apigee-cassandra</span></li>
 	<li>Restore the Cassandra node from the backup file:<br />
 		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-service apigee-cassandra restore backup-2016.03.17,14.40.41.tar.gz</span></li>
 	<li>Restart all components.</li>

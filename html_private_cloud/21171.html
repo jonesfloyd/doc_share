@@ -1,29 +1,18 @@
 <h1> Set the HTTP port used by the portal </h1>
-<p style="text-align: right;"><em>Developer Services Portal v. 4.17.05</em></p>
-<h2>For the portal running on Nginx</h2>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.17.09</em></p>
 <p>By default, the Nginx server installed with the portal listens for request on port 8079. Use the procedure below to configure Nginx to use a different port:</p>
 <div class="note">
 	<p>By default, the portal runs as the user "apigee". However, ports 1000 and below are often protected ports, which do not allow access to the "apigee" user. Therefore, you typically &nbsp;use ports above 1000 with the portal.&nbsp;</p>
 </div>
 <ol>
 	<li>Ensure that the desired port number is open on the Edge node.</li>
-	<li>Open<span style="font-family:courier new,courier,monospace;"> /&lt;inst_root&gt;/apigee/customer/application/drupal-devportal.properties</span> in an editor. If the file and directory does not exist, create it.&nbsp;</li>
+	<li>Open<span style="font-family:courier new,courier,monospace;"> /opt/apigee/customer/application/drupal-devportal.properties</span> in an editor. If the file and directory does not exist, create it.&nbsp;</li>
 	<li>Set the following propertty in <span style="font-family:courier new,courier,monospace;">drupal-devportal.properties</span>:<br />
 		<span style="font-family:courier new,courier,monospace;">conf_devportal_nginx_listen_port=<em><strong>PORT</strong></em></span><br />
 		<br />
 		<span style="font-family:arial,helvetica,sans-serif;">Where is&nbsp;<em><strong>PORT</strong></em> is the new port number.</span></li>
 	<li>Save the file.</li>
 	<li>Restart the portal:<br />
-		/<span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-drupal-devportal restart</span></li>
+		/<span style="font-family:courier new,courier,monospace;">opt/apigee/apigee-service/bin/apigee-service apigee-drupal-devportal restart</span></li>
 </ol>
-<h2>For the portal running on Apache</h2>
-<p>By default, the Apache server installed with the portal listens for request on port 80. Use the procedure below to configure Apache to use a different port:</p>
-<ol>
-	<li>Open <span style="font-family:courier new,courier,monospace;">httpd.conf</span> in an editor:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; vi /etc/httpd/conf/httpd.conf</span></li>
-	<li>Search for '<span style="font-family:courier new,courier,monospace;">Listen 80</span>' and replace '<span style="font-family:courier new,courier,monospace;">80</span>' with the desired port number.</li>
-	<li>Save the file.</li>
-	<li>Restart Apache:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; service httpd restart&nbsp;</span></li>
-</ol>
-<div>&nbsp;</div>
+<h2>&nbsp;</h2>

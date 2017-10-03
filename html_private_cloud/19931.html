@@ -1,5 +1,5 @@
 <h1> API BaaS Installation </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <div class="note">
 	<p>The <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> details the installation prerequisites and provides a list of required files to obtain before proceeding with the installation. Ensure that you have reviewed the requirements before beginning the installation process.&nbsp;</p>
 </div>
@@ -91,6 +91,9 @@
 <h2>Creating a configuration file</h2>
 <p>The configuration file contains all the information necessary to install API BaaS. You can often use the same configuration file to install all components in a BaaS installation.&nbsp;</p>
 <p>Each installation topology described below shows an example config file for that topology. For a complete reference on the config file, see <a href="http://docs.apigee.com/node/22981">http://docs.apigee.com/node/22981</a>.&nbsp;</p>
+<div class="note">
+	<p>API BaaS 4.17.09 added a new required parameter to the configuration file used when you enable an&nbsp;SMTP server. You must now set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span>&nbsp;in the configuration file when enabling the SMTP server. See the examples below.</p>
+</div>
 <div class="warning">
 	<p><strong>Creating a config file on a Windows machine and then copying it to a Linux machine can add additional end-of-line, carriage return, or newline characters to the file that are not compatible with all Linux utilites.</strong> This situation can also occur if you copy text from a Windows editor and paste into a Linux window. As an alternative, you can use the Linux&nbsp;<span style="font-family:courier new,courier,monospace;">dos2unix</span> utility to clean up a config file created on Windows. Or, make sure to do all editing of config files in a Linux editor.</p>
 </div>
@@ -156,7 +159,8 @@ SMTPHOST=smtp.gmail.com
 SMTPPORT=465
 SMTPUSER=your@email.com
 SMTPPASSWORD=yourEmailPassword
-SMTPSSL=y</pre>
+SMTPSSL=y
+SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 <p>To install API BaaS on its own node:&nbsp;</p>
 <ol>
 	<li>Install the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility on the node using the internet or non internet procedure. See <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>&nbsp;for more.</li>
@@ -271,7 +275,8 @@ SMTPHOST=smtp.gmail.com
 SMTPPORT=465
 SMTPUSER=your@email.com
 SMTPPASSWORD=yourEmailPassword
-SMTPSSL=y</pre>
+SMTPSSL=y
+SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 <h3>Optional - Install Cassandra: Machine 8, 9, and 10</h3>
 <p>You can connect API BaaS to the same Cassandra cluster as used by Edge. If you have not installed Edge, you can optionally install Cassandra for use by API BaaS.</p>
 <p>The Cassandra cluster can use authentication, or Cassandra authentication can be disabled. See <a href="http://docs.apigee.com/node/19916">http://docs.apigee.com/node/19916</a> for more.&nbsp;</p>

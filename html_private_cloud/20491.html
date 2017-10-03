@@ -1,5 +1,5 @@
 <h1> Configuring TLS/SSL for Edge On Premises </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>TLS (Transport Layer Security, whose predecessor is SSL) is the standard security technology for for ensuring secure, encrypted messaging across your API environment, from apps to Apigee Edge to your back-end services.&nbsp;</p>
 <div class="note">
 	<p>Because Edge originally supported SSL, you will see some instances in the Edge UI, Edge XML, and Edge properties that use the term "SSL". For example, the menu entry in the Edge UI that you use to view certs is called&nbsp;<strong>SSL Certificates</strong>, the XML tag that you use to configure a virtual host to use TLS is named <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span>, and the property to set the SSL port for the management API is&nbsp;<span style="font-family:courier new,courier,monospace;">conf_webserver_ssl.port</span>.</p>
@@ -37,12 +37,11 @@
 &gt; keytool -importkeystore -srckeystore keystore.pkcs12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks <strong>-alias devtest</strong></pre>
 <h2>Generating an obfuscated password</h2>
 <p>Some parts of the Edge TLS configuration procedure require you to enter an obfuscated password in a configuration file. An obfuscated password is a more secure alternative to entering your password in plain text.</p>
-<p>You can generate an obfuscated password in Java by using the Jetty .jar files installed with Edge. enerate the obfuscated password by using a command in the form:</p>
+<p>You can generate an obfuscated password by using the following command on the Edge Management Server:</p>
 <pre>
-&gt; java -cp /opt/apigee/edge-gateway/lib/thirdparty/jetty-http-<strong>x.y.z</strong>.jar:/opt/apigee/edge-gateway/lib/thirdparty/jetty-util-<strong>x.y.z</strong>.jar org.eclipse.jetty.http.security.Password <strong>yourPassword</strong></pre>
-<p>where <strong>x.y.z</strong> specifies the version number of the Jetty .jar files, such as 8.0.4.v20111024. This command returns the password in the form:</p>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-management-server generate-obfuscated-password</pre>
+<p>Enter the new password, and then confirm it at the prompt. For security reasons, the text of the password is not displayed. This command returns the password in the form:</p>
 <pre>
-yourPassword
 OBF:58fh40h61svy156789gk1saj
 MD5:902fobg9d80e6043b394cb2314e9c6</pre>
 <p>Use the obfuscated password specified by OBF when configuring TLS.&nbsp;</p>

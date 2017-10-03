@@ -1,5 +1,5 @@
 <h1> Edge Installation Overview </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>A typical Edge installation consists of Edge components distributed across multiple nodes. After you install Edge on a node, you then install and configure one or more Edge components on the node.</p>
 <h2>Installation process</h2>
 <p>Installing Edge on a node is a multi-step process:</p>
@@ -138,7 +138,7 @@
 </div>
 <p>In this guide and in the Edge Operations Guide, the root installation directory is noted as:</p>
 <pre>
-&lt;inst_root&gt;/apigee</pre>
+/opt/apigee</pre>
 <p>The installation uses the following file system structure to deploy Apigee Edge for Private Cloud.&nbsp;</p>
 <h3>Log Files</h3>
 <p>The log file for <span style="font-family:courier new,courier,monospace;">apigee-setup</span> and the <span style="font-family:courier new,courier,monospace;">setup.sh</span> script is written to <span style="font-family:courier new,courier,monospace;">/tmp/setup-root.log</span>.&nbsp;</p>
@@ -163,7 +163,7 @@
 				<p>Management Server</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/edge-management-server</p>
+				<p>/opt/apigee/var/log/edge-management-server</p>
 			</td>
 		</tr>
 		<tr>
@@ -171,7 +171,10 @@
 				<p>Router</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/edge-router</p>
+				<p>/opt/apigee/var/log/edge-router</p>
+				<p>The Edge Router is implemented by using Nginx. For additional logs, see:</p>
+				<p>/opt/apigee/var/log/edge-router/nginx &nbsp;</p>
+				<p><span style="font-family: arial, sans-serif; font-size: 12.8px;">/opt/nginx/logs</span></p>
 			</td>
 		</tr>
 		<tr>
@@ -179,7 +182,7 @@
 				<p>Message Processor &nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/edge-message-processor</p>
+				<p>/opt/apigee/var/log/edge-message-processor</p>
 			</td>
 		</tr>
 		<tr>
@@ -187,7 +190,7 @@
 				<p>Apigee Qpid Server &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/edge-qpid-server</p>
+				<p>/opt/apigee/var/log/edge-qpid-server</p>
 			</td>
 		</tr>
 		<tr>
@@ -195,7 +198,7 @@
 				<p>Apigee Postgres Server &nbsp;&nbsp;&nbsp;&nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/edge-postgres-server</p>
+				<p>/opt/apigee/var/log/edge-postgres-server</p>
 			</td>
 		</tr>
 		<tr>
@@ -203,7 +206,7 @@
 				<p>Edge UI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/edge-ui</p>
+				<p>/opt/apigee/var/log/edge-ui</p>
 			</td>
 		</tr>
 		<tr>
@@ -211,7 +214,7 @@
 				<p>ZooKeeper</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/apigee-zookeeper</p>
+				<p>/opt/apigee/var/log/apigee-zookeeper</p>
 			</td>
 		</tr>
 		<tr>
@@ -219,7 +222,7 @@
 				<p>OpenLDAP</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/apigee-openldap</p>
+				<p>/opt/apigee/var/log/apigee-openldap</p>
 			</td>
 		</tr>
 		<tr>
@@ -227,7 +230,7 @@
 				<p>Cassandra</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/apigee-cassandra</p>
+				<p>/opt/apigee/var/log/apigee-cassandra</p>
 			</td>
 		</tr>
 		<tr>
@@ -235,7 +238,7 @@
 				<p>Qpidd</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/apigee-qpidd</p>
+				<p>/opt/apigee/var/log/apigee-qpidd</p>
 			</td>
 		</tr>
 		<tr>
@@ -243,7 +246,7 @@
 				<p>PostgreSQL database</p>
 			</td>
 			<td>
-				<p>&lt;inst_root&gt;/apigee/var/log/apigee-postgresql</p>
+				<p>/opt/apigee/var/log/apigee-postgresql</p>
 			</td>
 		</tr>
 	</tbody>
@@ -266,7 +269,7 @@
 				<p>Management Server</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/edge-management-server</p>
+				<p>/opt/apigee/data/edge-management-server</p>
 			</td>
 		</tr>
 		<tr>
@@ -274,7 +277,7 @@
 				<p>Router</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/edge-router</p>
+				<p>/opt/apigee/data/edge-router</p>
 			</td>
 		</tr>
 		<tr>
@@ -282,7 +285,7 @@
 				<p>Message Processor &nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/edge-message-processor</p>
+				<p>/opt/apigee/data/edge-message-processor</p>
 			</td>
 		</tr>
 		<tr>
@@ -290,7 +293,7 @@
 				<p>Apigee Qpid agent &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/edge-qpid-server</p>
+				<p>/opt/apigee/data/edge-qpid-server</p>
 			</td>
 		</tr>
 		<tr>
@@ -298,7 +301,7 @@
 				<p>Apigee Postgres agent &nbsp;&nbsp;&nbsp;&nbsp;</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/edge-postgres-server</p>
+				<p>/opt/apigee/data/edge-postgres-server</p>
 			</td>
 		</tr>
 		<tr>
@@ -306,7 +309,7 @@
 				<p>ZooKeeper</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/apigee-zookeeper</p>
+				<p>/opt/apigee/data/apigee-zookeeper</p>
 			</td>
 		</tr>
 		<tr>
@@ -314,7 +317,7 @@
 				<p>OpenLDAP</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/apigee-openldap</p>
+				<p>/opt/apigee/data/apigee-openldap</p>
 			</td>
 		</tr>
 		<tr>
@@ -322,7 +325,7 @@
 				<p>Cassandra</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/apigee-cassandra/data</p>
+				<p>/opt/apigee/data/apigee-cassandra/data</p>
 			</td>
 		</tr>
 		<tr>
@@ -330,7 +333,7 @@
 				<p>Qpidd</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/apigee-qpid/data</p>
+				<p>/opt/apigee/data/apigee-qpid/data</p>
 			</td>
 		</tr>
 		<tr>
@@ -338,7 +341,7 @@
 				<p>PostgreSQL database</p>
 			</td>
 			<td>
-				<p>&lt;data_root&gt;/apigee/data/apigee-postgres/pgdata</p>
+				<p>/opt/apigee/data/apigee-postgres/pgdata</p>
 			</td>
 		</tr>
 	</tbody>

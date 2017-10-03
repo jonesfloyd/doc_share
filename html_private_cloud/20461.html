@@ -1,5 +1,5 @@
 <h1> Allowing the Edge UI Access to Local IP Addresses </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>There are several places where the Edge UI might attempt to access a local IP address. These local IP address might correspond to private or otherwise protected resources that should not be exposed to external users:</p>
 <ul>
 	<li>The Trace tool in the Edge UI has the ability to send and receive API request to any specified URL. In certain deployment scenarios where Edge components are co-hosted with other internal services, a malicious user may misuse the power of the Trace tool by making requests to private IP addresses.&nbsp;</li>
@@ -30,6 +30,8 @@
 		conf_apigee-base_apigee.feature.enableopenapiforinternaladdresses="true"<br />
 		conf_apigee-base_apigee.feature.enablewsdlforinternaladdresses="true"</span></li>
 	<li>Save your changes to <span style="font-family:courier new,courier,monospace;">ui.properties</span>.</li>
+	<li>Make sure the properties file is owned by the 'apigee' user:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/opt/apigee/customer/application/ui.properties</span></li>
 	<li>Restart the Edge UI:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui restart</span></li>
 </ol>

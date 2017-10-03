@@ -1,5 +1,5 @@
 <h1> Creating an Organization, Environment, and Virtual Host </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <h2>Creating an Organization, Environment, and Virtual Host at the same time</h2>
 <p>Before you create an API proxy on Apigee Edge, you must create at least one organization and, within each organization, one or more environments and virtual hosts.&nbsp;</p>
 <div class="note">
@@ -98,7 +98,9 @@ curl -H "Content-Type:application/xml" -u &lt;sysAdminEmail&gt;:&lt;adminPasswd&
 http://&lt;ms-ip&gt;:8080/v1/organizations/&lt;org-name&gt;/users/&lt;user-email&gt;/userroles/ \
 -d '&lt;Roles&gt;&lt;Role name="orgadmin"/&gt;&lt;/Roles&gt;'</pre>
 <div class="note">
-	<p>Currently, Apigee Edge for Private Cloud supports the roles – orgadmin, readonlyadmin, opsadmin, user, and businessuser, all having a default permission of full access to entities (APIs, API products, apps, developers, and reports) in an Apigee organization. Depending on the customer’s needs, you can customize the pre-defined or configure more complex roles and permissions using RBAC API. See <a href="http://apigee.com/docs/api/user-roles">http://apigee.com/docs/api/user-roles</a>.</p>
+	<p>Currently, Apigee Edge for Private Cloud supports the roles – orgadmin, opsadmin, user, and businessuser, all having a default permission of full access to entities (APIs, API products, apps, developers, and reports) in an Apigee organization. Depending on the customer’s needs, you can customize the pre-defined or configure more complex roles and permissions using RBAC API. See <a href="http://apigee.com/docs/api/user-roles">http://apigee.com/docs/api/user-roles</a>.</p>
+	<p>&nbsp;</p>
+	<p>Note that the&nbsp;readonlyadmin role is available in the Cloud only.</p>
 </div>
 <p>If the user does not exist, you can use the following call to create the user as described in Adding a user.</p>
 <h2>Create an Environment</h2>

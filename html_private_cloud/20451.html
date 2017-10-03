@@ -1,5 +1,5 @@
 <h1> Setting HTTP request/response header limits </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>The Edge Router and Message Processor have predefined limits to the size of request/response headers and to the line size.&nbsp;</p>
 <p>For the Router, which handles incoming requests from your APIs, edit the following properties in <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/router.properties</span> to change these default values:</p>
 <pre>
@@ -23,4 +23,4 @@ conf/http.properties+HTTPResponse.headers.limit=25k</pre>
 <p>If that file does not exist, create it.</p>
 <p>You must restart the Message Processor after changing these properties:</p>
 <pre>
-&gt; /opt/apigee/bin/apigee-service message-processor restart</pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor restart</pre>

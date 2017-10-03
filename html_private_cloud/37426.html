@@ -1,0 +1,79 @@
+<h1> Configure apigee-sso for HTTPS access </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p><a href="http://docs.apigee.com/node/37421">http://docs.apigee.com/node/37421</a> describes how to install and configure the Edge SSO module to use HTTP on port 9099, as specified by the following property in the config file:</p>
+<pre class="prettyprint">
+SSO_TOMCAT_PROFILE=DEFAULT
+</pre>
+<p>Alternatively, you can set <span style="font-family:courier new,courier,monospace;">SSO_TOMCAT_PROFILE</span> to one of the following values to enable HTTPS access:</p>
+<ul>
+	<li><strong>SSL_TERMINATION</strong> - Enabled TLS access to <span style="font-family:courier new,courier,monospace;">apigee-sso</span>, the Edge SSO module, on the port of your choice. You must specify a keystore for this mode that contains a cert signed by a CA. You cannot use a self-signed cert.</li>
+	<li><strong>SSL_PROXY</strong> - Configures <span style="font-family:courier new,courier,monospace;">apigee-sso</span> in proxy mode, meaning you have installed a load balancer in front of <span style="font-family:courier new,courier,monospace;">apigee-sso</span> and terminated TLS on the load balancer. You then specify the port used on <span style="font-family:courier new,courier,monospace;">apigee-sso</span> for requests from the load balancer.</li>
+</ul>
+<p>You can choose to enable HTTPS at the time you initially install and configure <span style="font-family:courier new,courier,monospace;">apigee-sso</span>, or you can enable it later.</p>
+<p>Enabling HTTPS access to <span style="font-family:courier new,courier,monospace;">apigee-sso</span> using either mode disables HTTP access. That is, you cannot access <span style="font-family:courier new,courier,monospace;">apigee-sso</span> using both HTTP and HTTPS concurrently.</p>
+<div class="note">
+	<p>If you configure HTTPS access to <span style="font-family:courier new,courier,monospace;">apigee-sso</span>, ensure that you update any URLs used by the Edge UI and by your IDP to to use HTTPS. Also, if you choose to enable HTTPS on a port other than 9099, also make sure you update the UI and IDP to use the correct port number.</p>
+</div>
+<h2>Enable SSL_TERMINATION mode</h2>
+<p>For <span style="font-family:courier new,courier,monospace;">SSL_TERMINATION</span> mode, you must:</p>
+<ul>
+	<li>Generated a TLS cert and key and store them in a keystore file. <strong>You cannot use a self-signed certificate. You must generate a cert from a CA.</strong></li>
+	<li>Update the configuration settings for <span style="font-family:courier new,courier,monospace;">apigee-sso.</span></li>
+</ul>
+<p>To create a keystore file from your cert and key:</p>
+<ol>
+	<li>Create a directory for the JKS file:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; sudo mkdir -p /opt/apigee/customer/application/apigee-sso/tomcat-ssl/ </span></li>
+	<li>Change to the new directory:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; cd /opt/apigee/customer/application/apigee-sso/tomcat-ssl/ </span></li>
+	<li>Create a JKS file containing the cert and key. You must specify a keystore for this mode that contains a cert signed by a CA. You cannot use a self-signed cert. For an example of creating a JKS file, see <a href="http://docs.apigee.com/node/20491">http://docs.apigee.com/node/20491</a>.</li>
+	<li>Make the JKS file owned by the "apigee" user:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; sudo chown -R apigee:apigee /opt/apigee/customer/application/apigee-sso/tomcat-ssl</span></li>
+</ol>
+<p>To configure the Edge SSO module:</p>
+<ol>
+	<li>Add the following settings to your config file:<br />
+		<span style="font-family:courier new,courier,monospace;"># Enable SSL_TERMINATION mode.<br />
+		SSO_TOMCAT_PROFILE=SSL_TERMINATION<br />
+		<br />
+		# Specify the path to the keystore file. SSO_TOMCAT_KEYSTORE_FILEPATH=/opt/apigee/customer/application/apigee-sso/tomcat-ssl/keystore.jks SSO_TOMCAT_KEYSTORE_ALIAS=sso<br />
+		<br />
+		# The password specified when you created the keystore.<br />
+		SSO_TOMCAT_KEYSTORE_PASSWORD=<strong><em>keystorePassword </em></strong><br />
+		<br />
+		# Specify the HTTPS port number between 1025 and 65535.<br />
+		# Typically ports 1024 and below require root access by apigee-sso.<br />
+		# The default is 9099.<br />
+		SSO_TOMCAT_PORT=9443<br />
+		<br />
+		# Set public access scheme of apigee-sso to https.<br />
+		SSO_PUBLIC_URL_SCHEME=https </span></li>
+	<li>Configure the Edge SSO module:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-sso setup -f <strong><em>configFile </em></strong></span></li>
+</ol>
+<h2>Enable SSL_PROXY mode</h2>
+<p>In SSL_PROXY mode, you system uses a load balancer in front of the Edge SSO module and terminates TLS on the load balancer. In the following figure, the load balancer terminates TLS on port 443, and then forwards requests to the Edge SSO module on port 9099:</p>
+<p><img alt="" src="../html/sites/docs/files/EdgeSAML_lb.png" style="width: 474px; height: 428px; margin: 15px;" /></p>
+<p>In this configuration, you trust the connection from the load balancer to the Edge SSO module so there is no need to use TLS for that connection. However, external entities, such as the SAML IDP, now must access the Edge SSO module on port 443, not on the unprotected port of 9099.</p>
+<p>The reason to configure the Edge SSO module in SSL_PROXY mode is that the Edge SSO module generates redirect URLs used externally by the IDP as part of the authentication procedure. Therefore, the redirect URLs must contain the external port number on the load balancer, 443 in this example, and not the internal port on the Edge SSO module, 9099.</p>
+<p><strong>Note</strong>: You do not have to create a TLS cert and key for SSL_PROXY mode because the connection from the load balancer to the Edge SSO module uses HTTP.</p>
+<p>To configure the Edge SSO module for <span style="font-family:courier new,courier,monospace;">SSL_PROXY</span> mode:</p>
+<ol>
+	<li>Add the following settings to your config file:<br />
+		<span style="font-family:courier new,courier,monospace;"># Enable SSL_TERMINATION mode.<br />
+		SSO_TOMCAT_PROFILE=SSL_PROXY<br />
+		<br />
+		# Specify the apigee-sso port, typically between 1025 and 65535.<br />
+		# Typically ports 1024 and below require root access by apigee-sso.<br />
+		# The default is 9099.<br />
+		SSO_TOMCAT_PORT=9099<br />
+		<br />
+		# Specify the port number on the load balancer for terminating TLS.<br />
+		# This port number is necessary for apigee-sso to generate redirect URLs.<br />
+		SSO_TOMCAT_PROXY_PORT=443<br />
+		<br />
+		# Set public access scheme of apigee-sso to https.<br />
+		SSO_PUBLIC_URL_SCHEME=https </span></li>
+	<li>Configure the Edge SSO module:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-sso setup -f <strong><em>configFile</em></strong></span></li>
+</ol>

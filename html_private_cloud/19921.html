@@ -1,129 +1,43 @@
 <h1> Set up Master-Standby Replication for Postgres </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
-<p>By default, Cassandra installs without authentication enabled. That means anyone can access Cassandra. You can enable authentication after installing Edge, or as part of the installation process.</p>
-<p>If you decide to enable authentication on Cassandra, it uses the following default credentials:</p>
-<ul>
-	<li>username = 'cassandra'&nbsp;</li>
-	<li>password = 'cassandra'&nbsp;</li>
-</ul>
-<p>You can use this account, set a different password for this account, or create a new Cassandra user. Add, remove, and modify users by using the Cassandra CREATE/ALTER/DROP USER statements.&nbsp;</p>
-<p>For more information, see <a href="http://www.datastax.com/documentation/cql/3.0/cql/cql_reference/cqlCommandsTOC.html">http://www.datastax.com/documentation/cql/3.0/cql/cql_reference/cqlCommandsTOC.html</a>.</p>
-<h2>Enable Cassandra authentication during installation</h2>
-<p>You can enable Cassandra authentication as install time. However, while you can enable authentication when you install Cassandra, you cannot change the default username and password. You have to perform that step manually after installation of Cassandra completes.</p>
-<p><strong>Note</strong>: Use this procedure when installing Cassandra by using the "-p c", "-p ds", "-p sa", "-p aio", "-p asa", and "-p ebp" options.</p>
-<p>To enable Cassandra authentication at install time, include the <span style="font-family:courier new,courier,monospace;">CASS_AUTH</span> property in the configuration file for all Cassandra nodes:</p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p>By default, Edge installs all Postgres nodes in master mode. However, in production systems with multiple Postgres nodes, you configure them to use master-standby replication so that if the master node fails, the standby node can continue to server traffic.</p>
+<p>If the master node ever fails, you can promote the standby server to the master. See <a href="http://docs.apigee.com/node/20426">http://docs.apigee.com/node/20426</a> for more information.</p>
+<h2>Configure Master-Standby Replication at install time</h2>
+<p>You can configure master-standby replication at install time by including the following properties in the config file for the two Postgres nodes:</p>
 <pre>
-CASS_AUTH=y<span class="Apple-tab-span" style="white-space:pre"> </span># The default value is n.</pre>
-<p>The following Edge components access Cassandra:</p>
-<ul>
-	<li>Management Server</li>
-	<li>Message Processors&nbsp;</li>
-	<li>Routers</li>
-	<li>Qpid servers</li>
-	<li>Postgres servers</li>
-	<li>BaaS Stack</li>
-</ul>
-<p>Therefore, when you install these components, you must set the following properties in the configuration file to specify the Cassandra credentials:</p>
-<pre>
-CASS_USERNAME=cassandra 
-CASS_PASSWORD=cassandra</pre>
-<p>You can change the Cassandra credentials after installing Cassandra. However, if you have already installed the Management Server, Message Processors, Routers, Qpid servers, Postgres servers, or BaaS Stack, you must also update those components to use the new credentials.&nbsp;</p>
-<p>To change the Cassandra credentials after installing Cassandra:</p>
+PG_MASTER=<strong><em>IPorDNSofNewMaster</em></strong>
+PG_STANDBY=<strong><em>IPorDNSofNewStandby</em></strong></pre>
+<p>The installer automatically configures the two Postgres node to function as master-standby with replication.</p>
+<h2>Configure Master-Standby Replication after installation</h2>
+<p>You can configure master-standby replication after installation by by using the following procedure:</p>
 <ol>
-	<li>Log into any one Cassandra node using the <span style="font-family:courier new,courier,monospace;">cqlsh</span> tool and the default credentials. You only have to change the password on one node and it will be broadcast to all Cassandra nodes in the ring:&nbsp;<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-cassandra/bin/cqlsh <em><strong>cassIP</strong></em> <em><strong>9042</strong></em> -u cassandra -p cassandra</span><br />
-		?Where:
-		<ol style="list-style: lower-alpha outside">
-			<li><em><strong>cassIP</strong></em> is the IP address of the Cassandra node.</li>
-			<li><em><strong>9042</strong></em> is the default Cassandra port.&nbsp;</li>
-			<li>The default user is <span style="font-family:courier new,courier,monospace;">cassandra</span>.&nbsp;</li>
-			<li>The default password is <span style="font-family:courier new,courier,monospace;">cassandra</span>. If you changed the password previously, use the current password.</li>
-		</ol>
+	<li>Identify which Postgre node will be the master and which will be the standby server.</li>
+	<li>On the master node, edit the config file to set:<br />
+		<span style="font-family:courier new,courier,monospace;">PG_MASTER=<em><strong>IPorDNSofNewMaster</strong></em><br />
+		PG_STANDBY=<em><strong>IPorDNSofNewStandby</strong></em></span></li>
+	<li>Enable replication on the new master:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql setup-replication-on-master -f <em><strong>configFIle</strong></em></span></li>
+	<li>On the standby node, edit the config file to set:<br />
+		<span style="font-family:courier new,courier,monospace;">PG_MASTER=<em><strong>IPorDNSofNewMaster</strong></em><br />
+		PG_STANDBY=</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>IPorDNSofNewStandby</strong></em></li>
+	<li>
+		<div>Stop the standby node:</div>
+		<div><span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql stop</span></div>
 	</li>
-	<li>Run the following command as the <span style="font-family:courier new,courier,monospace;">cqlsh&gt;</span> prompt to update the password:&nbsp;<br />
-		<span style="font-family:courier new,courier,monospace;">cqlsh&gt; ALTER USER cassandra WITH PASSWORD '<em><strong>NEW_PASSWORD</strong></em>';</span></li>
-	<li>Exit the cqlsh tool:<br />
-		<span style="font-family:courier new,courier,monospace;">cqlsh&gt; exit</span></li>
-	<li><strong>If you have not yet</strong> installed the Management Server, Message Processors, Routers, Qpid servers, Postgres servers, or BaaS Stack, set the following properties in the config file and then install those components:<br />
-		<span style="font-family:courier new,courier,monospace;">CASS_USERNAME=cassandra&nbsp;<br />
-		CASS_PASSWORD=<em><strong>NEW_PASSWORD</strong></em></span></li>
-	<li><strong>If you have already installed</strong>&nbsp;the Management Server, Message Processors, Routers,&nbsp;Qpid&nbsp;servers, Postgres servers, or BaaS Stack, then see <a href="http://docs.apigee.com/node/20356">http://docs.apigee.com/node/20356</a> for the procedure to update those components to use the new password.</li>
+	<li>On the standby node, delete any existing Postgres data:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; rm -rf /opt/apigee/data/apigee-postgresql/</span><br />
+		<strong>Note</strong>: If necessary, you can backup this data before deleting it.</li>
+	<li>Configure the standby node:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql setup-replication-on-standby -f <em><strong>configFile</strong></em></span></li>
 </ol>
-<h2>Enable Cassandra authentication post installation</h2>
-<p>To enable authentication:</p>
-<ul>
-	<li>Update all Edge components that connect to Cassandra with the Cassandra username and password.</li>
-	<li>On all Cassandra nodes, enable authentication.</li>
-	<li>Set the Cassandra username and password on any one node.&nbsp;You only have to change the credentials on one Cassandra node and they will be broadcast to all Cassandra nodes in the ring.</li>
-</ul>
-<p>Use the following procedure&nbsp;to update all Edge components that communicate with Cassandra with the new credentials. Note that you do this step before you actually update the Cassandra credentials:</p>
+<h2>Test Master-Standby Replication &nbsp;</h2>
+<p>On completion of replication, verify the replication status by issuing the following scripts on both servers. The system should display identical results on both servers to ensure a successful replication:</p>
 <ol>
-	<li>On the Management Server node, run the following command:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-management-server store_cassandra_credentials -u CASS_USERNAME -p CASS_PASSWORD</span>&nbsp;<br />
-		<br />
-		Optionally, you can pass a file to the command containing the new username and password:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; apigee-service edge-management-server store_cassandra_credentials &nbsp;-f <em><strong>configFile</strong></em>&nbsp;</span><br />
-		<br />
-		Where the <strong><em>configFile</em></strong> contains the following:<br />
-		<span style="font-family:courier new,courier,monospace;">CASS_USERNAME=cassandra<br />
-		CASS_PASSWORD=<em><strong>CASS_PASSWROD</strong></em></span><br />
-		<br />
-		This command automatically restarts the Management Server.</li>
-	<li>Repeat step 1 on:
-		<ul>
-			<li>All Message Processors&nbsp;</li>
-			<li>All Routers</li>
-			<li>All Qpid servers (edge-qpid-server)</li>
-			<li>Postgres servers &nbsp;(edge-postgres-server)</li>
-		</ul>
-	</li>
-	<li>On the BaaS Stack node for version 4.16.05.04 and later:
-		<ol style="list-style: lower-alpha outside">
-			<li>Run the following command to generate an encrypted password:<br />
-				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service baas-usergrid </span><span style="font-family:courier new,courier,monospace;">secure_password</span><br />
-				<br />
-				This command prompts you for the plain text password and returns the encrypted password in the form:<br />
-				<span style="font-family:courier new,courier,monospace;">SECURE:ae1b6dedbf6b26aaab8bee815a910737c1c15b55f3505c239e43bc09f8050</span></li>
-			<li>Set the following tokens in&nbsp;<span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/usergrid.properties</span>. If that file does not exist, create it:<br />
-				<span style="font-family:courier new,courier,monospace;">usergrid-deployment_cassandra.username=cassandra<br />
-				usergrid-deployment_cassandra.password=SECURE:ae1b6dedbf6b26aaab8bee815a910737c1c15b55f3505c239e43bc09f8050</span><br />
-				<br />
-				This example uses the default username for Cassandra. If you changed the username, set the value of&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">usergrid-deployment_cassandra.username</span>&nbsp;accordingly.<br />
-				<br />
-				Ensure that you include the "<span style="font-family:courier new,courier,monospace;">SECURE:</span>" prefix on the password. Otherwise, the BaaS Stack interprets the value as unencrypted.<br />
-				<br />
-				<strong>Note</strong>: Each BaaS Stack node has its own unique key used to encrypt the password. Therefore, you must generate the encrypted value on each BaaS Stack node separetly.</li>
-			<li>Change ownership of the <span style="font-family:courier new,courier,monospace;">usergrid.properties</span> file to the 'apigee' user:<br />
-				<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee&nbsp;/opt/apigee/customer/application/usergrid.properties</span></li>
-			<li>Configure the Stack node:<br />
-				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service baas-usergrid configure</span></li>
-			<li>Restart the BaaS Stack:<br />
-				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service baas-usergrid restart</span></li>
-			<li>Repeat these steps for all BaaS Stack nods.&nbsp;</li>
-		</ol>
-	</li>
-</ol>
-<p>Use the following procedure to enable Cassandra authentication&nbsp;and set the username and password:</p>
-<ol>
-	<li>Log in to the first Cassandra node.</li>
-	<li>Run the following command:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-cassandra enable_cassandra_authentication -e y</span><br />
-		<br />
-		This command enables authentication and restarts Cassandra.</li>
-	<li>Repeat steps 1 and 2 on all Cassandra nodes.</li>
-	<li>Log into any one Cassandra node using the <span style="font-family:courier new,courier,monospace;">cqlsh</span> tool and the default credentials. You only have to change the password on one Cassandra node and it will be broadcast to all Cassandra nodes in the ring:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-cassandra/bin/cqlsh <em><strong>cassIP</strong></em> <em><strong>9042</strong></em> -u cassandra -p cassandra</span><br />
-		Where
-		<ul>
-			<li><em><strong>cassIP</strong></em> is the IP address of the Cassandra node.</li>
-			<li><em><strong>9042</strong></em> is the Cassandra port.&nbsp;</li>
-			<li>The default user is <span style="font-family:courier new,courier,monospace;">cassandra</span>.&nbsp;</li>
-			<li>The default password is <span style="font-family:courier new,courier,monospace;">cassandra</span>. If you changed the password previously, use the current password.</li>
-		</ul>
-	</li>
-	<li>Run the following command as the <span style="font-family:courier new,courier,monospace;">cqlsh&gt;</span> prompt to update the password:&nbsp;<br />
-		<span style="font-family:courier new,courier,monospace;">cqlsh&gt; ALTER USER cassandra WITH PASSWORD '<em><strong>NEW_PASSWORD</strong></em>';</span></li>
-	<li>Exit the cqlsh tool:<br />
-		<span style="font-family:courier new,courier,monospace;">cqlsh&gt; exit</span></li>
+	<li>On the master node, run:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql postgres-check-master</span><br />
+		Validate that it says it is the master.</li>
+	<li>On the standby node:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql postgres-check-standby</span><br />
+		Validate that it says it is the standby.</li>
 </ol>
 <div>&nbsp;</div>

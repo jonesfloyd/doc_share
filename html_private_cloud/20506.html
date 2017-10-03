@@ -1,5 +1,5 @@
 <h1> Configuring TLS for the management UI </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>By default, you access the Edge management UI over HTTP by using the IP address of the Management Server node and port 9000. For example:</p>
 <pre>
 http://ms_IP:9000</pre>
@@ -11,6 +11,15 @@ https://ms_IP:9443</pre>
 <p>The procedure in this section configures TLS to use port 9443 on the Management Server. Regardless of the port that you use, you must ensure that the port is open on the Management Server. For example, you can use the following command to open it:</p>
 <pre>
 $ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 9443 -j ACCEPT --verbose </pre>
+<div class="note">
+	<p>This example uses port 9443 for the TLS port, and not the more common port 443. The reason is that ports below 1024 are typically protected by the operating system and require the process that accesses them to have root access. The Edge UI runs as the "apigee" user and therefore typically does not have access to ports below 1024.</p>
+	<p>&nbsp;</p>
+	<p>One alternative it to use a load balancer with the Edge UI and terminate TLS on the load balancer on port 443. You can then use either HTTP or HTTPS between the load balancer and the Edge UI.&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>Another alternative is to use <span style="font-family:courier new,courier,monospace;">iptables</span> to forward requests to port 443 to port 9443. For example:</p>
+	<pre>
+iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 9443 </pre>
+</div>
 <h2>Configure TLS</h2>
 <p>Use the following procedure to configure TLS access to the management UI:</p>
 <ol>
@@ -55,4 +64,7 @@ X-Forwarded-Proto: https</pre>
 	<li>Restart the Edge UI:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui restart</span></li>
 </ol>
-<p>&nbsp;</p>
+<h2>Disable TLS on the Edge UI</h2>
+<p>To disable TLS on the Edge UI, use the following command:</p>
+<pre>
+/opt/apigee/apigee-service/bin/apigee-service edge-ui disable-ssl</pre>

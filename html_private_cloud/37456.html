@@ -1,0 +1,24 @@
+<h1> Using SAML with the Edge UI </h1>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p>The SAML specification defines three entities:</p>
+<ul>
+	<li>Principal (Edge UI user)</li>
+	<li>Service provider (Edge SSO)</li>
+	<li>Identity provider (returns SAML assertion)</li>
+</ul>
+<p>When SAML is enabled, the principal (an Edge UI user) requests access to the service provider (Edge SSO). Edge SSO (in it's role as a SAML service provider) then requests and obtains an identity assertion from the SAML identity provider and uses that assertion to create the OAuth2 token required to access the Edge UI. The user is then redirected to the Edge UI.</p>
+<p>This process is shown below:</p>
+<p><img alt="" src="../html/sites/docs/files/saml_v3.png" style="width: 590px; height: 250px; margin: 15px; border-width: 1px; border-style: solid;" /></p>
+<p>In this diagram:</p>
+<ol>
+	<li>User attempts to access the Edge UI by making a request to the login URL for the Edge UI:<br />
+		For example: <span style="font-family:courier new,courier,monospace;">https://<strong><em>edge_ui_IP_DNS</em></strong>:9000</span></li>
+	<li>Unauthenticated requests to are redirected to the SAML identity provider. For example, <a href="https://idp.customer.com">https://idp.customer.com</a>.</li>
+	<li>If customer is not logged in to the identity provider, the customer is prompted to log in.</li>
+	<li>The user is authenticated by the SAML identity provider. The SAML identity provider generates and returns a SAML 2.0 assertion to the Edge SSO.</li>
+	<li>Edge SSO validates the assertion, extracts the user identity from the assertion, generates the OAuth 2 authentication token for the Edge UI, and redirects the user to the main Edge UI page at:<br />
+		<span style="font-family:courier new,courier,monospace;">https://<strong><em>edge_ui_IP_DNS:9000</em></strong>/platform/<strong><em>orgName</em></strong> </span><br />
+		<br />
+		where <strong><em>orgName</em></strong> is the name of an Edge organization.</li>
+</ol>
+<p>&nbsp;</p>

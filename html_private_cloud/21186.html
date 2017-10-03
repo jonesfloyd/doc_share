@@ -1,41 +1,27 @@
 <h1> Configuring the portal to use HTTPS </h1>
-<p style="text-align: right;"><em>Developer Services Portal v. 4.17.05</em></p>
-<p>All Apigee recommended Private Cloud installations of the portal require the portal to be behind a load balancer. Therefore, you configure SSL on the load balancer itself, and not on the portal. The procedure that you use to configure SSL is therefore dependent on the load balancer.</p>
-<p>See <a href="http://docs.apigee.com/node/15391">http://docs.apigee.com/node/15391</a> for an overview of using SSL on the portal.&nbsp;</p>
-<h2>For the portal running on Apache</h2>
-<p>However, if necessary, you can configure SSL on the web server that hosts the portal. By default, Apigee installs the Apache web server.</p>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.17.09</em></p>
+<p>All Apigee recommended Private Cloud installations of the portal require the portal to be behind a load balancer. Therefore, you configure TLS on the load balancer itself, and not on the portal. The procedure that you use to configure TLS is therefore dependent on the load balancer.</p>
+<p>However, if necessary, you can configure TLS on the web server that hosts the portal.&nbsp;</p>
+<p>See <a href="http://docs.apigee.com/node/15391">http://docs.apigee.com/node/15391</a> for an overview of using TLS on the portal.&nbsp;</p>
+<h2>For the portal running on Nginx</h2>
+<p>By default, a portal using the Nginx web server listens for HTTP requests on port 8079. If you enable TLS, then the portal listens only for HTTPS requests on 8079. That is, you can either configure the portal to listen for HTTP requests or HTTPS requests, but not both.</p>
+<p>You can also change the port number as described in <a href="http://docs.apigee.com/node/21171">http://docs.apigee.com/node/21171</a>.&nbsp;</p>
+<p>To configure TLS:</p>
 <ol>
-	<li>Obtain your SSL key and certificate.</li>
-	<li>Ensure that you install <span style="font-family:courier new,courier,monospace;">mod_ssl</span> as described in <a href="http://docs.apigee.com/node/21166">http://docs.apigee.com/node/21166</a> by using the command:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; yum install mod_ssl</span></li>
-	<li>Update <span style="font-family:courier new,courier,monospace;">/etc/httpd/conf/httpd.conf</span>:
-		<ol style="list-style: lower-alpha outside">
-			<li>If you want to disable HTTP access on port 80, search for '<span style="font-family:courier new,courier,monospace;">Listen 80</span>' and comment it out.</li>
-			<li>Add the following lines at the end of file:<br />
-				<span style="font-family:courier new,courier,monospace;">LoadModule ssl_module modules/mod_ssl.so<br />
-				Listen 443</span></li>
-		</ol>
-	</li>
-	<li>Setup a virtual host by editing <span style="font-family:courier new,courier,monospace;">/etc/httpd/conf/vhosts/devportal.conf</span> to add the following:<br />
-		<span style="font-family:courier new,courier,monospace;">&lt;VirtualHost *:443&gt;<br />
-		&nbsp; ServerName localhost<br />
-		&nbsp; SSLEngine on<br />
-		&nbsp; SSLCertificateFile "&lt;public cert path&gt;"<br />
-		&nbsp; SSLCertificateKeyFile "&lt;private key path&gt;"<br />
-		&nbsp; DocumentRoot "/var/www/html"<br />
-		&nbsp; &lt;Directory "/var/www/html"&gt;<br />
-		&nbsp; &nbsp; Options Indexes FollowSymLinks MultiViews<br />
-		&nbsp; &nbsp; AllowOverride All<br />
-		&nbsp; &nbsp; Order allow,deny<br />
-		&nbsp; &nbsp; Allow from all<br />
-		&nbsp; &lt;/Directory&gt;<br />
-		&lt;/VirtualHost&gt;</span><br />
+	<li>Obtain your TLS key and certificate. For this example, the cert is in a file named&nbsp;server.crt and the key is in&nbsp;server.key.</li>
+	<li>Upload your cert and key to the portal server to&nbsp;<span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/nginx/ssl</span>.</li>
+	<li>Change the owner of the cert and key to the "apigee" user:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;chown apigee:apigee /opt/apigee/customer/nginx/ssl/server.crt<br />
+		&gt;&nbsp;chown apigee:apigee /opt/apigee/customer/nginx/ssl/server.key</span></li>
+	<li>Open<span style="font-family:courier new,courier,monospace;"> /opt/apigee/customer/application/drupal-devportal.properties</span> in an editor. If the file and directory does not exist, create it.&nbsp;</li>
+	<li>Set the following properties in <span style="font-family:courier new,courier,monospace;">drupal-devportal.properties</span>:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_devportal_ssl_block=ssl on; ssl_certificate <strong>/opt/apigee/customer/nginx/ssl/server.crt</strong>; <strong>ssl_certificate_key /opt/apigee/customer/nginx/ssl/server.key</strong>;</span>
+		<div><span style="font-family:courier new,courier,monospace;">conf_devportal_http_https_redirect=</span></div>
+		<div><span style="font-family:courier new,courier,monospace;">conf_devportal_fastcgi_https=fastcgi_param HTTPS on; fastcgi_param HTTP_SCHEME https;</span></div>
 		<br />
-		Also, comment out the existing <span style="font-family:courier new,courier,monospace;">VirtualHost</span> definition if you do not want to use HTTP.</li>
-	<li>Because SSL is configured in <span style="font-family:courier new,courier,monospace;">httpd.conf</span>, you do not need <span style="font-family:courier new,courier,monospace;">ssl.conf</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.orig</span></li>
-	<li>Restart Apache:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; service httpd restart</span><br />
-		You might be prompted to enter the passphrase for your key file.&nbsp;</li>
+		<font face="arial, helvetica, sans-serif">For the&nbsp;</font><span style="font-family:courier new,courier,monospace;">conf_devportal_ssl_block</span>, specify the path to the cert and key files. You do not have to modify the other properties.</li>
+	<li>Save the file.</li>
+	<li>Restart the portal:<br />
+		/<span style="font-family:courier new,courier,monospace;">opt/apigee/apigee-service/bin/apigee-service apigee-drupal-devportal restart</span></li>
 </ol>
-<p>You should be able to access the portal over SSL.</p>
+<p>You should be able to access the portal over TLS.</p>

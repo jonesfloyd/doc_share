@@ -1,237 +1,69 @@
 <h1> Apigee Monitoring Dashboard Beta Overview </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p>The Beta release of the Edge monitoring dashboard helps you understand the health of various components (Routers, Message Processors, ZooKeeper, Cassandra) as well as HTTP error codes for various orgs and environments in your deployment. You can also snapshot these details and share them with Apigee if required for resolving support incidents.</p>
+<h2>Before using the dashboard</h2>
 <div class="note">
-	<p>If you performed an All-In-One (AIO) Edge installation, where you install all Edge components on a single node, then you already installed the RPM files for the dashboard. Therefore, you can skip step 1, the install step, of the procedures below and proceed directly to step 2.&nbsp;</p>
+	<p>Before you can install and use the Apigee Monitoring Dashboard, you must complete the <a href="http://docs.apigee.com/sites/docs/files/ApigeeEvaluationAgreeement_0.pdf">Apigee Monitoring Dashboard Evaluation Agreement (PDF - right-click the link and select Save Link As)</a> and return it to Apigee by emailing it to <a href="mailto:orders@apigee.com">orders@apigee.com</a>.</p>
 </div>
-<h2>System requirements</h2>
-<p>You must install <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> on all the Edge nodes to collect dashboard data. Therefore, the system requirements for <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> are the same as for the Edge node on which you are installing it.</p>
-<p>You can install <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> on a separate node, or reuse one of the existing Edge nodes such as the Management Server or Edge UI node.&nbsp;</p>
-<p>For <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span>, you can install it on an existing Edge node, such as the Management Server node or the Edge UI node, with no change to the system requirements.</p>
-<p>If you decide to install <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> on its own node for performance reasons, then the node should have the following requirements:</p>
-<ul>
-	<li>2 core CPU</li>
-	<li>4 GB RAM</li>
-	<li>250GB disk space (monitoring data purged after 1 month)</li>
-	<li>1000 or more IOPS</li>
-</ul>
-<p>See the <a href="https://docs.influxdata.com/influxdb/v0.11/guides/hardware_sizing/#general-hardware-guidelines-for-clusters">InfluxData doc</a> for more information.</p>
-<h2>Port requirements for apigee-influxdb</h2>
-<p>Ports 8086 and 8183 must be open on the ap<span style="font-family:courier new,courier,monospace;">igee-influxdb</span> data nodes for access by the node running <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> and <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>.</p>
-<h2>Config files for installing dashboard components</h2>
-<p>To install the <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> and <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> components, you pass a config file to the <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility. Store these files in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make them owned by the 'apigee' user.&nbsp;</p>
-<h3>Configuration parameters for apigee-telegraf</h3>
-<p>Set these properties in a text file that you pass to the <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> <span style="font-family:courier new,courier,monospace;">setup</span> command. For example, set them in a text file named <span style="font-family:courier new,courier,monospace;">sa_telegraf.txt</span>:</p>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				<p><strong>Property</strong></p>
-			</th>
-			<th>
-				<p><strong>Description</strong></p>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				<p><span style="font-family:courier new,courier,monospace;">INFLUXDB_URL</span></p>
-			</td>
-			<td>
-				<p>Specify the URL of the apigee-influxdb node, including port 8086.</p>
-				<p>For example:</p>
-				<pre>
-http://192.168.0.1:8086</pre>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<h3>Configuration Parameters for apigee-grafana</h3>
-<p>Set these properties in a text file that you pass to the <span style="font-family:courier new,courier,monospace;">apigee-grafana setup</span> command. For example, set them in a text file named <span style="font-family:courier new,courier,monospace;">sa_grafana.txt</span>:</p>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				<p><strong>Property</strong></p>
-			</th>
-			<th>
-				<p><strong>Description</strong></p>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				<p><span style="font-family:courier new,courier,monospace;">INFLUXDB_HOST</span></p>
-			</td>
-			<td>
-				<p>Specify the IP address or DNS name of the InfluxDB node.</p>
-				<p>For Example: &nbsp;</p>
-				<pre>
-192.168.0.1</pre>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p><span style="font-family:courier new,courier,monospace;">INFLUXDB_PORT</span></p>
-			</td>
-			<td>
-				<p>InfluxDB API port used by Grafana datasource. Specify 8086.</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p><span style="font-family:courier new,courier,monospace;">GRAFANA_USERNAME</span></p>
-			</td>
-			<td>
-				<p>Grafana username for logging in to the dashboard UI.</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p><span style="font-family:courier new,courier,monospace;">GRAFANA_PASSWORD</span></p>
-			</td>
-			<td>
-				<p>Grafana password for logging in to the dashboard UI.</p>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<h2>Installation instructions</h2>
-<p>Follow the instructions below to install the dashboard components in this sequence:</p>
-<ul>
-	<li><span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> (on a central node)</li>
-	<li><span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> (on each node)</li>
-	<li><span style="font-family:courier new,courier,monospace;">apigee-grafana</span> (on a central server)</li>
-</ul>
-<div class="note">
-	<p>You must have installed the apigee-service utility on an Edge node to install the dashboard components. For more information on the <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility, including installation instructions for the utility, see <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</p>
-</div>
-<h3>Install apigee-influxdb on a single Edge node or standalone node</h3>
-<p>On a standalone node, or an Edge node running the Management Server or Edge UI:</p>
-<ol>
-	<li>Install <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-influxdb install</span></li>
-	<li>Configure the <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> database:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-influxdb setup</span></li>
-</ol>
-<h3>Install apigee-telegraf on every Edge node</h3>
-<p>On every node of your Edge installation:</p>
-<ol>
-	<li>On your first Edge node, install <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf install</span></li>
-	<li>Create a config file for <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>. Typically, you store this file in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make it owned by the 'apigee' user.&nbsp;<br />
-		<br />
-		Set the following property in the file to specify the URL of the apigee-influxdb node, including port 8086:<br />
-		<span style="font-family:courier new,courier,monospace;">INFLUXDB_URL=http://influx_IP:8086</span></li>
-	<li>Change the owner to 'apigee':<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/customer/application/sa_telegraf.txt</span></li>
-	<li>Configure <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf setup -f /opt/apigee/customer/application/sa_telegraf.txt</span></li>
-	<li>Restart <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf restart</span></li>
-	<li>Repeat this process on all Edge nodes.</li>
-</ol>
-<h3>Install apigee-grafana on a single Edge node</h3>
-<p>On a single node of your Edge installation, such as the Edge UI node:</p>
-<ol>
-	<li>On your first Edge node, install <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-grafana install</span></li>
-	<li>Create a config file for <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. Typically, you store this file in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make it owned by the 'apigee' user.&nbsp;<br />
-		<br />
-		Set the following properties in the file. These properties are described above:<br />
-		<span style="font-family:courier new,courier,monospace;">INFLUXDB_HOST=192.168.56.101<br />
-		INFLUXDB_PORT=8086<br />
-		GRAFANA_USERNAME=admin<br />
-		GRAFANA_PASSWORD=admin</span></li>
-	<li>Change the owner to 'apigee':<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/customer/application/sa_grafana.txt</span></li>
-	<li>Configure <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> using the config file:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-grafana setup -f /opt/apigee/customer/application/sa_grafana.txt</span></li>
-	<li>Restart <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-grafana restart</span></li>
-</ol>
-<p>To access the dashboard, open the following URL in a browser:</p>
+<h2>Dashboard display</h2>
+<p>After installing the dashboard, access it by opening the following URL in a browser:</p>
 <pre>
 http://<em><strong>grafana_IP_or_DNS</strong></em>:3000</pre>
-<p>Log in by using the credentials you specified in the config file for <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. In the example shown above the username/password is admin/admin.</p>
-<h2>Troubleshooting installation</h2>
-<p>If you do not see data appearing in the dashboard, use the following procedure to troubleshoot your installation:</p>
-<ol>
-	<li>To ensure <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> is collecting the data
-		<ol style="list-style: lower-alpha outside">
-			<li>Run the <span style="font-family:courier new,courier,monospace;">apigee-service apigee-telegraf setup</span>, it’s idempotent, check for errors, missing dependencies and resolve them.</li>
-			<li>Restart <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> and check <span style="font-family:courier new,courier,monospace;">/opt/apigee/var/log/apigee-telegraf/apigee-telegraf.log</span> for any errors</li>
-		</ol>
-	</li>
-	<li>To ensure <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> is receiving data:
-		<ol style="list-style: lower-alpha outside">
-			<li>Make sure following TCP ports are open on <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> data nodes: 8086 and 8183.</li>
-			<li>Use the following URL to open the influxdb UI in a browser:&nbsp;<br />
-				<span style="font-family:courier new,courier,monospace;">http://<em><strong>influxdb_IP_or_DNS</strong></em>:8183</span>
-				<ol>
-					<li>In the Query field, enter "show databases".&nbsp;<br />
-						Ensure that the following databases were created: <span style="font-family:courier new,courier,monospace;">system, application, events, _internal</span>.</li>
-					<li>In the Query field, enter "show servers”.&nbsp;<br />
-						Ensure that you see the <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> nodes are listed.</li>
-				</ol>
-			</li>
-		</ol>
-	</li>
-	<li>Check the data sources to the dashboard:
-		<ol style="list-style: lower-alpha outside">
-			<li>Select <strong>Data Sources</strong> in the main menu. You should see icons for three data sources displayed.</li>
-			<li>For each data source, select the icon.</li>
-			<li>In the details page for the data source, select the <strong>Save &amp; Test</strong> button.&nbsp;</li>
-			<li>If the data source is configured correctly, you should see a message in the form:<br />
-				<strong>Success<br />
-				Data source is working&nbsp;</strong></li>
-		</ol>
-	</li>
-</ol>
-<h2>Updating the Beta monitoring dashboard</h2>
-<p>Use one of the two procedures below based on the Edge version that you are upgrading from:</p>
+<p>where <em><strong>grafana_IP_or_DNS</strong></em> is the IP or DNS name of the node running the Apigee <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> component. You will be prompted to enter the administrator's username:password as defined when you installed <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. The default values from the installation instructions below are <span style="font-family:courier new,courier,monospace;">admin:admin</span>.</p>
+<p>After you log in, you see the following screen:</p>
+<p><img alt="" src="../html/sites/docs/files/dashboard_v1.png" style="width: 600px; height: 313px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>Select the logo in the upper-left corner to open the menu bar. In the menu bar, select <strong>Pin</strong> to keep the bar open.</p>
+<p>In the menu bar, select:</p>
 <ul>
-	<li>4.16.09 and 4.17.01 use the same procedure</li>
-	<li>4.16.05 requires you to uninstall <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> as part of the update.</li>
+	<li><strong>admin Main Org</strong>. to set administrator details, such a password and email address.</li>
+	<li><strong>Dashboards &gt; Home</strong> to open the screen shown above. Then select <strong>Apigee Cloud</strong>&nbsp;or <strong>Cassandra Dashboard</strong> to see the dashboard.</li>
+	<li><strong>Data Sources</strong> to see the data sources for the apigee-grafana component. Select each data source, and then select the Save &amp; Test button to validate the connection.&nbsp;</li>
+	<li><strong>Plugins</strong> to display the list of installed plugins.&nbsp;</li>
+	<li><strong>Admin</strong> to set information about Grafana.</li>
 </ul>
-<h3>Update from version 4.16.09 or 4.17.01</h3>
-<p>If you installed the Beta version of the Apigee Monitoring Dashboard in 4.16.09 or 4.17.01, you can update it to the Beta version for 4.17.05.</p>
-<p>To update the Beta monitoring dashboard:</p>
+<p>After selecting&nbsp;<strong>Dashboards &gt; Home,</strong>&nbsp;selecting A<strong>pigee Cloud</strong> opens the dashboard display shown below:</p>
+<p><img alt="" src="../html/sites/docs/files/cloud_db_v1.png" style="width: 600px; height: 472px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>On this screen, you can see information about the:</p>
+<ul>
+	<li><strong>Router</strong>: status, traffic, errors, load, and more.</li>
+	<li><strong>Message Processor</strong>: status and health, traffic, target latency, target response codes, and more.</li>
+	<li><strong>Node metrics</strong>: CPU usage, disk space, heap usage, and more.</li>
+</ul>
+<p>Notice the buttons across the top of the charts:</p>
+<ul>
+	<li><strong>Color</strong>: set to <strong>All</strong>. <strong>All</strong> is the only supported option.</li>
+	<li><strong>Org</strong>: set to the name of your organization.</li>
+	<li><strong>Env</strong>: Set to the name of an environment in the organization.</li>
+	<li><strong>MPPod</strong> and <strong>RTPod</strong>: set to the pod name of the Message Processors and Routers. By default it is "gateway" unless you changed it at install time.&nbsp;</li>
+	<li><strong>apigee-service</strong>: check to display information about executions of the <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility.</li>
+</ul>
+<p>Some of the charts show information for individual API proxies and all API proxies together. For example, in the chart below, you can see a line for all proxies, identified by the green line for 1<span style="font-family:courier new,courier,monospace;">92.168.56.103()</span>, the IP address of the Message Processor:</p>
+<p><img alt="" src="../html/sites/docs/files/chart_v1.png" style="width: 332px; height: 285px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p>There are also individual lines in the chart for different API proxies named <span style="font-family:courier new,courier,monospace;">getUsers</span> and <span style="font-family:courier new,courier,monospace;">testAX</span>, identified in the chart as the orange line for <span style="font-family:courier new,courier,monospace;">192.168.56.103(getUsers)</span> and the blue line for <span style="font-family:courier new,courier,monospace;">192.168.56.103(testax)</span>.</p>
+<p>By default, the dashboard shows information for the last 5 minutes. Select the <strong>Today</strong> at the top-right of the dashboard to select a different interval.</p>
+<h2>Sending a dashboard snapshot to Apigee</h2>
+<p>To help Apigee diagnose and debug an issue, you can send a snapshot of your dashboard to Apigee Support. Apigee can then inspect your dashboard to help determine the cause of the issue.</p>
+<p>To send a dashboard snapshot to Apigee:</p>
 <ol>
-	<li>Update Edge to 4.17.05 as described at <a href="http://docs.apigee.com/node/23216">http://docs.apigee.com/node/23216</a> and <a href="http://docs.apigee.com/node/23136">http://docs.apigee.com/node/23136</a>.</li>
-	<li>Update <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> on the Management Server node:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c pp -f <em><strong>configfile</strong></em></span><br />
-		<br />
-		where <em><strong>configFile</strong></em> is the config&nbsp;file you used to install <span style="font-family:courier new,courier,monospace;">apigee-influx</span>.&nbsp;<br />
-		<br />
-		If you also installed <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>&nbsp;on the Management Server node, then this step also updates&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. Otherwise, update <span style="font-family:courier new,courier,monospace;">apigee-granfana</span> as shown in the following step.</li>
-	<li><strong>If you did not install&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-grafana</span>&nbsp;on the Management Server node</strong>, update <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> on the node where you installed it:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;/opt/apigee/apigee-setup/bin/update.sh -c&nbsp;pp&nbsp;-f&nbsp;<em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configfile</strong></em></span></li>
-	<li>Update <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> on node 1:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf update<br />
-		&gt; /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-telegraf&nbsp;setup -f <em><strong>configFile</strong></em><br />
-		&gt; /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-telegraf&nbsp;restart</span></li>
-	<li>Repeat step 4 for every node.</li>
+	<li>Select the <strong>Share Dashboard</strong> icon at the top of the dashboard (highlighted in the red box &nbsp;below):<br />
+		<img alt="" src="../html/sites/docs/files/share_db_v1.png" style="width: 416px; height: 44px; border-width: 1px; border-style: solid; margin: 15px;" /></li>
+	<li>In the pop-up window, select <strong>Snapshot Sharing</strong>.</li>
+	<li>Leave all fields as they are, and select the <strong>Publish to snapshot.apigee.net</strong> button.</li>
+	<li>A pop-up window appears containing a link. Copy that link and send it to Apigee.</li>
 </ol>
-<h3>Update from version 4.16.05&nbsp;</h3>
-<p>The 4.16.05 version of the dashboard used <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> instead of <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>. As part of updating to 4.17.05 you uninstall <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> and install <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>.</p>
-<p>To update the Beta monitoring dashboard:</p>
-<ol>
-	<li>Update Edge to 4.17.05 as described at <a href="http://docs.apigee.com/node/23216">http://docs.apigee.com/node/23216</a> and <a href="http://docs.apigee.com/node/23136">http://docs.apigee.com/node/23136</a>.</li>
-	<li>Update <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> on the Management Server node:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c pp -f <em><strong>configfile</strong></em></span><br />
+<h2>Dashboard components</h2>
+<p>The dashboard relies on several components that you install after installing Edge:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">apigee-telegraf</span><br />
+		A wrapper component for <a href="https://influxdata.com/time-series-platform/telegraf/">telegraf</a>, that gathers metrics from the system and running components and pushes them to the <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> <a href="https://en.wikipedia.org/wiki/Time_series_database">Time Series DataBase (TSDB)</a>.&nbsp;<br />
 		<br />
-		where <em><strong>configFile</strong></em> is the config&nbsp;file you used to install <span style="font-family:courier new,courier,monospace;">apigee-influx</span>.&nbsp;<br />
+		Install this component on all Edge runtime and data components such as the Edge Message Processor, Router, Postgres server, Cassandra, and Zookeeper nodes.</li>
+	<li><span style="font-family:courier new,courier,monospace;">apigee-influxdb</span><br />
+		A wrapper component for <a href="https://influxdb.com">influxdb</a>, that stores the metrics data and exposes it through an API so the data can be rendered in a UI by using <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>.&nbsp;<br />
 		<br />
-		If you also installed <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>&nbsp;on the Management Server node, then this step also updates&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. Otherwise, update <span style="font-family:courier new,courier,monospace;">apigee-granfana</span> as shown in the following step.</li>
-	<li><strong>If you did not install&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-grafana</span>&nbsp;on the Management Server node</strong>, update <span style="font-family:courier new,courier,monospace;">apigee-grafana</span> on the node where you installed it:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;/opt/apigee/apigee-setup/bin/update.sh -c&nbsp;pp&nbsp;-f&nbsp;<em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configfile</strong></em></span></li>
-	<li>Install&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> on node 1:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-collectd stop<br />
-		&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf install<br />
-		&gt; /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-telegraf&nbsp;setup -f <em><strong>configFile</strong></em><br />
-		&gt; /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-telegraf&nbsp;restart<br />
-		&gt; /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-collectd&nbsp;uninstall</span></li>
-	<li>Repeat step 4 for every node.</li>
-</ol>
+		Install this component centrally so it can be accessed by all the <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span> components running on individual Edge nodes.</li>
+	<li><span style="font-family:courier new,courier,monospace;">apigee-grafana</span><br />
+		A wrapper component on top of <a href="http://grafana.org/">grafana</a>, that provides a powerful and elegant way to create, explore, and share dashboards and data with your team and Apigee for troubleshooting.<br />
+		<br />
+		Install this component on the node where you want to view the dashboard.</li>
+</ul>

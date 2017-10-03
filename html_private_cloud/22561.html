@@ -1,39 +1,38 @@
 <h1> Uploading API Traffic Data to Apigee - Beta Release </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>All Edge for Private Cloud customers are required to submit to Apigee statistics about API proxy traffic. Apigee recommends that customers upload that information once a day, possibly by creating a cron job.&nbsp;</p>
 <p>You must submit the data for your production API deployments, but not for APIs in development or testing deployments. In most Edge installations, you will define specific organizations or environments for your production APIs. The data that you submit is only for those production organizations and environments.</p>
 <p>To assist in uploading this data, Apigee provides the Beta release of the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command-line utility. This utility &nbsp;sends the API call volume report back to Apigee. Every Edge for the Private Cloud installation can use this utility to retrieve and report traffic data to Apigee.</p>
 <div class="note">
-	<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility requires an external internet connection to upload data to Apigee. If you do not have a machine with external internet connection, you can use the Edge API to gather statistics, transfer that data to a machine with internet access, and then upload the data to Apigee. See <em>Manually uploading data to Apigee</em>&nbsp;below for more.</p>
+	<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility requires an external internet connection to upload data to Apigee. If you do not have a machine with external internet connection, you can use the Edge API to gather statistics, transfer that data to a machine with internet access, and then upload the data to Apigee. See <em><a href="#manuallyuploadingdatatoapigee">Manually uploading data to Apigee</a></em>&nbsp;below for more.</p>
 </div>
-<p>For additional information on the process of uploading traffic data to Apigee, see the <a href="https://www.npmjs.com/package/apigee-analytics-collector#faq">FAQ</a>.</p>
-<div class="video">
-	<p>Watch a short video to see the tool in action.</p>
-	<iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/wPV15S5azZs" width="854"></iframe></div>
+<h2>Accessing the data uploaded by apigee-analytics-collector</h2>
+<p>After uploading&nbsp;data with the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility, you can view it in <a href="https://360.apigee.com">Apigee 360</a>.</p>
+<p>To view the data, log in to Apigee 360 and then select the <strong>Usage</strong> option. The <strong>Usage</strong> page displays a usage graph and a table of usage data for each or your Edge organizations. &nbsp;</p>
 <h2>Installing apigee-analytics-collector</h2>
-<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility is a Node.js module that you install by using <span style="font-family:courier new,courier,monospace;">npm</span>.</p>
-<h3>Installation requirements</h3>
-<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility requires:</p>
-<ul>
-	<li>npm 2.x or later</li>
-	<li>Node.js 4.x.</li>
-</ul>
+<p>The <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility is an RPM that you install by using the&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-service</span>&nbsp;utility.</p>
 <h3>Where to install</h3>
 <p>The node on which you install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility can be any node that can access the Edge management API on the Edge Management Server. You can install it directly on the Management Server, on another node of the Edge installation, or on a separate node as long as that node can make API requests to the Management Server.&nbsp;</p>
 <h3>Internet access requirements</h3>
 <p>Install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility on a machine with external internet access. Then the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility can upload data directly to Apigee.</p>
-<p>If there is no node with both access to the Edge management API on the Edge Management Server and with external internet access, then you can use the Edge management API to save the traffic data locally. You must then transfer the data to a machine with internet access for upload to Apigee. In this scenario, you do not need to use the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility. See <em>Manually uploading data to Apigee</em>&nbsp;below for more.</p>
+<p>If there is no node with both access to the Edge management API on the Edge Management Server and with external internet access, then you can use the Edge management API to save the traffic data locally. You must then transfer the data to a machine with internet access for upload to Apigee. In this scenario, you do not need to use the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility. See <a href="#manuallyuploadingdatatoapigee"><em>Manually uploading data to Apigee</em></a>&nbsp;below for more.</p>
 <h3>Installation&nbsp;</h3>
-<p>Use the following command to install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility:</p>
+<p>Use the following command to install the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility. Because you are installing an RPM file, this command must be run by the root user or by a user that has full sudo access. For full sudo access, that means the user has sudo access to perform the same operations as root.</p>
 <pre>
-&gt; npm install apigee-analytics-collector -g</pre>
-<div class="note">
-	<p>The <span style="font-family:courier new,courier,monospace;">-g</span> option places the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command in your <span style="font-family:courier new,courier,monospace;">PATH</span>. On some machines, you might have to use <span style="font-family:courier new,courier,monospace;">sudo</span> with the <span style="font-family:courier new,courier,monospace;">-g</span> option. Typically, the <span style="font-family:courier new,courier,monospace;">-g</span> option places modules in <span style="font-family:courier new,courier,monospace;">/usr/local/lib/node_modules/apigee-analytics-cli</span>. If you omit <span style="font-family:courier new,courier,monospace;">-g</span>, then you must add&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-analytics-cli</span>&nbsp; to your <span style="font-family:courier new,courier,monospace;">PATH</span> manually.&nbsp;</p>
-</div>
-<h2>Running apigee-analytics-collector&nbsp;</h2>
+&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector install&nbsp;</pre>
+<h2>Running apigee-analytics-collector</h2>
 <p>This section describes how to run the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility.&nbsp;</p>
+<h3>Configuring a user to run apigee-analytics-collector</h3>
+<p>You must run <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span>&nbsp;as a non-root user. This user must have full sudo access to the "apigee" user.</p>
+<p>To configure a user to have full sudo access to the "apigee" user, use the "visudo" command to edit the sudoers file to add:</p>
+<pre>
+<em><strong>analyticsUser</strong></em>        ALL=(apigee)      NOPASSWD: ALL</pre>
+<p>where <em><strong>analyticsUser</strong></em> is the username of the person running the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility.</p>
+<p>After installing the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility and configuring the user, you can test the utility by running the help command for the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/?apigee-service apigee-analytics-collector export traffic --help</pre>
 <h3>Required information to run apigee-analytics-collector</h3>
-<p>You need the following information to run the apigee-analytics-collector command and to forward data to Apigee:</p>
+<p>You need the following information to run the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command and to forward data to Apigee:</p>
 <ul>
 	<li><strong>apigee_mgmt_api_uri</strong>: The base URL of the Edge API on your Management Server. This URL is typically in the form:<br />
 		<span style="font-family:courier new,courier,monospace;">http://<em><strong>ms_IP</strong></em>:8080/v1</span><br />
@@ -49,9 +48,9 @@
 	<li><strong>apigee_analytics_client_id</strong> and <strong>apigee_analytics_secret</strong>: Your credentials for uploading data to Apigee. Please submit a ticket with <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a> to obtain <strong>apigee_analytics_client_id</strong> and <strong>apigee_analytics_secret</strong>.</li>
 </ul>
 <h3>Example commands</h3>
-<p>Shown below is an example command to retrieve traffic data for all organizations and environments in the Edge installation and upload that data to Apigee:</p>
+<p>Shown below is an example command to retrieve traffic data for all organizations and environments in the Edge installation and upload that data to Apigee. Notice how you use&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-service</span>&nbsp;to run the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;command:</p>
 <pre>
-&gt; apigee-analytics-collector export traffic \
+&gt; ?/opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector export traffic \
 --<strong>apigee_mgmt_api_uri</strong> http://192.168.56.103:8080/v1 \
 --<strong>apigee_mgmt_api_email</strong> $ae_username \
 --<strong>apigee_mgmt_api_password</strong> $ae_password \
@@ -93,7 +92,7 @@
 </ul>
 <p>For example, to specify only the production organizations and environments, use the <span style="font-family:courier new,courier,monospace;">-i</span> (or -<span style="font-family:courier new,courier,monospace;">-include_orgs</span>) and <span style="font-family:courier new,courier,monospace;">-n</span> (or <span style="font-family:courier new,courier,monospace;">--include_envs</span>) options:</p>
 <pre>
-&gt; apigee-analytics-collector export traffic <strong>-i myOrg -n prod</strong> \
+&gt; ?/opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector export traffic <strong>-i myOrg -n prod</strong> \
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -102,7 +101,7 @@
 <p>In this example, you only collect data from the prod environment of <strong>myOrg</strong>.&nbsp;</p>
 <p>To dump the data to a screen to examine it before sending it to Apigee, use the <span style="font-family:courier new,courier,monospace;">-S</span> option:</p>
 <pre>
-&gt; apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S </strong>\
+&gt; ?/opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S </strong>\
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -111,7 +110,7 @@
 <p>The <span style="font-family:courier new,courier,monospace;">-S</span> option omits the data upload to Apigee. You can then rerun the command without the <span style="font-family:courier new,courier,monospace;">-S</span> option to send the data to Apigee.</p>
 <p>One reason to use the <span style="font-family:courier new,courier,monospace;">-S</span> option is so that you can display different types of data locally. Apigee only requires that you upload API traffic data, but the <span style="font-family:courier new,courier,monospace;">-D</span> option lets you display data about API products, developers, apps, or API proxies. The example below uses the <span style="font-family:courier new,courier,monospace;">-D</span> and <span style="font-family:courier new,courier,monospace;">-S</span> options to display developer data locally:</p>
 <pre>
-&gt; apigee-analytics-collector export traffic <strong>-i myOrg -n prod -S -D devs</strong> \
+&gt; ?/opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic <strong>-i myOrg -n prod -S -D devs</strong> \
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -119,7 +118,7 @@
 --apigee_analytics_secret $apigee_analytics_secret </pre>
 <p>Include the <span style="font-family:courier new,courier,monospace;">-v</span> option to get verbose output, and the <span style="font-family:courier new,courier,monospace;">-R</span> option to see the curl commands generated by <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span>:</p>
 <pre>
- &gt; apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S -R -v </strong>\
+ &gt; ?/opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S -R -v </strong>\
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -127,7 +126,7 @@
 --apigee_analytics_secret $apigee_analytics_secret </pre>
 <p>The next section contains a complete list of command-line options.</p>
 <h3>Command parameters</h3>
-<p>The following table lists the complete set of options to the apigee-analytics-collector utility:</p>
+<p>The following table lists the complete set of options to the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility:</p>
 <table class="table">
 	<thead>
 		<tr>
@@ -316,7 +315,7 @@ curl -X GET -u <em><strong>apigee_mgmt_api_email:apigee_mgmt_api_password</stron
 </ul>
 <p>For example, to gather stats for a 24 hour period, use the following command:</p>
 <pre>
-curl -X GET -u a<em><strong>pigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> \
+curl -X GET -u a<em><strong>pigee_mgmt_api_email</strong></em><em><strong>:apigee_mgmt_api_password</strong></em> \
 "http://192.168.56.103:8080/v1/organizations/<strong>myOrg</strong>/environments/<strong>prod</strong>/stats/?select=sum(message_count)&amp;timeRange=<strong>08/29/2016%2000:00~08/30/2016%2000:00</strong>"</pre>
 <p>You should see a response in the form:</p>
 <pre>

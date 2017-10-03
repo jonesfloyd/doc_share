@@ -1,15 +1,73 @@
 <h1> How to Monitor </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>This document describes the monitoring techniques of components supported by an on-premise deployment of Apigee Edge.&nbsp;</p>
+<h2>Enabling JMX</h2>
+<p>JMX is enabled by default for Cassandra, and disabled by default for all other Edge components. You must therefore enable JMX individually for each component.</p>
+<p>Each component supports JMX on a different port. The following table lists the JMX port and the file that you modify to enable JMX on that port:</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Component</th>
+			<th>JMX Port</th>
+			<th>File</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Management Server</td>
+			<td>1099</td>
+			<td>/opt/apigee/edge-management-server/bin/start&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Message Processor</td>
+			<td>1101</td>
+			<td>/opt/apigee/edge-mesage-processor/bin/start&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Qpid</td>
+			<td>1102</td>
+			<td>/opt/apigee/edge-qpid-server/bin/start&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Postgres</td>
+			<td>1103</td>
+			<td>/opt/apigee/edge-postgres-server/bin/start&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<p>For example, to enable JMX on the Management Server, open /opt/apigee/edge-management-server/bin/start in an editor. You should see the following line used to start the Management Server:</p>
+<pre>
+exec $JAVA -classpath "$classpath" -Xms$min_mem -Xmx$max_mem $xx_opts -Djava.security.auth.login.config=$conf_path/jaas.config 
+-Dinstallation.dir=$install_dir $sys_props -Dconf.dir=$conf_path 
+-Ddata.dir=$data_dir $* $debug_options com.apigee.kernel.MicroKernel</pre>
+<p>Edit this line to add the following:</p>
+<pre>
+-Dcom.sun.management.jmxremote <strong>-Dcom.sun.management.jmxremote.port=1099</strong> 
+-Dcom.sun.management.jmxremote.local.only=false  
+-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false </pre>
+<p>Note that this line specifies the JMX port number as 1099 for the Management Server. Set the port number for each component as defined in the table above. For example:</p>
+<pre>
+exec $JAVA -classpath "$classpath" -Xms$min_mem -Xmx$max_mem $xx_opts 
+-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 
+-Dcom.sun.management.jmxremote.local.only=false  
+-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false 
+-Djava.security.auth.login.config=$conf_path/jaas.config 
+-Dinstallation.dir=$install_dir $sys_props -Dconf.dir=$conf_path -Ddata.dir=$data_dir $* $debug_options com.apigee.kernel.MicroKernel</pre>
+<p>Save the file and then restart the component. For example to restart the Management Server:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/?apigee-service edge-management-server restart</pre>
 <h2>Enabling JMX authentication and setting the JMX password</h2>
 <p>The monitoring process for the Management Server, Message Processor, Qpid, and Postgres all use JMX. JMX is enabled by default and remote JMX access does not require a password.&nbsp;</p>
 <p>To enable JMX authentication, each component has a <span style="font-family:courier new,courier,monospace;">change_jmx_auth</span> action that you use to enable/disable authentication and to set the JMX credentials.</p>
+<div class="note">
+	<p>To enable JMX authentication for Cassandra, see <a href="#apachecassandra">Apache Cassandra</a> below.&nbsp;</p>
+</div>
 <p>To enable JMX authentication, use the following command:</p>
 <pre>
-&gt;  /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service <em><strong>comp</strong></em> change_jmx_auth <em><strong>optionsOrConfigFile</strong></em></pre>
+&gt;  /opt/apigee/apigee-service/bin/apigee-service <em><strong>comp</strong></em> change_jmx_auth <em><strong>optionsOrConfigFile</strong></em></pre>
 <p>where:</p>
 <ul>
-	<li><em><strong>comp</strong></em> is either <span style="font-family:courier new,courier,monospace;">edge-management-server, edge-message-processor, edge-router, edge-qpid-server, <span style="font-family:arial,helvetica,sans-serif;">or</span> edge-postgres-server</span>.</li>
+	<li><em><strong>comp</strong></em> is either <span style="font-family:courier new,courier,monospace;">edge-management-server, edge-message-processor, edge-qpid-server, <span style="font-family:arial,helvetica,sans-serif;">or</span> edge-postgres-server</span>.</li>
 	<li>Options are:
 		<ul>
 			<li><span style="font-family:courier new,courier,monospace;">-u</span>: username</li>
@@ -27,14 +85,14 @@
 </ul>
 <p>For example, to use options on the command line:</p>
 <pre>
-&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -u foo -p bar -e y</pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -u foo -p bar -e y</pre>
 <p>If &nbsp;you have a config file:</p>
 <pre>
-&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -f <em><strong>configFile</strong></em></pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -f <em><strong>configFile</strong></em></pre>
 <p>If you are running Edge on multiple nodes, run this command on all nodes, specifying the same username and password.</p>
 <p>To later disable JMX authentication, use the command:</p>
 <pre>
-&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -e n</pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service edge-management-server change_jmx_auth -e n</pre>
 <h2>Management Server</h2>
 <h3>Using ?JConsole to monitor system health check and process information</h3>
 <p>Use JConsole (a JMX compliant tool) to manage and monitor health check and process statistics. Using JConsole, you can consume JMX statistics exposed by Management Server (or any server) and display them in a graphical interface. For more information on JConsole usage, see <a href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html">http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html</a>.</p>
@@ -83,16 +141,16 @@ service:jmx:rmi:///jndi/rmi://<em><strong>&lt;ip address&gt;</strong></em>:&lt;p
 <h3>Using Edge Application &nbsp;API checks</h3>
 <p>You can perform API check on the Management Server (or any server) by invoking the following CURL command:</p>
 <pre>
-curl http://<em><strong>&lt;host&gt;</strong></em>:8080/v1/servers/self/up</pre>
-<p>Where, <em><strong>&lt;host&gt;</strong></em> is the IP address of Management Server.&nbsp;</p>
+curl http://<em><strong>&lt;host&gt;</strong></em>:8080/v1/servers/self/up -H "Accept: application/json"</pre>
+<p>Where, <em><strong>&lt;host&gt;</strong></em> is the IP address of Management Server. &nbsp;You can specify the Accept type as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">application/json</span>&nbsp;or&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">application/xml</span>.</p>
 <p>This call returns the "true" and "false". If true, that means node is up and Java service is running.</p>
 <p>If you do not receive a HTTP 200 (OK) response, the Edge is unable to respond to port 8080 requests.&nbsp;</p>
 <h4>Troubleshooting</h4>
 <ol>
 	<li>Login to the server and run the following command:<br />
-		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server status</span></li>
+		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-service edge-management-server status</span></li>
 	<li>If the service is not running start the service:<br />
-		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server start</span></li>
+		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-service edge-management-server start</span></li>
 </ol>
 <h3>Using Edge Application – Users, organization and deployment checks</h3>
 <p>Management Server plays a vital role in holding all other parcels together in each on-premises installation. You can check for user, organization and deployment status on the management server by issuing the following commands:</p>
@@ -102,17 +160,17 @@ curl -u userEmail:password http://localhost:8080/v1/organizations
 curl -u userEmail:password http://localhost:8080/v1/organizations/orgname/deployments</pre>
 <p>The system should display "deployed" status for all calls. If these fail, do the following:</p>
 <ol>
-	<li>Check the Management Server logs (at <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/var/log/edge-management-server</span>) for any errors.</li>
+	<li>Check the Management Server logs (at <span style="font-family:courier new,courier,monospace;">opt/apigee/var/log/edge-management-server</span>) for any errors.</li>
 	<li>Make a call against Management Server to check whether it is functioning properly.&nbsp;</li>
 	<li>Remove the server from the ELB and then restart the Management Server.<br />
-		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-management-server restart</span></li>
+		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-service edge-management-server restart</span></li>
 </ol>
 <h2>Router</h2>
 <p>You can perform API check on the Router (or any server) by invoking the following CURL command:</p>
 <pre>
 curl http://&lt;host&gt;:8081/v1/servers/self/up</pre>
 <p>Where, host is the IP address of Router.&nbsp;</p>
-<p>This call returns the "true" and "false". If true, that means node is up and Java service is running.</p>
+<p>This call returns the "true" and "false". If true, that means the node is up and Router service is running.</p>
 <p>If you do not receive a HTTP 200 (OK) response, Edge is unable to respond to port 8081 requests.&nbsp;</p>
 <h3>Troubleshooting</h3>
 <ol>
@@ -120,65 +178,8 @@ curl http://&lt;host&gt;:8081/v1/servers/self/up</pre>
 		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router status</span></li>
 	<li>If the service is not running start the service<br />
 		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router start</span></li>
-	<li>If the service is running, test that it is functioning. You monitor the cluster status by checking the memberCount against the reachableCount and alert all the instances with 'memberCount != reachableCount'<br />
-		<span style="font-family:courier new,courier,monospace;">curl -v -u &lt;userEmail&gt;:&lt;password&gt; http://localhost:port/v1/cluster</span><br />
-		<br />
-		Where port – 8081 for Router and 8082 for Message Processor.&nbsp;The output of above CURL command is shown below:<br />
-		<span style="font-family:courier new,courier,monospace;">{<br />
-		&nbsp;"memberCount" : 12,<br />
-		&nbsp;"pod" : "rea1gw001",<br />
-		&nbsp;"reachableCount" : 12,<br />
-		&nbsp;"region" : "us-east-1",<br />
-		&nbsp;"types" : [ "management-server" ]<br />
-		* Connection #0 to host ms05apigee left intact<br />
-		* Closing connection #0<br />
-		}</span></li>
-	<li>If it is not functioning, run the following command to examine the failure or find the offending member.<br />
-		<span style="font-family:courier new,courier,monospace;">curl http://localhost:port/v1/cluster/members</span><br />
-		<br />
-		Where port – 8081 for Router and 8082 for Message Processor.&nbsp;The output of above CURL command will like this:<br />
-		<span style="font-family:courier new,courier,monospace;">{<br />
-		&nbsp; "lastChange" : 0,<br />
-		&nbsp; "latency" : 0,<br />
-		&nbsp; "state" : "CONNECTED",<br />
-		&nbsp; "uuid" : "9c4c8bde-0015-4dc5-82d2-59fb326c4074"<br />
-		}, {<br />
-		&nbsp; "address" : "/192.168.5.209:4526",<br />
-		&nbsp; "clusterType" : "router,message-processor",<br />
-		&nbsp; "lastChange" : 1350658037228,<br />
-		&nbsp; "latency" : 3,<br />
-		&nbsp; "pod" : "rea1gw001",<br />
-		&nbsp; "region" : "us-east-1",<br />
-		&nbsp; "serverType" : "message-processor",<br />
-		&nbsp; "state" : "CONNECTED",<br />
-		&nbsp; "uuid" : "f1c663a1-2bb8-469f-b5fd-69a5c5aa91c5"<br />
-		}, {<br />
-		&nbsp; "address" : "/192.168.5.29:4526",<br />
-		&nbsp; "clusterType" : "router,message-processor",<br />
-		&nbsp; "lastChange" : 1350623005057,<br />
-		&nbsp; "latency" : 1,<br />
-		&nbsp; "pod" : "rea1gw001",<br />
-		&nbsp; "region" : "us-east-1",<br />
-		&nbsp; "serverType" : "message-processor",<br />
-		&nbsp; "state" : " DISCONNECTED ",<br />
-		&nbsp; "uuid" : "4cfe932b-f644-4581-b1ae-df338af9c7ce"<br />
-		}, {<br />
-		&nbsp; "address" : "/192.168.4.182:4526",<br />
-		&nbsp; "clusterType" : "router,message-processor",<br />
-		&nbsp; "lastChange" : 1350657730535,<br />
-		&nbsp; "latency" : 1,<br />
-		&nbsp; "pod" : "rea1gw001",<br />
-		&nbsp; "region" : "us-east-1",<br />
-		&nbsp; "serverType" : "message-processor",<br />
-		&nbsp; "state" : "CONNECTED",<br />
-		&nbsp; "uuid" : "cba063d5-b8a4-409f-9e0b-f5d403e02091"<br />
-		}</span></li>
-	<li>Notice that the IP address 192.168.5.29 is disconnected. Restart the server<br />
-		<span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-router restart</span><br />
-		<br />
-		<strong>Note</strong>: If a Router has a disconnected state, remove the router from the ELB and then restart it.</li>
 	<li>After restart check that it is functioning<br />
-		<span style="font-family:courier new,courier,monospace;">curl -v http://localhost:<strong>port</strong>/v1/cluster</span><br />
+		<span style="font-family:courier new,courier,monospace;">curl -v http://localhost:<strong>port</strong>/v1/servers/self/up</span><br />
 		<br />
 		Where <strong>port</strong> is 8081 for Router and 8082 for Message Processor.</li>
 </ol>
@@ -292,11 +293,11 @@ service:jmx:rmi:///jndi/rmi://&lt;<em><strong>ip address</strong></em>&gt;:7199/
 <p>JMX is enabled by default for Cassandra and remote JMX access to Cassandra does not require a password.&nbsp;</p>
 <p>To enable JMX authentication to add a password:</p>
 <ol>
-	<li>Edit <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/customer/application/cassandra.properties</span>. If the file does not exist, create it.</li>
+	<li>Edit <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/cassandra.properties</span>. If the file does not exist, create it.</li>
 	<li>Add the following to the file:<br />
 		<span style="font-family:courier new,courier,monospace;">conf_cassandra-env_com.sun.management.jmxremote.authenticate=true</span></li>
 	<li>Save the file.</li>
-	<li>Copy the following files from your <span style="font-family:courier new,courier,monospace;">$JAVA_HOME</span> directory to /&lt;inst_root&gt;/apigee/data/apigee-cassandra/:<br />
+	<li>Copy the following files from your <span style="font-family:courier new,courier,monospace;">$JAVA_HOME</span> directory to /opt/apigee/data/apigee-cassandra/:<br />
 		<span style="font-family:courier new,courier,monospace;">cp ${JAVA_HOME}/lib/management/jmxremote.password.template $APIGEE_ROOT/data/apigee-cassandra/jmxremote.password<br />
 		<br />
 		cp ${JAVA_HOME}/lib/management/jmxremote.access $APIGEE_ROOT/data/apigee-cassandra/jmxremote.access</span></li>
@@ -307,22 +308,22 @@ service:jmx:rmi:///jndi/rmi://&lt;<em><strong>ip address</strong></em>&gt;:7199/
 	<li>Edit <span style="font-family:courier new,courier,monospace;">jmxremote.access</span> and add the following role:<br />
 		<span style="font-family:courier new,courier,monospace;">cassandra &nbsp; &nbsp; readwrite</span></li>
 	<li>Make sure the files are owned by "apigee" and that the file mode is 400:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /&lt;inst_root&gt;/apigee/data/apigee-cassandra/jmxremote.*<br />
-		&gt; chmod 400 /&lt;inst_root&gt;/apigee/data/apigee-cassandra/jmxremote.*</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/data/apigee-cassandra/jmxremote.*<br />
+		&gt; chmod 400 /opt/apigee/data/apigee-cassandra/jmxremote.*</span></li>
 	<li>Run <span style="font-family:courier new,courier,monospace;">configure</span> on Cassandra:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra configure</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-cassandra configure</span></li>
 	<li>Restart Cassandra:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra restart</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-cassandra restart</span></li>
 </ol>
 <p>To later disable authentication:</p>
 <ol>
-	<li>Edit /<span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/customer/application/cassandra.properties</span>.&nbsp;</li>
+	<li>Edit /<span style="font-family:courier new,courier,monospace;">opt/apigee/customer/application/cassandra.properties</span>.&nbsp;</li>
 	<li>Remove the following line in the file:<br />
 		<span style="font-family:courier new,courier,monospace;">conf_cassandra-env_com.sun.management.jmxremote.authenticate=true</span></li>
 	<li>Run configure on Cassandra:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra configure</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-cassandra configure</span></li>
 	<li>Restart Cassandra:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-cassandra restart</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-cassandra restart</span></li>
 </ol>
 <h3>Cassandra JMX statistics</h3>
 <table class="table">
@@ -423,7 +424,7 @@ service:jmx:rmi:///jndi/rmi://&lt;<em><strong>ip address</strong></em>&gt;:7199/
 	</tbody>
 </table>
 <h3>Using nodetool utility to manage cluster nodes</h3>
-<p>The nodetool utility, which is a command line interface for Cassandra, is used to manage cluster nodes. The utility can be found at <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/apigee-cassandra/bin</span>.</p>
+<p>The nodetool utility, which is a command line interface for Cassandra, is used to manage cluster nodes. The utility can be found at <span style="font-family:courier new,courier,monospace;">opt/apigee/apigee-cassandra/bin</span>.</p>
 <p>For more info on nodetool utility, see <a href="http://www.datastax.com/docs/1.0/references/nodetool">http://www.datastax.com/docs/1.0/references/nodetool</a>.</p>
 <p>The following calls can be made on all Cassandra cluster nodes:</p>
 <ol>
@@ -470,11 +471,11 @@ service:jmx:rmi:///jndi/rmi://&lt;<em><strong>ip address</strong></em>&gt;:7199/
 <h2>Apache ZooKeeper</h2>
 <h3>Checking ZooKeeper status</h3>
 <ol>
-	<li>Ensure the ZooKeeper process is running. ZooKeeper writes a PID file to <span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/var/run/apigee-zookeeper/apigee-zookeeper.pid</span>.</li>
+	<li>Ensure the ZooKeeper process is running. ZooKeeper writes a PID file to <span style="font-family:courier new,courier,monospace;">opt/apigee/var/run/apigee-zookeeper/apigee-zookeeper.pid</span>.</li>
 	<li>Test ZooKeeper ports to ensure that you can establish a TCP connection to ports 2181 and 3888 on every ZooKeeper server.</li>
-	<li>Ensure that you can read values from the ZooKeeper database. Connect using a ZooKeeper client library (or <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/apigee-zookeeper/bin/zkCli.sh</span>) and read a value from the database.</li>
+	<li>Ensure that you can read values from the ZooKeeper database. Connect using a ZooKeeper client library (or <span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-zookeeper/bin/zkCli.sh</span>) and read a value from the database.</li>
 	<li>Check the status:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service apigee-zookeeper status</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-zookeeper status</span></li>
 </ol>
 <h3>Using ZooKeeper Four Letter Words</h3>
 <p>ZooKeeper can be monitored via a small set of commands (four-letter words) that are sent to the port 2181 using netcat (nc) or telnet.</p>
@@ -554,4 +555,4 @@ service:jmx:rmi:///jndi/rmi://&lt;<em><strong>ip address</strong></em>&gt;:7199/
 		&nbsp;"lastName" : "admin"<br />
 		}</span></li>
 </ol>
-<p>You can also monitor the OpenLDAP caches, which help in reducing the number of disk accesses and hence improve the performance of the system. Monitoring and then tuning the cache size in the OpenLDAP server can heavily impact the performance of the directory server. You can view the log files (<span style="font-family:courier new,courier,monospace;">&lt;inst_root&gt;/apigee/var/log</span>) to obtain information about cache.</p>
+<p>You can also monitor the OpenLDAP caches, which help in reducing the number of disk accesses and hence improve the performance of the system. Monitoring and then tuning the cache size in the OpenLDAP server can heavily impact the performance of the directory server. You can view the log files (<span style="font-family:courier new,courier,monospace;">opt/apigee/var/log</span>) to obtain information about cache.</p>

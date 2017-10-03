@@ -1,7 +1,14 @@
 <h1> Installation Requirements </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <h2>Hardware Requirements</h2>
-<p>You must meet the basic hardware configurations that support the basic host installation. For all installation scenarios described above, the following tables list the minimum hardware requirements for the installation components.&nbsp;</p>
+<p>You must meet the following minimum&nbsp;hardware requirements for a highly available infrastructure in a production grade environment. For all installation scenarios described in <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a>, the following tables list the minimum hardware requirements for the installation components.&nbsp;</p>
+<p>The Edge installation configuration file supports the following property:</p>
+<div class="note">
+	<pre>
+ENABLE_SYSTEM_CHECK=y 
+</pre>
+	<p>If you set this property to "y", the installer check that the system meets the CPU and memory requirements for the component being installed. The default value is "n" to disable check.</p>
+</div>
 <p>In these tables the hard disk requirements are in addition to the hard disk space required by the operating system. Depending on your applications and network traffic, your installation might require more or fewer resources than listed below.</p>
 <table class="table">
 	<thead>
@@ -127,7 +134,7 @@
 					<br />
 					For example:<br />
 					<br />
-					(500 bytes of analytics data per request) * 100 req/sec * 3600 secs/hr * 18 hours peak usage per day * 30 days/month * 3 months retention = 291,600,000,000 bytes or 292 GB.</p>
+					(2K bytes of analytics data per request) * 100 req/sec * 3600 secs/hr * 18 hours peak usage per day * 30 days/month * 3 months retention = 291,600,000,000 bytes or 1168 GB.</p>
 			</td>
 		</tr>
 		<tr>
@@ -340,6 +347,13 @@
 	<li><span style="font-family:courier new,courier,monospace;">hostname -i</span> returns the IP address for the hostname that can be addressed from other machines.&nbsp;</li>
 </ul>
 <p>Depending on your operating system type and version, you might have to edit <span style="font-family:courier new,courier,monospace;">/etc/hosts</span> and <span style="font-family:courier new,courier,monospace;">/etc/sysconfig/network</span> if the hostname is not set correctly. See the documentation for your specific operating system for more information.</p>
+<p>If a server has multiple interface cards, the "hostname -i" command returns a space-separated list of IP addresses's. By default, the Edge installer uses the first IP address returned, which might not be correct in all situations. As an alternative, you can set the following property in the installation configuration file:</p>
+<pre>
+ENABLE_DYNAMIC_HOSTIP=y</pre>
+<p>With that property set to "y", the installer prompts you to select the IP address to use as part of the install. The default value is "n". See <a href="http://docs.apigee.com/node/22961">http://docs.apigee.com/node/22961</a> for more.</p>
+<div class="warning">
+	<p>If you set&nbsp;<span style="font-family:courier new,courier,monospace;">ENABLE_DYNAMIC_HOSTIP=y</span>, ensure that your property file does not set&nbsp;<span style="font-family:courier new,courier,monospace;">HOSTIP</span>.</p>
+</div>
 <h3>TCP Wrappers</h3>
 <p>TCP Wrappers can block communication of some ports and can affect OpenLDAP, Postgres, and Cassandra installation. On those nodes, check&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/hosts.allow</span>&nbsp;and&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/hosts.deny</span>&nbsp;to ensure that there are no port restrictions on the required OpenLDAP, Postgres, and Cassandra ports.</p>
 <h3>iptables</h3>
@@ -397,8 +411,9 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 		apigee soft as unlimited<br />
 		apigee hard as unlimited</span><br />
 		&nbsp;</li>
-	<li>On Message Processor nodes, set the maximum number of open file descriptors to 64K by using the command:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; ulimit -n 65535</span><br />
+	<li>On Message Processor nodes, set the maximum number of open file descriptors to 64K in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/security/limits.conf&nbsp;</span>as shown below:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee soft nofile 32768<br />
+		apigee hard nofile 65536</span><br />
 		<br />
 		If necessary, you can raise that limit. For example, if you have a large number of temporary files open at any one time.</li>
 </ul>
@@ -420,6 +435,15 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 	<li>On every Message Processor node, edit <span style="font-family:courier new,courier,monospace;">/etc/nscd.conf</span></li>
 	<li>Set the following property:<br />
 		<span style="font-family:courier new,courier,monospace;">enable-cache hosts no</span></li>
+</ol>
+<h2>Disable IPv6&nbsp;on Google Cloud Platform for RedHat/CentOS&nbsp;7</h2>
+<p>If you are installing Edge on RedHat 7 or&nbsp;CentOS 7 on Google Cloud Platform, then you must disable IPv6 on all Qpid nodes.</p>
+<p>See the RedHat or CentOS documentation for your specific OS version for instructions on disabling IPv6. For example, you can:</p>
+<ol>
+	<li>Open <span style="font-family:courier new,courier,monospace;">/etc/hosts</span> in an editor.</li>
+	<li>Insert a "#" character in column one of the following line to comment it out:<br />
+		<span style="font-family:courier new,courier,monospace;">#::1 &nbsp; &nbsp; &nbsp; &nbsp; localhost localhost.localdomain localhost6 localhost6.localdomain6</span></li>
+	<li>Save the file.</li>
 </ol>
 <h2>AWS AMI</h2>
 <p>If you are installing Edge on an AWS Amazon Machine Image (AMI) for Red Hat Enterprise Linux 7.x, you must first run the following command:</p>
@@ -530,7 +554,7 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 				<p>date</p>
 			</td>
 			<td>
-				<div>libibverbs&nbsp;</div>
+				<div>libibverbs</div>
 			</td>
 			<td>
 				<p>pwd</p>
@@ -545,7 +569,7 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 		<tr>
 			<td>dirname</td>
 			<td>
-				<div>librdmacm&nbsp;</div>
+				<div>librdmacm</div>
 			</td>
 			<td>python</td>
 			<td>uname</td>
@@ -972,21 +996,26 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 		</tr>
 		<tr>
 			<td>
-				<p><strong>4526 through 4530</strong></p>
+				<p><strong>4526</strong></p>
 			</td>
 			<td>
-				<p>RPC Management ports used for distributed cache and calls from the Management Servers to the other components</p>
+				<p>RPC Management port&nbsp;</p>
 			</td>
 			<td>
 				<p>Management Server</p>
 			</td>
 			<td>
-				<p>Management Server (4526)</p>
-				<p>Router (4527)</p>
-				<p>Message Processor (4528)</p>
-				<p>Qpid Server (4529)</p>
-				<p>Postgres Server (4530)</p>
+				<p>Management Server&nbsp;</p>
 			</td>
+		</tr>
+		<tr>
+			<td><strong>4527</strong></td>
+			<td>RPC Management port for distributed cache and management calls, and for communications between&nbsp;Routers</td>
+			<td>
+				<p>Management Server</p>
+				<p>Router</p>
+			</td>
+			<td>Router</td>
 		</tr>
 		<tr>
 			<td>
@@ -996,12 +1025,25 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 				<p>For distributed cache calls&nbsp;between Message Processors, and for communication from the Router</p>
 			</td>
 			<td>
+				<p>Management Server</p>
 				<p>Router</p>
 				<p>Message Processor</p>
 			</td>
 			<td>
 				<p>Message Processor</p>
 			</td>
+		</tr>
+		<tr>
+			<td><strong>4529</strong></td>
+			<td>RPC Management port for distributed cache and management calls</td>
+			<td>Management Server</td>
+			<td>Qpid Server&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>4530</strong></td>
+			<td>RPC Management port for distributed cache and management calls</td>
+			<td>Management Server</td>
+			<td>Postgres Server</td>
 		</tr>
 		<tr>
 			<td>

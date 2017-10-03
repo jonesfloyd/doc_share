@@ -1,11 +1,15 @@
 <h1> Onboard an organization </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>Use the <span style="font-family:courier new,courier,monospace;">setup-org</span> command to perform the onboarding process. You must run the command on the Management Server node.</p>
 <p>As part of the onboarding process, the script:</p>
 <ul>
-	<li>Optionally creates a new user to function as the organization administrator.</li>
 	<li>Creates the organization.</li>
-	<li>Adds the specified user as the org admin. The user must already exist; otherwise the script issues an error.&nbsp;</li>
+	<li>Sets the specified user as the organization admin.
+		<ul>
+			<li>This user must be different from the sys admin user. That is, do not use the sys admin user as an org admin user.</li>
+			<li>You can specify an existing user for the organization admin, or configure the script to create a new user. &nbsp;</li>
+		</ul>
+	</li>
 	<li>Associates the organization with a pod, by default is associates it with the "gateway" pod.</li>
 	<li>Create an environment.</li>
 	<li>Create a virtual host for the environment.</li>
@@ -27,16 +31,17 @@ IP1=192.168.1.1
 # Specify the IP or DNS name of the Management Server.
 MSIP="$IP1"
 
-# Specify the Edge admin credentials.
+# Specify the Edge sys admin credentials.
 ADMIN_EMAIL="admin@email.com"
 APIGEE_ADMINPW=adminPassword     # If omitted, you are prompted for it.
 
-# Specify organization name and administrator.
+# Specify organization name.
 ORG_NAME=myorg  # lowercase only, no spaces, underscores, or periods.
 
-#
-# Set the organization administrator.
-# Do not use sys admin as organization administrator.
+# Specify the organization administrator user.
+# Either specify an existing user, or specify the information
+# necessary to create a new user.
+# Do not use the sys admin as the organization administrator.
 #
 # Create a new user for the organization administrator. 
 NEW_USER="y"
@@ -46,11 +51,12 @@ FIRST_NAME=new
 LAST_NAME=user
 USER_PWD="newUserPword"
 ORG_ADMIN=new@user.com
-
-# Specify an existing user as the organization admin,
+#
+# Or, specify an existing user as the organization admin,
 # omit USER_NAME, FIRST_NAME, LAST_NAME, USER_PWD.
 # NEW_USER="n"
 # ORG_ADMIN=existing@user.com
+
 # Specify environment name. 
 ENV_NAME=prod
 
@@ -64,10 +70,6 @@ VHOST_ALIAS=myorg-test.apigee.net
 # If you do not have a DNS entry for the virtual host, 
 # specify the IP and port of each router as a space-separated list:
 # VHOST_ALIAS="firstRouterIP:9001 secondRouterIP:9001" 
-
-# Optionally set the base URL displayed by the Edge UI for an
-# API proxy deployed to the virtual host.
-# VHOST_BASEURL="http://myCo.com"
 
 # Optionally configure TLS/SSL for virtual host.
 # VHOST_SSL=y     # Set to "y" to enable TLS/SSL on the virtual host.
@@ -135,8 +137,8 @@ VHOST_ALIAS=myorg-test.apigee.net
 				<br />
 				<div><a href="http://docs.apigee.com/api-services/tutorials/add-and-configure-your-first-api">Create your API</a></div>
 				<div><a href="http://docs.apigee.com/api-services/tutorials/part-1-create-your-api-xml">Create your API in XML</a></div>
-				<div>&nbsp;</div>
-			</li>
+				<br />
+				Also see the sections on samples, including <a href="http://docs.apigee.com/node/14926">http://docs.apigee.com/node/14926</a>, and&nbsp;the mock target RESTful APIs that you can use in your own API-building experiments at <a href="http://docs.apigee.com/node/20716">http://docs.apigee.com/node/20716</a>.</li>
 		</ol>
 	</li>
 </ol>

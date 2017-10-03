@@ -1,5 +1,5 @@
 <h1> Adding a data center </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>This document describes how to add a data center (also called a region) to an existing data center.&nbsp;</p>
 <div class="note">
 	<p>If you require three or more data centers, please&nbsp;contact your Sales Rep or Account Executive to engage with Apigee Edge Professional Services and Customer Success.</p>
@@ -249,8 +249,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 						<br />
 						The UUIDs appear at the end of the returned data. Save those values.</li>
 					<li><strong>On the Management Server node of dc-1</strong>, add the Qpid nodes to the analytics group:<br />
-						<span style="font-family:courier new,courier,monospace;">&gt;apigee-adminapi.sh analytics groups qpid_server add -g axgroup-001 -u <strong>UUID_1</strong>&nbsp;--admin <strong>adminEmail</strong> --pwd <strong>adminPword</strong> --host localhost<br />
-						&gt;apigee-adminapi.sh analytics groups qpid_server add -g axgroup-001 -u <strong>UUID_2</strong>&nbsp;--admin <strong>adminEmail</strong> --pwd <strong>adminPword</strong> --host localhost</span></li>
+						<span style="font-family:courier new,courier,monospace;">&gt;apigee-adminapi.sh analytics groups qpid_server add -g axgroup-001 -u "<strong>UUID_1&nbsp;</strong><strong>UUID_2"</strong>&nbsp;--admin <strong>adminEmail</strong> --pwd <strong>adminPword</strong> --host localhost</span></li>
 					<li><strong>On the Management Server node of dc-1</strong>, add the Qpid nodes to the consumer group:<br />
 						<span style="font-family:courier new,courier,monospace;">&gt; apigee-adminapi.sh analytics groups consumer_groups consumers add -g axgroup-001 -c consumer-group-001 -u "<strong>UUID_1,UUID_2"</strong> --admin <strong>adminEmail</strong> --pwd <strong>adminPword</strong> --host localhost</span></li>
 				</ol>

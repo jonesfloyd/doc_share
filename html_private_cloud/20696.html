@@ -1,5 +1,5 @@
 <h1> How to Perform a Backup </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <div class="note">
 	<p>When backing up a complete Edge installation, you must back up all components. See "What to Backup" at <a href="http://docs.apigee.com/node/20691">http://docs.apigee.com/node/20691</a> for more.&nbsp;&nbsp;</p>
 </div>
@@ -12,9 +12,12 @@
 <div class="warning">
 	<p>The backup utility writes the generated backup file to <span style="font-family:courier new,courier,monospace;">/opt/apigee/backup/<em><strong>comp</strong></em></span> where <em><strong>comp</strong></em> is the name of the component. Because you can generate many backup files, and because these files can get large, you can mount a separate disk at <span style="font-family:courier new,courier,monospace;">/opt/apigee/backup</span> just for backup files.</p>
 </div>
+<div class="note">
+	<p>For PostgreSQL only, you can optionally create a network storage snapshot as an alternative to using the Apigee backup command. This snapshot cab be useful because the Apigee backup command takes time to run and&nbsp;PostgreSQL data generated while the backup runs could be omitted from the resulting <span style="font-family:courier new,courier,monospace;">.dump</span> file.&nbsp;</p>
+</div>
 <p>The backup command:&nbsp;</p>
 <ol>
-	<li>Stops the component (except for PostgreSQL which must be running to backup).</li>
+	<li>Stops the component (except for PostgreSQL and Cassandra which must be running to backup).</li>
 	<li>Creates a tar file of the following directories and files, where <em><strong>comp</strong></em> is the name of the component:
 		<ol style="list-style: lower-alpha outside">
 			<li>Directories
@@ -41,7 +44,7 @@
 		<br />
 		For PostgreSQL, the file is named:<br />
 		<span style="font-family:courier new,courier,monospace;">(year).(month).(day),(hour).(min).(seconds).dump</span></li>
-	<li>Restarts the component (except for PostgreSQL which must be running to backup).</li>
+	<li>Restarts the component (except for PostgreSQL and Cassandra&nbsp;which must be running to backup).</li>
 </ol>
 <p>If you have multiple Edge components installed on the same node, you can back up them all with a single command:</p>
 <pre>

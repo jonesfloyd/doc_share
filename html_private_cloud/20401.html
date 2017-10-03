@@ -1,33 +1,33 @@
 <h1> Starting, Stopping, Restarting, and Checking the Status of Apigee Edge </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>The order of stopping and starting the subsystems is important. Start and stop scripts are provided that take care of that for you for Edge components running on the same node.&nbsp;</p>
 <p><strong>Stop order</strong>: If you install Edge on multiple nodes, then you should stop Edge components on those nodes in the following order:</p>
 <ol>
-	<li>Apigee UI</li>
-	<li>Management Server</li>
-	<li>Router</li>
-	<li>Message Processor</li>
-	<li>Qpid Server</li>
-	<li>Postgres Server</li>
-	<li>OpenLDAP</li>
-	<li>Qpidd</li>
-	<li>PostgreSQL database</li>
-	<li>Cassandra</li>
-	<li>ZooKeeper</li>
+	<li>Management Server (edge-management-server)</li>
+	<li>Message Processor (edge-message-processor)</li>
+	<li>Postgres Server (edge-postgres-server)</li>
+	<li>Qpid Server (edge-qpid-server)</li>
+	<li>Router (edge-router)</li>
+	<li>Edge UI (edge-ui)</li>
+	<li>Cassandra (apigee-cassandra)</li>
+	<li>OpenLDAP&nbsp;(apigee-openldap)</li>
+	<li>PostgreSQL&nbsp;database &nbsp;(apigee-postgresql)</li>
+	<li>Qpidd&nbsp;(apigee-qpidd)</li>
+	<li>ZooKeeper (apigee-zookeeper)</li>
 </ol>
 <p><strong>Start order</strong>: If you install Edge on multiple nodes, then you should start Edge components on those nodes in the following order:</p>
 <ol>
-	<li>ZooKeeper</li>
-	<li>Cassandra</li>
-	<li>OpenLDAP</li>
-	<li>Qpidd</li>
-	<li>PostgreSQL database&nbsp;</li>
-	<li>Management Server</li>
-	<li>Router</li>
-	<li>Message Processor</li>
-	<li>Qpid Server</li>
-	<li>Postgres Server</li>
-	<li>Apigee UI</li>
+	<li>Cassandra (apigee-cassandra)</li>
+	<li>OpenLDAP&nbsp;(apigee-openldap)</li>
+	<li>PostgreSQL database &nbsp;(apigee-postgresql)</li>
+	<li>Qpidd&nbsp;(apigee-qpidd)</li>
+	<li>ZooKeeper (apigee-zookeeper)</li>
+	<li>Management Server (edge-management-server)</li>
+	<li>Message Processor (edge-message-processor)</li>
+	<li>Postgres Server (edge-postgres-server)</li>
+	<li>Qpid Server (edge-qpid-server)</li>
+	<li>Router (edge-router)</li>
+	<li>Edge UI (edge-ui)</li>
 </ol>
 <p>The following scripts detect the Apigee components configured to run on the system on which the script is executed, and will start or stop only those components in the correct order for that node.</p>
 <ul>

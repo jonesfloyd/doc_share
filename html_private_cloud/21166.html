@@ -1,5 +1,5 @@
 <h1> Developer Services portal installation </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <div class="note">
 	<p>These instructions are only for installing the portal.</p>
 </div>
@@ -157,9 +157,12 @@ php-pear
 php-pecl-apc
 php-process
 php-xml</pre>
-<p>For CentOS and RedHat Enterprise Linux (RHEL), remove the PHP packages using the following command:</p>
+<p>Remove the PHP packages using the following command:</p>
 <pre>
 yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
+<div class="note">
+	<p>To remove PHP on CentOS 6.6, you might also have to remove Ganglia, if it is installed.</p>
+</div>
 <h2>3. Install Postgres</h2>
 <p>The portal requires Postgres to be installed before you can install the portal. You can either install Postgres as part of installing Edge, or install Postgres standalone for use by the portal.&nbsp;</p>
 <ul>
@@ -207,7 +210,7 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 <p>Once enabled, you can see the available updates by using the <strong>Reports &gt; Available Updates</strong> menu item. You can also use the following Drush command:</p>
 <pre>
 &gt; drush pm-info update</pre>
-<p>You have to run this command from the root directory of the site. By default, the Developer Portal is installed at /opt/apigee/apigee-drupal. Therefore, you should first change directory to /opt/apigee/apigee-drupal before running the command. If you did not install the portal in the default directory, change to your installation directory.</p>
+<p>You have to run this command from the root directory of the site. By default, the Developer Portal is installed at <span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-drupal/wwwroot</span>. Therefore, you should first change directory to <span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-drupal/wwwroot</span> before running the command. If you did not install the portal in the default directory, change to your installation directory.</p>
 <p>Use the <strong>Reports &gt; Available Updates &gt; Settings</strong> menu item to configure the module to email you when updates are available and to set the frequency for checking for updates.</p>
 <h2>6. Configure the Apache Solr search engine (Optional)</h2>
 <p>By default, the Drupal modules that connect to the Apache Solr search engine are disabled when you install the portal. Most portals use the internal Drupal search engine, and therefore do not require the Drupal Solr modules.&nbsp;</p>
@@ -227,7 +230,17 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 	<li>If you are connecting the portal to an Edge for Private Cloud installation, you must ensure that SmartDocs is installed on Edge. For more on installing Edge and SmartDocs, see <a href="http://docs.apigee.com/node/19926">http://docs.apigee.com/node/19926</a>.</li>
 </ul>
 <p>You must also enable SmartDocs on the portal. For more information on SmartDocs, see <a href="http://docs.apigee.com/node/15231">http://docs.apigee.com/node/15231</a>.&nbsp;</p>
-<h2>8. What next?</h2>
+<h2>8. Configure the JQuery Update module for non-internet installations (Optional)</h2>
+<p>If you install and use the JQuery Update module in a non-internet installation, you need to configure the module to use the local version of JQuery. If you configure the module to use a CDN for a non-internet installation, it will attempt to access the CDN and cause delays with page loading. For more information about the JQuery Update module see <a href="https://www.drupal.org/project/jquery_update">https://www.drupal.org/project/jquery_update</a>.</p>
+<p>To configure the JQuery Update module to use the local version of JQuery:</p>
+<ol>
+	<li>Log in to your portal as a user with admin or content creation privileges.</li>
+	<li>Select <b>Configuration &gt; Development &gt; JQuery Update</b> in the Drupal menu.</li>
+	<li>Click <b>Performance</b>&nbsp;in the left navigation.</li>
+	<li>In the JQuery and JQuery UI CDN drop-down select&nbsp;<b>None</b>.</li>
+	<li>Click <b>Save configuration</b>.</li>
+</ol>
+<h2>9. What next?</h2>
 <p>Your next steps after you install the Developer Services portal are to configure and customize it for your specific requirements. The documentation on the Apigee web site contains all of the information on configuring, styling, and managing a portal. Access the documentation at <a href="http://apigee.com/docs/developer-services/content/what-developer-portal">http://apigee.com/docs/developer-services/content/what-developer-portal</a>.</p>
 <p></p>
 <p>The following table lists some of the most common tasks that you perform after installation, and includes links to the Apigee documentation where you can find more information:</p>
@@ -313,7 +326,7 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 			</td>
 			<td>
 				<p>If you do not set up a hostname in your DNS server, you can always access the site via the server’s IP address. If you want to use a hostname, you can configure DNS for the server, which should work correctly without any other configuration on a basic setup. &nbsp;</p>
-				<p>If you set up a load balancer or are getting incorrect URLs on your site for some other reason, you can set $base_url in the Dev Portal <strong>settings.php</strong> file, which by default is located in the <strong>/opt/apigee/apigee-drupal/sites/default</strong> directory. &nbsp;</p>
+				<p>If you set up a load balancer or are getting incorrect URLs on your site for some other reason, you can set $base_url in the Dev Portal <strong>settings.php</strong> file, which by default is located in the <strong>/opt/apigee/apigee-drupal/wwwroot/sites/default</strong> directory. &nbsp;</p>
 			</td>
 		</tr>
 		<tr>

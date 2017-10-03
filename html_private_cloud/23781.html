@@ -1,5 +1,5 @@
 <h1> Multiple Data Center Installation for API BaaS </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>You can install API BaaS across multiple data centers&nbsp;using an active/active configuration. This document describes how to add a BaaS data center to an existing BaaS data center.&nbsp;</p>
 <h2>Adding a data center when the Cassandra cluster is shared with Edge</h2>
 <p>All data centers must to have the same number of Cassandra nodes. An API BaaS installation can use its own Cassandra cluster, or it can share a Cassandra cluster with Edge.&nbsp;</p>
@@ -13,6 +13,9 @@
 <p>To perform these updates on data center 1, you update the original configuration file used to install data center 1, and then rerun <span style="font-family:courier new,courier,monospace;">apigee-setup</span> on the Cassandra nodes of data center 1. If the Cassandra cluster for data center 1 is shared with an Edge installation, then you also have to update the Management Server as well. &nbsp;</p>
 <h2>Creating the configuration files</h2>
 <p>For installing data center 1, use the configuration shown at <a href="http://docs.apigee.com/node/19931">http://docs.apigee.com/node/19931</a>. The configuration file does not need to include any information about data center 2 at the time you install data center 1.You add information to the configuration file after installing data center 2.</p>
+<div class="note">
+	<p>API BaaS 4.17.09 added a new required parameter to the configuration file used when you enable an&nbsp;SMTP server. You must now set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span>&nbsp;in the configuration file when enabling the SMTP server. See the examples below.</p>
+</div>
 <p>Shown below is the configuration files for data center 2. This configuration file assumes you are installing dc-2 on 10 nodes, as described at <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a>. Modify this file accordingly if you are installing on 7 nodes.</p>
 <p>Notice that the config file for data center 2 (dc-2) contains information about data center 1 (dc-1):</p>
 <pre>
@@ -97,7 +100,8 @@ SMTPHOST=smtp.gmail.com
 SMTPPORT=465
 SMTPUSER=your@email.com
 SMTPPASSWORD=yourEmailPassword
-SMTPSSL=y</pre>
+SMTPSSL=y
+SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 <h2>Add a BaaS data center &nbsp;</h2>
 <ol>
 	<li>Install the first data center as described at <a href="http://docs.apigee.com/node/19931">http://docs.apigee.com/node/19931</a>. That document includes the configuration file that you use to install data center 1.</li>
@@ -136,6 +140,7 @@ SMTPSSL=y</pre>
 					<li>&nbsp;cqlsh&gt;<span style="font-family:courier new,courier,monospace;"> ALTER KEYSPACE "Apigee_Baas" WITH replication = { 'class': 'NetworkTopologyStrategy', 'dc-1': '3','dc-2': '3' };</span></li>
 					<li>&nbsp;cqlsh&gt; <span style="font-family:courier new,courier,monospace;">ALTER KEYSPACE "Apigee_Baas_Locks" WITH replication = { 'class': 'NetworkTopologyStrategy', 'dc-1': '3','dc-2': '3' };</span><span class="Apple-tab-span" style="white-space:pre"> </span></li>
 					<li>cqlsh&gt; <span style="font-family:courier new,courier,monospace;">ALTER KEYSPACE "system_traces" WITH replication = { 'class': 'NetworkTopologyStrategy', 'dc-1': '3','dc-2': '3' };</span></li>
+					<li>cqlsh&gt;&nbsp;<span style="font-family:courier new,courier,monospace;">ALTER KEYSPACE "system_auth" WITH replication = { 'class': 'NetworkTopologyStrategy', 'dc-1': '3','dc-2': '3' };</span></li>
 					<li>View the keyspaces by using the command:<br />
 						cqlsh&gt; <span style="font-family:courier new,courier,monospace;">select * from system.schema_keyspaces;</span></li>
 					<li>Exit cqlsh:<br />
@@ -198,8 +203,6 @@ SMTPSSL=y</pre>
 			</li>
 		</ol>
 	</li>
-	<li>Run the following nodetool command on all Cassandra nodes in data center 1 to free memory:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;/opt/apigee/apigee-cassandra/bin/nodetool -h <em><strong>cassandraIP</strong></em> cleanup</span></li>
 </ol>
 <p>This installation of the second data center is now complete.</p>
 <p>After you complete the installation and configuration of the two data centers, you can validate the installation by using the following procedure:</p>

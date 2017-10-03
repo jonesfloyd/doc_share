@@ -1,5 +1,5 @@
 <h1> Install Edge components on a node </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>After you install the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility on a node, use the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility to install one or more Edge components on the node.&nbsp;</p>
 <div class="note">
 	<p>See <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a> for more on installing the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility.</p>
@@ -138,6 +138,10 @@
 			</td>
 		</tr>
 		<tr>
+			<td>sso</td>
+			<td>Install the Edge SSO module.</td>
+		</tr>
+		<tr>
 			<td>
 				<p>mo</p>
 			</td>
@@ -175,9 +179,6 @@
 <p>The configuration file contains all the information necessary to install Edge. You can often use the same configuration file to install all components in an Edge installation.&nbsp;</p>
 <div class="note">
 	<p>In the configuration file, you must specify all Cassandra nodes by IP address. Other components can be specified by IP address or DNS name.</p>
-</div>
-<div class="note">
-	<p>Edge 4.17.05 added a new required parameter to the configuration file used when you enable an&nbsp;SMTP server. You must now set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span>&nbsp;in the configuration file when enabling the SMTP server. See the examples below.</p>
 </div>
 <p>However, you will have to use different configuration files, or modify your configuration file, if:</p>
 <ul>
@@ -222,6 +223,7 @@
 <strong># With SMTP
 IP1=IPorDNSnameOfNode</strong>
 HOSTIP=$(hostname -i)
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt
@@ -261,6 +263,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 <strong># With SMTP
 IP1=IPorDNSnameOfNode1
 </strong>HOSTIP=$(hostname -i)
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt
@@ -308,6 +311,7 @@ IP3=IPorDNSnameOfNode3
 IP4=IPorDNSnameOfNode4
 IP5=IPorDNSnameOfNode5
 ?</strong>HOSTIP=$(hostname -i)
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt 
@@ -360,6 +364,7 @@ IP3=IPorDNSnameOfNode3
 IP8=IPorDNSnameOfNode8
 IP9=IPorDNSnameOfNode9
 </strong>HOSTIP=$(hostname -i)
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt 
@@ -422,6 +427,7 @@ IP7=IPorDNSnameOfNode7
 IP8=IPorDNSnameOfNode8
 IP9=IPorDNSnameOfNode9
 </strong>HOSTIP=$(hostname -i)
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt 
@@ -471,6 +477,7 @@ IP7=IPorDNSnameOfNode7
 IP8=IPorDNSnameOfNode8
 IP9=IPorDNSnameOfNode9</strong>
 HOSTIP=$(hostname -i)
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 <strong># First OpenLDAP Server on IP4
@@ -554,6 +561,7 @@ IP9=IPorDNSnameOfNode9
 IP12=IPorDNSnameOfNode12</strong>
 HOSTIP=$(hostname -i)
 MSIP=$IP1
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt
@@ -596,6 +604,7 @@ IP9=IPorDNSnameOfNode9
 IP12=IPorDNSnameOfNode12</strong>
 HOSTIP=$(hostname -i)
 MSIP=$IP7
+ENABLE_SYSTEM_CHECK=y
 ADMIN_EMAIL=opdk@google.com
 APIGEE_ADMINPW=Secret123
 LICENSE_FILE=/tmp/license.txt

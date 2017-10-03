@@ -19,6 +19,17 @@
 <h2>Who can perform the update</h2>
 <p>The user running the update should be the same as the user who originally installed Edge, or a user running as root.</p>
 <p>After you install the Edge RPMs, any user can configure them.</p>
+<h2>Which components must you update</h2>
+<p>You must update all Edge components. Edge does not support a setup that contains components from multiple versions.</p>
+<h2>Downgrading Zookeeper if updating from 4.16.01</h2>
+<p>The &nbsp;version of the Zookeeper RPM in Edge for Private Cloud 4.16.01 is&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-zookeeper-3.4.5-1.0.905.noarch.rpm</span>. In subsequent versions of Edge, the Zookeeper version was changed back to&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-zookeeper-3.4.5-0.0.94x</span>. This prevents yum from upgrading Zookeeper to a later versions from 4.16.01. The way to corrct this situation is to run&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">yum downgrade apigee-zookeeper</span>&nbsp;before updating Zookeeper.</p>
+<p>You can check your Zookeeper version by using the following command:</p>
+<pre>
+&gt; rpm -qa |grep apigee-zookeeper</pre>
+<p>If this command returns Zookeeper version:</p>
+<pre>
+apigee-zookeeper-3.4.5-1.0.905</pre>
+<p>Then you must do the downgrade.</p>
 <h2>Automatic propagation of property settings&nbsp;</h2>
 <p>If you have set any properties by editing <span style="font-family:courier new,courier,monospace;">.properties</span> files in <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application</span> then these values are retained by the update.</p>
 <h2>Update prerequisites</h2>
@@ -27,7 +38,7 @@
 	<li><strong>Backup all nodes</strong><br />
 		Before you update, it is recommended to perform a complete backup of all nodes for safety reasons. Use the procedure for your current version of Edge to perform the backup.&nbsp;<br />
 		<br />
-		This allows you to have a backup plan, in case the update to a new version doesn’t function properly. For more information on backup, see <a href="http://docs.apigee.com/node/20691">http://docs.apigee.com/node/20691</a>.</li>
+		This allows you to have a backup plan, in case the update to a new version doesn’t function properly. For more information on backup, see <a href="http://docs.apigee.com/node/37271">http://docs.apigee.com/node/37271</a>.</li>
 	<li><strong>Ensure Edge is running</strong><br />
 		Ensure that Edge is up and running during update process by using the command:<br />
 		<br />
@@ -59,14 +70,14 @@
 	<li>For RedHat/CentOS 6.x:<br />
 		<span style="font-family:courier new,courier,monospace;">wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm; rpm -ivh epel-release-latest-6.noarch.rpm</span></li>
 </ul>
-<h2>Required addition of SMTMAILFROM configuration paramater</h2>
+<h2>Required addition of SMTPMAILFROM configuration parameter</h2>
 <p>Edge 4.17.05 added a new required parameter to the configuration file used when you enable an&nbsp;SMTP server. You must now set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span>&nbsp;in the configuration file when enabling the SMTP server. This parameter has the form:</p>
 <pre>
 SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 <p>Add this parameter to your configuration file before performing the update.</p>
 <h2>Required if updating when using external authentication</h2>
 <p>You can integrate an external directory service into an existing Apigee Edge Private Cloud installation. This feature is designed to work with any directory service that supports LDAP, such as Active Directory, OpenLDAP, and others. An external LDAP solution allows system administrators to manage user credentials from a centralized directory management service, external to systems like Apigee Edge that use them.</p>
-<p>See <a href="http://docs.apigee.com/node/22046">http://docs.apigee.com/node/22046</a> for more.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for more.</p>
 <p>When external authentication is enabled, most customers use the Active Directory SAM account name field as the username for authentication, instead of an email address which is used by the Edge OpenLDAP server.&nbsp;</p>
 <p>If you have integrated with&nbsp;an external directory service, then add the following line to your config file when updating Edge to 4.17.05:</p>
 <pre>
@@ -96,7 +107,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 <div class="warning">
 	<p>Most Edge production systems use Postgres master-standby replication. If your current installation uses Postgres master-standby replication, as part of the upgrade process you must install a new Postgres standby node for the duration of the upgrade. After the upgrade completes, you can decommission the Postgres standby node. &nbsp;&nbsp;</p>
 </div>
-<p>The additional Postgres standby node is required if you have to roll back the update for any reason. If you have to roll back the update, the new Postgres standby node becomes the master Postgres node after the rollback. Therefore, when you install the new Postgres standby node, it should be on a node that meets all the hardware requirements of a Postgres server, as defined in the Edge <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a>.</p>
+<p>The additional Postgres standby node is required if you have to roll back the update for any reason. If you have to roll back the update, the new Postgres standby node becomes the master Postgres node after the rollback. Therefore, when you install the new Postgres standby node, it should be on a node that meets all the hardware requirements of a Postgres server, as defined in the Edge <a href="http://docs.apigee.com/node/36731">http://docs.apigee.com/node/36731</a>.</p>
 <h3>Installing a new Postgres standby node</h3>
 <p>This procedure creates a Postgres standby server on a new node. Ensure that you install a new Postgres standby server for your <strong>existing</strong> version of Edge (4.16.01 or 4.16.05), not for version 4.17.05.&nbsp;</p>
 <p>To perform the install, use the same config file that you used to install your current version of Edge.</p>
@@ -120,7 +131,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 				PG_MASTER=192.168.56.103<br />
 				# IP address of the new standby node<br />
 				PG_STANDBY=192.168.56.102&nbsp;</span></li>
-			<li>Disable SELinux as described at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+			<li>Disable SELinux as described at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 			<li>Download the Edge bootstrap_4.16.05.sh file to <span style="font-family:courier new,courier,monospace;">/tmp/bootstrap_4.16.05.sh</span>:<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap_4.16.05.sh -o /tmp/bootstrap_4.16.05.sh</span><br />
 				<br />
@@ -169,7 +180,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 <p>The key to zero-downtime upgrading is to remove each Router, one at a time, from the load balancer. You then update the Router and any other components on the same machine as the Router, and then add the Router back to the load balancer.</p>
 <ol>
 	<li>Update the machines in the correct order for your installation as described below in "Order of machine update".</li>
-	<li>When it is time to update the Routers, select any one Router and make it unreachable, as described in <a href="http://docs.apigee.com/node/20371">http://docs.apigee.com/node/20371</a>.</li>
+	<li>When it is time to update the Routers, select any one Router and make it unreachable, as described in <a href="http://docs.apigee.com/node/37071">http://docs.apigee.com/node/37071</a>.</li>
 	<li>Update the selected Router and all other Edge components on the same machine as the Router. All Edge configurations show a Router and Message Processor on the same node.&nbsp;</li>
 	<li>Make the Router reachable again.</li>
 	<li>Repeat steps 2 through 4 for the remaining Routers.</li>
@@ -215,7 +226,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>If present, disable any CRON jobs configured to perform a repair operation on Cassandra until after the update completes.&nbsp;</li>
 	<li>Log in to your node as root to install the Edge RPMs.<br />
 		<strong>Note</strong>: While RPM installation requires root access, you can perform Edge configuration without root access.</li>
-	<li>Disable SELinux as described in <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+	<li>Disable SELinux as described in <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 	<li>Download the Edge 4.17.05&nbsp;<span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file to <span style="font-family:courier new,courier,monospace;">/tmp/bootstrap_4.17.05.sh</span>:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap_4.17.05.sh -o /tmp/bootstrap_4.17.05.sh</span></li>
 	<li>Install the Edge 4.17.05&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-service</span> utility and dependencies:&nbsp;<br />
@@ -228,6 +239,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 		I = Install OpenJDK 1.8 (default)<br />
 		C = Continue without installing Java<br />
 		Q = Quit. For this option, you have to install Java yourself.</li>
+	<li><strong>(CentOS-6.x and RedHat-6.x only)</strong>&nbsp;On all&nbsp;Qpid&nbsp;nodes, run the following command to ensure you download the correct&nbsp;Qpid&nbsp;version:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; yum install&nbsp;apigee-qpidd&nbsp;--disablerepo=epel</span></li>
 	<li>Use <span style="font-family:courier new,courier,monospace;">apigee-service</span> to update the apigee-setup utility:
 		<ol style="list-style: lower-alpha outside">
 			<li><strong>If you installed 4.16.01 by upgrading Edge version 4.15.07.0x, you must install the apigee-setup utility:</strong><br />
@@ -286,7 +299,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">b</span> = API BaaS Stack<br />
 		<span style="font-family:courier new,courier,monospace;">p</span> = API BaaS Portal<br />
 		<span style="font-family:courier new,courier,monospace;">ebp</span> = ElasticSearch, API BaaS Stack, and API BaaS Portal on the same node</li>
-	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/19906">http://docs.apigee.com/node/19906</a>.</li>
+	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/36781">http://docs.apigee.com/node/36781</a>.</li>
 	<li>If you installed a new Postgres standby node, decommission the node as described above in <em>Decommissioning a Postgres node</em>.</li>
 </ol>
 <p>To later rollback the update, use the procedure described in <a href="http://docs.apigee.com/node/25176">http://docs.apigee.com/node/25176</a>. &nbsp;</p>
@@ -300,8 +313,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 <p>To update from a local 4.17.05 repo:</p>
 <ol>
 	<li>If you are currently using Postgres master-standby replication, install a new Postgres standby node as described above in <em>Installing a new Postgres standby node</em>.</li>
-	<li>Create a local 4.17.05 repo as described in "Create a local Apigee repository" at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.<br />
-		<strong>Note</strong>: If you already have an existing 4.16.01 or 4.16.05 repo, you can add the 4.17.05 repo to it as described in "Update a local Apigee repository" at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+	<li>Create a local 4.17.05 repo as described in "Create a local Apigee repository" at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.<br />
+		<strong>Note</strong>: If you already have an existing 4.16.01 or 4.16.05 repo, you can add the 4.17.05 repo to it as described in "Update a local Apigee repository" at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 	<li><strong>To install apigee-service from a .tar file</strong>:
 		<ol style="list-style: lower-alpha outside">
 			<li>On the node with the local repo, use the following command to package the local repo into a single .tar file named <span style="font-family:courier new,courier,monospace;">/opt/apigee/data/apigee-mirror/apigee-4.17.05.tar.gz</span>:<br />
@@ -319,7 +332,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 	</li>
 	<li><strong>To install apigee-service using the Nginx webserver:</strong>
 		<ol style="list-style: lower-alpha outside">
-			<li>Configure the Nginx web server as described in "Install from the repo using the Nginx webserver" at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+			<li>Configure the Nginx web server as described in "Install from the repo using the Nginx webserver" at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 			<li>On the remote node, download the Edge <span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file to <span style="font-family:courier new,courier,monospace;">/tmp/bootstrap_4.17.05.sh</span>:<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; /usr/bin/curl http://<em><strong>uName:</strong></em><em><strong>pWord</strong></em>@<em><strong>remoteRepo</strong></em>:3939/bootstrap_4.17.05.sh -o /tmp/bootstrap_4.17.05.sh</span><br />
 				<br />
@@ -388,7 +401,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">b</span> = API BaaS Stack<br />
 		<span style="font-family:courier new,courier,monospace;">p</span> = API BaaS Portal<br />
 		<span style="font-family:courier new,courier,monospace;">ebp</span> = ElasticSearch, API BaaS Stack, and API BaaS Portal on the same node</li>
-	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/19906">http://docs.apigee.com/node/19906</a>.</li>
+	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/36781">http://docs.apigee.com/node/36781</a>.</li>
 	<li>If you installed a new Postgres standby node, decommission the node as described above in <em>Decommissioning a Postgres node</em>.</li>
 </ol>
 <p>To later rollback the update, use the procedure described in <a href="http://docs.apigee.com/node/25176">http://docs.apigee.com/node/25176</a>. &nbsp;</p>
@@ -399,6 +412,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>For any machine with multiple Edge components (Management Server, Message Processor, Router, QPID Server but not Postgres Server), use the "-c edge" option to update them all at the same time.&nbsp;</li>
 	<li>If a step specifies that it should be performed on multiple machines, perform it in the specified machine order.</li>
 	<li>There is no separate step to update Monetization. It is updated when you specify the "-c edge" option.</li>
+	<li><strong>(CentOS-6.x and RedHat-6.x only)</strong>&nbsp;On all&nbsp;Qpid&nbsp;nodes with an external internet connection, ensure that you ran the following command to download the correct&nbsp;Qpid&nbsp;version as shown above:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; yum install&nbsp;apigee-qpidd&nbsp;--disablerepo=epel</span></li>
 </ul>
 <h3>For a 1-host standalone installation</h3>
 <div class="note">
@@ -407,6 +422,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
+	<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 	<li>Update Cassandra and ZooKeeper:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f <em><strong>configFile</strong></em></span></li>
 	<li>Set the following iptables rule:<br />
@@ -438,10 +455,12 @@ IS_EXTERNAL_AUTH="true"</pre>
 <div class="note">
 	<p>For a 2-host installation, you do not have to create a new Postgres standby node.</p>
 </div>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
+	<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper on machine 1:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 	<li>Update Cassandra and ZooKeeper on machine 1:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f <em><strong>configFile</strong></em></span></li>
 	<li>Set the following iptables rule on machine 2:<br />
@@ -478,11 +497,13 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c edge -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 </ol>
 <h3>For a 5-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
 	<li>Ensure that you have installed a new Postgres standby node as described above in <a href="#requiredupgradetopostgres94-installinganewpostgresstandbynode"><em>Installing a new Postgres standby node</em></a>.</li>
+	<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper on macine 1, 2, and 3:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 	<li>Update Cassandra and ZooKeeper on machine 1, 2, and 3:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f <em><strong>configFile</strong></em></span></li>
 	<li>Set the following iptables rule on machine 4:<br />
@@ -495,7 +516,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c qpid -f <em><strong>configFile</strong></em></span></li>
 	<li>Flush iptables&nbsp;on machine 4:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; sudo iptables -F</span></li>
-	<li>Repeat steps 4 through 7 on machine 5.</li>
+	<li>Repeat steps 5 through 8 on machine 5.</li>
 	<li>Update LDAP on machine 1:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ldap -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li>Update Edge components on machine 1, 2, 3:<br />
@@ -545,11 +566,13 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>Ensure that you decommission the new standby node by using the procedure above in <a href="#requiredupgradetopostgres94-decommissioningapostgresnode"><em>Decommissioning a Postgres node</em></a>.</li>
 </ol>
 <h3>For a 9-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
 	<li>Ensure that you have installed a new Postgres standby node as described above in <a href="#requiredupgradetopostgres94-installinganewpostgresstandbynode"><em>Installing a new Postgres standby node</em></a>.</li>
+	<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper on macine 1, 2, and 3:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 	<li>Update Cassandra and ZooKeeper on machine 1, 2, and 3:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li>Set the following iptables rule on machine 6:<br />
@@ -562,7 +585,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c qpid -f <em><strong>configFile</strong></em></span></li>
 	<li>Flush iptables&nbsp;on machine 6:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; sudo iptables -F</span></li>
-	<li>Repeat steps 4 through 7 on machine 7.</li>
+	<li>Repeat steps 5 through 8 on machine 7.</li>
 	<li>Update LDAP on machine 1:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ldap -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li>Update Edge components on machine 6, 7, 1, 4, and 5 in that order:<br />
@@ -612,11 +635,13 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>Ensure that you decommission the new standby node by using the procedure above in <a href="#requiredupgradetopostgres94-decommissioningapostgresnode"><em>Decommissioning a Postgres node</em></a>.</li>
 </ol>
 <h3>For a 13-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
 	<li>Ensure that you have installed a new Postgres standby node as described above in <a href="#requiredupgradetopostgres94-installinganewpostgresstandbynode"><em>Installing a new Postgres standby node</em></a>.</li>
+	<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper on macine 1, 2, and 3:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 	<li>Update Cassandra and ZooKeeper on machine 1, 2, and 3:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li>Set the following iptables rule on machine 12:<br />
@@ -629,7 +654,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c qpid -f <em><strong>configFile</strong></em></span></li>
 	<li>Flush iptables&nbsp;on machine 12:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; sudo iptables -F</span></li>
-	<li>Repeat steps 4 through 7 on machine 13.</li>
+	<li>Repeat steps 5 through 8 on machine 13.</li>
 	<li>Update LDAP on machine 4 and 5:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ldap -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li>Update Edge components on machine 12, 13, 6, 7, 10, and 11 in that order:<br />
@@ -679,15 +704,19 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>Ensure that you decommission the new standby node by using the procedure above in <a href="#requiredupgradetopostgres94-decommissioningapostgresnode"><em>Decommissioning a Postgres node</em></a>.</li>
 </ol>
 <h3>For a 12-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
 	<li>Ensure that you have installed a new Postgres standby node as described above in <a href="#requiredupgradetopostgres94-installinganewpostgresstandbynode"><em>Installing a new Postgres standby node</em></a>.</li>
 	<li>Update Cassandra and ZooKeeper:
 		<ol style="list-style: lower-alpha outside">
+			<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper on macine 1, 2, and 3 in Data Center 1:<br />
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 			<li>On machines 1, 2 and 3 in Data Center 1:<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
+			<li><strong>If updating from 4.16.01</strong>, downgrade Zookeeper on macine 7, 8, and 9 in Data Center 2:<br />
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;yum downgrade apigee-zookeeper</span></li>
 			<li>On machines 7, 8, and 9 in Data Center 2<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs,zk -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 		</ol>
@@ -797,7 +826,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<p>The procedure to update a 4.16.01 or 4.16.05 version of API BaaS to 4.17.05 is the same as the procedure to update a 4.16.09 version. See <a href="http://docs.apigee.com/node/25161">http://docs.apigee.com/node/25161</a>.</p>
 </div>
 <div class="note">
-	<p>BaaS does not support the <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> paramater so you do not have to add it to the configuration file.</p>
+	<p>BaaS does not support the <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> parameter so you do not have to add it to the configuration file.</p>
 </div>
 <h3>For a non-standard installation</h3>
 <p>If you have a non-standard installation, then update Edge components in the following order:</p>

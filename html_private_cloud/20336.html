@@ -1,5 +1,5 @@
 <h1> About Planets, Regions, Pods, Organizations, Environments and Virtual Hosts </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>An on-premises installation of Edge Private Cloud, or an Edge instance, consists of multiple Edge components installed on a set of server nodes. The following image shows the relationship among the planet, regions, pods, organizations, environments, and virtual hosts that make up an Edge instance:</p>
 <p><img alt="" src="../html/sites/docs/files/regionsPortsEtc.png" style="width: 465px; height: 457px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
 <p>The following table describes these relationships:</p>
@@ -175,14 +175,17 @@
 				<p>Management Server, Zookeeper, LDAP, UI, Qpid</p>
 			</td>
 			<td>
-				<p>application-datastore<br />
-					apimodel-datastore<br />
-					audit-datastore</p>
+				<div>application-datastore</div>
+				<div>apimodel-datastore</div>
+				<div>audit-datastore</div>
+				<div>auth-datastore</div>
 			</td>
 			<td>
-				<p>auth-datastore<br />
-					management-server<br />
-					user-settings-datastore</p>
+				<div>identityzone-datastore</div>
+				<div>edgenotification-datastore</div>
+				<div>management-server</div>
+				<div>scheduler-datastore</div>
+				<div>user-settings-datastore</div>
 			</td>
 		</tr>
 		<tr>

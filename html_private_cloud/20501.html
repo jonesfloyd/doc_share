@@ -1,5 +1,5 @@
 <h1> Configuring TLS for the management API </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <p>By default, TLS is disabled for the management API and you access the Edge management API over HTTP by using the IP address of the Management Server node and port 8080. For example:</p>
 <pre>
 http://ms_IP:8080</pre>
@@ -16,6 +16,15 @@ https://ms_IP:8443</pre>
 <p>The procedure in this section configures TLS to use port 8443 on the Management Server. Regardless of the port that you use, you must ensure that the port is open on the Management Server. For example, you can use the following command to open it:</p>
 <pre>
 $ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 8443 -j ACCEPT --verbose </pre>
+<div class="note">
+	<p>This example uses port 8443 for the TLS port, and not the more common port 443. The reason is that ports below 1024 are typically protected by the operating system and require the process that accesses them to have root access. The Edge Management Server runs as the "apigee" user and therefore typically does not have access to ports below 1024.</p>
+	<p>&nbsp;</p>
+	<p>One alternative it to use a load balancer with the Edge API and terminate TLS on the load balancer on port 443. You can then use either HTTP or HTTPS between the load balancer and the Edge API.&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>Another alternative is to use <span style="font-family:courier new,courier,monospace;">iptables</span> to forward requests to port 443 to port 8443. For example:</p>
+	<pre>
+iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 8443 </pre>
+</div>
 <h2>Configure TLS</h2>
 <p>Edit the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/management-server.properties</span> file to control TLS use on traffic to and from your management API. If this file does not exist, create it.</p>
 <p>Use the following procedure to configure TLS access to the management API:</p>
@@ -43,7 +52,11 @@ $ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 8443 -j ACCEPT --
 </ol>
 <p>The management API now supports access over TLS.</p>
 <h2>Configure the Edge UI to use TLS to access the Edge API</h2>
-<p>In the procedure above, Apigee recommended leaving <span style="font-family:courier new,courier,monospace;">conf_webserver_http.turn.off=false</span> so that the Edge UI can continue to make Edge API calls over HTTP. Use the following procedure to configure the Edge UI to make these calls over HTTPS only:</p>
+<p>In the procedure above, Apigee recommended leaving <span style="font-family:courier new,courier,monospace;">conf_webserver_http.turn.off=false</span> so that the Edge UI can continue to make Edge API calls over HTTP.</p>
+<div class="warning">
+	<p>Apigee recommends that you disable HTTP access in production environments.</p>
+</div>
+<p>Use the following procedure to configure the Edge UI to make these calls over HTTPS only:</p>
 <ol>
 	<li>Configure TLS access to the management API as described above.</li>
 	<li>After confirming that TLS is working for the management API, edit&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application/<strong>management-server.properties</strong></span>&nbsp;to set the following property:<br />
@@ -51,10 +64,10 @@ $ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 8443 -j ACCEPT --
 	<li>Restart the Edge Management Server by using the command:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">$ /opt/apigee/apigee-service/bin/apigee-service edge-management-server restart&nbsp;</span></li>
 	<li>Edit <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/<strong>ui.properties</strong></span> to set the following property for the Edge UI. If that file does not exist, create it:<br />
-		<span style="font-family:courier new,courier,monospace;">conf_apigee_apigee.mgmt.baseurl="https://<em><strong>MS_IP:8443</strong></em>/v1"</span><br />
+		<span style="font-family:courier new,courier,monospace;">conf_apigee_apigee.mgmt.baseurl="https://<em><strong>FQDN:8443</strong></em>/v1"</span><br />
 		<br />
-		where <em><strong>MS_IP</strong></em> is the IP address of the Management Server and the port number is the port specified above by&nbsp;<span style="font-family:courier new,courier,monospace;">conf_webserver_ssl.port</span>.</li>
-	<li><strong>Only if you used a self-signed cert</strong> when&nbsp;configuring TLS access to the management API above, add the following property to <span style="font-family:courier new,courier,monospace;">ui.properties</span>:<br />
+		where <em><strong>FQDN</strong></em>&nbsp;is the full domain name, as per your certificate address of the Management Server, and the port number is the port specified above by <span style="font-family:courier new,courier,monospace;">conf_webserver_ssl.port</span>.</li>
+	<li><strong>Only if you used a self-signed cert (not recommended in a production environment)</strong> when&nbsp;configuring TLS access to the management API above, add the following property to <span style="font-family:courier new,courier,monospace;">ui.properties</span>:<br />
 		<span style="font-family:courier new,courier,monospace;">conf/application.conf+play.ws.ssl.loose.acceptAnyCertificate=true</span><br />
 		<br />
 		Otherwise, the Edge UI will reject a self-signed cert.</li>

@@ -1,5 +1,5 @@
 <h1> Installation Topologies </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <div>This section describes the Edge installation topologies, meaning the node configurations supported by Edge.&nbsp;</div>
 <h2>All-in-one Installation</h2>
 <p>A single host runs all Edge components. Note that this configuration is only to be used for getting started with Edge or for initial prototyping. It is not to be used as a deployment or production environment.</p>
@@ -13,7 +13,6 @@
 	<p>This scenario combines cluster and Gateway components to reduce the number of servers used. To achieve optimal performance, the cluster can also be deployed on three different servers. This scenario also introduces a master-standby replication between two Postgres nodes if analytics statistics are mission critical.<span class="Apple-tab-span" style="white-space:pre"> </span></p>
 </div>
 <p><img alt="" src="../html/sites/docs/files/5host-cluster-Setup.png" style="width: 728px; height: 189px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.16.09</em></p>
 <h2>9-host clustered installation</h2>
 <p>This scenario is similar to five-host clustered installation but has different Analytics components setup to achieve performance high availability.</p>
 <div class="note">
@@ -28,7 +27,7 @@
 </div>
 <p><img alt="" src="../html/sites/docs/files/13host-cluster-Setup.png" style="width: 700px; height: 218px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
 <h2>12-host clustered installation</h2>
-<p>This scenario covers disaster recovery and analytics high availability across two datacenters.&nbsp;</p>
+<p>This scenario covers disaster recovery and analytics high availability across two datacenters.</p>
 <div class="note">
 	<p>This scenario uses master-master OpenLDAP replication and master-standby Postgres replication (across two datacenters).</p>
 </div>

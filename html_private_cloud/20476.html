@@ -1,6 +1,6 @@
 <h1> Configuring the Router to retry connections to a Message Processor </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
-<h2>Configuring the Router response when a Message Processor is unavailable</h2>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<h2>Configuring the Router response when a Message Processor is unavailable during a health check</h2>
 <p>The Router makes a health check to the Message Processor every five seconds to determine if the Message Processor is able to service requests. If a Message Processor goes down, the Router automatically forwards requests to another Message Processor.&nbsp;</p>
 <p>You can configure how the Router reacts when the Message Processor goes down by setting the <span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.nginx.server.retry</span> property on the Router. That property takes a space-delimited set of values that can include:</p>
 <ul>
@@ -19,12 +19,12 @@
 	<li>Add the <span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.nginx.server.retry</span> property as shown below:<br />
 		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.nginx.server.retry=http_599 error</span></li>
 	<li>Make sure the properties file is owned by the 'apigee' user:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/customer/application/ui.properties</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/customer/application/router.properties</span></li>
 	<li>Restart the Router:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart</span></li>
 </ol>
-<h2>Configuring the Router timeout when accessing Message Processors</h2>
-<p>The Edge Router has a preset timeout of 57 seconds when attempting to access a Message Processor. When that timeout expires, the Router will attempt to connect to another Message Processor, if one is available. Otherwise, it will return an error.</p>
+<h2>Configuring the Router timeout when accessing Message Processors as part of an&nbsp;API proxy request</h2>
+<p>The Edge Router has a preset timeout of 57 seconds when attempting to access a Message Processor as part of handling a request through an API proxy. When that timeout expires, the Router will attempt to connect to another Message Processor, if one is available. Otherwise, it will return an error.</p>
 <p>You can use two properties to control this timeout:</p>
 <ul>
 	<li><span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.proxy.read.timeout</span>&nbsp;specifies the wait time, in seconds, for a single Message Processor. The default value is 57 seconds.</li>
@@ -37,7 +37,7 @@
 		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.proxy.read.timeout=120</span><br />
 		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.nginx.upstream_next_timeout=240</span></li>
 	<li>Make sure the properties file is owned by the 'apigee' user:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/customer/application/ui.properties</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; chown apigee:apigee /opt/apigee/customer/application/router.properties</span></li>
 	<li>Restart the Router:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart</span></li>
 </ol>

@@ -1,9 +1,9 @@
 <h1> Monitoring Best Practices </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.05</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <h2>Monitoring Alerts</h2>
 <p>Apigee Edge allows you to forward alerts to syslogs or external monitoring systems/tools when an error or a failure occurs due to failure of an event. These alerts can be system-level or application-level alerts/events. Application level alerts are mostly custom alerts that are created based on events generated. The network administrator usually configures the custom conditions. For more information on alerts, contact Apigee Support.</p>
 <h2>Setting Alert Thresholds</h2>
-<p>Set a threshold after which an alert needs to be generated. What you set depends on your hardware configuration? Threshold should be set in relation to your capacity. For example, Apigee Edge might be too low if you only have 6GB capacity. You can assign threshold with equal to (=) or greater than (&gt;) criterion. You can also specify a time interval between two consecutive alerts generation. You can use the hours/minutes/seconds option.</p>
+<p>Set a threshold after which an alert needs to be generated. What you set depends on your hardware configuration. Threshold should be set in relation to your capacity. For example, Apigee Edge might be too low if you only have 6GB capacity. You can assign threshold with equal to (=) or greater than (&gt;) criterion. You can also specify a time interval between two consecutive alerts generation. You can use the hours/minutes/seconds option.</p>
 <h2>Criteria for Setting System-level Alerts</h2>
 <p>The following table describes the criteria:</p>
 <table class="table">
@@ -75,7 +75,7 @@
 <ul>
 	<li>Port 4526, 4527 and 4528 on Management Server, Router and Message Processor</li>
 	<li>Port 1099, 1100 and 1101 on Management Server, Router and Message Processor</li>
-	<li>Port 8081 on Routers</li>
+	<li>Port 8081&nbsp;and 15999&nbsp;on Routers</li>
 	<li>Port 8082 and 8998 on Message Processors</li>
 </ul>
 <p>Port 8080 on Management Server Check the following third-party ports to make sure they’re active:</p>

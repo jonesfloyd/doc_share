@@ -10,6 +10,8 @@
 <h2>Who can perform the update</h2>
 <p>The user running the update should be the same as the user who originally installed Edge, or a user running as root.</p>
 <p>After you install the Edge RPMs, any user can configure them.</p>
+<h2>Which components must you update</h2>
+<p>You must update all Edge components. Edge does not support a setup that contains components from multiple versions.</p>
 <h2>Required upgrade to Qpid&nbsp;1.35</h2>
 <p>This release contains a required update to Qpid 1.35. As part of updating a Qpid node, you have to:</p>
 <ul>
@@ -36,13 +38,13 @@
 	<li>For RedHat/CentOS 6.x:<br />
 		<span style="font-family:courier new,courier,monospace;">wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm; rpm -ivh epel-release-latest-6.noarch.rpm</span></li>
 </ul>
-<h2>Required addition of SMTMAILFROM configuration paramater</h2>
+<h2>Required addition of SMTPMAILFROM configuration paramater</h2>
 <p>Edge 4.17.05 added a new required parameter to the configuration file used when you enable an&nbsp;SMTP server. You must now set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span>&nbsp;in the configuration file when enabling the SMTP server. This parameter has the form:</p>
 <pre>
 SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 <h2>Required if updating when using external authentication</h2>
 <p>You can integrate an external directory service into an existing Apigee Edge Private Cloud installation. This feature is designed to work with any directory service that supports LDAP, such as Active Directory, OpenLDAP, and others. An external LDAP solution allows system administrators to manage user credentials from a centralized directory management service, external to systems like Apigee Edge that use them.</p>
-<p>See <a href="http://docs.apigee.com/node/22046">http://docs.apigee.com/node/22046</a> for more.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for more.</p>
 <p>When external authentication is enabled, most customers use the Active Directory SAM account name field as the username for authentication, instead of an email address which is used by the Edge OpenLDAP server.&nbsp;</p>
 <p>If you have integrated with&nbsp;an external directory service, then add the following line to your config file when updating Edge to 4.17.05:</p>
 <pre>
@@ -56,7 +58,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li><strong>Backup all nodes</strong><br />
 		Before you update, it is recommended to perform a complete backup of all nodes for safety reasons. Use the procedure for your current version of Edge to perform the backup.&nbsp;<br />
 		<br />
-		This allows you to have a backup plan, in case the update to a new version doesn’t function properly. For more information on backup, see <a href="http://docs.apigee.com/node/20691">http://docs.apigee.com/node/20691</a>.</li>
+		This allows you to have a backup plan, in case the update to a new version doesn’t function properly. For more information on backup, see <a href="http://docs.apigee.com/node/37271">http://docs.apigee.com/node/37271</a>.</li>
 	<li><strong>Ensure Edge is running</strong><br />
 		Ensure that Edge is up and running during update process by using the command:<br />
 		<br />
@@ -80,7 +82,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 <p>The key to zero-downtime upgrading is to remove each Router, one at a time, from the load balancer. You then update the Router and any other components on the same machine as the Router, and then add the Router back to the load balancer.</p>
 <ol>
 	<li>Update the machines in the correct order for your installation as described below in "Order of machine update".</li>
-	<li>When it is time to update the Routers, select any one Router and make it unreachable, as described in <a href="http://docs.apigee.com/node/20371">http://docs.apigee.com/node/20371</a>.</li>
+	<li>When it is time to update the Routers, select any one Router and make it unreachable, as described in <a href="http://docs.apigee.com/node/37071">http://docs.apigee.com/node/37071</a>.</li>
 	<li>Update the selected Router and all other Edge components on the same machine as the Router. All Edge configurations show a Router and Message Processor on the same node.&nbsp;</li>
 	<li>Make the Router reachable again.</li>
 	<li>Repeat steps 2 through 4 for the remaining Routers.</li>
@@ -125,9 +127,9 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>If present, disable any CRON jobs configured to perform a repair operation on Cassandra until after the update completes.&nbsp;</li>
 	<li>Log in to your node as root to install the Edge RPMs.<br />
 		<strong>Note</strong>: While RPM installation requires root access, you can perform Edge configuration without root access.</li>
-	<li>Disable SELinux as described in <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+	<li>Disable SELinux as described in <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 	<li>Download the Edge 4.17.05&nbsp;<span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file to <span style="font-family:courier new,courier,monospace;">/tmp/bootstrap_4.17.05.sh</span>:<br />
-		<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap_4.17.05.sh -o /tmp/bootstrap_<span style="background-color:#004;color:#fff;">4.17.05</span>.sh</span></li>
+		<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap_4.17.05.sh -o /tmp/bootstrap_4.17.05.sh</span></li>
 	<li>Install the Edge 4.17.05&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-service</span> utility and dependencies:&nbsp;<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; sudo bash /tmp/bootstrap_4.17.05.sh apigeeuser=<em><strong>uName</strong></em> apigeepassword=<em><strong>pWord</strong></em>&nbsp;</span><br />
 		<br />
@@ -138,6 +140,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 		I = Install OpenJDK 1.8 (default)<br />
 		C = Continue without installing Java<br />
 		Q = Quit. For this option, you have to install Java yourself.</li>
+	<li><strong>(CentOS-6.x and RedHat-6.x only)</strong>&nbsp;On all&nbsp;Qpid&nbsp;nodes, run the following command to ensure you download the correct&nbsp;Qpid&nbsp;version:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; yum install&nbsp;apigee-qpidd&nbsp;--disablerepo=epel</span></li>
 	<li>Use <span style="font-family:courier new,courier,monospace;">apigee-service</span> to update the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility:?<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-setup update</span></li>
 	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-validate</span> utility on the Management Server:?<br />
@@ -162,7 +166,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">b</span> = API BaaS Stack<br />
 		<span style="font-family:courier new,courier,monospace;">p</span> = API BaaS Portal<br />
 		<span style="font-family:courier new,courier,monospace;">ebp</span> = ElasticSearch, API BaaS Stack, and API BaaS Portal on the same node</li>
-	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/19906">http://docs.apigee.com/node/19906</a>.</li>
+	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/36781">http://docs.apigee.com/node/36781</a>.</li>
 </ol>
 <p>To later rollback the update, use the procedure described in <a href="http://docs.apigee.com/node/25176">http://docs.apigee.com/node/25176</a>. &nbsp;</p>
 <h2>Procedure for updating to 4.17.05 from a local repo</h2>
@@ -174,8 +178,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 </ul>
 <p>To update from a local 4.17.05 repo:</p>
 <ol>
-	<li>Create a local 4.17.05 repo as described in "Create a local Apigee repository" at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.<br />
-		<strong>Note</strong>: If you already have an existing 4.16.09 repo, you can add the 4.17.05 repo to it as described in "Update a local Apigee repository" at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+	<li>Create a local 4.17.05 repo as described in "Create a local Apigee repository" at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.<br />
+		<strong>Note</strong>: If you already have an existing 4.16.09 repo, you can add the 4.17.05 repo to it as described in "Update a local Apigee repository" at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 	<li><strong>To install apigee-service from a .tar file</strong>:
 		<ol style="list-style: lower-alpha outside">
 			<li>On the node with the local repo, use the following command to package the local repo into a single .tar file named <span style="font-family:courier new,courier,monospace;">/opt/apigee/data/apigee-mirror/apigee-4.17.05.tar.gz</span>:<br />
@@ -193,7 +197,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 	</li>
 	<li><strong>To install apigee-service using the Nginx webserver:</strong>
 		<ol style="list-style: lower-alpha outside">
-			<li>Configure the Nginx web server as described in "Install from the repo using the Nginx webserver" at <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a>.</li>
+			<li>Configure the Nginx web server as described in "Install from the repo using the Nginx webserver" at <a href="http://docs.apigee.com/node/36766">http://docs.apigee.com/node/36766</a>.</li>
 			<li>On the remote node, download the Edge <span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file to /tmp/bootstrap_4.17.05.sh:<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; /usr/bin/curl http://<em><strong>uName:</strong></em><em><strong>pWord</strong></em>@<em><strong>remoteRepo</strong></em>:3939/bootstrap_4.17.05.sh -o /tmp/bootstrap_4.17.05.sh</span><br />
 				<br />
@@ -228,7 +232,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">b</span> = API BaaS Stack<br />
 		<span style="font-family:courier new,courier,monospace;">p</span> = API BaaS Portal<br />
 		<span style="font-family:courier new,courier,monospace;">ebp</span> = ElasticSearch, API BaaS Stack, and API BaaS Portal on the same node</li>
-	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/19906">http://docs.apigee.com/node/19906</a>.</li>
+	<li>Test the update by running the apigee-validate utility on the Management Server, as described in <a href="http://docs.apigee.com/node/36781">http://docs.apigee.com/node/36781</a>.</li>
 </ol>
 <p>To later rollback the update, use the procedure described in <a href="http://docs.apigee.com/node/25176">http://docs.apigee.com/node/25176</a>. &nbsp;</p>
 <h2>Order of machine update</h2>
@@ -238,6 +242,8 @@ IS_EXTERNAL_AUTH="true"</pre>
 	<li>For any machine with multiple Edge components (Management Server, Message Processor, Router, QPID Server but not Postgres Server), use the "-c edge" option to update them all at the same time.&nbsp;</li>
 	<li>If a step specifies that it should be performed on multiple machines, perform it in the specified machine order.</li>
 	<li>There is no separate step to update Monetization. It is updated when you specify the "-c edge" option.</li>
+	<li><strong>(CentOS-6.x and RedHat-6.x only)</strong>&nbsp;On all&nbsp;Qpid&nbsp;nodes with an external internet connection, ensure that you ran the following command to download the correct&nbsp;Qpid&nbsp;version as shown above:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; yum install&nbsp;apigee-qpidd&nbsp;--disablerepo=epel</span></li>
 </ul>
 <h3>For a 1-host standalone installation</h3>
 <ol>
@@ -267,7 +273,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ui -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 </ol>
 <h3>For a 2-host standalone installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
@@ -295,7 +301,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ui -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 </ol>
 <h3>For a 5-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
@@ -325,7 +331,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ui -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 </ol>
 <h3>For a 9-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
@@ -355,7 +361,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ui -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 </ol>
 <h3>For a 13-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
@@ -385,7 +391,7 @@ IS_EXTERNAL_AUTH="true"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c ui -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 </ol>
 <h3>For a 12-host clustered installation</h3>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">SMTPMAILFROM</span> in your configuration file if you have enabled SMTP on Edge. This parameter has the form:<br />
 		<span style="font-family:courier new,courier,monospace;">SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</span></li>
@@ -485,7 +491,7 @@ BAAS_CASS_DC_LIST="dc-1"
 BAAS_CLUSTER_SEEDS="dc-1:$IP4,dc-1:$IP5"</pre>
 <p>For a complete config file example, see <a href="http://docs.apigee.com/node/19931">http://docs.apigee.com/node/19931</a>.</p>
 <p>You also must ensure that port 2551 is open on all Stack nodes for access from all other Stack nodes.</p>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Update Cassandra on machine 5, 6, and 7:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
@@ -510,7 +516,7 @@ BAAS_CASS_DC_LIST="dc-1"
 BAAS_CLUSTER_SEEDS="dc-1:$IP4,dc-1:$IP5"</pre>
 <p>For a complete config file example, see <a href="http://docs.apigee.com/node/19931">http://docs.apigee.com/node/19931</a>.</p>
 <p>You also must ensure that port 2551 is open on all Stack nodes for access from all other Stack nodes.</p>
-<p>See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for the list of Edge topologies and node numbers.</p>
+<p>See <a href="http://docs.apigee.com/node/36736">http://docs.apigee.com/node/36736</a> for the list of Edge topologies and node numbers.</p>
 <ol>
 	<li>Update Cassandra on machine 8, 9, and 10:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
