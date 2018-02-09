@@ -1,5 +1,5 @@
 <h1> Setting up a virtual host </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>A virtual host on Edge defines the domains and Edge Router ports on which an API proxy is exposed, and, by extension, the URL that apps use to access an API proxy. A virtual host also defines whether the API proxy is accessed by using the HTTP protocol, or by the encrypted HTTPS protocol.</p>
 <p>As part of the Edge onboarding process, you have to create an organization, environment, and virtual host. Edge provides the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">setup-org</span>&nbsp;command to make this process easier for new users.</p>
 <p>When you create the virtual host, you must specify the following information:</p>
@@ -53,17 +53,3 @@ curl -v http://&lt;routerIP&gt;:9001/{proxy-base-path}/{resource-path} <span sty
 <p>Then you can make a request as if you had a DNS entry:</p>
 <pre>
 curl -v http://<strong>myapis.apigee.net</strong>:9001/{proxy-base-path}/{resource-path}</pre>
-<h2>Using a protected port in a virtual host</h2>
-<p>If you want to create a virtual host that binds the Router to a protected port, such as port numbers less than 1000, then you have to configure the Router to run as a user with access to those ports. By default, the Router runs as the user "apigee" which does not have access to privileged ports.&nbsp;</p>
-<p>To run the Router as a different user:</p>
-<ol>
-	<li>As root, create the file&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/etc/edge-router.d/RUN_USER.sh</span>.</li>
-	<li>Add the following entry to the file:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">RUN_USER=root</span><br />
-		If you do not want to run the Router as root, specify a user with access to the port.</li>
-	<li>Save the file.</li>
-	<li>If you specified a user other than root, change the owner of the file to that user:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;<em><strong>USER:USER</strong></em>&nbsp;/opt/apigee/etc/edge-router.d/RUN_USER.sh</span></li>
-	<li>Restart router:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart&nbsp;</span></li>
-</ol>

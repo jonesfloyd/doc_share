@@ -1,5 +1,5 @@
 <h1> Install Edge components on a node </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>After you install the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility on a node, use the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility to install one or more Edge components on the node.&nbsp;</p>
 <div class="note">
 	<p>See <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a> for more on installing the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility.</p>
@@ -24,7 +24,7 @@
 <p>For more, see <a href="http://docs.apigee.com/node/19916">http://docs.apigee.com/node/19916</a>.</p>
 <h3>Using a protected port when creating a virtual host</h3>
 <p>If you want to create a virtual host that binds the Router to a protected port, such as port numbers less than 1000, then you have to configure the Router to run as a user with access to those ports. By default, the Router runs as the user "apigee" which does not have access to privileged ports.&nbsp;</p>
-<p>For infomration about how to confgure a virtual host and Router to access ports below 1000, see <a href="http://docs.apigee.com/node/22951">http://docs.apigee.com/node/22951</a>.</p>
+<p>For information about how to configure a virtual host and Router to access ports below 1000, see <a href="http://docs.apigee.com/node/22951">http://docs.apigee.com/node/22951</a>.</p>
 <h2>Specifying the components to install</h2>
 <p>The following table lists the options you pass to the -p option of the apigee-service utility to specify which components to install on the node:&nbsp;</p>
 <table class="table">
@@ -189,6 +189,13 @@
 <div class="warning">
 	<p><strong>Creating a config file on a Windows machine and then copying it to a Linux machine can add additional end-of-line, carriage return, or newline characters to the file that are not compatible with all Linux utilites.</strong> This situation can also occur if you copy text from a Windows editor and paste into a Linux window. As an alternative, you can use the Linux&nbsp;<span style="font-family:courier new,courier,monospace;">dos2unix</span> utility to clean up a config file created on Windows. Or, make sure to do all editing of config files in a Linux editor.</p>
 </div>
+<h2>Test system requirements without running an install</h2>
+<p>Edge for the Private Cloud supports the <span style="font-family:courier new,courier,monospace;">ENABLE_SYSTEM_CHECK=y</span> property to check CPU and memory requirements on a machine as part of an install. However, in previous releases of Edge, that check required you to actually perform the install.</p>
+<p>You can now use the "-t" flag to make that check without having to do an install. For example, to check the system requirments for an "aio" install without actually doing the install, use the following command:&nbsp;</p>
+<pre>
+/opt/apigee/apigee-setup/bin/setup.sh -p aio -f <em>configFile</em> <strong>-t</strong></pre>
+<p>This command displays any errors with the system requirements to the screen.&nbsp;&nbsp;</p>
+<p>See <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a> for a list of system requirements for all Edge components.</p>
 <h2>Installation log files</h2>
 <p>By default, the setup.sh utility writes log information about the installation to:</p>
 <p><span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/var/log/apigee-setup/setup.log</span></p>

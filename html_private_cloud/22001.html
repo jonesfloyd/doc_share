@@ -1,9 +1,9 @@
 <h1> Enabling external authentication  </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>This section explains how to obtain, install, and configure the components required to integrate an external LDAP service into Apigee Edge for user authentication.&nbsp;</p>
 <h2>Prerequisites</h2>
 <ul>
-	<li>You must have an Apigee Edge for Private Cloud 4.17.05 installation.&nbsp;</li>
+	<li>You must have an Apigee Edge for Private Cloud 4.18.01 installation.&nbsp;</li>
 	<li>You must have global system administrator credentials on Apigee Edge for Private Cloud to perform this installation.&nbsp;</li>
 	<li>You need to know the root directory of your Apigee Edge for Private Cloud installation. The default root directory is <span style="font-family:courier new,courier,monospace;">/opt</span>.&nbsp;</li>
 	<li>You must add your <strong>Edge global system administrator credentials</strong> to the external LDAP. Remember that by default, the sysadmin credentials are stored in the Edge internal LDAP. Once you switch to the <strong>external</strong> LDAP, your sysadmin credentials will be authenticated there instead. Therefore, you must provision the credentials to the external system <strong>before</strong> enabling external authentication in Edge.&nbsp;<br />
@@ -20,7 +20,6 @@
 <p>The main activity you'll perform is configuring the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">management-server.properties</span>&nbsp;file. This activity includes stopping and starting the Edge Management Server, deciding whether you want to use direct or indirect binding, encrypting sensitive credentials, and other related tasks.&nbsp;</p>
 <ol>
 	<li><strong>Important</strong>: Decide now whether you intend to use the indirect or direct binding authentication method. This decision will affect some aspects of the configuration. See <a href="http://docs.apigee.com/node/21996">http://docs.apigee.com/node/21996</a>.</li>
-	<li><strong>Important</strong>: You must do an additional configuration (described later in this document) under either (or both) of the following circumstances: (a) if you intend to have users log in using usernames that are not email addresses. In this case, your sysadmin user must also authenticate with a username <strong>and/or</strong> (b) if the password for your sysadmin user account in your external LDAP is different from the password you configured when you first installed Apigee Edge for Private Cloud. See <a href="http://docs.apigee.com/node/22006">http://docs.apigee.com/node/22006</a>.</li>
 	<li><strong>Important</strong>: You must do these config steps on each Apigee Edge Management Server (if you are running more than one).&nbsp;</li>
 	<li>Open <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/management-server.properties</span> in a text editor. If the file does not exist, create it.</li>
 	<li>Add the following line. <strong>Note: Be sure that there are no trailing spaces at the end of the line</strong>.<br />
@@ -36,6 +35,7 @@
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-management-server restart</span></li>
 	<li>Verify that the server is running:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-all status</span></li>
+	<li><strong>Important</strong>: You must do an additional configuration under either (or both) of the following circumstances: (a) if you intend to have users log in using usernames that are not email addresses. In this case, your sysadmin user must also authenticate with a username <strong>and/or</strong> (b) if the password for your sysadmin user account in your external LDAP is different from the password you configured when you first installed Apigee Edge for Private Cloud. See <a href="http://docs.apigee.com/node/22006">http://docs.apigee.com/node/22006</a>.</li>
 </ol>
 <h3>DIRECT BINDING configuration sample</h3>
 <pre>
@@ -95,7 +95,9 @@
 ## Change these baseDN values to match your external LDAP service. This attribute value will be provided by your external LDAP administrator, and may have more or fewer dc elements depending on your setup.
 <strong>conf_security_externalized.authentication.user.store.baseDN=<em>dc=apigee,dc=com</em></strong>
 
-## Do not change this search string. It is used internally. conf_security_externalized.authentication.user.store.search.query=(&amp;(${userAttribute}=${userId}))
+## Do not change this search string. It is used internally. 
+<strong>conf_security_externalized.authentication.user.store.search.query=(&amp;(${userAttribute}=${userId}))</strong>
+
 ## Identifies the external LDAP property you want to bind against for Authentication. For example if you are binding against an email address, this would typically be in the userPrincipalName property in your external LDAP instance. Alternatively if you are binding against the user’s ID, this would typically be in the sAMAccountName property. See also "<a href="http://docs.apigee.com/node/22006">http://docs.apigee.com/node/22006</a>".
 <strong>conf_security_externalized.authentication.user.store.user.attribute=userPrincipalName</strong>
 

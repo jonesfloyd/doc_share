@@ -22,7 +22,7 @@
 <h2>Which components must you update</h2>
 <p>You must update all Edge components. Edge does not support a setup that contains components from multiple versions.</p>
 <h2>Downgrading Zookeeper if updating from 4.16.01</h2>
-<p>The &nbsp;version of the Zookeeper RPM in Edge for Private Cloud 4.16.01 is&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-zookeeper-3.4.5-1.0.905.noarch.rpm</span>. In subsequent versions of Edge, the Zookeeper version was changed back to&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-zookeeper-3.4.5-0.0.94x</span>. This prevents yum from upgrading Zookeeper to a later versions from 4.16.01. The way to corrct this situation is to run&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">yum downgrade apigee-zookeeper</span>&nbsp;before updating Zookeeper.</p>
+<p>The &nbsp;version of the Zookeeper RPM in Edge for Private Cloud 4.16.01 is&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-zookeeper-3.4.5-1.0.905.noarch.rpm</span>. In subsequent versions of Edge, the Zookeeper version was changed back to&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-zookeeper-3.4.5-0.0.94x</span>. This prevents yum from upgrading Zookeeper to a later versions from 4.16.01. The way to correct this situation is to run&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">yum downgrade apigee-zookeeper</span>&nbsp;before updating Zookeeper.</p>
 <p>You can check your Zookeeper version by using the following command:</p>
 <pre>
 &gt; rpm -qa |grep apigee-zookeeper</pre>
@@ -65,7 +65,7 @@ apigee-zookeeper-3.4.5-1.0.905</pre>
 <h2>Required to enable EPEL repo</h2>
 <p>You must enable&nbsp;<a href="https://fedoraproject.org/wiki/EPEL">Extra Packages for Enterprise Linux (or EPEL)</a>&nbsp;to install or update Edge. The command you use&nbsp;depends on your version of RedHat/CentOS:</p>
 <ul>
-	<li>For&nbsp;RedHat/CentOS 7.x:?<br />
+	<li>For&nbsp;RedHat/CentOS 7.x:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm; rpm -ivh epel-release-latest-7.noarch.rpm</span></li>
 	<li>For RedHat/CentOS 6.x:<br />
 		<span style="font-family:courier new,courier,monospace;">wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm; rpm -ivh epel-release-latest-6.noarch.rpm</span></li>

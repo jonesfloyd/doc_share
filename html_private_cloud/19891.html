@@ -1,5 +1,5 @@
 <h1> Edge Installation Overview </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>A typical Edge installation consists of Edge components distributed across multiple nodes. After you install Edge on a node, you then install and configure one or more Edge components on the node.</p>
 <h2>Installation process</h2>
 <p>Installing Edge on a node is a multi-step process:</p>
@@ -10,7 +10,7 @@
 	<li>Select your Edge configuration from the list of recommended topologies. For example, you can install Edge on a single node for testing, or on 13 nodes for production. See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a> for more.</li>
 	<li>On each node in your selected topology, install the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility:
 		<ul>
-			<li>Download the Edge <span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file to <span style="font-family:courier new,courier,monospace;">/tmp/bootstrap_4.17.05.sh</span>.</li>
+			<li>Download the Edge <span style="font-family:courier new,courier,monospace;">bootstrap_4.18.01.sh</span> file to <span style="font-family:courier new,courier,monospace;">/tmp/bootstrap_4.18.01.sh</span>.</li>
 			<li>Install the Edge <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility and dependencies.&nbsp;</li>
 			<li>Install the Edge <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility and dependencies. &nbsp;&nbsp;<br />
 				<br />
@@ -47,7 +47,7 @@
 </ul>
 <h3>Creating a user with full sudo access to "apigee" user</h3>
 <div class="note">
-	<p>You cannot perform this step until after you have run <span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file to create the "apigee" user.</p>
+	<p>You cannot perform this step until after you have run <span style="font-family:courier new,courier,monospace;">bootstrap_4.</span><span style="font-family: &quot;courier new&quot;, courier, monospace;">18.01</span><span style="font-family:courier new,courier,monospace;">.sh</span> file to create the "apigee" user.</p>
 </div>
 <p>To configure a user to have full sudo access to the "apigee" user, use the "visudo" command to edit the sudoers file to add:</p>
 <pre>
@@ -68,9 +68,9 @@
 <ol>
 	<li>Tasks performed by root:
 		<ol style="list-style: lower-alpha outside">
-			<li>Download and run the&nbsp;<span style="font-family:courier new,courier,monospace;">bootstrap_4.17.05.sh</span> file:??<br />
-				<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap_4.17.05.sh -o /tmp/bootstrap_4.17.05.sh<br />
-				&gt; sudo bash /tmp/bootstrap_4.17.05.sh apigeeuser=<em><strong>uName</strong></em> apigeepassword=<em><strong>pWord</strong></em></span><br />
+			<li>Download and run the&nbsp;<span style="font-family:courier new,courier,monospace;">bootstrap_4.18.01.sh</span> file:??<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; curl https://software.apigee.com/bootstrap_4.18.01.sh -o /tmp/bootstrap_4.18.01.sh<br />
+				&gt; sudo bash /tmp/bootstrap_4.18.01.sh apigeeuser=<em><strong>uName</strong></em> apigeepassword=<em><strong>pWord</strong></em></span><br />
 				<br />
 				This step installs the <span style="font-family:courier new,courier,monospace;">apigee-service</span> utility and creates the "apigee" user.</li>
 			<li>Configure a user to have full&nbsp;sudo&nbsp;access to the "apigee" user as described above.</li>
@@ -110,7 +110,11 @@
 		Nodes with an external internet connection access the Apigee repository to install the Edge RPMs and dependencies.&nbsp;</li>
 	<li><strong>Nodes without an external Internet connection</strong><br />
 		<br />
-		Nodes without an external Internet connection can access a mirrored version of the Apigee repository that you set up internally. This repository contains all Edge RPMs, but you have to ensure that you have all other dependencies&nbsp;available from repos on the internal network.</li>
+		Nodes without an external Internet connection can access a mirrored version of the Apigee repository that you set up internally. This repository contains all Edge RPMs, but you have to ensure that you have all other dependencies&nbsp;available from repos on the internal network.<br />
+		<br />
+		<strong>Note</strong>: Apigee does not host all third-party dependencies in our public repositories. You must download and install these dependencies from publicly accessible repositories.<br />
+		<br />
+		To create the internal Apigee repository, you do require a node with an external internet access to be able to download the Edge RPMs and dependencies. Once you have created the internal repo, you can then move it to another node or make that node accessible to the Edge nodes for installation.</li>
 </ul>
 <h2>Using a local Edge repository to maintain your Edge version</h2>
 <p>One of the reasons to use a local, or mirrored, repository is for installing Edge on nodes with no external internet connection, as described in the previous section.</p>

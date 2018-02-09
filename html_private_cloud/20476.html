@@ -1,5 +1,5 @@
 <h1> Configuring the Router to retry connections to a Message Processor </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <h2>Configuring the Router response when a Message Processor is unavailable during a health check</h2>
 <p>The Router makes a health check to the Message Processor every five seconds to determine if the Message Processor is able to service requests. If a Message Processor goes down, the Router automatically forwards requests to another Message Processor.&nbsp;</p>
 <p>You can configure how the Router reacts when the Message Processor goes down by setting the <span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.nginx.server.retry</span> property on the Router. That property takes a space-delimited set of values that can include:</p>

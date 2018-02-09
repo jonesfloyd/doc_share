@@ -17,7 +17,7 @@
 <p>You should be aware of the following conditions when performing a rollback:</p>
 <ul>
 	<li>The five Edge components listed below share common code. Therefore, to rollback any one of the five components on a node, you must roll back any of the five installed on the node. For example, if you have the Management Server, Router, and Message Processor installed on the node, to roll back any one of them you must roll back all three.<br />
-		?The five components that share code are:
+		The five components that share code are:
 		<ul>
 			<li>Management Server</li>
 			<li>Router</li>
@@ -251,7 +251,7 @@
 				<span style="font-family:courier new,courier,monospace;">&gt; apigee-service edge-gateway uninstall&nbsp;</span></li>
 			<li><strong>If you are rolling back any other component on the node, uninstall just that component:</strong><br />
 				<span style="font-family:courier new,courier,monospace;">&gt; apigee-service <em><strong>comp</strong></em> uninstall&nbsp;</span></li>
-			<li>?I<strong>f you are rolling back the Router</strong>, then you have to delete the contents of <span style="font-family:courier new,courier,monospace;">/opt/nginx/conf.d</span>:<br />
+			<li>I<strong>f you are rolling back the Router</strong>, then you have to delete the contents of <span style="font-family:courier new,courier,monospace;">/opt/nginx/conf.d</span>:<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; cd /opt/nginx/conf.d&nbsp;<br />
 				&gt; rm -rf *</span></li>
 		</ol>

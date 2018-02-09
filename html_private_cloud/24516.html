@@ -1,23 +1,24 @@
 <h1> Set the timeout used by the Edge UI for Edge API management calls </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
-<p>You can specify the API timeout duration used by the Edge UI to control how long the UI waits for an API management call to return. The following properties define the timeout:</p>
-<ul>
-	<li><span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee_apigee.feature.apitimeout</span>&nbsp;sets the time, in seconds, that the UI waits for a call to the backend to return, regardless of any activity on it. If the call is not completed in that time, the UI throws a timeout error. The default value is 180 seconds (3 minutes).</li>
-	<li><span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee_play.ws.timeout.idle</span>&nbsp;sets how long the UI waits, in milliseconds, for activity on the server. It can be set to the same value as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee_apigee_apitimeout</span>&nbsp;or to a lesser value. Setting it to a larger value has no effect. The default is 180000 milliseconds (3 minutes).</li>
-	<li><span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee_play.ws.timeout.connection</span>&nbsp;sets how long the UI waits for a connection to be established. It can be set to the same value as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee_apigee_apitimeout</span>&nbsp;or to a lesser value. Setting it to a larger value has no effect. The default is 120000 milliseconds (2 minutes).</li>
-</ul>
-<p>To set these properties:</p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
+<p>By default, a session in the Edge UI expires one day after login. That means Edge UI users have to log in again after the session expires.</p>
+<p>You can configure the session timeout be setting the <span style="font-family:courier new,courier,monospace;">conf_application_session.maxage</span> property in the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/ui.properties</span> file.</p>
+<p>To set this property:</p>
 <ol>
 	<li>Open the <span style="font-family:courier new,courier,monospace;">ui.properties</span> file in an editor. If the file does not exist, create it::<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; vi /opt/apigee/customer/application/ui.properties</span></li>
-	<li>Set the properties as desired:<br />
-		<span style="font-family:courier new,courier,monospace;">conf_apigee_apigee.feature.apitimeout="240"<br />
-		conf_apigee_play.ws.timeout.idle="240000"<br />
-		conf_apigee_play.ws.timeout.connection="180000"</span></li>
+	<li>Set <span style="font-family:courier new,courier,monospace;">conf_application_session.maxage</span> as a time value and time unit. Time units can be:
+		<ul>
+			<li><span style="font-family:courier new,courier,monospace;">m</span>, minute, minutes</li>
+			<li><span style="font-family:courier new,courier,monospace;">h</span>, hour, hours</li>
+			<li><span style="font-family:courier new,courier,monospace;">d</span>, day, days<br />
+				<br />
+				For example, set&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_application_session.maxage</span>&nbsp;as:
+				<div>&nbsp;</div>
+				<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_application_session.maxage="2d"</span></li>
+		</ul>
+	</li>
 	<li>Save your changes.</li>
-	<li>Make sure the properties file is owned by the 'apigee' user:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/opt/apigee/customer/application/ui.properties</span></li>
 	<li>Restart the Edge UI:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui restart</span></li>
 </ol>
-<p>&nbsp;</p>
+<div>&nbsp;</div>

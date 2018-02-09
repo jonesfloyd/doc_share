@@ -1,5 +1,5 @@
 <h1> Enabling/Disabling Server (Message Processor/Router) Reachability </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>It is a good practice to disable&nbsp;reachability&nbsp;on a server during maintenance, such as for a server restart or upgrade. When reachability is disabled, no traffic is directed to the server. For example, when reachability is disabled on a Message Processor, Routers will not direct any traffic to that Message Processor.</p>
 <p>For example, to upgrade a Message Processor, you can use the following procedure:</p>
 <ol>
@@ -23,8 +23,12 @@
 <pre>
 Checking if message-processor is up: message-processor is up.</pre>
 <h2>Disabling/enabling&nbsp;reachability on a Router</h2>
-<p>In a production environment, you typically have a load balancer in front of the Edge Routers. Load balancers monitor port 15999 on the Routers to ensure that the Route is available. To make a Router unreachable, you can block port 15999 on the Router. If the load balancer is unable to access the Router on port 15999 it no longer forwards requests to the Router.&nbsp;</p>
-<p>For example, you can block the port by using the following iptables command on the Router node:</p>
+<p>In a production environment, you typically have a load balancer in front of the Edge Routers. Load balancers monitor port 15999 on the Routers to ensure that the Route is available.</p>
+<p>Configure the load balancer to perform an HTTP or TCP health check on the Router using the following URL:</p>
+<pre>
+http://<em><strong>router_IP</strong></em>:15999/?v1/servers/self/reachable</pre>
+<p>This URL returns an HTTP 200 response code if the Router is reachable.&nbsp;</p>
+<p>To make a Router unreachable, you can block port 15999 on the Router. If the load balancer is unable to access the Router on port 15999 it no longer forwards requests to the Router. For example, you can block the port by using the following iptables command on the Router node:</p>
 <pre>
 &gt; ?sudo iptables -A INPUT -i eth0 -p tcp --dport 15999 -j REJECT</pre>
 <p>To later make the Router available, flush iptables:</p>
@@ -33,11 +37,16 @@ Checking if message-processor is up: message-processor is up.</pre>
 <p>You might be using iptables to manage other ports on the node so you have to take that into consideration when you flush iptables or use iptables&nbsp;to block port 15999. If you are using iptables for other rules, you can use the -D option to reverse the specific change:</p>
 <pre>
 &gt; sudo iptables -D INPUT -i eth0 -p tcp --dport 15999 -j REJECT</pre>
-<h2>Checking reachability status</h2>
-<p>To get the reachable status of a &nbsp;Router, make a request to port 8081 on the Router:</p>
+<div class="note">
+	<p>As an alternative to checking reachability on the Router on port 15999, you can check the port on individual virtual hosts. For example, if you have a virtual host on port 9001, make a TCP check on that port. To make that port unreachable, you can use the following iptables command:&nbsp;</p>
+	<pre>
+sudo iptables -A INPUT -i eth0 -p tcp --syn --dport 9001 -j REJECT </pre>
+</div>
+<h2>Checking the status of Router or Message Processor</h2>
+<p>To get the status of a Router, make a request to port 8081 on the Router:</p>
 <pre>
 &gt; curl -v http://&lt;routerIP&gt;:8081/v1/servers/self/up</pre>
-<p>If the Router is reachable, the request returns "true" in the response and HTTP 200.</p>
-<p>To get reachable status of a &nbsp;Message Processor:</p>
+<p>If the Router is up, the request returns "true" in the response and HTTP 200. Note that this call only checks if the Router is up and running. Control of the Router's reachability from a load balancer is determinedby port 15999</p>
+<p>To get the status of a Message Processor:</p>
 <pre>
 &gt; curl http://&lt;mpIP&gt;:8082/v1/servers/self/up</pre>

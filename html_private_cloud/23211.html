@@ -1,5 +1,5 @@
 <h1> Beta Monitoring Dashboard Installation  </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <div class="note">
 	<p>If you performed an All-In-One (AIO) Edge installation, where you install all Edge components on a single node, then you already installed the RPM files for the dashboard. Therefore, you can skip step 1, the install step, of the procedures below and proceed directly to step 2.&nbsp;</p>
 </div>
@@ -122,7 +122,7 @@ http://192.168.0.1:8086</pre>
 <ol>
 	<li>On your first Edge node, install <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-telegraf install</span></li>
-	<li>Create a config file for <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>. Typically, you store this file in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make it owned by the 'apigee' user.&nbsp;<br />
+	<li>Create a config file for <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>&nbsp;named&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">sa_telegraf.txt</span>. Typically, you store this file in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make it owned by the 'apigee' user.&nbsp;<br />
 		<br />
 		Set the following property in the file to specify the URL of the apigee-influxdb node, including port 8086:<br />
 		<span style="font-family:courier new,courier,monospace;">INFLUXDB_URL=http://influx_IP:8086</span></li>
@@ -139,7 +139,7 @@ http://192.168.0.1:8086</pre>
 <ol>
 	<li>On your first Edge node, install <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-grafana install</span></li>
-	<li>Create a config file for <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>. Typically, you store this file in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make it owned by the 'apigee' user.&nbsp;<br />
+	<li>Create a config file for <span style="font-family:courier new,courier,monospace;">apigee-grafana</span>&nbsp;named&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">sa_grafana.txt</span>. Typically, you store this file in a directory accessible by the 'apigee' user, such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/customer/application</span>, and make it owned by the 'apigee' user.&nbsp;<br />
 		<br />
 		Set the following properties in the file. These properties are described above:<br />
 		<span style="font-family:courier new,courier,monospace;">INFLUXDB_HOST=192.168.56.101<br />
@@ -194,14 +194,14 @@ http://<em><strong>grafana_IP_or_DNS</strong></em>:3000</pre>
 <h2>Updating the Beta monitoring dashboard</h2>
 <p>Use one of the two procedures below based on the Edge version that you are upgrading from:</p>
 <ul>
-	<li>4.16.09, 4.17.01, and 4.17.05 use the same procedure</li>
+	<li>4.16.09 and 4.17.0x use the same procedure</li>
 	<li>4.16.05 requires you to uninstall <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> as part of the update.</li>
 </ul>
-<h3>Update from version 4.16.09, 4.17.01, or 4.17.05</h3>
-<p>If you installed the Beta version of the Apigee Monitoring Dashboard in 4.16.09, 4.17.01, or 4.17.05 you can update it to the Beta version for 4.17.09.</p>
+<h3>Update from version 4.16.09 or 4.17.0x</h3>
+<p>If you installed the Beta version of the Apigee Monitoring Dashboard in 4.16.09 or 4.17.0x you can update it to the Beta version for 4.18.01.</p>
 <p>To update the Beta monitoring dashboard:</p>
 <ol>
-	<li>Update Edge to 4.17.09 as described at <a href="http://docs.apigee.com/node/23216">http://docs.apigee.com/node/23216</a> and <a href="http://docs.apigee.com/node/23136">http://docs.apigee.com/node/23136</a>.</li>
+	<li>Update Edge to 4.18.01 as described at <a href="http://docs.apigee.com/node/36701">http://docs.apigee.com/node/36701</a>, <a href="http://docs.apigee.com/node/36706">http://docs.apigee.com/node/36706</a>, and <a href="http://docs.apigee.com/node/36711">http://docs.apigee.com/node/36711</a>.</li>
 	<li>Update <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> on the Management Server node:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c pp -f <em><strong>configfile</strong></em></span><br />
 		<br />
@@ -217,10 +217,10 @@ http://<em><strong>grafana_IP_or_DNS</strong></em>:3000</pre>
 	<li>Repeat step 4 for every node.</li>
 </ol>
 <h3>Update from version 4.16.05&nbsp;</h3>
-<p>The 4.16.05 version of the dashboard used <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> instead of <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>. As part of updating to 4.17.09 you uninstall <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> and install <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>.</p>
+<p>The 4.16.05 version of the dashboard used <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> instead of <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>. As part of updating to 4.18.01 you uninstall <span style="font-family:courier new,courier,monospace;">apigee-collectd</span> and install <span style="font-family:courier new,courier,monospace;">apigee-telegraf</span>.</p>
 <p>To update the Beta monitoring dashboard:</p>
 <ol>
-	<li>Update Edge to 4.17.09 as described at <a href="http://docs.apigee.com/node/23216">http://docs.apigee.com/node/23216</a> and <a href="http://docs.apigee.com/node/23136">http://docs.apigee.com/node/23136</a>.</li>
+	<li>Update Edge to 4.18.01 as described at <a href="http://docs.apigee.com/node/23216">http://docs.apigee.com/node/23216</a> and <a href="http://docs.apigee.com/node/23136">http://docs.apigee.com/node/23136</a>.</li>
 	<li>Update <span style="font-family:courier new,courier,monospace;">apigee-influxdb</span> on the Management Server node:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c pp -f <em><strong>configfile</strong></em></span><br />
 		<br />

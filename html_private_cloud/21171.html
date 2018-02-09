@@ -1,9 +1,6 @@
 <h1> Set the HTTP port used by the portal </h1>
-<p style="text-align: right;"><em>Developer Services Portal v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.</em><em>18.01</em></p>
 <p>By default, the Nginx server installed with the portal listens for request on port 8079. Use the procedure below to configure Nginx to use a different port:</p>
-<div class="note">
-	<p>By default, the portal runs as the user "apigee". However, ports 1000 and below are often protected ports, which do not allow access to the "apigee" user. Therefore, you typically &nbsp;use ports above 1000 with the portal.&nbsp;</p>
-</div>
 <ol>
 	<li>Ensure that the desired port number is open on the Edge node.</li>
 	<li>Open<span style="font-family:courier new,courier,monospace;"> /opt/apigee/customer/application/drupal-devportal.properties</span> in an editor. If the file and directory does not exist, create it.&nbsp;</li>

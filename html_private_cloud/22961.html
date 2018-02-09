@@ -1,5 +1,5 @@
 <h1> Edge Configuration File Reference </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>Shown below is an example of a complete silent configuration file for a 9 node Edge installation. Edit this file as necessary for your configuration. Use the <span style="font-family: &quot;courier new&quot;, courier, monospace;">-f</span> option to <span style="font-family: &quot;courier new&quot;, courier, monospace;">setup.sh</span> to include this file. Also shown below are example configuration files for each Edge topology.</p>
 <div class="note">
 	<p>The definition of the IP# variables for the Router, Message Processor, Qpid, and Postgres nodes are for illustrating the node configuration; they are not actually used.&nbsp;</p>
@@ -85,7 +85,9 @@ CASS_HOSTS="$IP1:1,1 $IP2:1,1 $IP3:1,1"
 # CASS_USERNAME=
 # CASS_PASSWORD=
 
-# Set Postgres password. Default is postgres.
+# Postgres username and password as set when you installed Edge.
+# Default is apigee:postgres.
+PG_USER=apigee
 PG_PWD=postgres
 
 # Use to enable Postgres master-standby replication
@@ -155,6 +157,10 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 			</td>
 		</tr>
 		<tr>
+			<td><span style="font-family:courier new,courier,monospace;">APIGEE_LDAPPW</span></td>
+			<td>Specifies the OpenLDAP password.</td>
+		</tr>
+		<tr>
 			<td>
 				<p><span style="font-family:courier new,courier,monospace;">USE_LDAP_REMOTE_HOST<br />
 					LDAP_HOST<br />
@@ -215,7 +221,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 			<td>
 				<p>The IP addresses or DNS names of the ZooKeeper nodes. The IP addresses or DNS names must be listed in the same order on all ZooKeeper nodes.</p>
 				<p>In a multi-data center environment, list all ZooKeeper nodes from both data centers.</p>
-				<p>Specify the “:observer” modifier &nbsp;on ZooKeeper nodes only when creating multiple data centers as described in a 12-host installation. In a single data center installation, omit that modifier. See <a href="#orderofcomponentinstallation-12hostclusteredinstallation">12-host clustered installation </a>for more.</p>
+				<p>Specify the “:observer” modifier &nbsp;on ZooKeeper nodes only when creating multiple data centers as described in a 12-host installation. In a single data center installation, omit that modifier. See "12-host clustered installation" at <a href="http://docs.apigee.com/node/19901">http://docs.apigee.com/node/19901</a> for more.</p>
 			</td>
 		</tr>
 		<tr>
@@ -225,8 +231,12 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 			<td>
 				<p>The IP addresses or DNS names of the ZooKeeper nodes used by this data center. The IP addresses or DNS names must be listed in the same order on all ZooKeeper nodes.</p>
 				<p>In a single data center installation, these are the same nodes as specified by ZK_HOSTS.</p>
-				<p>In a multi-data center environment, list only the ZooKeeper nodes in this data center. See <a href="#orderofcomponentinstallation-12hostclusteredinstallation">12-host clustered installation </a>for more.</p>
+				<p>In a multi-data center environment, list only the ZooKeeper nodes in this data center. See "12-host clustered installation" at <a href="http://docs.apigee.com/node/19901">http://docs.apigee.com/node/19901</a> for more.</p>
 			</td>
+		</tr>
+		<tr>
+			<td><span style="font-family:courier new,courier,monospace;">CASS_CLUSTERNAME</span></td>
+			<td>Optionally species&nbsp;the name of the Cassandra cluster. The default name is "Apigee".</td>
 		</tr>
 		<tr>
 			<td>
@@ -236,7 +246,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 				<p>The IP addresses (not DNS names) of the Cassandra nodes. The first two nodes will be used as seed servers. The IP addresses must be listed in the same order on all Cassandra nodes.</p>
 				<p>Cassandra nodes can have an optional “:dc,ra” suffix that specifies the data center and rack of the Cassandra node. Specify this modifier only when creating multiple data centers as described in a 12-host installation. In a single data center installation, omit that modifier.</p>
 				<p>For example '192.168.124.201:1,1 = datacenter 1 and rack/availability zone 1, and '192.168.124.204:2,1 = datacenter 2 and rack/availability zone 1.</p>
-				<p>In a multi-datacenter environment, to overcome firewall issues, CASS_HOSTS have to be ordered in a manner (as shown in above example) such that the nodes of the current datacenter are placed at the beginning. See <a href="#orderofcomponentinstallation-12hostclusteredinstallation">12-host clustered installation </a>for more.</p>
+				<p>In a multi-datacenter environment, to overcome firewall issues, CASS_HOSTS have to be ordered in a manner (as shown in above example) such that the nodes of the current datacenter are placed at the beginning. See "12-host clustered installation" at <a href="http://docs.apigee.com/node/19901">http://docs.apigee.com/node/19901</a> for more.</p>
 			</td>
 		</tr>
 		<tr>
@@ -250,8 +260,11 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 			</td>
 		</tr>
 		<tr>
-			<td><span style="font-family:courier new,courier,monospace;">PG_PWD</span></td>
+			<td><span style="font-family:courier new,courier,monospace;">PG_USER<br />
+				PG_PWD</span></td>
 			<td>
+				<p>By default, the PostgreSQL database has two users defined: 'postgres' and 'apigee'.&nbsp;</p>
+				<p><span style="font-family: &quot;courier new&quot;, courier, monospace;">PG_USER</span>&nbsp;lets you change the username of the 'apigee' user. You cannot change the name of the 'postgres' user.</p>
 				<p>By default, the PostgreSQL database has two users defined: 'postgres' and 'apigee'. Both users have a default password of 'postgres'. Use <span style="font-family:courier new,courier,monospace;">PG_PWD</span>&nbsp;to set the password to a different value for both users at install time.</p>
 			</td>
 		</tr>

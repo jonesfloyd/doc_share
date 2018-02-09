@@ -1,5 +1,5 @@
 <h1> Allowing the Edge UI Access to Local IP Addresses </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>There are several places where the Edge UI might attempt to access a local IP address. These local IP address might correspond to private or otherwise protected resources that should not be exposed to external users:</p>
 <ul>
 	<li>The Trace tool in the Edge UI has the ability to send and receive API request to any specified URL. In certain deployment scenarios where Edge components are co-hosted with other internal services, a malicious user may misuse the power of the Trace tool by making requests to private IP addresses.&nbsp;</li>
@@ -15,7 +15,7 @@
 <p>If you want to enable the Edge UI to access private IP addresses, set the following tokens:&nbsp;</p>
 <ul>
 	<li>For the Trace tool, the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee-base_apigee.feature.enabletraceforinternaladdresses</span>&nbsp;property is disabled by default. Set it to true to enable the Trace tool access to private IP addresses.</li>
-	<li>For OpenAPI specs, the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee-base_apigee.feature.</span><span style="font-family: &quot;courier new&quot;, courier, monospace;">enableopenapiforinternaladdresses</span>&nbsp;property is disabled by default. Set it to true to enable an OpenAPI access to private IP addresses. Requires Edge 4.16.09.01. See <a href="http://docs.apigee.com/node/22711">http://docs.apigee.com/node/22711</a> for more.&nbsp;</li>
+	<li>For OpenAPI specs, the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf_apigee-base_apigee.feature.</span><span style="font-family: &quot;courier new&quot;, courier, monospace;">enableopenapiforinternaladdresses</span>&nbsp;property is disabled by default. Set it to true to enable an OpenAPI access to private IP addresses.&nbsp;&nbsp;</li>
 	<li>For WSDL files, the <span style="font-family:courier new,courier,monospace;">conf_apigee-base_apigee.feature.enablewsdlforinternaladdresses</span>&nbsp;property is disabled by default. Set it to true to enable the upload of a WSDL file from private IP addresses.&nbsp;</li>
 </ul>
 <div class="note">

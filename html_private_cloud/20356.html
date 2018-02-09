@@ -1,5 +1,5 @@
 <h1> Resetting Edge Passwords </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>You can reset the OpenLDAP, Apigee Edge system administrator, Edge organization user, and Cassandra passwords after the installation is complete.</p>
 <h2>Reset OpenLDAP Password</h2>
 <p>Depending on your Edge configuration, OpenLDAP can be installed as:</p>
@@ -58,11 +58,26 @@
 </ol>
 <p>In an <strong>OpenLDAP replication</strong> environment with multiple Management Servers, resetting the password on one Management Server updates the other Management Server automatically. However, you have to update all Edge UI nodes separately.</p>
 <h2>Reset Organization User Password</h2>
-<p>To reset the password for an organization user, use the <span style="font-family:courier new,courier,monospace;">apigee-servce</span> utility to invoke <span style="font-family:courier new,courier,monospace;">apigee-openldap</span>:</p>
+<p>To reset the password for an organization user, use the apigee-servce utility to invoke apigee-setup:</p>
 <pre>
-&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-openldap change-ldap-user-password -u <em><strong>userEmail</strong></em>
-</pre>
-<p>You are prompted for the system admin's password, and then for the new user password. For security reasons, the text of the passwords is not displayed as you enter them. &nbsp;&nbsp;</p>
+/opt/apigee/apigee-service/bin/apigee-service apigee-setup reset_user_password
+ [-h] 
+ [-u USER_EMAIL] 
+ [-p USER_PWD]
+ [-a ADMIN_EMAIL] 
+ [-P APIGEE_ADMINPW] 
+ [-f configFile]</pre>
+<p>For example:</p>
+<pre>
+&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-setup reset_user_password -u user@myCo.com -p foo12345 -a admin@myCo.com -P adminPword </pre>
+<div class="note">
+	<p>If you omit the admin email, then it uses the default admin email set at installation time. If you omit the admin password, then the script prompts for it. All other parameters must be set on the command line, or in a config file.&nbsp;</p>
+</div>
+<p>Shown below is an example config file that you can use with the "-f" option:</p>
+<pre>
+USER_NAME= user@myCo.com
+USER_PWD= "foo12345"
+APIGEE_ADMINPW= adminPword&nbsp;&nbsp;</pre>
 <p>You can also use the <a href="http://docs.apigee.com/node/21221">http://docs.apigee.com/node/21221</a> API to change the user password.&nbsp;</p>
 <h2>Sys Admin and Organization User Password Rules</h2>
 <p>Use this section to enforce a desired level of password length and strength for your API management users. The settings use a series of preconfigured (and uniquely numbered) regular expressions to check password content (such as uppercase, lowercase, numbers, and special characters). &nbsp;Write these settings to <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/management-server.properties</span> file. If that file does not exist, create it.</p>

@@ -1,5 +1,5 @@
 <h1> Developer Services portal requirements </h1>
-<p style="text-align: right;"><em>Developer Services Portal v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Developer Services Portal v. 4.</em><em>18.01</em></p>
 <div class="note">
 	<p>Do not install Developer Channel Services portal on the same servers as Apigee Edge.</p>
 </div>
@@ -80,18 +80,18 @@
 </ul>
 <p>The extensions and modules can be installed during server installation or by using the YaST tool after the server is installed.</p>-->
 <h2>SMTP requirements</h2>
-<p>Apigee requires that you configure an SMTP server to send email messages from the portal.&nbsp;Therefore, you must ensure that the Drupal can access the necessary port on the SMTP server. For non-TLS SMTP, the port number is typically 25. For TLS-enabled SMTP, it is often 465, but check with your SMTP provider.&nbsp;</p>
+<p>Apigee recommends, but does not require, that you configure an SMTP server to send email messages from the portal.&nbsp;If configured, you must ensure that the Drupal can access the necessary port on the SMTP server. For non-TLS SMTP, the port number is typically 25. For TLS-enabled SMTP, it is often 465, but check with your SMTP provider.&nbsp;</p>
 <h2>Additional Requirements&nbsp;</h2>
 <p>In order to perform the installation, the user installing the software must have root access.&nbsp;</p>
 <h2>Deployment Architecture Requirements&nbsp;</h2>
 <p>Developer Channel Services has a single interface with the Apigee Management Server via a REST API in order to store and retrieve information about a user’s applications. Developer Channel Services will need to be able to connect to the Management Server via HTTP or HTTPS, depending on your installation.&nbsp;</p>
-<p><img alt="" src="../html/sites/docs/files/DevPortalconnectionflow.png" style="width: 602px; height: 200px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
+<p><img alt="" src="../html/sites/docs/files/DevPortalconnectionflow_v2.png" style="width: 650px; height: 216px; border-width: 1px; border-style: solid; margin: 15px;" /></p>
 <h2>Information Required Before You Start the Install</h2>
 <p>Before starting the install, you must have the following information available:</p>
 <ol>
 	<li>Which platform are you configuring: Red Hat or CentOS? If this is a Red Hat install, the machine must be registered on the Red Hat Network to download RPMs.</li>
-	<li>Do you plan on installing MySQL on the local machine? Some HA installations require MySQL to be on a different machine than the one serving the portal web pages. If this is the case, do not install MySQL locally. If you want a simple install with everything on the same machine, then install MySQL locally.</li>
-	<li>If you intend to access a remote MySQL server, the hostname, port, database name, username, and password of the remote MySQL server. The remote MySQL server should already be configured before you start the installation.</li>
+	<li>Do you plan on installing Postgres on the local machine? If this is the case, do not install Postgres locally. If you want a simple install with everything on the same machine, then install Postgres locally.</li>
+	<li>If you intend to access a remote Postgres server, the hostname, port, database name, username, and password of the remote Postgres server. The remote Postgres server should already be configured before you start the installation.</li>
 	<li>What is the fully-qualified domain name of the web server? (This information will be added to /etc/hosts.) This should be an IP address or hostname, such as <span style="font-family:courier new,courier,monospace;">portalserver.example.com</span>. The default value is <span style="font-family:courier new,courier,monospace;">localhost</span>.</li>
 	<li>There are three pieces of information that allow your portal to communicate with the Apigee Edge management server. This information is as follows:
 		<ol style="list-style: lower-alpha outside">

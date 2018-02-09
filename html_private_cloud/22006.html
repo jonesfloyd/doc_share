@@ -1,5 +1,5 @@
 <h1> Configuration required for different sysadmin credentials </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>When you first installed Edge, a special kind of user was created called a sysadmin user, and at the same time some additional config files were updated with this user’s details. If you configure your external LDAP to authenticate using a non-email address username and / or you have a different password in your external LDAP for this sysadmin user, then you will need to make the changes described in this section.</p>
 <p>There are two locations that need to be updated:</p>
 <ul>
@@ -54,7 +54,10 @@
 <h2>Editing the Edge sysadmin username store for Apigee utility scripts</h2>
 <ol>
 	<li>Edit the silent config file that you used to install the Edge UI to set the following property to change the value of ADMIN_EMAIL to the username you will be using for your sysadmin user in your external LDAP:<br />
-		<span style="font-family:courier new,courier,monospace;">APIGEE_EMAIL=<em><strong>newUser</strong></em></span></li>
+		<span style="font-family:courier new,courier,monospace;">APIGEE_EMAIL=<em><strong>newUser</strong></em><br />
+		?IS_EXTERNAL_AUTH="true"</span><br />
+		<br />
+		The <span style="font-family:courier new,courier,monospace;">IS_EXTERNAL_AUTH</span> property configures Edge to support an account name, rather than an email address, as the username.&nbsp;</li>
 	<li>Use the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility to reset the username on all Edge component from the config file:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/setup.sh -p edge -f <em><strong>configFile</strong></em></span><br />
 		<br />

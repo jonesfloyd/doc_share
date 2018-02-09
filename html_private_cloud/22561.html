@@ -1,5 +1,5 @@
 <h1> Uploading API Traffic Data to Apigee - Beta Release </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.18.01</em></p>
 <p>All Edge for Private Cloud customers are required to submit to Apigee statistics about API proxy traffic. Apigee recommends that customers upload that information once a day, possibly by creating a cron job.&nbsp;</p>
 <p>You must submit the data for your production API deployments, but not for APIs in development or testing deployments. In most Edge installations, you will define specific organizations or environments for your production APIs. The data that you submit is only for those production organizations and environments.</p>
 <p>To assist in uploading this data, Apigee provides the Beta release of the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command-line utility. This utility &nbsp;sends the API call volume report back to Apigee. Every Edge for the Private Cloud installation can use this utility to retrieve and report traffic data to Apigee.</p>
@@ -30,7 +30,7 @@
 <p>where <em><strong>analyticsUser</strong></em> is the username of the person running the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility.</p>
 <p>After installing the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility and configuring the user, you can test the utility by running the help command for the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;utility:</p>
 <pre>
-&gt; /opt/apigee/apigee-service/bin/?apigee-service apigee-analytics-collector export traffic --help</pre>
+&gt; /opt/apigee/apigee-service/bin/ apigee-service apigee-analytics-collector export traffic --help</pre>
 <h3>Required information to run apigee-analytics-collector</h3>
 <p>You need the following information to run the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> command and to forward data to Apigee:</p>
 <ul>
@@ -50,7 +50,7 @@
 <h3>Example commands</h3>
 <p>Shown below is an example command to retrieve traffic data for all organizations and environments in the Edge installation and upload that data to Apigee. Notice how you use&nbsp;<span style="font-family:courier new,courier,monospace;">apigee-service</span>&nbsp;to run the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee-analytics-collector</span>&nbsp;command:</p>
 <pre>
-&gt; ?/opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector export traffic \
+&gt;  /opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector export traffic \
 --<strong>apigee_mgmt_api_uri</strong> http://192.168.56.103:8080/v1 \
 --<strong>apigee_mgmt_api_email</strong> $ae_username \
 --<strong>apigee_mgmt_api_password</strong> $ae_password \
@@ -92,7 +92,7 @@
 </ul>
 <p>For example, to specify only the production organizations and environments, use the <span style="font-family:courier new,courier,monospace;">-i</span> (or -<span style="font-family:courier new,courier,monospace;">-include_orgs</span>) and <span style="font-family:courier new,courier,monospace;">-n</span> (or <span style="font-family:courier new,courier,monospace;">--include_envs</span>) options:</p>
 <pre>
-&gt; ?/opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector export traffic <strong>-i myOrg -n prod</strong> \
+&gt;  /opt/apigee/apigee-service/bin/apigee-service apigee-analytics-collector export traffic <strong>-i myOrg -n prod</strong> \
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -101,7 +101,7 @@
 <p>In this example, you only collect data from the prod environment of <strong>myOrg</strong>.&nbsp;</p>
 <p>To dump the data to a screen to examine it before sending it to Apigee, use the <span style="font-family:courier new,courier,monospace;">-S</span> option:</p>
 <pre>
-&gt; ?/opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S </strong>\
+&gt;  /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S </strong>\
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -110,7 +110,7 @@
 <p>The <span style="font-family:courier new,courier,monospace;">-S</span> option omits the data upload to Apigee. You can then rerun the command without the <span style="font-family:courier new,courier,monospace;">-S</span> option to send the data to Apigee.</p>
 <p>One reason to use the <span style="font-family:courier new,courier,monospace;">-S</span> option is so that you can display different types of data locally. Apigee only requires that you upload API traffic data, but the <span style="font-family:courier new,courier,monospace;">-D</span> option lets you display data about API products, developers, apps, or API proxies. The example below uses the <span style="font-family:courier new,courier,monospace;">-D</span> and <span style="font-family:courier new,courier,monospace;">-S</span> options to display developer data locally:</p>
 <pre>
-&gt; ?/opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic <strong>-i myOrg -n prod -S -D devs</strong> \
+&gt;  /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic <strong>-i myOrg -n prod -S -D devs</strong> \
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -118,7 +118,7 @@
 --apigee_analytics_secret $apigee_analytics_secret </pre>
 <p>Include the <span style="font-family:courier new,courier,monospace;">-v</span> option to get verbose output, and the <span style="font-family:courier new,courier,monospace;">-R</span> option to see the curl commands generated by <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span>:</p>
 <pre>
- &gt; ?/opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S -R -v </strong>\
+ &gt;  /opt/apigee/apigee-service/bin/apigee-service&nbsp;apigee-analytics-collector export traffic -i myOrg -n prod <strong>-S -R -v </strong>\
 --apigee_mgmt_api_uri http://192.168.56.103:8080/v1 \
 --apigee_mgmt_api_email $ae_username \
 --apigee_mgmt_api_password $ae_password \
@@ -303,29 +303,129 @@
 	<p>In this scenario, you do not use the <span style="font-family:courier new,courier,monospace;">apigee-analytics-collector</span> utility.</p>
 </div>
 <p>Use the following cURL command to gather traffic data for a specific organization and environment for a specified time interval:</p>
+<!-- Nucleus requires a timeUnit for upload -->
 <pre>
 curl -X GET -u <em><strong>apigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> \
-"http://<em><strong>&lt;ms_IP&gt;</strong></em>:8080/v1/organizations/<em><strong>{org_name}</strong></em>/environments/<em><strong>{env_name}</strong></em>/stats/?select=sum(message_count)&amp;timeRange=<em><strong>MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM</strong></em>"</pre>
+"http://<em><strong>&lt;ms_IP&gt;</strong></em>:8080/v1/organizations/<em><strong>{org_name}</strong></em>/environments/<em><strong>{env_name}</strong></em>/stats/<strong>apiproxy</strong>?select=sum(message_count)&amp;<em><strong>timeRange=MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM&amp;timeUnit=hour</strong></em>"</pre>
 <p>This command uses the Edge Get API message count API. In this command:</p>
 <ul>
 	<li><em><strong>apigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> specifies the email address of an account with access to the Edge /stats APIs.&nbsp;</li>
 	<li><em><strong>&lt;ms_IP&gt;</strong></em> is the IP address or DNS name of the Edge Management Server.</li>
 	<li><em><strong>{org_name}</strong></em> and <em><strong>{env_name}</strong></em> specifies the org and environment.</li>
-	<li><em><strong>MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM</strong></em> specifies the time range of the stats to gather. Notice that the cURL command uses the hex code <span style="font-family:courier new,courier,monospace;">%20</span> for the spaces in the time range.</li>
+	<li><strong>apiproxy</strong> is the dimenesion that groups metrics by API proxies.</li>
+	<li><em><strong>MM/DD/YYYY%20HH:MM~MM/DD/YYYY%20HH:MM&amp;timeUnit=hour</strong></em> specifies the time range divided into time units of the metrics to gather. Notice that the cURL command uses the hex code <code>%20</code> for the spaces in the time range.</li>
 </ul>
-<p>For example, to gather stats for a 24 hour period, use the following command:</p>
+<p>For example, to gather API proxy message counts hour by hour over a 24 hour period, use the following <a href="/management/apis/get/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/stats/%7Bdimension_name%7D-0">management API call</a>. The timeRange contains URL-encoded characters.</p>
 <pre>
-curl -X GET -u a<em><strong>pigee_mgmt_api_email</strong></em><em><strong>:apigee_mgmt_api_password</strong></em> \
-"http://192.168.56.103:8080/v1/organizations/<strong>myOrg</strong>/environments/<strong>prod</strong>/stats/?select=sum(message_count)&amp;timeRange=<strong>08/29/2016%2000:00~08/30/2016%2000:00</strong>"</pre>
+curl -X GET -u a<em><strong>pigee_mgmt_api_email:apigee_mgmt_api_password</strong></em> \
+"http://192.168.56.103:8080/v1/organizations/<strong>myOrg</strong>/environments/<strong>prod</strong>/stats/apiproxy?select=sum(message_count)&amp;<strong>timeRange=01%2F01%2F2018%2000%3A00~01%2F02%2F2018%2000%3A00</strong>"</pre>
 <p>You should see a response in the form:</p>
 <pre>
 {
   "environments" : [ {
     "metrics" : [ {
       "name" : "sum(message_count)",
-      "values" : [ "42.0" ]
-    } ],
-    "name" : "prod"
+      "values": [
+                {
+                  "timestamp": 1514847600000,
+                  "value": "35.0"
+                },
+                {
+                  "timestamp": 1514844000000,
+                  "value": "19.0"
+                },
+                {
+                  "timestamp": 1514840400000,
+                  "value": "58.0"
+                },
+                {
+                  "timestamp": 1514836800000,
+                  "value": "28.0"
+                },
+                {
+                  "timestamp": 1514833200000,
+                  "value": "29.0"
+                },
+                {
+                  "timestamp": 1514829600000,
+                  "value": "33.0"
+                },
+                {
+                  "timestamp": 1514826000000,
+                  "value": "26.0"
+                },
+                {
+                  "timestamp": 1514822400000,
+                  "value": "57.0"
+                },
+                {
+                  "timestamp": 1514818800000,
+                  "value": "41.0"
+                },
+                {
+                  "timestamp": 1514815200000,
+                  "value": "27.0"
+                },
+                {
+                  "timestamp": 1514811600000,
+                  "value": "47.0"
+                },
+                {
+                  "timestamp": 1514808000000,
+                  "value": "66.0"
+                },
+                {
+                  "timestamp": 1514804400000,
+                  "value": "50.0"
+                },
+                {
+                  "timestamp": 1514800800000,
+                  "value": "41.0"
+                },
+                {
+                  "timestamp": 1514797200000,
+                  "value": "49.0"
+                },
+                {
+                  "timestamp": 1514793600000,
+                  "value": "35.0"
+                },
+                {
+                  "timestamp": 1514790000000,
+                  "value": "89.0"
+                },
+                {
+                  "timestamp": 1514786400000,
+                  "value": "42.0"
+                },
+                {
+                  "timestamp": 1514782800000,
+                  "value": "47.0"
+                },
+                {
+                  "timestamp": 1514779200000,
+                  "value": "21.0"
+                },
+                {
+                  "timestamp": 1514775600000,
+                  "value": "27.0"
+                },
+                {
+                  "timestamp": 1514772000000,
+                  "value": "20.0"
+                },
+                {
+                  "timestamp": 1514768400000,
+                  "value": "12.0"
+                },
+                {
+                  "timestamp": 1514764800000,
+                  "value": "7.0"
+                }
+              ]
+            }
+          ],
+          "name" : "proxy1"
   } ],
   "metaData" : {
     "errors" : [ ],

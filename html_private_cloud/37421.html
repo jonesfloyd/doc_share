@@ -1,5 +1,5 @@
 <h1> Install and configure Edge SSO </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>Installing and configuring the Edge SSO module requires that you first generate two sets of TLS keys and certificates. The Edge SSO module uses TLS to secure the transmission of information as part of the SAML handshaking process with the SAML IDP.</p>
 <p><strong>Note</strong>: By default, the Edge SSO module is accessible over HTTP on port 9099 of the node on which it is installed. You can enable TLS on the Edge SSO module. To do so, you have to create a third set of TLS keys and certificates used by Tomcat to support TLS. See <a href="http://docs.apigee.com/node/37426">http://docs.apigee.com/node/37426</a> for more.</p>
 <h2>Create the TLS keys and certificates</h2>
@@ -27,7 +27,7 @@
 	<li><span style="font-family:courier new,courier,monospace;">&gt; sudo chown apigee:apigee server.key</span></li>
 	<li><span style="font-family:courier new,courier,monospace;">&gt; sudo chown apigee:apigee selfsigned.crt </span></li>
 </ol>
-<p>If you want to enable TLS on the Edge SSO module, you cannot use a self-signed certificate. You must generate a cert from a CA. See <a href="http://docs.apigee.com/node/37426">http://docs.apigee.com/node/37426</a> for more.</p>
+<p>If you want to enable TLS on the Edge SSO module, by setting&nbsp;<strong>SSO_TOMCAT_PROFILE</strong>&nbsp;to&nbsp;<strong>SSL_TERMINATION</strong>&nbsp;or to&nbsp;<strong>SSL_PROXY</strong>, you cannot use a self-signed certificate. You must generate a cert from a CA. See <a href="http://docs.apigee.com/node/37426">http://docs.apigee.com/node/37426</a> for more.</p>
 <h2>Install and configure Edge SSO for HTTP access</h2>
 <p>To install the Edge SSO module, <span style="font-family:courier new,courier,monospace;">apigee-sso</span>, you must use the same process that you used to install Edge. Because <span style="font-family:courier new,courier,monospace;">apigee-sso</span> is represented by an RPM file, that means the user performing the install must be the root user or be a user that has full sudo access. See <a href="http://docs.apigee.com/node/19891">http://docs.apigee.com/node/19891</a> for more.</p>
 <p>Pass a config file to the installer. The config file has the following form:</p>
@@ -56,8 +56,9 @@ PG_PWD=postgres
 SSO_PROFILE="saml"
 # Externally accessible IP or DNS name of apigee-sso.
 SSO_PUBLIC_URL_HOSTNAME=$IP2
-# Default port is 9099.
+# Default port is 9099. If changing, set both properties to the same value.
 SSO_PUBLIC_URL_PORT=9099
+SSO_TOMCAT_PORT=9099
 # Set Tomcat TLS mode to DEFAULT to use HTTP access to apigee-sso.
 SSO_TOMCAT_PROFILE=DEFAULT
 SSO_PUBLIC_URL_SCHEME=http

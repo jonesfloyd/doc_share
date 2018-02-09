@@ -1,5 +1,5 @@
 <h1> Creating an Organization, Environment, and Virtual Host </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <h2>Creating an Organization, Environment, and Virtual Host at the same time</h2>
 <p>Before you create an API proxy on Apigee Edge, you must create at least one organization and, within each organization, one or more environments and virtual hosts.&nbsp;</p>
 <div class="note">
@@ -10,6 +10,8 @@
 &gt; /opt/apigee/apigee-service/bin/apigee-service apigee-provision setup-org -f <em><strong>configFile</strong></em></pre>
 <p>The config file contains:</p>
 <pre>
+# Set Edge sys admin credentials.
+ADMIN_EMAIL=your@email.com
 APIGEE_ADMINPW=adminPword     # If omitted, you are prompted for it.
 NEW_USER="y"
 USER_NAME=orgAdmin@myCo.com

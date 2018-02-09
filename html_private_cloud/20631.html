@@ -1,5 +1,5 @@
 <h1> Monitoring Best Practices </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <h2>Monitoring Alerts</h2>
 <p>Apigee Edge allows you to forward alerts to syslogs or external monitoring systems/tools when an error or a failure occurs due to failure of an event. These alerts can be system-level or application-level alerts/events. Application level alerts are mostly custom alerts that are created based on events generated. The network administrator usually configures the custom conditions. For more information on alerts, contact Apigee Support.</p>
 <h2>Setting Alert Thresholds</h2>
@@ -77,8 +77,9 @@
 	<li>Port 1099, 1100 and 1101 on Management Server, Router and Message Processor</li>
 	<li>Port 8081&nbsp;and 15999&nbsp;on Routers</li>
 	<li>Port 8082 and 8998 on Message Processors</li>
+	<li>Port 8080 on Management Server</li>
 </ul>
-<p>Port 8080 on Management Server Check the following third-party ports to make sure they’re active:</p>
+<p>Check the following third-party ports to make sure they’re active:</p>
 <ul>
 	<li>Qpid port 5672</li>
 	<li>Postgres port 5432</li>
@@ -260,7 +261,7 @@ SystemLoadAverage = 0.25 ;</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui restart</span></li>
 </ol>
 <h2>Monitoring Tools</h2>
-<p>The open-source monitoring tools such as Nagios, Collectd, Graphite, Splunk, Sumologic, and Monit can help you monitor your entire enterprise environment and business processes.</p>
+<p>Monitoring tools such as Nagios, Collectd, Graphite, Splunk, Sumologic, and Monit can help you monitor your entire enterprise environment and business processes.</p>
 <table class="table">
 	<thead>
 		<tr>

@@ -1,5 +1,5 @@
 <h1> Configuring TLS/SSL for Edge On Premises </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>TLS (Transport Layer Security, whose predecessor is SSL) is the standard security technology for for ensuring secure, encrypted messaging across your API environment, from apps to Apigee Edge to your back-end services.&nbsp;</p>
 <div class="note">
 	<p>Because Edge originally supported SSL, you will see some instances in the Edge UI, Edge XML, and Edge properties that use the term "SSL". For example, the menu entry in the Edge UI that you use to view certs is called&nbsp;<strong>SSL Certificates</strong>, the XML tag that you use to configure a virtual host to use TLS is named <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span>, and the property to set the SSL port for the management API is&nbsp;<span style="font-family:courier new,courier,monospace;">conf_webserver_ssl.port</span>.</p>
@@ -28,7 +28,7 @@
 <p>Use the following command to convert it to a JKS file named keystore.jks:</p>
 <pre>
 &gt; keytool -importkeystore -srckeystore keystore.pkcs12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks</pre>
-<p>You are prompted to enter the new password for the JKS file, and the existing password for the PKCS12 file.</p>
+<p>You are prompted to enter the new password for the JKS file, and the existing password for the PKCS12 file.&nbsp;<strong>Make sure you use the same password for the JKS file as you used for the PKCS12 file.</strong></p>
 <p>If you have to specify a key alias, such as when configuring TLS between a Router and Message Processor, include the "<span style="font-family:courier new,courier,monospace;">-name"</span> option to the openssl command:</p>
 <pre>
 &gt;? openssl pkcs12 -export -clcerts -in server.pem -inkey private_key.pem -out keystore.pkcs12 <strong>-name devtest</strong></pre>

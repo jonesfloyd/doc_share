@@ -1,5 +1,5 @@
 <h1> Configure your SAML IDP </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>When SAML is enabled, the principal (an Edge UI user) requests access to the service provider (Edge SSO). Edge SSO then requests and obtains an identity assertion from the SAML identity provider (IDP) and uses that assertion to create the OAuth2 token required to access the Edge UI. The user is then redirected to the Edge UI.</p>
 <p>Edge supports many IDPs, including Okta and the Microsoft Active Directory Federation Services (ADFS). For information on configuring ADFS for use with Edge, see <a href="http://docs.apigee.com/node/24041">http://docs.apigee.com/node/24041</a>. For Okta, see the following section.</p>
 <p>To configure your SAML IDP, Edge requires an email address to identify the user. Therefore, the identity provider must return an email address as part of the identity assertion.</p>
@@ -57,7 +57,7 @@
 <ol>
 	<li>Log in to Okta.</li>
 	<li>Select <strong>Applications</strong> and then select your SAML application.</li>
-	<li>Select the <strong>Assignments</strong> tab to add any users to the application. These user will be able to log in to the Edge UIi and make Edge API calls. However, you must first add each user to an Edge organization and specify the user's role. See <a href="http://docs.apigee.com/node/37411">http://docs.apigee.com/node/37411</a> for more.</li>
+	<li>Select the <strong>Assignments</strong> tab to add any users to the application. These user will be able to log in to the Edge UI and make Edge API calls. However, you must first add each user to an Edge organization and specify the user's role. See <a href="http://docs.apigee.com/node/37411">http://docs.apigee.com/node/37411</a> for more.</li>
 	<li>Select the <strong>Sign on</strong> tab to obtain the Identity Provider metadata URL. Store that URL because you need it to configure Edge.</li>
 	<li>Select the <strong>General</strong> tab to configure the Okta application, as shown in the table below:</li>
 </ol>

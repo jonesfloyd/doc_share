@@ -1,7 +1,10 @@
 <h1> Set up Master-Standby Replication for Postgres </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>By default, Edge installs all Postgres nodes in master mode. However, in production systems with multiple Postgres nodes, you configure them to use master-standby replication so that if the master node fails, the standby node can continue to server traffic.</p>
 <p>If the master node ever fails, you can promote the standby server to the master. See <a href="http://docs.apigee.com/node/20426">http://docs.apigee.com/node/20426</a> for more information.</p>
+<div class="note">
+	<p>Master-Standby replication is not supported for the Developer Services portal. The portal only supports a single Postgres node.</p>
+</div>
 <h2>Configure Master-Standby Replication at install time</h2>
 <p>You can configure master-standby replication at install time by including the following properties in the config file for the two Postgres nodes:</p>
 <pre>

@@ -1,5 +1,5 @@
 <h1> Starting, Stopping, Restarting, and Checking the Status of Apigee Edge </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>The order of stopping and starting the subsystems is important. Start and stop scripts are provided that take care of that for you for Edge components running on the same node.&nbsp;</p>
 <p><strong>Stop order</strong>: If you install Edge on multiple nodes, then you should stop Edge components on those nodes in the following order:</p>
 <ol>
@@ -31,11 +31,11 @@
 </ol>
 <p>The following scripts detect the Apigee components configured to run on the system on which the script is executed, and will start or stop only those components in the correct order for that node.</p>
 <ul>
-	<li>To stop Apigee Edge, Apache Cassandra, and Apache ZooKeeper:<br />
+	<li>To stop all Apigee components:<br />
 		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-all stop</span></li>
-	<li>To start Apache ZooKeeper, Apache Cassandra, and Apigee Edge:<br />
+	<li>To start all Apigee components:<br />
 		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-all start</span></li>
-	<li>To check if the server is running:<br />
+	<li>To check which components are running:<br />
 		<span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-service/bin/apigee-all status</span></li>
 </ul>
 <h2>Starting, Stopping, Restarting, and Checking the Status of an Individual Service</h2>

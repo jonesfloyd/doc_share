@@ -1,5 +1,5 @@
 <h1> Disabling Basic Auth on Edge </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>After you have enabled SAML on Edge, you can disable Basic Auth. However, <strong>before you disable Basic Auth</strong>:</p>
 <ul>
 	<li>Make sure you have added all Edge users, including system administrators, to your SAML IDP.</li>
@@ -17,7 +17,7 @@
     &lt;UserAccessControl enabled="true"&gt;
     &lt;/UserAccessControl&gt;
 &lt;/SecurityProfile&gt;</pre>
-<p>If you have already enabled SAML, you see the <span style="font-family:courier new,courier,monospace;"><ssoserver></ssoserver></span> tag in the output:</p>
+<p>If you have already enabled SAML, you see the <span style="font-family:courier new,courier,monospace;">&lt;ssoserver&gt;</span> tag in the output:</p>
 <pre>
 &lt;SecurityProfile enabled="true" name="securityprofile"&gt;
     &lt;UserAccessControl enabled="true"&gt;
@@ -60,12 +60,11 @@ http://localhost:8080/v1/securityprofile  -u <em><strong>sysAdminEmail:pWord</st
 	<li>Run the following bash script to turn off all security:<br />
 		<strong>Caution</strong>: This step disables all authentication on Edge, including SAML.<br />
 		<br />
-		<span style="font-family:courier new,courier,monospace;">#! /bin/bash<br />
-		<eof securityprofile="" set="" system="">
-		<div>/opt/apigee/apigee-zookeeper/bin/zkCli.sh -server localhost:2181 &lt;&lt;EOF</div>
-		<div>set /system/securityprofile &lt;SecurityProfile&gt;&lt;/SecurityProfile&gt;</div>
-		<div>quit</div>
-		EOF&nbsp;</eof></span><br />
+		<span style="font-family:courier new,courier,monospace;">#! /bin/bash</span><br />
+		<div><span style="font-family:courier new,courier,monospace;">/opt/apigee/apigee-zookeeper/bin/zkCli.sh -server localhost:2181 &lt;&lt;EOF</span></div>
+		<div><span style="font-family:courier new,courier,monospace;">set /system/securityprofile &lt;SecurityProfile&gt;&lt;/SecurityProfile&gt;</span></div>
+		<div><span style="font-family:courier new,courier,monospace;">quit</span></div>
+		<span style="font-family:courier new,courier,monospace;">EOF&nbsp;</span><br />
 		<br />
 		You will see output in the form:<br />
 		<span style="font-family:courier new,courier,monospace;">Connecting to localhost:2181<br />

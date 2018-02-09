@@ -1,5 +1,5 @@
 <h1> Adding Cassandra nodes </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>This document describes how to add three new Cassandra nodes to an existing Edge for Private Cloud installation.</p>
 <p>While you can add one or two Cassandra nodes to an existing Edge installation, Apigee recommends that you add three nodes at a time.</p>
 <p>For a list of the system requirements for a Cassandra node, see <a href="http://docs.apigee.com/node/19881">http://docs.apigee.com/node/19881</a>.</p>
@@ -91,6 +91,13 @@ ADMIN_EMAIL=opdk@google.com
 <ol>
 	<li>Rerun setup.sh to update the Management Server for the newly added Cassandra nodes:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/setup.sh -p ms -f <em><strong>updatedConfigFile</strong></em></span></li>
+</ol>
+<h3>Restart all Routers and Message Processors</h3>
+<ol>
+	<li>On all Routers:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service&nbsp;edge-router restart</span></li>
+	<li>On all Message Processors:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt;&nbsp;/opt/apigee/apigee-service/bin/apigee-service&nbsp;edge-message-processor restart</span></li>
 </ol>
 <h3>Free memory on the existing Cassandra nodes</h3>
 <p>On the existing Cassandra nodes, run the nodetool <span style="font-family:courier new,courier,monospace;">cleanup</span> command to free up memory:</p>

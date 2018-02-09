@@ -1,5 +1,5 @@
 <h1> Modifying Java Memory Settings </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>Depending on your traffic and processing requirements you may need to increase the heap size or class metadata size&nbsp;for one or more Apigee components.</p>
 <div class="note">
 	<p>In Java 1.8 class metadata memory allocation replaced permanent generation (permgem). Some Edge properties still refer to permgen as described below.&nbsp;</p>
@@ -7,9 +7,9 @@
 <p>To change these settings, edit the properties file for the component. If the component is installed on multiple machines, such as the Edge Message Processor, then edit the properties file on all machines hosting the component.</p>
 <p>To set these values, set the following properties:</p>
 <ul>
-	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_min_mem</span> - set the minimum heap size.&nbsp;The default is 256 MB.</li>
-	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_max_mem</span> - set the maximum heap size.&nbsp;The default is 512 MB.</li>
-	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_meta_space_size</span>&nbsp;- set the maximum class metadata size. The default value is set to the value of&nbsp;<span style="font-family:courier new,courier,monospace;">bin_setenv_max_permsize</span>, which&nbsp;defaults to 128 MB. On the Message Processor, Apigee recommends that you set this value to 256 MB or 512 MB, depending on your traffic.</li>
+	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_min_mem</span> - set the minimum heap size.&nbsp;The default is 256 MB. This setting corresponds to the&nbsp;Java&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">-Xms</span>&nbsp;option.</li>
+	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_max_mem</span> - set the maximum heap size.&nbsp;The default is 512 MB. This setting corresponds to the Java&nbsp;<span style="font-family:courier new,courier,monospace;">-Xmx</span> option.</li>
+	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_meta_space_size</span>&nbsp;- set the default class metadata size. The default value is set to the value of&nbsp;<span style="font-family:courier new,courier,monospace;">bin_setenv_max_permsize</span>, which&nbsp;defaults to 128 MB. On the Message Processor, Apigee recommends that you set this value to 256 MB or 512 MB, depending on your traffic.&nbsp; This setting corresponds to the&nbsp;Java -<span style="font-family:courier new,courier,monospace;">XX:MetaspaceSize</span>&nbsp;option.</li>
 </ul>
 <p>Set these properties for each component on the machine, using "m" suffix to indicate megabyte. For example, for the Message Processor, set them in the <span style="font-family: 'courier new', courier, monospace;">/opt/apigee/</span><span style="font-family: 'courier new', courier, monospace;">customer/application/message-processor.properties</span> file as:</p>
 <pre>
@@ -25,4 +25,12 @@ bin_setenv_meta_space_size=1024m</pre>
 <p>For example:</p>
 <pre>
 &gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor restart</pre>
+<p>For Java settings not controlled by the properties listed above, you can also set the following in the corresponding&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">.properties</span>&nbsp;file for any Edge component:</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">bin_setenv_ext_jvm_opts</span>&nbsp;- set any Java property not specified by other properties. For example:<br />
+		<br />
+		<span style="font-family:courier new,courier,monospace;">bin_setenv_ext_jvm_opts=-XX:MaxGCPauseMillis=500</span><br />
+		<br />
+		However, do not use&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">bin_setenv_ext_jvm_opts</span>&nbsp;to set <span style="font-family:courier new,courier,monospace;">-Xms</span>, <span style="font-family:courier new,courier,monospace;">-Xmx</span>, or&nbsp;<span style="font-family:courier new,courier,monospace;">-XX:MetaspaceSize</span>&nbsp;as these values are controlled by the properties listed above.&nbsp;</li>
+</ul>
 <p>For additional tips on configuring memory, see <a href="https://community.apigee.com/articles/36324/apigee-private-cloud-performance-optimization.html">this article</a> on the Edge forums.</p>

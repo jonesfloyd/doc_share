@@ -1,5 +1,5 @@
 <h1> Edge Demo Installation Requirements </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>You can install Edge for the Private Cloud on a single host machine as part of a demo or proof of concept installation. This type of installation is referred to as an Edge "all-in-one" installation. The host machine can be a standalone machine or a VM that meets the system prerequisites listed below.</p>
 <div class="note">
 	<p>A single machine install is meant for a getting started and prototyping environments, not for production. &nbsp;&nbsp;A full production installation of Edge requires multiple machines. See <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a>&nbsp;for examples of production installations.</p>
@@ -9,6 +9,8 @@
 	<li>Developer Services portal on its own host machine</li>
 	<li>API BaaS on its own host machine</li>
 </ul>
+<h2>Licensing</h2>
+<p>Each installation of Edge requires a unique license file that you obtain from Apigee. If you do not yet have a license, contact Sales&nbsp;<a href="https://pages.apigee.com/contact-sales-reg.html">here</a>.</p>
 <h2>System requirements for Edge</h2>
 <p>The following table lists the system requirements for installing Edge on a single host machine:</p>
 <table class="table">
@@ -96,7 +98,7 @@
 				<p><strong>CPU cores</strong></p>
 			</td>
 			<td>
-				<p>2 minimum</p>
+				<p>8 minimum</p>
 			</td>
 			<td>
 				<p><span style="font-family:courier new,courier,monospace;">lscpu</span> returns number of CPUs</p>
@@ -108,7 +110,7 @@
 				<p><strong>RAM</strong></p>
 			</td>
 			<td>
-				<p>8 GB minimum</p>
+				<p>16 GB minimum</p>
 			</td>
 			<td>
 				<p><span style="font-family:courier new,courier,monospace;">cat /proc/meminfo</span> returns memory information</p>
@@ -256,10 +258,10 @@
 				<p><strong>Port</strong></p>
 			</td>
 			<td>
-				<p>Ensure port 80 is available and accessible</p>
+				<p>Ensure port 8079 is available and accessible</p>
 			</td>
 			<td>
-				<p><span style="font-family:courier new,courier,monospace;">netstat -nlptu | grep 80</span></p>
+				<p><span style="font-family:courier new,courier,monospace;">netstat -nlptu | grep 8079</span></p>
 			</td>
 		</tr>
 	</tbody>

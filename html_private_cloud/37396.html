@@ -1,5 +1,5 @@
 <h1> Configuring the Developer Services portal to use SAML to communicate with Edge </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>The Developer Services portal acts as a client of Apigee Edge. That means the portal does not function as a stand-alone system. Instead, much of the information used by the portal is actually stored on Edge. When necessary, the portal makes a request to retrieve information from Edge or to send information to Edge.</p>
 <p>The portal is always associated with a single Edge organization. When you configure the portal, you can specify the basic authentication credentials (username and password) for an account in the organization that the portal uses to communicate with Edge.</p>
 <p>If you choose to enable SAML for Edge authentication, you can then configure the portal to use SAML authentication when making requests to Edge. Configuring the portal to use SAML automatically creates a new machine user account in the Edge organization that the portal then uses to make requests to Edge. For more on machine users, see <a href="http://docs.apigee.com/node/37381">http://docs.apigee.com/node/37381</a>.</p>
@@ -80,6 +80,7 @@ PORTALCLI_SSO_CLIENT_OVERWRITE=y
 	</li>
 	<li>You can press the <strong>Test Connection</strong> button to retest the connection at anytime.</li>
 </ol>
+<p>To later change these values, update the config file and run the command again.</p>
 <h2>Disable SAML on the portal</h2>
 <p>If you choose to disable SAML for communications between the portal and Edge, the portal will no longer be able to make requests to Edge. Developers are able to log in to the portal but will not be able to view product or create apps.</p>
 <p><strong>Caution</strong>: If you disable SAML, you should then reconfigure it the portal to either use SAML or, if Edge is still configured to supports Basic Auth, configure the portal to communicate with Edge using Basic Auth. For more on using Basic Auth see <a href="http://docs.apigee.com/node/15146">http://docs.apigee.com/node/15146</a>.</p>

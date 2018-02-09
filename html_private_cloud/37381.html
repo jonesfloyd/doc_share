@@ -1,5 +1,5 @@
 <h1> Using SAML with automated tasks </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>When using SAML with the Edge API, the process that you use to obtain OAuth2 access and refresh tokens from the SAML assertion is called the passcode flow. With the passcode flow, you use a browser to obtain a one-time passcode that you then use to obtain OAuth2 tokens.</p>
 <p>However, your development environment might support automation for common development tasks, such as test automation or Continuous Integration/Continuous Deployment (CI/CD). To automate these tasks when SAML is enabled, you need a way to obtain and refresh OAuth2 tokens without having to copy/paste a passcode from a browser.</p>
 <p>Edge supports automated token generation through the use of machine users. A machine user can obtain OAuth2 tokens without having to specify a passcode. That means you can completely automate the process of obtaining and refreshing OAuth2 tokens by using the Edge management API.</p>

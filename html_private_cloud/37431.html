@@ -1,6 +1,6 @@
 <h1> Enable SAML on the Edge UI </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
-<p>After installing the Edge SSO module, you have to configure the Edge UI to supports SAM. The Edge UI is typically installed on the same node as the Edge Management Server, meaning it s on the same node as <span style="font-family:courier new,courier,monospace;">apigee-sso</span>.</p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
+<p>After installing the Edge SSO module, you have to configure the Edge UI to supports SAML. The Edge UI is typically installed on the same node as the Edge Management Server, meaning it s on the same node as <span style="font-family:courier new,courier,monospace;">apigee-sso</span>.</p>
 <p>After you enable SAML on the Edge UI, the Edge UI uses OAuth to connect to the Management Server. You do not have to worry about expiring OAuth tokens between the Edge UI and the Edge Management Server. Expired tokens are automatically refreshed.</p>
 <div class="note">
 	<p>Automatic refresh of tokens only occurs for the token use by the Edge UI to make calls to the Management Server. Tokens generated for users when they log in to the Edge UI expire in one hour and the refresh token expires in 12 hours.</p>
@@ -47,5 +47,7 @@ EDGEUI_SSO_CLIENT_OVERWRITE=y
 </pre>
 <p>To configure the Edge UI to enable SAML support:</p>
 <ol>
-	<li>Run the following command: <span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui configure-sso -f <strong><em>configFile</em></strong></span></li>
+	<li>Run the following command:<br />
+		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-ui configure-sso -f <strong><em>configFile</em></strong></span></li>
 </ol>
+<p>To later change these values, update the config file and run the command again.</p>

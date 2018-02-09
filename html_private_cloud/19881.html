@@ -1,9 +1,9 @@
 <h1> Installation Requirements </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.18.01</em></p>
 <h2>Hardware Requirements</h2>
 <p>You must meet the following minimum&nbsp;hardware requirements for a highly available infrastructure in a production grade environment. For all installation scenarios described in <a href="http://docs.apigee.com/node/19876">http://docs.apigee.com/node/19876</a>, the following tables list the minimum hardware requirements for the installation components.&nbsp;</p>
-<p>The Edge installation configuration file supports the following property:</p>
 <div class="note">
+	<p>The Edge installation configuration file supports the following property:</p>
 	<pre>
 ENABLE_SYSTEM_CHECK=y 
 </pre>
@@ -36,7 +36,7 @@ ENABLE_SYSTEM_CHECK=y
 				<p>16GB</p>
 			</td>
 			<td>
-				<p>8?core</p>
+				<p>8-core</p>
 			</td>
 			<td>
 				<p>250GB local storage with SSD or fast HDD supporting 2000 IOPS</p>
@@ -47,10 +47,10 @@ ENABLE_SYSTEM_CHECK=y
 				<p>Message Processor/Router on same machine</p>
 			</td>
 			<td>
-				<p>8/16GB</p>
+				<p>16GB</p>
 			</td>
 			<td>
-				<p>4/8?core</p>
+				<p>8-core</p>
 			</td>
 			<td>
 				<p>100GB</p>
@@ -176,7 +176,7 @@ ENABLE_SYSTEM_CHECK=y
 				<p>8GB</p>
 			</td>
 			<td>
-				<p>4?core</p>
+				<p>4-core</p>
 			</td>
 			<td>
 				<p>60GB</p>
@@ -252,7 +252,7 @@ ENABLE_SYSTEM_CHECK=y
 				<p>8GB</p>
 			</td>
 			<td>
-				<p>4?core</p>
+				<p>4-core</p>
 			</td>
 			<td>
 				<p>60 - 80GB</p>
@@ -266,7 +266,7 @@ ENABLE_SYSTEM_CHECK=y
 				<p>8GB</p>
 			</td>
 			<td>
-				<p>4?core</p>
+				<p>4-core</p>
 			</td>
 			<td>
 				<p>60 - 80GB</p>
@@ -323,7 +323,7 @@ ENABLE_SYSTEM_CHECK=y
 <p>In the instructions in this guide, the installation directory is noted as <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee</span>, where <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;</span> is <span style="font-family:courier new,courier,monospace;">/opt</span> by default.</p>
 <h3>Creating a symlink from /opt/apigee</h3>
 <p>Before you create the symlink, you must first create a user and group named "apigee". This is the same group and user created by the Edge installer.&nbsp;</p>
-<p>To create the symlink, perform these steps before downloading the bootstrap_4.17.01.sh file. You must perform all of these steps as root:</p>
+<p>To create the symlink, perform these steps before downloading the bootstrap_4.18.01.sh file. You must perform all of these steps as root:</p>
 <ol>
 	<li>Create the "apigee" user and group:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; groupadd -r apigee<br />
@@ -403,7 +403,7 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 <h2>System limits</h2>
 <p>Ensure that you have set the following system limits on Cassandra and Message Processor nodes:</p>
 <ul>
-	<li>On Cassandra nodes, set soft and hard memlock, nofile, and address space (as) limits for installation user (default is “apigee") in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/security/limits.conf&nbsp;</span>as shown below:<br />
+	<li>On Cassandra nodes, set soft and hard memlock, nofile, and address space (as) limits for installation user (default is “apigee") in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/security/limits.d/90-apigee-edge-limits.conf&nbsp;</span>as shown below:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee soft memlock unlimited<br />
 		apigee hard memlock unlimited<br />
 		apigee soft nofile 32768<br />
@@ -411,7 +411,7 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 		apigee soft as unlimited<br />
 		apigee hard as unlimited</span><br />
 		&nbsp;</li>
-	<li>On Message Processor nodes, set the maximum number of open file descriptors to 64K in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/security/limits.conf&nbsp;</span>as shown below:<br />
+	<li>On Message Processor nodes, set the maximum number of open file descriptors to 64K in&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/etc/security/limits.d/90-apigee-edge-limits.conf&nbsp;</span>as shown below:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">apigee soft nofile 32768<br />
 		apigee hard nofile 65536</span><br />
 		<br />
@@ -730,7 +730,7 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 				<p>4528</p>
 			</td>
 			<td>
-				<p>For distributed cache and management calls&nbsp;between Message Processors, and for communication from the Router</p>
+				<p>For distributed cache and management calls&nbsp;between Message Processors, and for communication from the Router&nbsp;and Management Server</p>
 			</td>
 		</tr>
 		<tr>
@@ -1243,11 +1243,11 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 <ol>
 	<li>Set <span style="font-family:courier new,courier,monospace;">net.ipv4.tcp_keepalive_time = 1800</span> in sysctl settings on Linux OS, where 1800 should be lower than the firewall idle tcp timeout. This setting should keep the connection in an established state so that the firewall does not disconnect the connection.</li>
 	<li>On all Message Processors, edit <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span> to add the following property. If the file does not exist, create it.<br />
-		<span style="font-family:courier new,courier,monospace;">conf_system_casssandra.maxconnecttimeinmillis=-1</span></li>
+		<span style="font-family:courier new,courier,monospace;">conf_system_cassandra.maxconnecttimeinmillis=-1</span></li>
 	<li>Restart the Message Processor:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor restart</span></li>
 	<li>On all Routers, edit <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/customer/application/router.properties</span> to add the following property. If the file does not exist, create it.<br />
-		<span style="font-family:courier new,courier,monospace;">conf_system_casssandra.maxconnecttimeinmillis=-1</span></li>
+		<span style="font-family:courier new,courier,monospace;">conf_system_cassandra.maxconnecttimeinmillis=-1</span></li>
 	<li>Restart the Router:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart</span></li>
 </ol>
@@ -1336,3 +1336,4 @@ conf_postgresql_work_mem = 512MB       # min 64kB</pre>
 <p>Each installation of Edge requires a unique license file that you obtain from Apigee. You will need to provide the path to the license file when installing the management server, for example /tmp/license.txt.&nbsp;</p>
 <p>The installer copies the license file to <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/customer/conf/license.txt</span>.&nbsp;</p>
 <p>If license file is valid, the management server validates the expiry and allowed Message Processor (MP) count. If any of the license settings is expired, you can find the logs in the following location: <span style="font-family:courier new,courier,monospace;">/&lt;inst_root&gt;/apigee/var/log/edge-management-server/logs</span>. In this case you can contact <a href="http://support@apigee.com">Apigee Support</a> for migration details.&nbsp;</p>
+<p>If you do not yet have a license, contact Sales <a href="https://pages.apigee.com/contact-sales-reg.html">here</a>.</p>

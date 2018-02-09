@@ -1,5 +1,5 @@
 <h1> Enabling SAML for API BaaS </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>After you enable SAML for Edge, you can enable SAML for API BaaS. SAML support for API BaaS requires that you have already installed and configures the Edge SSO module on the Edge Management Server node.</p>
 <p>The general process for enabling SAML for API BaaS is:</p>
 <ol>
@@ -42,10 +42,10 @@ BAAS_SSO_CLIENT_OVERWRITE=y
 # API BaaS Portal properties:
 BAAS_SSO_ENABLED=y
 
-# Comma separated list of URLs for the BAAS UI, 
+# Comma separated list of URLs for the BAAS portal, 
 # in the format:  <em><strong>http_or_https://IP_or_hostname_of_UI:9000</strong></em>. 
-# You can have multiple URLs when you have multiple installations.
-# of the BAAS UI or you have multiple data centers.
+# You can have multiple URLs when you have multiple installations
+# of the BAAS portal or you have multiple data centers.
 BAAS_PUBLIC_URIS=<em><strong>http_or_https://IP_or_hostname_of_BAAS:9000</strong></em>
 BAAS_SSO_REGISTERD_PUBLIC_URIS=$BAAS_PUBLIC_URIS
 
@@ -66,6 +66,7 @@ BAAS_SSO_ENABLED=y
 	<li>Run the following command to configure SAML on all the BaaS Stack nodes:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service baas-usergrid configure-sso -f <strong><em>samlConfigFile</em></strong></span></li>
 </ol>
+<p>To later change these values, update the config files and run these steps&nbsp;again.</p>
 <h2>Disable SAML on API BaaS</h2>
 <p>To disable SAML on API BaaS:</p>
 <ol>

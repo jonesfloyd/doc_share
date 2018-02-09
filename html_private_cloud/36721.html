@@ -1,11 +1,11 @@
 <h1> Convert a tar-based portal to an RPM-based portal </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
-<p>The 4.17.09 release of the Developer Services portal does not let you update a previous tar-based version of the portal. You can only directly update an RPM-based version of the portal to 4.17.09.</p>
-<p>However, you can convert a tar-based version of the portal to an 4.17.09 RPM-based instance of the portal. As part of this process, you migrate the MySQL/MariaDB of the existing portal to a Postgres database. Once converted, your portal remains as an RPM-based portal.</p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
+<p>The 4.18.01 release of the Developer Services portal does not let you update a previous tar-based version of the portal. You can only directly update an RPM-based version of the portal to 4.18.01.</p>
+<p>However, you can convert a tar-based version of the portal to an 4.18.01 RPM-based instance of the portal. As part of this process, you migrate the MySQL/MariaDB of the existing portal to a Postgres database. Once converted, your portal remains as an RPM-based portal.</p>
 <p>You can migrate many previous versions of the tar-based portal to an RPM-based portal, including versions 4.16.09 and 4.17.01, not just version 4.17.05. The only requirements is that the portal is running Drupal 7 or later. To check your version of Drupal, select <strong>Reports &gt; Status Reports</strong> in the Drupal menu. The version of Drupal appears in the first row of the output.</p>
 <p>The high-level steps that you use to migrate from a tar-based portal to an RPM-based portal are:</p>
 <ul>
-	<li>Install the <strong>RPM-based 4.17.09</strong> version of the Developer Service portal on a new node.</li>
+	<li>Install the <strong>RPM-based 4.18.01</strong> version of the Developer Service portal on a new node.</li>
 	<li>Create a new Postgres database <strong>on the RPM-based portal</strong>.</li>
 	<li>Migrate the portal database <strong>from the tar-based portal</strong>.</li>
 	<li>Copy all accessory file <strong>from the tar-based portal</strong> to the RPM-based portal.</li>
@@ -23,7 +23,7 @@
 <h2>Portal&nbsp;conversion procedure&nbsp;</h2>
 <p>To convert the portal to an RPM-based installation:</p>
 <ol>
-	<li>Install the RPM-based 4.17.09 version of the Developer Service portal on a different node from your tar-based portal.</li>
+	<li>Install the RPM-based 4.18.01 version of the Developer Service portal on a different node from your tar-based portal.</li>
 	<li><strong>On the RPM-based portal</strong>, create a new Postgres database. Later, you migrate the database from the tar-based portal to this new database:
 		<ol style="list-style: lower-alpha outside">
 			<li>Log in to psql:<br />
@@ -36,7 +36,15 @@
 				<span style="font-family:courier new,courier,monospace;"># \q</span></li>
 		</ol>
 	</li>
-	<li><strong>On the tar-based portal</strong>, Install and configure the Migrator Drupal module:
+	<li>
+		<p><strong>On the tar-based portal</strong>, remove old modules that are no longer used:<br />
+			<span style="font-family:courier new,courier,monospace;">&gt; cd&nbsp;/var/www/html<br />
+			&gt; drush sql-query --db-prefix "DELETE from {system}&nbsp;where name = 'apigee_account' AND type = 'module';"<br />
+			&gt; drush sql-query --db-prefix "DELETE from {system}&nbsp;where name = 'apigee_checklist' AND type = 'module';"<br />
+			&gt; drush sql-query --db-prefix "DELETE from {system}&nbsp;where name = 'apigee_sso_ui' AND type = 'module';"</span>?</p>
+	</li>
+	<li>
+		<p><strong>On the tar-based portal</strong>, Install and configure the Migrator Drupal module:</p>
 		<ol style="list-style: lower-alpha outside">
 			<li><span style="font-family:courier new,courier,monospace;">cd /tmp&nbsp;</span></li>
 			<li><span style="font-family:courier new,courier,monospace;">wget https://ftp.drupal.org/files/projects/dbtng_migrator-7.x-1.4.tar.gz&nbsp;</span></li>
@@ -156,6 +164,24 @@
 		);</span><br />
 		<br />
 		where <strong>database</strong> specifies the new database you created, <strong>username</strong> and <strong>password</strong> are as defined for the custom database on the tar-based portal, and <strong>prefix</strong> is empty.</li>
+	<li><strong>On the RPM-based portal</strong>, the RPM-based version of the portal contains fewer Drupal modules than the tar-based version. After you migrate to the RPM-based portal, you must check for any missing modules and install them as necessary.
+		<ol style="list-style: lower-alpha outside">
+			<li>Install the Drupal&nbsp;<span style="font-family:courier new,courier,monospace;">missing_module</span> used to detect missing modules:&nbsp;&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; cd /opt/apigee/apigee-drupal/wwwroot<br />
+				&gt; drush dl missing_module<br />
+				&gt; drush en missing_module</span></li>
+			<li>Login to the RPM-based portal as an admin.</li>
+			<li>Select <strong>Reports &gt; Status reports</strong> in the Drupal menu and check for any missing modules.</li>
+			<li>Use that report to install any missing modules, or use the following commands:<br />
+				<span style="font-family:courier new,courier,monospace;">&gt; cd /opt/apigee/apigee-drupal/wwwroot??<br />
+				&gt;&nbsp;drush dl &lt;moduleA&gt; &lt;moduleB&gt; ...<br />
+				&gt; drush en&nbsp;&lt;moduleA&gt; &lt;moduleB&gt; ...</span></li>
+			<li>After you enable all the modules, make sure the files are owned by the apigee user:&nbsp;<br />
+				<span style="font-family:courier new,courier,monospace;">&gt;&nbsp;chown -LR apigee:apigee /opt/apigee/apigee-drupal/wwwroot</span><br />
+				<br />
+				For more on file permissions, see <a href="https://www.drupal.org/node/244924">https://www.drupal.org/node/244924</a>.</li>
+		</ol>
+	</li>
 	<li><strong>On the RPM-based portal</strong>, run update.php in a browser to remove any errors on missing modules:
 		<ol style="list-style: lower-alpha outside">
 			<li>Login to the RPM-based portal as an admin.</li>

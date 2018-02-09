@@ -1,5 +1,5 @@
 <h1> What to Monitor </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>Generally in a production setup, there is a need to enable monitoring mechanisms within an Apigee Edge for Private Cloud deployment. These monitoring techniques warn the network administrators (or operators) of an error or a failure. Every error generated is reported as an alert in Apigee Edge. For more information on alerts, see <a href="http://docs.apigee.com/node/20631">http://docs.apigee.com/node/20631</a>.</p>
 <p>For ease, Apigee components are classified mainly into two categories:</p>
 <ul>
@@ -230,24 +230,23 @@ curl http://&lt;host&gt;:&lt;port&gt;/v1/servers/self/up</pre>
 	<li>Number of responses (10X, 20X, 30X, 40X and 50X)</li>
 	<li>Connect failures</li>
 </ul>
-<p>This helps you to provide dashboards for the API message flow.&nbsp;</p>
+<p>This helps you to provide dashboards for the API message flow. For more, see:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/node/20686">http://docs.apigee.com/node/20686</a> for the Message Procesor</li>
+	<li><a href="http://docs.apigee.com/node/23206">http://docs.apigee.com/node/23206</a> for the Router</li>
+</ul>
 <h2>Router health check of the Message Processer&nbsp;</h2>
-<p>The Router implements a health check mechanism to determine which of the Message Processors are working as expected. If a Message Processor is detected as down or slow, the Router can automatically take the Message Processor out of rotation. If that happens, the Router writes a "Mark Down" messages to the Router log file at <span style="font-family:courier new,courier,monospace;">/opt/apigee4/var/log/apigee/router/logs/system.log</span>.&nbsp;</p>
+<p>The Router implements a health check mechanism to determine which of the Message Processors are working as expected. If a Message Processor is detected as down or slow, the Router can automatically take the Message Processor out of rotation. If that happens, the Router writes a "Mark Down" messages to the Router log file at&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">/opt/apigee/var/log/edge-router/logs/system.log</span>.&nbsp;</p>
 <p>You can monitor the Router log file for these messages. For example, if the Router takes a Message Processor out of rotation, it writes message to the log in the form:</p>
 <pre>
 2014-05-06 15:51:52,159 org: env: RPCClientClientProtocolChildGroup-RPC-0 INFO CLUSTER - ServerState.setState() : State of 2a8a0e0c-3619-416f-b037-8a42e7ad4577 is now DISCONNECTED. handle = <em><strong>&lt;MP_IP&gt;</strong></em> at 1399409512159
 
 2014-04-17 12:54:48,512 org: env: nioEventLoopGroup-2-2 INFO HEARTBEAT - HBTracker.gotResponse() : No HeartBeat detected from /<em><strong>&lt;MP_IP&gt;:&lt;PORT&gt;</strong></em> Mark Down</pre>
-<p>where <em><strong>/&lt;MP_IP&gt;:&lt;PORT&gt;</strong></em> is the IP address and port number of the Message Processor.</p>
+<p>where&nbsp;<em><strong>/&lt;MP_IP&gt;:&lt;PORT&gt;</strong></em>&nbsp;is the IP address and port number of the Message Processor.</p>
 <p>If later the Router performs a health check and determines that Message Processor is functioning properly, the Router automatically puts the Message Processor back into rotation. The Router also writes a "Mark Up" message to the log in the form:</p>
 <pre>
 2014-05-06 16:07:29,054 org: env: RPCClientClientProtocolChildGroup-RPC-0 INFO CLUSTER - ServerState.setState() : State of 2a8a0e0c-3619-416f-b037-8a42e7ad4577 is now CONNECTED. handle = &lt;IP&gt; at 1399410449054
 
 2014-04-17 12:55:06,064 org: env: nioEventLoopGroup-4-1 INFO HEARTBEAT - HBTracker.updateHB() : HeartBeat detected from /&lt;IP&gt;:&lt;PORT&gt; Mark Up</pre>
-<p>To configure the Router to make the health check, set the following property to <span style="font-family:courier new,courier,monospace;">true</span> in <span style="font-family:courier new,courier,monospace;">/opt/apigee4/conf/apigee/router/router.properties</span>:</p>
-<pre>
-Client.pool.heartBeat.use.http=true</pre>
-<p>Then, restart the Router:</p>
-<pre>
-&gt; /opt/apigee4/bin/apigee-service router restart</pre>
+<p>&nbsp;</p>
 <div>&nbsp;</div>

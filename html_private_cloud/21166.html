@@ -1,5 +1,5 @@
 <h1> Developer Services portal installation </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <div class="note">
 	<p>These instructions are only for installing the portal.</p>
 </div>
@@ -18,6 +18,9 @@
 	<li>Yum is installed.</li>
 </ul>
 <h2>Installation overview</h2>
+<div class="note">
+	<p>Do not install Developer Channel Services portal on the same servers as Apigee Edge.</p>
+</div>
 <p>After you install the Edge the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility on a node, use that utility to install the portal on the node. The <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility has the form:</p>
 <pre>
 &gt; sudo /opt/apigee/apigee-setup/bin/setup.sh -p <em><strong>component</strong></em> -f <em><strong>configFile</strong></em></pre>
@@ -27,6 +30,9 @@
 <pre>
 &gt; sudo /opt/apigee/apigee-setup/bin/setup.sh -p dp -f <em><strong>myConfig</strong></em></pre>
 <p>See <a href="http://docs.apigee.com/node/19896">http://docs.apigee.com/node/19896</a> for more.</p>
+<h2>Deprecation of the SMTPSSL property&nbsp;</h2>
+<p>In previous releases, you used the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">SMTPSSL</span>&nbsp;property&nbsp;to set the protocol used by the SMTP server connected to the portal. That property has been deprecated.</p>
+<p>You now use the <span style="font-family: &quot;courier new&quot;, courier, monospace;">SMTP_PROTOCOL</span> property, instead of the <span style="font-family: &quot;courier new&quot;, courier, monospace;">SMTPSSL</span> property, to set the protocol used by the SMTP server connected to the portal. The valid values are: "standard", "ssl", or "tls".&nbsp;&nbsp;</p>
 <h2>Creating a configuration file</h2>
 <p>Shown below is an example silent configuration file for a portal installation. Edit this file as necessary for your configuration. Use the -f option to <span style="font-family:courier new,courier,monospace;">setup.sh</span> to include this file.</p>
 <div class="note">
@@ -96,14 +102,17 @@ DEVADMIN_PWD=pWord
 # If omitted, it defaults to 8888. 
 PHP_FPM_PORT=8888 
 
-# You must configure the SMTP server used by the portal. 
-# The properties SMTPHOST and SMTPPORT are required. 
+# Optionally configure the SMTP server used by the portal. 
+# If you do, the properties SMTPHOST and SMTPPORT are required. 
 # The others are optional with a default value as notated below. 
 # SMTP hostname. For example, for the Gmail server, use smtp.gmail.com. 
 SMTPHOST=smtp.gmail.com 
 
-# Use SSL for SMTP: 'y' or 'n' (default). 
-SMTPSSL="n" 
+# Set the SMTP protocol as "standard", "ssl", or "tls",
+# where "standard" corresponds to HTTP.
+# Note that in previous releases, this setting was controlled by the 
+# SMTPSSL property. That property has been deprecated. 
+SMTP_PROTOCOL="standard" 
 
 # SMTP port (usually 25). 
 # The value can be different based on the selected encryption protocol. 
@@ -164,6 +173,9 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 	<p>To remove PHP on CentOS 6.6, you might also have to remove Ganglia, if it is installed.</p>
 </div>
 <h2>3. Install Postgres</h2>
+<div class="note">
+	<p>Do not install Developer Channel Services portal on the same servers as Apigee Edge.</p>
+</div>
 <p>The portal requires Postgres to be installed before you can install the portal. You can either install Postgres as part of installing Edge, or install Postgres standalone for use by the portal.&nbsp;</p>
 <ul>
 	<li>If you are connecting to Postgres installed as part of Edge, and Postgres is configured in master/standby mode, specify the IP address of the master Postgres server.&nbsp;</li>
@@ -203,7 +215,8 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 		<br />
 		The configuration file must be accessible or readable by the "apigee" user.&nbsp;</li>
 	<li>Navigate to the portal home page at <span style="font-family:courier new,courier,monospace;">http://localhost:8079</span> or to the DNS name of your portal.</li>
-	<li>Log in to the portal using the administrator credentials that you set in the config file.&nbsp;</li>
+	<li>Log in to the portal using the administrator credentials that you set in the config file to ensure that the portal is running properly.&nbsp;</li>
+	<li>Select&nbsp;<strong>Reports &gt; Status Report</strong>&nbsp;in the Drupal menu to ensure that you can see the current status of the portal.</li>
 </ol>
 <h2>5. Ensure that the Update manager module is enabled</h2>
 <p>To receive notifications of Drupal updates, ensure that the Drupal Update manager module is enabled. From the Drupal menu, select <strong>Modules</strong> and scroll down to the <strong>Update manager </strong>module. If it is not enabled, enable it.&nbsp;</p>
@@ -288,7 +301,7 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 		</tr>
 		<tr>
 			<td>
-				<p><a href="http://docs.apigee.com/developer-services/content/add-and-manage-user-accounts#addingatermsconditionspage">Adding a Terms &amp; Conditions page</a></p>
+				<p><a href="http://docs.apigee.com/node/291">http://docs.apigee.com/node/291</a></p>
 			</td>
 			<td>
 				<p>Add a Terms &amp; Conditions page that developers must accept before being allowed to access the portal.</p>
@@ -296,7 +309,7 @@ yum remove <em><strong>&lt;package-name&gt;</strong></em></pre>
 		</tr>
 		<tr>
 			<td>
-				<p><a href="http://docs.apigee.com/developer-services/content/add-and-manage-user-accounts#settinguserrolesandpermissions">Setting user roles and permissions</a></p>
+				<p><a href="http://docs.apigee.com/node/291">http://docs.apigee.com/node/291</a></p>
 			</td>
 			<td>
 				<p>The portal implements a role-based authorization model. Before allowing developers to register, define the permissions and roles used by the portal.</p>

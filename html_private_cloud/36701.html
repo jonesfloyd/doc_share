@@ -1,7 +1,7 @@
 <h1> Update Apigee Edge 4.17.01/4.17.05 to 4.17.09 </h1>
 <p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
 <h2>Which Edge versions can you update to 4.17.09</h2>
-<p>You can update Apigee Edge version 4.17.01.0x/4.17.05.0x to 4.17.05 using this procedure.</p>
+<p>You can update Apigee Edge version 4.17.01.0x/4.17.05.0x to 4.17.09 using this procedure.</p>
 <div class="note">
 	<p>If you are updating from 4.16.09.0x, see <a href="http://docs.apigee.com/node/36706">http://docs.apigee.com/node/36706</a>.</p>
 	<p>If you are updating from 4.16.01.0x or 4.16.05.0x, see <a href="http://docs.apigee.com/node/36711">http://docs.apigee.com/node/36711</a>.</p>
@@ -113,9 +113,9 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 		I = Install OpenJDK 1.8 (default)<br />
 		C = Continue without installing Java<br />
 		Q = Quit. For this option, you have to install Java yourself.</li>
-	<li>Use <span style="font-family:courier new,courier,monospace;">apigee-service</span> to update the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility:?<br />
+	<li>Use <span style="font-family:courier new,courier,monospace;">apigee-service</span> to update the <span style="font-family:courier new,courier,monospace;">apigee-setup</span> utility:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-setup update</span></li>
-	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-validate</span> utility on the Management Server:?<br />
+	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-validate</span> utility on the Management Server:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-validate update</span></li>
 	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-provision</span> utility:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-provision update</span></li>
@@ -181,7 +181,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 	</li>
 	<li>Use <span style="font-family:courier new,courier,monospace;">apigee-service</span> to update the apigee-setup utility:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-setup update&nbsp;</span></li>
-	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-validate</span> utility on the Management Server.?<br />
+	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-validate</span> utility on the Management Server.<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-validate update</span></li>
 	<li>Update the <span style="font-family:courier new,courier,monospace;">apigee-provision</span> utility:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service apigee-provision update</span></li>
@@ -435,7 +435,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 			</li>
 		</ol>
 	</li>
-	<li><strong>??(Only if you did not update Cassandra as part of updating Edge)&nbsp;</strong>Update Cassandra nodes in data center 1, one machine at a time:<br />
+	<li><strong>(Only if you did not update Cassandra as part of updating Edge)&nbsp;</strong>Update Cassandra nodes in data center 1, one machine at a time:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li><strong>(Only if you did not update Cassandra as part of updating Edge)</strong>&nbsp;Update Cassandra nodes in data center 2, one machine at a time:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c cs -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
@@ -453,7 +453,7 @@ SMTPMAILFROM="My Company &lt;myco@company.com&gt;"</pre>
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-setup/bin/update.sh -c p -f&nbsp;</span><em style="font-family: &quot;courier new&quot;, courier, monospace;"><strong>configFile</strong></em></li>
 	<li>Update BaaS keyspace values. These keyspace have to be set for replication at install time, but do not have to be at run time. Removing replication also saves Cassandra memory.&nbsp;<br />
 		<br />
-		?You only have to run this step once on any Cassandra server in either data center:
+		You only have to run this step once on any Cassandra server in either data center:
 		<ol style="list-style: lower-alpha outside">
 			<li>Start the Cassandra cqlsh utility:<br />
 				<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-cassandra/bin/cqlsh <em><strong>cassandraIP</strong></em></span></li>

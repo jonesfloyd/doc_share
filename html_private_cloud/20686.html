@@ -1,5 +1,5 @@
 <h1> How to Monitor </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>This document describes the monitoring techniques of components supported by an on-premise deployment of Apigee Edge.&nbsp;</p>
 <h2>Enabling JMX</h2>
 <p>JMX is enabled by default for Cassandra, and disabled by default for all other Edge components. You must therefore enable JMX individually for each component.</p>
@@ -21,7 +21,7 @@
 		<tr>
 			<td>Message Processor</td>
 			<td>1101</td>
-			<td>/opt/apigee/edge-mesage-processor/bin/start&nbsp;</td>
+			<td>/opt/apigee/edge-message-processor/bin/start&nbsp;</td>
 		</tr>
 		<tr>
 			<td>Qpid</td>
@@ -98,7 +98,7 @@ exec $JAVA -classpath "$classpath" -Xms$min_mem -Xmx$max_mem $xx_opts
 <p>Use JConsole (a JMX compliant tool) to manage and monitor health check and process statistics. Using JConsole, you can consume JMX statistics exposed by Management Server (or any server) and display them in a graphical interface. For more information on JConsole usage, see <a href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html">http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html</a>.</p>
 <p>Use <strong>JConsole</strong> and the following service URL to monitor the JMX attributes (MBeans) offered via JMX.</p>
 <pre>
-service:jmx:rmi:///jndi/rmi://<em><strong>&lt;ip address&gt;</strong></em>:&lt;port&gt;/platform</pre>
+service:jmx:rmi:///jndi/rmi://<em><strong>&lt;ip address&gt;</strong></em>:&lt;port&gt;/jmxrmi</pre>
 <p>where <strong>&lt;ip address&gt;</strong> is the IP address of Management Server (or respective server). By default the port is 1099 for the Management Server.&nbsp;</p>
 <p>The following table shows the generic&nbsp;JMX statistics:</p>
 <table class="table">

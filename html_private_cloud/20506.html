@@ -1,5 +1,5 @@
 <h1> Configuring TLS for the management UI </h1>
-<p style="text-align: right;"><em>Edge for Private Cloud v. 4.17.09</em></p>
+<p style="text-align: right;"><em>Edge for Private Cloud v. 4.</em><em>18.01</em></p>
 <p>By default, you access the Edge management UI over HTTP by using the IP address of the Management Server node and port 9000. For example:</p>
 <pre>
 http://ms_IP:9000</pre>
@@ -21,6 +21,9 @@ $ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 9443 -j ACCEPT --
 iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 9443 </pre>
 </div>
 <h2>Configure TLS</h2>
+<div class="note">
+	<p>If you have multiple UI instances installed on separate nodes, you must configure both to support TLS. After enabling TLS on the first node, see <a href="http://docs.apigee.com/node/37621">http://docs.apigee.com/node/37621</a> for information about configuring TLS on the second node.&nbsp;</p>
+</div>
 <p>Use the following procedure to configure TLS access to the management UI:</p>
 <ol>
 	<li>Generate the keystore JKS file containing your TLS certification and private key and copy it to the Management Server node. For more information, see <a href="http://docs.apigee.com/node/20491">http://docs.apigee.com/node/20491</a>.</li>
@@ -32,7 +35,7 @@ iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 9
 	<li>Enter the absolute path to the keystore JKS file.&nbsp;<br />
 		<br />
 		The script copies the file to the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/conf</span> directory on the Management Server node, and changes the ownership of the file to <span style="font-family:courier new,courier,monospace;">apigee</span>.</li>
-	<li>Enter the keystore password.</li>
+	<li>Enter the clear text keystore password.</li>
 	<li>The script then restarts the Edge management UI. After the restart, the management UI supports access over TLS.<br />
 		You can see these settings in&nbsp;<span style="font-family:courier new,courier,monospace;">/opt/apigee/etc/edge-ui.d/SSL.sh</span>.</li>
 </ol>
@@ -43,7 +46,7 @@ HTTPSPORT=9443
 DISABLE_HTTP=y
 KEY_ALGO=JKS
 KEY_FILE_PATH=/opt/apigee/customer/application/mykeystore.jks
-KEY_PASS=keystorePWord</pre>
+KEY_PASS=clearTextKeystorePWord</pre>
 	<p>Then use the following command to configure TLS of the Edge UI:</p>
 	<pre>
 /opt/apigee/apigee-service/bin/apigee-service edge-ui configure-ssl -f <em><strong>configFile</strong></em></pre>
