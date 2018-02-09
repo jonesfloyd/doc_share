@@ -24,14 +24,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -40,14 +40,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -422,7 +422,7 @@
 </table>
 <h2 id="InitialEntriesElement">&lt;InitialEntries&gt; element</h2>
 <p>Seed values for KeyValueMaps, which are populated in the KeyValueMap when it is initialized. Be sure to specify the name of the KVM with the&nbsp;<code>mapIdentifier</code>&nbsp;attribute on the parent element.</p>
-<p>When using this element, when you save the policy in the management UI on a deployed version of the proxy, or deploy the API proxy bundle containing the policy with this element, the key(s) are automatically created in the KVM (as unencrypted). If the values for existing keys change in the policy, the existing values are overwritten with the new values. Any new keys/values are added to the existing KVM alongside the existing keys/values.</p>
+<p>When using this element, when you save the policy in the management UI on a deployed version of the proxy, or deploy the API proxy bundle containing the policy with this element, the key(s) are automatically created in the KVM (as unencrypted). If the values in the policy are different than the values in the KVM, the values in the KVM are overwritten when the proxy is deployed. Any new keys/values are added to the existing KVM alongside the existing keys/values.</p>
 <p>Keys and values populated by this element must be literals. For example, <code>&lt;Parameter ref="request.queryparam.key"&gt;</code> isn't supported within this element.</p>
 <p>In organizations with&nbsp;<a href="/api-services/content/api-reference-getting-started#cps" target="_blank">Core Persistence Services (CPS)</a>&nbsp;enabled, key size is limited to 2 KB.</p>
 <p>To create an encrypted key value map, use the <a href="/api-reference/content/keyvalue-maps-management-api">management API</a>.</p>
@@ -514,10 +514,7 @@
 &lt;/Key&gt;</pre>
 	</li>
 </ul>
-<p>When the Key element includes multiple Parameter elements, the effective key string is the concatenation 
-of the values of each parameter, joined with a double underscore. For example, in the above example, 
-if the <code>apiproxy.name</code> variable has the value "abc1", then 
-the effective key will be <code>targeturl__abc1__weight</code>.</p>
+<p>When the Key element includes multiple Parameter elements, the effective key string is the concatenation of the values of each parameter, joined with a double underscore. For example, in the above example, if the <code>apiproxy.name</code> variable has the value "abc1", then the effective key will be <code>targeturl__abc1__weight</code>.</p>
 <p>Whether you're getting, updating, or deleting a key/value entry, the key name must match the name of the key in the key value map. See <a href="#specifying_key_names">Specifying and retrieving key names</a> for guidelines.</p>
 <table class="pd-table">
 	<tbody>
@@ -631,7 +628,7 @@ the effective key will be <code>targeturl__abc1__weight</code>.</p>
 					<li><code>organization</code></li>
 					<li><code>environment</code></li>
 					<li><code>apiproxy</code></li>
-					<li><code>policy</code></li>
+					<li><code>policy</code> (API proxy revision)</li>
 				</ul>
 			</td>
 		</tr>
@@ -680,7 +677,7 @@ the effective key will be <code>targeturl__abc1__weight</code>.</p>
         &lt;Parameter ref="organization.name"/&gt;
     &lt;/Key&gt;
     &lt;Value ref="apiproxy.name"/&gt;
-    &lt;Value ref="apiproxy.name"/&gt;
+    &lt;Value ref="environment.name"/&gt;
 &lt;/Put&gt;
 </pre>
 <table class="pd-table">

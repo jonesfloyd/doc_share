@@ -39,7 +39,7 @@ $ curl -u email:password -H "Accept: application/json" https://api.enterprise.ap
 </div>
 <p>The API <i>version</i> (for example, <code>api.company.com/v1</code>) should change very infrequently. When you do increment the API version, it signifies to developers that there has been a significant change in the signature of the external interface exposed by the API.</p>
 <p>The API proxy <i>revision</i> is an incremented number associated with an API proxy configuration. API Services maintains revisions of your configurations so that you can revert a configuration when something goes wrong. By default, an API proxy's revision is automatically incremented every time you import an API proxy by using the <a href="http://docs.apigee.com/node/16206">http://docs.apigee.com/node/16206</a> API. If you don't want to increment an API proxy's revision, use the <a href="http://docs.apigee.com/node/19491">http://docs.apigee.com/node/19491</a> API. If you're using Maven to deploy, use the <code>clean</code> or <code>update</code> options, as described in the <a href="https://github.com/apigee/apigee-deploy-maven-plugin" target="_blank">Maven plugin readme</a>.</p>
-<div class="bestpractice">
+<div class="bestpractices">
 	<p>To obtain the detailed profile of an API proxy configuration, you call the GET method on a specific revision number.</p>
 </div>
 <p>For example, you can call the GET method on API proxy revision 1 to get a detailed view.</p>
@@ -83,13 +83,13 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
 <p>Sample Response</p>
 <pre>
 [ "test", "prod" ]</pre>
-<div class="tiptricks">If you have an On-Premise installation of Apigee Edge, you may see a different list of environments.</div>
+<div class="note">If you have an on-premises installation of Apigee Edge, you may see a different list of environments.</div>
 <h3>Explore Deployments</h3>
 <p>A "deployment" is a revision of an API proxy that has been deployed in an environment. An API proxy that is in the 'deployed' state is accessible over the network, at the addresses defined in the VirtualHost for that environment.</p>
 <div class="tipstricks">It is often useful to check to see in which environment (and if!) your API is deployed. For example, you might find requests to your API proxy are failing. One troubleshooting step is to ensure that the API proxy is deployed as expected.</div>
 <h2>Deploying API proxies</h2>
 <p>API proxies cannot be invoked until they have been deployed. API Services exposes RESTful APIs that provide control over the deployment process.</p>
-<div class="bestpractice">
+<div class="bestpractices">
 	<p>The following APIs are called on your behalf by the Python deploy tool. The deploy tool provides support for packaging and importing API proxies that you develop locally, and it also manages undeployment of existing API proxy revisions. Use the direct API calls described below when you need additional control over the deployment process.</p>
 </div>
 <p>Only one revision of an API proxy can be deployed in an environment at a given time. Therefore the deployed revision needs to be undeployed. You can control whether the new bundle is deployed as a new revision or whether it overwrites the existing revision.</p>
@@ -145,7 +145,7 @@ https://api.enterprise.apigee.com/v1/o/{org_name}/environments/{env-name}/apis/{
 		<tr>
 			<td><code>delay</code></td>
 			<td>
-				<p>To allow transaction processing to complete on the existing revision before it is undeployedâ€”and eliminate the possibility of 502 Bad Gateway or 504 Gateway Timeout errorsâ€”set this parameter to the number of seconds you want undeployment to be delayed. There is no limit to the number of seconds you can set, and there are no performance ramifications for setting a large number of seconds. During the delay, no new traffic is sent to the old revision.</p>
+				<p>To allow transaction processing to complete on the existing revision before it is undeployed—and eliminate the possibility of 502 Bad Gateway or 504 Gateway Timeout errors—set this parameter to the number of seconds you want undeployment to be delayed. There is no limit to the number of seconds you can set, and there are no performance ramifications for setting a large number of seconds. During the delay, no new traffic is sent to the old revision.</p>
 				<p>Default is 0 (zero) seconds. When&nbsp;<code>override</code>&nbsp;is set to true and <code>delay</code> is 0, the existing revision is undeployed immediately after the new revision is deployed. Negative values are treated as 0 (zero) seconds.</p>
 			</td>
 		</tr>
@@ -224,7 +224,7 @@ $ curl https://api.enterprise.apigee.com/v1/o/{org_name}/deployments -u email:pa
   "type" : "Application"
 }</pre>
 <div class="tipstricks">
-	<p>Keep in mind that the response payload merely contains a representation of an API resource â€” you can create an API proxy using JSON or XML, and you can also retrieve representations of the API proxy as XML or JSON, depending on your needs.</p>
+	<p>Keep in mind that the response payload merely contains a representation of an API resource — you can create an API proxy using JSON or XML, and you can also retrieve representations of the API proxy as XML or JSON, depending on your needs.</p>
 </div>
 <p>The API proxy profile that is generated demonstrates the complete structure of an API proxy:</p>
 <ul>

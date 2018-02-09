@@ -24,14 +24,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -40,14 +40,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -76,7 +76,7 @@
 <hr />
 <h2 id="usage">Usage notes</h2>
 <p>Apigee Edge provides an OAuth v1.0a policy type that enables you to authorize apps with OAuth 1.0a. The OAuthV1 policy type is responsible for generating request tokens, generating access tokens, and verifying access tokens based on the <a href="https://tools.ietf.org/html/rfc5849">OAuth 1.0a specification</a>.</p>
-<p>Once you have configured OAuth policies on your API, apps must obtain access tokens to consume them. To do so, the app must exchange a request token for an access token. Rather than relying on a single password as the master key for every app that accesses an API, OAuth uses this token to provide ‚Äúdelegated authentication‚Äù between APIs and apps. The resource owner can issue access tokens with restricted scope and limited lifetime, and revoke them independently.</p>
+<p>Once you have configured OAuth policies on your API, apps must obtain access tokens to consume them. To do so, the app must exchange a request token for an access token. Rather than relying on a single password as the master key for every app that accesses an API, OAuth uses this token to provide ìdelegated authenticationî between APIs and apps. The resource owner can issue access tokens with restricted scope and limited lifetime, and revoke them independently.</p>
 <p>On token requests, Apigee OAuth 1.0a only supports HMAC-SHA signature algorithm for the <code>oauth_signature_method</code> header parameter, as described in the&nbsp;<a href="https://tools.ietf.org/html/rfc5849">OAuth 1.0a specification</a>.&nbsp;</p>
 <p>The <code>name</code> attribute for this policy is restricted to these characters: <code>A-Z0-9._\-$ %</code>. However, the Management UI enforces additional restrictions, such as automatically removing characters that are not alphanumeric.</p>
 <h3 id="generaterequesttoken">Generating a request token</h3>
@@ -115,10 +115,10 @@
 <p>On failure, a request returns the appropriate response status code with an error message.</p>
 <p><strong>Sample request:</strong></p>
 <pre>
-https://$org-$env.$api_domain/oauth1-proxy/request_token -H 'Authorization: OAuth oauth_callback="oob", oauth_signature_method="HMAC-SHA1", oauth_token="\", oauth_consumer_key=‚Äú{consumerkey}‚Äú, oauth_timestamp="{timestamp}", oauth_nonce="{nonce}", oauth_version="1.0", oauth_signature="{signature}"'
+https://$org-$env.$api_domain/oauth1-proxy/request_token -H 'Authorization: OAuth oauth_callback="oob", oauth_signature_method="HMAC-SHA1", oauth_token="\", oauth_consumer_key=ì{consumerkey}ì, oauth_timestamp="{timestamp}", oauth_nonce="{nonce}", oauth_version="1.0", oauth_signature="{signature}"'
 </pre>
 <h3 id="generateaccesstoken">Generating an access token</h3>
-<p>An access token is used by the consumer to gain access to the protected resources on behalf of the user, instead of using the user‚Äôs service provider credentials. An access token is created with a valid key, request token, and verifier combination. Here are examples of the simple and comprehensive forms for generating access tokens.</p>
+<p>An access token is used by the consumer to gain access to the protected resources on behalf of the user, instead of using the userís service provider credentials. An access token is created with a valid key, request token, and verifier combination. Here are examples of the simple and comprehensive forms for generating access tokens.</p>
 <h4>Simple form</h4>
 <pre>
 &lt;OAuthV1 name="OAuthV1-GenerateAccessToken-1"&gt;
@@ -170,7 +170,7 @@ https://$org-$env.$api_domain/oauth1-proxy/request_token -H 'Authorization: OAut
     &lt;GenerateResponse enabled="true"&gt;
        &lt;Format&gt;FORM_PARAM | XML&lt;/Format&gt;
     &lt;/GenerateResponse&gt;
-‚Äã    &lt;Attributes&gt;
+?    &lt;Attributes&gt;
        &lt;Attribute name="ver-attr1"&gt;ver-attr1&lt;/Attribute&gt; 
        &lt;Attribute name="ver-attr2" ref="request.header.ver-attr2"&gt;&lt;/Attribute&gt; 
        &lt;Attribute name="ver-attr3" display="false"&gt;ver-attr3&lt;/Attribute&gt; 
@@ -258,8 +258,8 @@ https://$org-$env.$api_domain/oauth1-proxy/request_token -H 'Authorization: OAut
 <p>Custom attributes can be optionally included in access, refresh, and verifier tokens.</p>
 <pre>
 &lt;Attributes&gt; 
-  &lt;Attribute name=‚Äùattr_name1‚Äù ref=‚Äùflow.variable‚Äù display="true|false"&gt;value1&lt;/Attribute&gt;
-  &lt;Attribute name=‚Äùattr_name2‚Äù ref=‚Äùflow.variable‚Äù display="true|false"&gt;value2&lt;/Attribute&gt;
+  &lt;Attribute name=îattr_name1î ref=îflow.variableî display="true|false"&gt;value1&lt;/Attribute&gt;
+  &lt;Attribute name=îattr_name2î ref=îflow.variableî display="true|false"&gt;value2&lt;/Attribute&gt;
 &lt;/Attributes&gt;</pre>
 <p>Where display is set to&nbsp;<code>true</code>, custom attributes are returned in the response , where they may be viewable by the app end user.</p>
 <p>Where display is set to&nbsp;<code>false</code>, custom attributes are stored in the data store, but are not returned in the response message.</p>
@@ -270,7 +270,7 @@ https://$org-$env.$api_domain/oauth1-proxy/request_token -H 'Authorization: OAut
   &lt;ExpiresIn&gt;1000&lt;/ExpiresIn&gt;
   &lt;GenerateResponse /&gt;
   &lt;Attributes&gt; 
-    &lt;Attribute name=‚Äùuser-agent‚Äù ref=‚Äùrequest.header.user-agent‚Äù 
+    &lt;Attribute name=îuser-agentî ref=îrequest.header.user-agentî 
             display="false"&gt;NONE&lt;/Attribute&gt;
   &lt;/Attributes&gt;
 &lt;/OAuthV1&gt;</pre>

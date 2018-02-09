@@ -128,7 +128,7 @@ console.log('Server running at http://127.0.0.1:8124/');
 <div class="note">
 	<p>Scopes for all the built-in Edge variables are listed in the <a href="/api-services/api/variables-reference">Variables reference</a>.</p>
 </div>
-<p>There's another built-in variable called <code>target.url</code>. This variable's scope is "target request". It is populated in the TargetEndpoint request segment with the request URL sent to the back-end target. If you try to access <code>target.url</code> in the ProxyEndpoint request segment, you will receive a NULL value. If you try to set this variable before it is in scope, the proxy does nothingâ€”does not generate an error and does not set the variable.&nbsp;</p>
+<p>There's another built-in variable called <code>target.url</code>. This variable's scope is "target request". It is populated in the TargetEndpoint request segment with the request URL sent to the back-end target. If you try to access <code>target.url</code> in the ProxyEndpoint request segment, you will receive a NULL value. If you try to set this variable before it is in scope, the proxy does nothing—does not generate an error and does not set the variable.&nbsp;</p>
 <div class="note">
 	<p>It's possible to configure some policies to either throw an error or return NULL when an undefined variable is accessed. Refer to individual policy reference pages for details.</p>
 </div>
@@ -142,7 +142,7 @@ console.log('Server running at http://127.0.0.1:8124/');
 <h2>Referencing flow variables</h2>
 <p>All built-in variables in Apigee Edge follow a dot-notation naming convention. This convention makes it easier to determine the purpose of the variable. For example <code>system.time.hour</code> and <code>request.content</code>.</p>
 <div class="note">
-	<p>This dot-notation convention is strictly for naming purposes. For example, <code>request.content</code> does not refer to a parent variable or object called "request". You can name custom variables anything you wish. There is no requirement to include a dot. Apigee considers following this naming convention a best practice whenever you create your own custom flow variables. It can be useful to use the dots to organize your custom variables. For example <code>approval.code</code> and <code>approval.status</code> both might refer to an approval feature within the flow. Apigee uses prefixes like request, target, system, and response to organize relevant variables appropriately.</p>
+	<p>Apigee considers following this naming convention a best practice whenever you create your own custom flow variables. It can be useful to use the dots to organize your custom variables. For example <code>approval.code</code> and <code>approval.status</code> both might refer to an approval feature within the flow. Apigee uses reserved prefixes like request, target, system, and response to organize relevant variables appropriately.</p>
 </div>
 <p>When you reference a variable in a policy, you must enclose it in curly braces. For example, this simple AssignMessage policy takes the value of the variable <code>client.ip</code> and puts it in a request header called Client-IP.</p>
 <pre>

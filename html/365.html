@@ -2,6 +2,13 @@
 <img src="sites/docs/files/icon_policy_threat-protection.jpg" />
 <h3>What</h3>
 <p>Minimizes the risk posed by content-level attacks by enabling you to specify limits on various JSON structures, such as arrays and strings.</p>
+<div class="video">
+	<p><strong>Video:</strong> Watch a short video to learn more about how the JSON Threat Protection policy enables you to secure APIs against content-level attacks.</p>
+	<div class="collapse" id="json">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/LIUeaAvRuTQ" width="854"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#json">Show/Hide Video</a></div>
+</div>
 <h3>Where</h3>
 <p>This policy can be attached in the following locations.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
@@ -24,14 +31,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -40,14 +47,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -224,7 +231,7 @@
 <h3>Threat protection error configuration</h3>
 <p>By default, Edge throws an HTTP 500 Internal Server Error status code and an ExecutionFailed error if a message doesn't make it past a JSON or XML Threat Protection policy. You can change that error behavior with a new organization-level property. When setting org property&nbsp;<code>features.isPolicyHttpStatusEnabled</code>&nbsp;to true, the following behavior occurs:</p>
 <ul>
-	<li>Request: With a threat protection policy attached to any request flow, invalid messages return a 400 status code, along with a corresponding policy error message.</li>
+	<li>Request: With a threat protection policy attached to any request flow, invalid messages return a 500 status code, along with a corresponding policy error message.</li>
 	<li>Response: With a threat protection policy attached to any response flow, invalid messages still return a 500 status code, and one of the corresponding policy error messages is thrown (rather than just ExecutionFailed).</li>
 </ul>
 <p>Cloud customers must contact&nbsp;<a href="http://community.apigee.com/page/apigee-customer-support">Apigee Support</a>&nbsp;to set the organization property.</p>

@@ -6,7 +6,7 @@
 	<p>If you want to learn more about OAuth on Apigee Edge, see the <a href="http://apigee.com/docs/api-services/content/oauth-home">OAuth home page</a>. It provides links to resources, samples, videos, and more. See the <a href="http://github.com/apigee/api-platform-samples/tree/master/sample-proxies/oauth-advanced">advanced OAuth sample</a> on GitHub for a good demonstration of how this policy is used in a working application.&nbsp;</p>
 </div>
 <h3>Where</h3>
-<p>Place this policy on custom API proxy flows to generate access tokens, refresh tokens, authorization codes, to perform token validation, and other operations. For example, you might put this policy on an API proxy endpoint called&nbsp;<code>/authorizationcode</code>&nbsp;for apps to request authorization codes. Likewise, you might put this policy on an API proxy endpoint called&nbsp;<code>/token</code>&nbsp;to generate an access token when that endpoint is called.</p>
+<p>It's a common practice to place this policy on a custom (conditional) flow for generating access, refresh tokens, auth codes. For example, you might put this policy on an API proxy endpoint called&nbsp;<code>/authorizationcode</code>&nbsp;for apps to request authorization codes. Likewise, you might put this policy on an API proxy endpoint called&nbsp;<code>/token</code>&nbsp;to generate an access token when that endpoint is called. For token verification (VerifyAccessToken operation), it's common to place the policy on the Proxy Endpoint PreFlow.&nbsp;</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
 	<tbody>
 		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
@@ -29,8 +29,8 @@
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
 			<td class="bbl" style="text-align:center; font-size:16px">&nbsp;</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">�</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">�</td>
 			<td class="bblbrl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
@@ -47,7 +47,7 @@
 			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="brl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
-			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">�</td>
 			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
 			<!-- End response dots -->
 			<td style="text-align:center; font-size:16px">&nbsp;</td>
@@ -304,13 +304,29 @@ context.setVariable("request.header.Authorization","Basic "+CryptoJS.enc.Base64.
 <h2>&lt;Attributes/Attribute&gt;</h2>
 <pre>
 &lt;Attributes&gt;
-    &lt;Attribute name=”attr_name1” ref=”flow.variable” display="true|false"&gt;value1&lt;/Attribute&gt;
-    &lt;Attribute name=”attr_name2” ref=”flow.variable” display="true|false"&gt;value2&lt;/Attribute&gt;
+    &lt;Attribute name="attr_name1" ref="flow.variable" display="true|false"&gt;value1&lt;/Attribute&gt;
+    &lt;Attribute name="attr_name2" ref="flow.variable" display="true|false"&gt;value2&lt;/Attribute&gt;
 &lt;/Attributes&gt;</pre>
 <p>Use this element to add custom attributes to an access token or authorization code. For example, you may wish to embed a user ID or session identifier in an access token that can be extracted and checked at runtime.</p>
 <p>This element lets you specify a value in a flow variable or from a literal string. If you specify both a variable and a string, the value specified in the flow variable is used. If the variable cannot be resolved, then the string is the default.</p>
-<p>The optional <code>display</code> attribute lets you specify whether or not custom attributes appear in the response. If set to <code>true</code>, custom attributes appears in the response (if <code>GenerateResponse</code> is also enabled). Default value is <code>false</code>.</p>
 <p>For more information on using this element, see <a href="http://docs.apigee.com/node/17886">http://docs.apigee.com/node/17886</a>.</p>
+<div class="note">
+	<p>If you add custom attributes to an authorization code, those attributes will be inherited by the access token generated from that code.</p>
+	<p>&nbsp;</p>
+</div>
+<h3><a id="displayorhide" name="displayorhide"></a>Displaying or hiding custom attributes in the response</h3>
+<p>Remember that if you set the GenerateResponse element of this policy to <strong>true</strong>, the full JSON representation of the token is returned in the response, including any custom attributes that you set. In some cases, you might want to hide some or all of your custom attributes in the response so that they are not visible to client apps.&nbsp;</p>
+<p>By default, custom attributes do appear in the response. If you want to hide them, you can set the <strong>display</strong> parameter to <strong>false</strong>. For example:</p>
+<pre>
+&lt;Attributes&gt;
+    &lt;Attribute name="employee_id" ref="employee.id" display="false"/&gt;
+    &lt;Attribute name="employee_name" ref="employee.name" display="false"/&gt;
+&lt;/Attributes&gt;</pre>
+<p><strong>It's important to note </strong>that the display value (true or false) is not persisted. This means that if you generate a new token using a refresh token (grant type refresh_token), any custom attributes that are set in the original access token will show up in the response by default. To hide custom attributes in this case, you have these choices:</p>
+<ul>
+	<li>Explicitly reset the custom attributes in the refresh token policy and set their display to false. In this case, you may need to retrieve the original custom values from the original access token using the GetOAuthV2Info policy.</li>
+	<li>Use a postprocessing JavaScript policy to manually extract any attributes that you do not want to see in the response.&nbsp;</li>
+</ul>
 <table class="table">
 	<tbody>
 		<tr>
@@ -335,7 +351,7 @@ context.setVariable("request.header.Authorization","Basic "+CryptoJS.enc.Base64.
 				<ul>
 					<li><code>name</code> -The attribute name</li>
 					<li><code>ref</code> - The value of the attribute. Can come from a flow variable.</li>
-					<li><code>display</code> - (Optional) If set to <code>true</code>, custom attributes appears in the response (If <code>GenerateResponse</code> is also enabled). Default value is <code>false</code>.</li>
+					<li><code>display</code> - (Optional) Lets you specify whether or not custom attributes appear in the response. If <code>true</code>, custom attributes appear in the response (If <code>GenerateResponse</code> is also enabled). If <code>false</code>, custom attributes are not included in the response. Default value is <code>true</code>. See&nbsp;<a href="#displayorhide">Displaying or hiding custom attributes in the response</a>.</li>
 				</ul>
 			</td>
 		</tr>
@@ -347,6 +363,7 @@ context.setVariable("request.header.Authorization","Basic "+CryptoJS.enc.Base64.
 					<li>implicit</li>
 					<li>password</li>
 					<li>client_credentials</li>
+					<li>refresh_token</li>
 					<li>Can also be used with the GenerateAuthorizationCode operation.</li>
 				</ul>
 			</td>
@@ -575,7 +592,7 @@ context.setVariable("request.header.Authorization","Basic "+CryptoJS.enc.Base64.
   "refresh_count" : "0"
 }
 </pre>
-<p>If <code>false</code>, no response is sent. Instead, a set of flow variables are populated with values related to the policy's function. For example, a flow variable called <code>oauthv2authcode.OAuthV2-GenerateAuthorizationCode.code</code> gets populated with the newly minted auth code.</p>
+<p>If <code>false</code>, no response is sent. Instead, a set of flow variables are populated with values related to the policy's function. For example, a flow variable called <code>oauthv2authcode.OAuthV2-GenerateAuthorizationCode.code</code> gets populated with the newly minted auth code. Note that <strong>expires_in</strong> is expressed in seconds in the response.&nbsp;</p>
 <table class="table">
 	<tbody>
 		<tr>
@@ -666,7 +683,7 @@ context.setVariable("request.header.Authorization","Basic "+CryptoJS.enc.Base64.
 <pre>
 &lt;GrantType&gt;request.queryparam.grant_type&lt;/GrantType&gt;
 </pre>
-<p>Tells the policy where to find the grant type parameter that is passed in a request. Per the OAuth 2.0 specification, the grant type must be supplied with requests for access tokens and authorization codes. The variable can be a header, query parameter, or form parameter (default). Or, it can be a hard-coded value.&nbsp;</p>
+<p>Tells the policy where to find the grant type parameter that is passed in a request. Per the OAuth 2.0 specification, the grant type must be supplied with requests for access tokens and authorization codes. The variable can be a header, query parameter, or form parameter (default).&nbsp;</p>
 <p>For example&nbsp;<code>request.queryparam.grant_type</code>&nbsp;indicates that the Password should be present as a query parameter, as, for example,&nbsp;<code>?grant_type=password</code>. To require the grant type in an HTTP header, for example, set this value to&nbsp;<code>request.header.grant_type</code>.&nbsp;See also <a href="http://docs.apigee.com/node/17881">http://docs.apigee.com/node/17881</a>.</p>
 <table class="table">
 	<tbody>
@@ -692,7 +709,7 @@ context.setVariable("request.header.Authorization","Basic "+CryptoJS.enc.Base64.
 		</tr>
 		<tr>
 			<td><strong>Valid values:</strong></td>
-			<td>A variable, as explained above, or a hard-coded grant type of: client_credentials, implicit, authorization_code, or password</td>
+			<td>A variable, as explained above.</td>
 		</tr>
 		<tr>
 			<td><strong>Used with grant types:</strong></td>
@@ -1326,7 +1343,7 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 <h2><a id="flowvariables" name="flowvariables"></a>Flow variables</h2>
 <p>The flow variables defined in this table are populated when the respective OAuth policies are executed, and hence are available to other policies or applications executing in the API proxy flow.</p>
 <h3>VerifyAccessToken operation</h3>
-<p>The the VerifyAccessToken operation executes, a large number of flow variables are populated in the proxy's execution context. These variables give you properties related to the access token, developer app, developer, and company. You can use an AssignMessage or JavaScript policy, for example, to read any of these variables and use them as needed later in the flow. These variables can also be useful for debugging purposes. </p>
+<p>The the VerifyAccessToken operation executes, a large number of flow variables are populated in the proxy's execution context. These variables give you properties related to the access token, developer app, developer, and company. You can use an AssignMessage or JavaScript policy, for example, to read any of these variables and use them as needed later in the flow. These variables can also be useful for debugging purposes.</p>
 <div class="note">
 	<p>API product variables will be populated automatically if the API products are configured with valid environment, proxies, and API resources (derived from the <code>proxy.pathsuffix</code>). Explicitly setting flow.resource.name variable is not required.</p>
 	<p>Where the API products are not configured with valid environments and API proxies, then <code>flow.resource.name</code> must explicitly be set to populate API product variables in the flow. For details on product configuration, see <a href="http://docs.apigee.com/node/427">http://docs.apigee.com/node/427</a>.</p>
@@ -1376,7 +1393,7 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><code>expires_in</code></td>
-			<td>The expiration time for the access token.</td>
+			<td>The expiration time for the access token. Expressed in <strong>seconds</strong>.&nbsp;</td>
 		</tr>
 		<tr>
 			<td><code>status</code></td>
@@ -1395,13 +1412,13 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 			<td>The name of the API product associated with the registered client app.</td>
 		</tr>
 		<tr>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-	  </tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
 	</tbody>
 </table>
 <p><strong>App-specific variables</strong></p>
-<p>These variables are releated to the Developer App that is associated with the token. </p>
+<p>These variables are releated to the Developer App that is associated with the token.</p>
 <table class="table">
 	<tbody>
 		<tr>
@@ -1470,9 +1487,9 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><code>app.{custom_attributes}</code></td>
-			<td>A named custom attribute  of the registered client app.</td>
+			<td>A named custom attribute of the registered client app.</td>
 		</tr>
-  </tbody>
+	</tbody>
 </table>
 <p><strong>Developer-specific variables</strong></p>
 <p>If the app.appType is "Company", then company attributes are populated and if app.appType is "Developer", then developer attributes are populated.</p>
@@ -1484,7 +1501,7 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><strong>Developer-specific variables</strong></td>
-		  <td>&nbsp;</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td><code>developer.id</code></td>
@@ -1532,9 +1549,9 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><code>developer.{custom_attributes}</code></td>
-			<td>A named custom attribute  of the developer.</td>
+			<td>A named custom attribute of the developer.</td>
 		</tr>
-  </tbody>
+	</tbody>
 </table>
 <p><strong>Company-specific variables</strong></p>
 <p>If the app.appType is "Company", then company attributes are populated and if app.appType is "Developer", then developer attributes are populated.</p>
@@ -1578,9 +1595,9 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><code>company.{custom_attributes}</code></td>
-			<td>A named custom attribute  of the company.</td>
+			<td>A named custom attribute of the company.</td>
 		</tr>
-  </tbody>
+	</tbody>
 </table>
 <h3>GenerateAuthorizationCode operation</h3>
 <p>These variables are set when the GenerateAuthorizationCode operation executes successfully:</p>
@@ -1623,7 +1640,7 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 			<th width="251">Variable name</th>
 			<th width="975">Description</th>
 		</tr>
-  </thead>
+	</thead>
 	<tbody>
 		<tr>
 			<td><code>access_token</code></td>
@@ -1631,64 +1648,64 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><code>client_id</code></td>
-		  <td>The client ID of the developer app associated with this token.</td>
-	  </tr>
+			<td>The client ID of the developer app associated with this token.</td>
+		</tr>
 		<tr>
 			<td><code>expires_in</code></td>
-			<td>The expiry value for the token. See the <a href="#expiresin">&lt;ExpiresIn&gt;</a> element for details.</td>
-	  </tr>
+			<td>The expiry value for the token. See the <a href="#expiresin">&lt;ExpiresIn&gt;</a> element for details. Note that in the response, <strong>expires_in</strong> is expressed in <strong>seconds</strong>.&nbsp;</td>
+		</tr>
 		<tr>
 			<td><code>scope</code></td>
 			<td>List of available scopes configured for the token. See <a href="http://docs.apigee.com/node/17911">http://docs.apigee.com/node/17911</a>.</td>
-	  </tr>
+		</tr>
 		<tr>
 			<td><code>status</code></td>
 			<td>Either <code>approved</code> or <code>revoked</code>.</td>
-	  </tr>
+		</tr>
 		<tr>
 			<td><code>token_type</code></td>
-		  <td>Is set to <code>BearerToken</code>.</td>
-	  </tr>
+			<td>Is set to <code>BearerToken</code>.</td>
+		</tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-	  </tr>
+		</tr>
 		<tr>
 			<td><code>developer.email</code></td>
-		  <td>The email address of the registered developer who owns the developer app associated with the token.</td>
-	  </tr>
+			<td>The email address of the registered developer who owns the developer app associated with the token.</td>
+		</tr>
 		<tr>
 			<td><code>organization_name</code></td>
-		  <td>The org where the proxy executes.</td>
-	  </tr>
+			<td>The org where the proxy executes.</td>
+		</tr>
 		<tr>
-		  <td><code>api_product_list</code></td>
+			<td><code>api_product_list</code></td>
 			<td>A list of the products associated with the token's corresponding developer app.</td>
-	  </tr>
+		</tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-	  </tr>
+		</tr>
 		<tr>
-		  <td><code>refresh_count</code></td>
+			<td><code>refresh_count</code></td>
 			<td>&nbsp;</td>
-	  </tr>
+		</tr>
 		<tr>
 			<td><code>refresh_token</code></td>
-		  <td>The refresh token that was generated. Note that refresh tokens are not generated for the client credentials grant type.</td>
-	  </tr>
+			<td>The refresh token that was generated. Note that refresh tokens are not generated for the client credentials grant type.</td>
+		</tr>
 		<tr>
-		  <td><code>refresh_token_expires_in</code></td>
+			<td><code>refresh_token_expires_in</code></td>
 			<td>The lifespan of the refresh token, in seconds.</td>
-	  </tr>
+		</tr>
 		<tr>
-		  <td><code>refresh_token_issued_at</code></td>
+			<td><code>refresh_token_issued_at</code></td>
 			<td>This time value is the string representation of the corresponding 32-bit timestamp quantity. For example, 'Wed, 21 Aug 2013 19:16:47 UTC' corresponds to the timestamp value of 1377112607413.</td>
-	  </tr>
+		</tr>
 		<tr>
-		  <td><code>refresh_token_status</code></td>
+			<td><code>refresh_token_status</code></td>
 			<td>Either <code>approved</code> or <code>revoked</code>.</td>
-	  </tr>
+		</tr>
 	</tbody>
 </table>
 <h3>GenerateAccessTokenImplicitGrant</h3>
@@ -1709,7 +1726,7 @@ curl -u email:password -X PUT -H "Content-type:application/xml" http://host:port
 		</tr>
 		<tr>
 			<td><code>oauthv2accesstoken.{policy_name}.expires_in</code></td>
-			<td>The expiry value for the token. See the <a href="#expiresin">&lt;ExpiresIn&gt;</a> element for details.</td>
+			<td>The expiry value for the token, in seconds. See the <a href="#expiresin">&lt;ExpiresIn&gt;</a> element for details.</td>
 		</tr>
 	</tbody>
 </table>
@@ -1764,7 +1781,7 @@ POST https://&lt;host-name&gt;/v1/organizations/&lt;org-name&gt;</pre>
 &nbsp;&lt;Description&gt;Desc&lt;/Description&gt;
 &nbsp;&lt;Properties&gt;
 &nbsp;&nbsp; &nbsp; &lt;Property name="keymanagement.oauth20.access.token.purge"&gt;true&lt;/Property&gt;
-&nbsp;&nbsp; &nbsp; &lt;Property name="keymanagement.oauth20.access.token.purge.after.seconds”&gt;120&lt;/Property&gt;
+&nbsp;&nbsp; &nbsp; &lt;Property name="keymanagement.oauth20.access.token.purge.after.seconds"&gt;120&lt;/Property&gt;
 &nbsp;&lt;/Properties&gt;
 &lt;/Organization&gt;</pre>
 		</li>

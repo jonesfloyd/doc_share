@@ -1,6 +1,6 @@
 <h1> Comparing Quota, Spike Arrest, and Concurrent Rate Limit Policies </h1>
 <title></title>
-<p>Quota, Spike Arrest, and Concurrent Rate Limit policies â€” wondering which one to use to best meet your rate limiting needs? See the comparison chart below.</p>
+<p>Quota, Spike Arrest, and Concurrent Rate Limit policies — wondering which one to use to best meet your rate limiting needs? See the comparison chart below.</p>
 <table class="table" width="100%">
 	<tbody>
 		<tr>
@@ -18,7 +18,7 @@
 		<tr>
 			<td valign="top">Don't use it to:</td>
 			<td valign="top">
-				<p>Don't use it to protect your API proxy against traffic spikes.</p>
+				<p>Don't use it to protect your API proxy's target backend against traffic spikes.</p>
 				<p>For that, use the Spike Arrest policy or Concurrent Rate Limit policy.</p>
 			</td>
 			<td valign="top">
@@ -96,9 +96,10 @@
 		</tr>
 	</tbody>
 </table>
-<p><span style="color:#ff0000;">* The current HTTP status code for exceeding the rate limit is 500, but it will soon be changed to 429. Until the change occurs, if you are want the status code to be 429 for all three policy types used in an organization (Quota, Spike Arrest, and Concurrent Rate Limit), a property needs to be set on your organization (<code>features.isHTTPStatusTooManyRequestEnabled</code>). If you're a cloud customer, contact&nbsp;</span><a href="http://community.apigee.com/content/apigee-customer-support" target="_blank"><span style="color:#ff0000;">Apigee Support</span></a><span style="color:#ff0000;"> to have the property enabled.</span></p>
+<p><span style="color:#ff0000;">* The default HTTP status code for exceeding the rate limit is 500. If you are want the status code to be 429 for all three policy types used in an organization (Quota, Spike Arrest, and Concurrent Rate Limit), a property needs to be set on your organization (<code>features.isHTTPStatusTooManyRequestEnabled</code>). If you're a Cloud customer, contact&nbsp;</span><a href="http://community.apigee.com/content/apigee-customer-support" target="_blank"><span style="color:#ff0000;">Apigee Support</span></a><span style="color:#ff0000;"> to have the property enabled.</span></p>
 <div class="opdk">
 	<p>If you're an Edge for Private Cloud customer, set this property with the following API call:</p>
+	<p><b>Note</b>: When updating properties, you must pass all existing properties to the API, even if they are not being changed. If you omit properties in the payload, the properties are removed.</p>
 	<pre>
 curl -u email:password -X POST -H "Content-type:application/xml" http://host:8080/v1/o/myorg -d \
 "&lt;Organization type="trial" name="MyOrganization"&gt;

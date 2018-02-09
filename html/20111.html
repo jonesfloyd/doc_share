@@ -139,7 +139,7 @@
 <h3>Is the JavaRegex operator case sensitive?</h3>
 <p>Yes. Assume you have a condition like this:</p>
 <pre>
-&lt;Condition&gt;(proxy.pathsuffix Matches "/ca?t")&lt;/Condition&gt;</pre>
+&lt;Condition&gt;(proxy.pathsuffix JavaRegex "/ca?t")&lt;/Condition&gt;</pre>
 <p><strong>API call:</strong></p>
 <p><code>GET http://artomatic-test.apigee.net/matchtest/cat</code></p>
 <p>Does the policy execute? Yes, the regex matches zero or one of the preceeding character, which is "a". &nbsp;</p>

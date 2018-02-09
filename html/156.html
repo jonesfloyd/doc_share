@@ -29,14 +29,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -45,14 +45,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -155,7 +155,7 @@
 <!-- End tabbed region. -->
 <hr />
 <h2 id="usage">About the Service Callout policy</h2>
-<p>There are many scenarios where you can use a Service Callout policy in your API proxy. For example, you can configure an API proxy to make calls to an external service to deliver geolocation data, customer reviews, items from a partner‚Äôs retail catalog, and so on.</p>
+<p>There are many scenarios where you can use a Service Callout policy in your API proxy. For example, you can configure an API proxy to make calls to an external service to deliver geolocation data, customer reviews, items from a partnerís retail catalog, and so on.</p>
 <div class="sample-github">
 	<p><strong>Learn by doing!</strong><br />
 		If you want to see Service Callout in action, check out this <a href="https://github.com/apigee/api-platform-samples/tree/master/learn-edge/service-callout-1" target="_blank">Learn by doing example</a> in the Apigee GitHub samples. Just clone the repository and follow the instructions in that topic. The example uses Assign Message to set a request path, then uses a Service Callout policy to make the request to an external service.</p>
@@ -453,10 +453,10 @@
 &lt;URL&gt;http://example.com/forecastrss?w=${request.header.woeid}&lt;/URL&gt;</pre>
 <p>Or, set a portion of the URL path with a variable:</p>
 <pre>
-&lt;URL&gt;http://example.com/{request.resourePath}?w=${request.header.woeid}&lt;/URL&gt;</pre>
+&lt;URL&gt;http://example.com/{request.resourcePath}?w=${request.header.woeid}&lt;/URL&gt;</pre>
 <p>If you want to use a variable to specify the domain and port of the URL, then use one variable for the domain and port only, and a second variable for any other part of the URL:</p>
 <pre>
-&lt;URL&gt;http://{request.dom_port}/{request.resourePath}&lt;/URL&gt;</pre>
+&lt;URL&gt;http://{request.dom_port}/{request.resourcePath}&lt;/URL&gt;</pre>
 <table class="pd-table">
 	<tbody>
 		<tr>

@@ -4,7 +4,7 @@
 <h2>Digital acceleration</h2>
 <div class="video">
 	<p>This video gives you a quick view of how Apigee helps you evolve into a digital business.</p>
-	<iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/LssHa1Y_i0g" width="560"></iframe></div>
+	<iframe allowfullscreen="" frameborder="0" height="315" scrolling="no" src="https://www.youtube.com/embed/FPj_va9-rM8" width="560"></iframe></div>
 <h2>Making your services available on the Web</h2>
 <p>Companies today want to make their backend services available on the web so that these services can be consumed by apps running on mobile devices and desktops. A company might want to expose services that provide product pricing and availability information, sales and ordering services, order tracking services, and any other services required by client apps.</p>
 <p>Companies often expose services as a set of HTTP endpoints. Client app developers then make HTTP&nbsp; requests to these endpoints. Depending on the endpoint, the service might then return data, formatted as XML or JSON, back to the client app.</p>
@@ -47,9 +47,9 @@
 <p>You have a great deal of flexibility when creating API products. For example, multiple API products can share the same API proxy. The following figure shows three API products. Notice that all products allow access to API proxy 3, but only product A allows access to API proxy 1.</p>
 <p><img alt="" height="274" src="sites/docs/files/products.png" style="border-width: 1px; border-style: solid; margin: 15px;" width="247" /></p>
 <p>You can set different properties on each API product. For example, you might make available one API product with a low access limit, such as 1000 requests per day, for a bargain price. You then release another API product that provides access to the same API proxy, but with a much higher access limit, for a higher price. Or, you might create a free API product that allows read-only access to your services, and then sell an API product to the same API proxies that allows read/write access.</p>
-<p>For more information, see <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a>.</p>
+<p>For more information, see <a href="http://docs.apigee.com/node/36696">http://docs.apigee.com/node/36696</a>.</p>
 <h3>Allowing a client-side app to access your API product</h3>
-<p>When app developers decide that they want to access your services, they must first register their client app with your API product. Upon registration, an app developer receives an API key that she must then include in every request to an API proxy included in the API product. That key is authenticated and, if authentication is successful, the request is allowed to access your backend service.</p>
+<p>When app developers decide that they want to access your services, they must first register their client app with your API product. Upon registration, an app developer receives an API key that they must then include in every request to an API proxy included in the API product. That key is authenticated and, if authentication is successful, the request is allowed to access your backend service.</p>
 <p><img alt="" height="142" src="sites/docs/files/apikey.png" style="border-width: 1px; border-style: solid; margin: 15px;" width="311" /></p>
 <p>At any time, you can revoke the key so that the client app no longer has access to your services. Or, you can define a time limit on a key so that the developer must refresh the key after a specific time.</p>
 <p>You decide how to handle registration requests from developers to access your API products. By using Apigee Edge Developer Services, you can automate the registration process; or you can use a manual process to control access.</p>

@@ -55,8 +55,8 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/userr
 $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/userroles/testing/permissions -H "Content-type:application/json" -X POST -d'{"path" : "/applications","permissions" : [ "get" ]}'</pre>
 <p>For an on-premises installation of Edge, the minimum set of permissions that have to be set to allow the user to log in to the Edge UI are:</p>
 <pre>
-{"path" : "/","permissions" : [ "get" ]}'
-{"path" : "/*","permissions" : [ ]}'
+{"path" : "/","permissions" : [ "get" ]}
+{"path" : "/*","permissions" : [ ]}
 {"path" : "/environments","permissions" : [ "get" ]}
 {"path" : "/userroles","permissions" : [ "get" ]}</pre>
 <p>Use the following cURL&nbsp;command to set these permissions:</p>

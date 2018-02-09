@@ -28,15 +28,15 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -45,15 +45,15 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -289,7 +289,7 @@
 		<tr>
 			<td style="vertical-align: top;"><code>FormatMessage</code></td>
 			<td style="vertical-align: top;">
-				<p><code>true</code> or <code>false</code></p>
+				<p><code>true</code> or <code>false</code> (default)</p>
 				<p>Optional, but <code>&lt;FormatMessage&gt;true&lt;/FormatMessage&gt;</code> is required for use with Loggly.</p>
 				<p>This element lets you control the format of Apigee-generated content prepended to the message. If set to true, the syslog message is prepended by a fixed number of characters, which lets you filter out that information from messages. Here's an example for the fixed format:</p>
 				<p><code>&lt;14&gt;1 2016-02-23T09:24:39.039+0000 e49cd3a9-4cf6-48a7-abb9-7ftfe4d97d00 Apigee-Edge - - - Message starts here</code></p>
@@ -301,6 +301,7 @@
 					<li>Message processor UUID.</li>
 					<li>"Apigee Edge - - - "</li>
 				</ul>
+				<p>If set to false (default), the message is not prepended with those fixed characters.</p>
 			</td>
 		</tr>
 		<tr>
@@ -375,6 +376,31 @@ Log message size exceeded. Increase the max message size setting</pre>
 <p>Increase the <code>max.log.message.size.in.kb</code> property (default value = 128 KB) in the <code>message-logging.properties</code> file.</p>
 <p>For Edge for Private Cloud 4.16.01 and later, set the&nbsp;<code>conf_message-logging_max.log.message.size.in.kb</code>&nbsp;property in the <span style="font-family:courier new,courier,monospace;">/opt/apigee/customer/application/message-processor.properties</span> file and restart the Message Processor.</p>
 <p><strong>Note:</strong>&nbsp;The&nbsp;<a href="http://docs.apigee.com/api-services/reference/variables-reference#response">response message variables</a>&nbsp;in Edge are not available from the Error Flow. These variables are also not available in PostClientFlow if the preceding flow was the Error Flow. If you want to log response information from the PostClientFlow, use the&nbsp;<strong>message</strong>&nbsp;object. You can use this object to get at headers and other information from the response whether or not there was an error. See&nbsp;<a href="http://docs.apigee.com/api-services/reference/variables-reference#messagevariables">Message variables</a>&nbsp;for more information and an example.</p>
+<h3>Controlling log message timestamp in Edge for Private Cloud</h3>
+<p>By default, the timestamp in log messages has the format:</p>
+<pre>
+yyyy-MM-dd'T'HH:mm:ss.sssZ</pre>
+<p>For example:</p>
+<pre>
+2017-05-08T13:33:00.000+0000</pre>
+<p>You can use the <span style="font-family:courier new,courier,monospace;">conf_system_apigee.syslogger.dateFormat</span> property on the Edge Message Processor to control that format. For example, changing the message format to:</p>
+<pre>
+yy/MM/dd'T'HH:mm:ss.sssZ</pre>
+<p>Records a timestamp in the form:</p>
+<pre>
+17/09/01T22:38:11.011+0000</pre>
+<p>To change the format:</p>
+<ol>
+	<li>Open the&nbsp;<span style="font-family:courier new,courier,monospace;">message-processor.properties</span> file in an editor. If the file does not exist, create it:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; vi /opt/apigee/customer/application/message-processor.properties</span></li>
+	<li>Set the properties as desired:<br />
+		<span style="font-family:courier new,courier,monospace;">conf_system_apigee.syslogger.dateFormat=yy/MM/dd'T'HH:mm:ss.sssZ</span></li>
+	<li>Save your changes.</li>
+	<li>Make sure the properties file is owned by the 'apigee' user:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/opt/apigee/customer/application/message-processor.properties</span></li>
+	<li>Restart the Edge Message Processor:<br />
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor restart</span></li>
+</ol>
 <h3 id="location">Log file location in Edge for Private Cloud</h3>
 <h4>Edge for Private Cloud 4.16.01 and later</h4>
 <p>By default, message logs are located in the following location on Message Processors:&nbsp;</p>
@@ -393,14 +419,14 @@ Log message size exceeded. Increase the max message size setting</pre>
 <p>To set these properties:</p>
 <ol>
 	<li>Open the&nbsp;<span style="font-family:courier new,courier,monospace;">message-processor.properties</span> file in an editor. If the file does not exist, create it:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; vi /&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span></li>
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; vi /opt/apigee/customer/application/message-processor.properties</span></li>
 	<li>Set the properties as desired:<br />
 		<span style="font-family: &quot;courier new&quot;, courier, monospace;">conf/message-logging.properties+logging_log.root.dir=</span><span style="font-family:courier new,courier,monospace;">/opt/apigee/var/log/messages</span></li>
 	<li>Save your changes.</li>
 	<li>Make sure the properties file is owned by the 'apigee' user:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/&lt;inst_root&gt;/apigee/customer/application/message-processor.properties</span></li>
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; chown&nbsp;apigee:apigee&nbsp;/opt/apigee/customer/application/message-processor.properties</span></li>
 	<li>Restart the Edge component:<br />
-		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /&lt;inst_root&gt;/apigee/apigee-service/bin/apigee-service edge-message-processor restart</span></li>
+		<span style="font-family: &quot;courier new&quot;, courier, monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-message-processor restart</span></li>
 </ol>
 <h4>Edge for Private Cloud 4.15.07 and earlier</h4>
 <p>By default, message logs are located in the following location on message processors:&nbsp;</p>
@@ -432,7 +458,7 @@ Log message size exceeded. Increase the max message size setting</pre>
 		Also see this Apigee Community post:&nbsp;<a href="https://community.apigee.com/content/kbentry/13298/log-messages-into-splunk.html">https://community.apigee.com/content/kbentry/13298/log-messages-into-splunk.html</a></li>
 	<li><a href="http://help.sumologic.com/Send_Data/Sources/Syslog_Source" target="_blank">Sumo Logic</a>
 		<ul>
-			<li><a href="http://help.sumologic.com/Send_Data/Sources/Syslog_Source" target="_blank">‚Äã</a>Also see this Apigee Community post: <a href="https://community.apigee.com/questions/5226/setting-up-logging-with-sumo-logic-which-host-shou.html">https://community.apigee.com/questions/5226/setting-up-logging-with-sumo-logic-which-host-shou.html</a></li>
+			<li><a href="http://help.sumologic.com/Send_Data/Sources/Syslog_Source" target="_blank">?</a>Also see this Apigee Community post: <a href="https://community.apigee.com/questions/5226/setting-up-logging-with-sumo-logic-which-host-shou.html">https://community.apigee.com/questions/5226/setting-up-logging-with-sumo-logic-which-host-shou.html</a></li>
 			<li>For a complete example using Sumo Logic as the logging service, see the following Apigee Community post. The solution uses a single JavaScript policy to make HTTP POST requests to Sumo Logic HTTP Source Collector:&nbsp;&nbsp;<a href="https://community.apigee.com/articles/32286/logging-to-sumo-logic-using-javascript-and-http.html">https://community.apigee.com/articles/32286/logging-to-sumo-logic-using-javascript-and-http.html</a></li>
 		</ul>
 	</li>

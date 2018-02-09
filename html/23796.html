@@ -1,4 +1,4 @@
-<h1> Edge deprecated features </h1>
+<h1> Apigee deprecations and retirements </h1>
 <p>The following Apigee Products, Services, and features are subject to the <a href="http://docs.apigee.com/node/23096">http://docs.apigee.com/node/23096</a>.</p>
 <ul>
 	<li><strong>Deprecated</strong> - The feature is still in the product but will be removed at a future date. Use alternative functionality, either described here in or in the relevant documentation.</li>
@@ -7,7 +7,6 @@
 </ul>
 <p>For more information about deprecations and retirements in Edge for Private Cloud, see <a href="http://docs.apigee.com/node/23096">http://docs.apigee.com/node/23096</a>.</p>
 <p>For planning a move to Apigee <a href="/api-services/content/api-reference-getting-started#cps" target="_blank">Core Persistence Services</a> (CPS), see <a href="#cps">CPS retirements and changes</a>&nbsp;below.</p>
-<p>Last modification date: 2/15/2017</p>
 <table class="table">
 	<thead>
 		<tr>
@@ -19,6 +18,21 @@
 		</tr>
 	</thead>
 	<tbody>
+		<tr>
+			<td>Cloud</td>
+			<td>10/30/2017</td>
+			<td>
+				<p id="hipaa_dedicated_instances"><strong>Apigee announces that it is discontinuing the use of Dedicated Instances for HIPAA compliance pack customers in AWS.</strong></p>
+				<p>Apigee is discontinuing the use of Dedicated Instances (DIs) for HIPAA compliance pack customers.</p>
+				<p>Apigee Edge with HIPAA compliance pack has been using Amazon Web Services (AWS) DIs since its inception. The concept of DIs is that the hardware in AWS cloud is dedicated for use only by Apigee (but not to individual Apigee customers), and Apigee can launch multiple virtual machines on this hardware.</p>
+				<p>The use of DIs for HIPAA compliance pack customers was required by the Business Associate Agreement (BAA) in place between Apigee and AWS. AWS <a href="https://aws.amazon.com/compliance/hipaa-compliance/" target="_blank">recently announced</a> that DIs are no longer required in order to have a BAA in place between AWS and its customers. The use of DIs has never been required by the HIPAA regulations or by Apigee’s third-party auditors who review and attest to our compliance with HIPAA.</p>
+				<p>The concept of DIs is logical in a virtual machine environment, but does not lend itself well to a container-based platform (for example, Google Cloud Platform and Kubernetes). Because Apigee is a multi-cloud service, use of DIs in AWS does not integrate well into our service management processes.</p>
+				<p>The use of DIs in AWS has been unique in our management of the Apigee multi-cloud platform, and our experience shows that DIs have a higher rate of failure than standard instances. This experience has been reported publicly by other AWS DI users as well.</p>
+				<p>This change allows Apigee to provide a more consistent experience for Apigee customers.</p>
+			</td>
+			<td>N/A</td>
+			<td>N/A</td>
+		</tr>
 		<tr>
 			<td>Cloud</td>
 			<td><a href="/release-notes/content/170213-apigee-edge-public-cloud-release-notes-management" target="_blank">3/6/2017</a></td>
@@ -312,7 +326,7 @@
 		</tr>
 		<tr>
 			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email_or_id%7D" target="_blank">Get Developer</a></td>
-			<td>The response returns list of all apps for the developer. With CPS, the response includes only the first 100 apps. Pagination for a developerâ€™s apps is not currently supported. To paginate a list of the developer's apps, use <a href="http://docs.apigee.com/node/16236">http://docs.apigee.com/node/16236</a>.</td>
+			<td>The response returns list of all apps for the developer. With CPS, the response includes only the first 100 apps. Pagination for a developer’s apps is not currently supported. To paginate a list of the developer's apps, use <a href="http://docs.apigee.com/node/16236">http://docs.apigee.com/node/16236</a>.</td>
 		</tr>
 		<tr>
 			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/developers" target="_blank">Create Developer</a></td>
@@ -405,6 +419,14 @@
 		<tr>
 			<td><a href="/management/apis/post/organizations/%7Borg_name%7D/oauth1/requesttokens/%7Brequest_token%7D" target="_blank">Update OAuth 1.0a Request Token</a></td>
 			<td>There is a custom attribute limit of 18.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/%7Bapp_name%7D-1" target="_blank">Get Count of OAuth 1.0 Access Tokens for a Developer App</a></td>
+			<td>Not available in CPS. No replacement API.</td>
+		</tr>
+		<tr>
+			<td><a href="/management/apis/get/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/%7Bapp_name%7D-2" target="_blank">Get a Count of OAuth 2.0 Access Tokens for a Developer App</a></td>
+			<td>Not available in CPS. No replacement API.</td>
 		</tr>
 	</tbody>
 </table>

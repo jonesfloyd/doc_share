@@ -1041,7 +1041,7 @@ var req_url = req_scheme + "://" + req_host + req_request_uri;
 				<p><strong>Scope begins</strong>: Target response<br />
 					<strong>Type</strong>: String<br />
 					<strong>Permission</strong>: Read</p>
-				<p>The time, expressed in string form, at which the TargetEndpoint started receiving the response from the target. For example: Wed, 21 Aug 2013 19:16:47 UTC</p>
+				<p>The time, expressed in string form, at which the TargetEndpoint finished receiving the response from the target. For example: Wed, 21 Aug 2013 19:16:47 UTC</p>
 				<p>This time value is the string representation of the corresponding 32-bit timestamp quantity. For example, 'Wed, 21 Aug 2013 19:16:47 UTC' corresponds to the timestamp value of 1377112607413.</p>
 			</td>
 		</tr>
@@ -1060,7 +1060,7 @@ var req_url = req_scheme + "://" + req_host + req_request_uri;
 				<p><strong>Scope begins</strong>: Target response<br />
 					<strong>Type</strong>: String<br />
 					<strong>Permission</strong>: Read</p>
-				<p>The time, expressed in string form, at which the TargetEndpoint finished receiving the response from the target. For example: Wed, 21 Aug 2013 19:16:47 UTC</p>
+				<p>The time, expressed in string form, at which the TargetEndpoint started receiving the response from the target. For example: Wed, 21 Aug 2013 19:16:47 UTC</p>
 				<p>This time value is the string representation of the corresponding 32-bit timestamp quantity. For example, 'Wed, 21 Aug 2013 19:16:47 UTC' corresponds to the timestamp value of 1377112607413.</p>
 			</td>
 		</tr>
@@ -1293,7 +1293,7 @@ context.setVariable('message.header.FOO-1', 'the header value');</pre>
 			<td>message.headers.names</td>
 			<td>
 				<p><strong>Scope begins</strong>: Proxy request<br />
-					<strong>Type</strong>: Integer<br />
+					<strong>Type</strong>: Collection<br />
 					<strong>Permission</strong>: Read</p>
 				<p>Value of all HTTP headers in the message</p>
 			</td>
@@ -1378,9 +1378,9 @@ context.setVariable('message.header.FOO-1', 'the header value');</pre>
 			<td>error.status.code</td>
 			<td>
 				<p style="font-size: 12px;"><strong>Scope</strong>: Error<br />
-					<strong>Type</strong>: String<br />
+					<strong>Type</strong>: Integer<br />
 					<strong>Permission</strong>: Read</p>
-				<p style="font-size: 12px;">The HTTP status code associated with the error. For example: "400".</p>
+				<p style="font-size: 12px;">The HTTP status code associated with the error. For example: 400.</p>
 			</td>
 		</tr>
 		<tr>

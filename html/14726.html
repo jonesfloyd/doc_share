@@ -3,6 +3,13 @@
 <p>Apigee Edge enhances the availability of your API by providing built-in support for load balancing and failover across multiple backend server instances.</p>
 <p>TargetServer configurations decouple concrete endpoint URLs from TargetEndpoint configurations. Each TargetServer is referenced by name in a TargetEndpoint HTTPConnection.&nbsp;Instead of defining concrete URL in the configuration, you can configure one or more named TargetServers.&nbsp;</p>
 <p>A TargetServer definition consists of a name, a host and a port, with an additional element to indicate whether the TargetServer is enabled or disabled.</p>
+<div class="video">
+	<p><strong>Video:</strong>&nbsp;Check out this short video for an introduction to load balancing using backend target servers.</p>
+	<div id="collapsible_2"><a class="btn" data-toggle="collapse" href="#targetserver">Show/Hide Video</a></div>
+	<div class="collapse" id="targetserver">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="313" mozallowfullscreen="" src="https://www.youtube.com/embed/crnuHAgj9Vo" webkitallowfullscreen="" width="560"></iframe></div>
+	</div>
+</div>
 <h3>Sample TargetServer Configuration:</h3>
 <pre>
 &lt;TargetServer  name="target1"&gt;
@@ -23,7 +30,7 @@
 	<tbody>
 		<tr>
 			<td><b><code>name</code></b></td>
-			<td>The name of the TargetServer configuration. The name must be unique within the environment.</td>
+			<td>The name of the TargetServer configuration, which must be unique within the environment. The TargetServer name can contain only alphanumeric characters.</td>
 			<td>N/A</td>
 			<td>Yes</td>
 		</tr>
@@ -357,7 +364,7 @@ $ curl -u email:password https://api.enterprise.apigee.com/v1/o/{org_name}/envir
     &lt;/Request&gt;
     &lt;SuccessResponse&gt; 
       &lt;ResponseCode&gt;200&lt;/ResponseCode&gt;
-      &lt;Header name=‚ÄùImOK‚Äù&gt;YourOK&lt;/Header&gt;
+      &lt;Header name=îImOKî&gt;YourOK&lt;/Header&gt;
     &lt;/SuccessResponse&gt;
   &lt;/HTTPMonitor&gt; 
 &lt;/HealthMonitor&gt;</pre>

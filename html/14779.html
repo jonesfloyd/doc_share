@@ -45,7 +45,7 @@
 <p>or:</p>
 <pre>
 <span style="font-family:courier new,courier,monospace;">-----BEGIN ENCRYPTED PRIVATE KEY-----</span>
-​ <span style="font-family:courier new,courier,monospace;">-----END ENCRYPTED PRIVATE KEY-----</span></pre>
+? <span style="font-family:courier new,courier,monospace;">-----END ENCRYPTED PRIVATE KEY-----</span></pre>
 <p>Then the files are compatible with the PEM format and you can use them in a keystore or truststore without converting them to a PEM file.</p>
 <p>If you have a certificate chain, and want to use that chain in a keystore or truststore, then you can combine all of the certs into a single PEM file. The certs have to be in order and the last cert must be a root certificate or an intermediate cert signed by a root certificate:</p>
 <pre>
@@ -140,7 +140,7 @@ myKey.pem</pre>
 <div class="note">
 	<p>A keystore JAR can contain only one certificate. If you have a certificate chain, all certs in the chain must be appended into a single PEM file, where the last certificate is signed by a CA. The certs must be appended to the PEM file in the correct order, meaning:</p>
 	<pre>
-cert -&gt; intermediate cert(1) -&gt; intermediate cert(2) -&gt; … -&gt; root</pre>
+cert -&gt; intermediate cert(1) -&gt; intermediate cert(2) -&gt; � -&gt; root</pre>
 </div>
 <p>In the directory containing your key pair and certificate, create a directory called <span style="font-family:courier new,courier,monospace;">/META-INF</span>. Then, create a file called <span style="font-family:courier new,courier,monospace;">descriptor.properties</span> in <span style="font-family:courier new,courier,monospace;">/META-INF</span> with the following contents:</p>
 <pre>

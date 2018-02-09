@@ -128,12 +128,13 @@ Apigee
 			<li>Click <strong>Save configuration</strong>.</li>
 		</ol>
 	</li>
-	<li>For Public or Private Cloud users working in an environment with restricted or no internet access, configure the SmartDocs API proxy URL, as follows:
+	<li>If your developer portal will be exposed to users in an internal network without access to the internet or if a subset of your APIs are on a private network, configure the SmartDocs API proxy URL, as follows:
 		<ol style="list-style: lower-alpha outside">
 			<li>Select <strong>Configuration &gt; SmartDocs</strong> in the Drupal Administration menu.</li>
 			<li>Expand <strong>Advanced Settings</strong>.</li>
-			<li>Update the <strong>SmartDocs proxy URL</strong> field as follows: <code>&lt;<em>host</em>&gt;:&lt;<em>port</em>&gt;/smartdocs/v1/sendrequest</code>.<br />
-				Typically, <code><i>&lt;host&gt;</i></code>&nbsp;is the Edge host and&nbsp;<i style="font-family: monospace;">&lt;port&gt;</i>&nbsp;is 59001. For example:&nbsp;<span style="font-family: monospace;">https://&lt;<em>edgehost</em>&gt;:59001/smartdocs/v1/sendrequest</span><br />
+			<li>Update the <strong>SmartDocs proxy URL</strong> field as follows: <code>&lt;<em>host</em>&gt;/smartdocs/v1/sendrequest</code>.<br />
+				The inline help should provide the required value for your environment. For example:<br />
+				<span style="font-family:courier new,courier,monospace;">https://api-us-east-1-enterprise.apigee.com/smartdocs/v1/sendrequest</span><br />
 				<br />
 				This field defaults to <code>https://apiconsole-prod.apigee.net/smartdocs/v1/sendrequest</code></li>
 			<li>Click <strong>Save configuration</strong>.</li>
@@ -186,6 +187,13 @@ http://prod-myco.devportal.apigee.com/mymodel/apis/get/books</pre>
 	<li>Manually creating resources and methods</li>
 </ul>
 <p>You can also import a SmartDocs JSON file into a model. This file is typically created by first exporting an existing model, editing the file, and then importing the updates. For more, see "<em>Exporting and importing a model</em>" below.&nbsp;</p>
+<div class="video">
+	<p><strong>Video:</strong> Watch a short video to learn how to add APIs to a SmartDocs model by importing an OpenAPI Specification.</p>
+	<div class="collapse" id="openapi">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/GQYOFMH1FAI" width="854"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#openapi">Show/Hide Video</a></div>
+</div>
 <h3><strong>Import a WADL</strong></h3>
 <p>After you have successfully created a model, import a WADL file that describes your API. Every time you import a WADL file, you automatically create a new revision of the model.</p>
 <div class="note">
@@ -204,7 +212,7 @@ http://prod-myco.devportal.apigee.com/mymodel/apis/get/books</pre>
 		</ol>
 	</li>
 	<li>Click&nbsp;<strong>Import</strong>&nbsp;to import it into the model.&nbsp;You can now render the model.</li>
-	<li>You are redirected to the modelâ€™s information page where you can now render the model.</li>
+	<li>You are redirected to the model’s information page where you can now render the model.</li>
 </ol>
 <h3><strong>Import an OpenAPI Specification</strong></h3>
 <p>After you have successfully created a model, you can import an OpenAPI (formerly Swagger) Specification. Edge supports OpenAPI version 1.2 and 2.0.</p>
@@ -236,7 +244,7 @@ http://prod-myco.devportal.apigee.com/mymodel/apis/get/books</pre>
 		</ol>
 	</li>
 	<li>Click&nbsp;<strong>Import</strong>&nbsp;to import it into the model.</li>
-	<li>You are redirected to the modelâ€™s information page where you can now render the model.</li>
+	<li>You are redirected to the model’s information page where you can now render the model.</li>
 </ol>
 <h3><strong>Manually create resources and methods</strong></h3>
 <p>If you do not have a WADL file or OpenAPI Specification that represents your API, you can manually add APIs to your model. Also, if you use a WADL file or OpenAPI Specification to create your model, you can use this procedure to edit your APIs, including adding new APIs, after import.</p>
@@ -571,7 +579,7 @@ http://prod-myco.devportal.apigee.com/mymodel/apis/get/books</pre>
 		</ol>
 	</li>
 	<li>Click&nbsp;<strong>Import</strong>&nbsp;to import it into the model.</li>
-	<li>You are redirected to the modelâ€™s information page where you can now render the model. Note that the import creates a new revision of the model.</li>
+	<li>You are redirected to the model’s information page where you can now render the model. Note that the import creates a new revision of the model.</li>
 	<li>Render and publish the nodes.</li>
 </ol>
 <h2>Editing the SmartDocs template</h2>

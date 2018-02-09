@@ -31,7 +31,12 @@
   &lt;/Response&gt;
 </pre>
 <p>This is just to show you that custom errors can be thrown. We go into more detail about the Raise Fault policy in the <a href="#rulesvraisefault">FaultRules vs. the Raise Fault policy</a> section.</p>
-<p>You can also throw an error with JavaScript. See <a href="https://community.apigee.com/questions/38535/how-to-use-javascript-variable-in-raise-fault.html" target="_blank">this Apigee Community thread</a>&nbsp;for more information.</p>
+<p>For more examples, see these posts on the <a href="https://community.apigee.com/index.html">Apigee Community Forums</a>:</p>
+<ul>
+	<li>
+		<div><a href="https://community.apigee.com/questions/38535/how-to-use-javascript-variable-in-raise-fault.html">Referencing JavaScript variables in RaiseFault</a></div>
+	</li>
+</ul>
 <h2>What API proxies do when errors occur</h2>
 <p>Here's what happens when a proxy throws an error.</p>
 <h3>Exit the proxy pipeline</h3>
@@ -86,7 +91,7 @@ Server: Apigee Router
 &lt;AssignMessage async="false" continueOnError="false" enabled="true" name="<strong>invalid-key-message</strong>"&gt;
     &lt;DisplayName&gt;Invalid key message&lt;/DisplayName&gt;
     &lt;Set&gt;
-        &lt;Payload contentType="application/json"&gt;{"Citizen","Where's your API key? I don't see it as a query parameter"}&lt;/Payload&gt;
+        &lt;Payload contentType="application/json"&gt;{"Citizen":"Where's your API key? I don't see it as a query parameter"}&lt;/Payload&gt;
         &lt;StatusCode&gt;911&lt;/StatusCode&gt;
         &lt;ReasonPhrase&gt;Rejected by API Key Emergency Services&lt;/ReasonPhrase&gt;
     &lt;/Set&gt;
@@ -110,9 +115,9 @@ Connection: keep-alive
 Server: Apigee Router
 
 * Connection #0 to host myorg-test.apigee.net left intact
-<strong>{"Citizen","Where's your API key? I don't see it as a query parameter."}</strong>
+<strong>{"Citizen":"Where's your API key? I don't see it as a query parameter."}</strong>
 </pre>
-<p>Yes, it's a little silly, but it shows you what's possible. At least now the developer receiving the message knows he forgot to include an API key as a query parameter.</p>
+<p>Yes, it's a little silly, but it shows you what's possible. At least now the developer receiving the message knows they forgot to include an API key as a query parameter.</p>
 <p>But how does this policy get executed? The next section shows you.</p>
 <h3>2. Create the &lt;FaultRule&gt; that will trigger the policy</h3>
 <p>In the <code>&lt;ProxyEndpoint&gt;</code> or <code>&lt;TargetEndpoint&gt;</code> sections of the proxy configuration, you'll add a <code>&lt;FaultRules&gt;</code> XML block that contains one or more individual <code>&lt;FaultRule&gt;</code> sections. Each FaultRule represents a different error you want to handle. In this simple example, we'll use only one FaultRule to show you what it's composed of.</p>
@@ -347,7 +352,7 @@ Server: Apigee Router
 <h3>Policies to include</h3>
 <p>You can execute any policies from a FaultRule by putting them in Steps. For example, you can execute an Assign Message policy to format a response to the client app, then log a message with the Message Logging policy. Policies are executed in the order you put them (top to bottom in the XML).</p>
 <h3>Fault rules are triggered ONLY in an error state (about continueOnError)</h3>
-<p>The heading may seem like we're repeating ourselves, but there's one particular nuance to be aware of with regard to a proxy error causing an API proxy to enter an error stateâ€”or rather, <em>not</em> entering an error state: the <code>continueOnError</code> attribute on a policy.</p>
+<p>The heading may seem like we're repeating ourselves, but there's one particular nuance to be aware of with regard to a proxy error causing an API proxy to enter an error state—or rather, <em>not</em> entering an error state: the <code>continueOnError</code> attribute on a policy.</p>
 <p>To recap: An API proxy evaluates <code>&lt;FaultRules&gt;</code> and <code>&lt;DefaultFaultRule&gt;</code> <em>only</em> if the proxy has entered an error state. That means that even if a FaultRule condition evaluates to true, it won't get triggered if the proxy isn't in an error state.</p>
 <p>However, here's an example of an error occurring and the proxy not entering an error state. On any policy, you can set an attribute on the parent element called <code>continueOnError</code>. That attribute is very important with regard to fault handling, because it determines whether or not the proxy enters an error state if the policy fails. In most cases, you'll want to keep the default <code>continueOnError="false"</code>, which puts the proxy in an error state if the policy fails, and your custom error handling will get triggered. However, if <code>continueOnError="true"</code> (for example, if you don't want the failure of a Service Callout to stop the proxy execution), the proxy will <em>not</em> go into an error state if that policy fails, and the proxy won't look at your FaultRules.</p>
 <p>For information on logging errors when <code>continueOnError="true"</code>, see <a href="#continueonerror">Handling policy faults within the current flow</a>.</p>
@@ -547,7 +552,7 @@ Server: Apigee Router
 </ul>
 <h3>Pattern for centralized, reusable fault handling</h3>
 <p>The following Apigee Community post describes a pattern for centralized fault handling without code duplication:</p>
-<p><a href="https://community.apigee.com/content/kbentry/23724/an-error-handling-pattern-for-apigee-proxies.html">https://community.apigee.com/content/kbentry/23724/an-error-handling-pattern-for-apigee-proxies.html</a></p>
+<p><a href="https://community.apigee.com/articles/23724/an-error-handling-pattern-for-apigee-proxies.html" target="_blank">https://community.apigee.com/articles/23724/an-error-handling-pattern-for-apigee-proxies.html</a></p>
 <h2>Creating FaultRules</h2>
 <p>To add a FaultRule you need to edit the XML configuration of the ProxyEndpoint or TargetEndpoint. You can use the Edge UI to make this edit in the <b>Code</b> pane of the <b>Develop</b> view for an API proxy, or edit the XML file that defines the ProxyEndpoint or TargetEndpoint.</p>
 <p>If you create FaultRules in the management UI, first create the policies you want to execute, then add them to the FaultRule configuration. (You'll get an error in the UI if you try to save a FaultRule that references a policy that hasn't been created yet.)</p>

@@ -2,9 +2,10 @@
 <p>[toc]</p>
 <p>This topic discusses role-based access control for Apigee Edge organizations and explains how to create roles and assign users to them. You must be an organization administrator to perform the tasks described here.&nbsp;</p>
 <h2>What are roles?</h2>
-<p>Roles are essentially CRUD-based permission sets. CRUD means "create, read, update, delete". For example, a user may be given a role that permits her to read or "get" details about a protected entity, but not permission to update or delete it. The organization administrator is the highest-level role, and can perform any CRUD operation on protected entities, which include:</p>
+<p>Roles are essentially CRUD-based permission sets. CRUD means "create, read, update, delete". For example, a user may be given a role that permits her to read or "get" details about a protected entity, but not permission to update or delete it. The organization administrator is the highest-level role, and has permissions to perform any operation on protected entities, which include:</p>
 <ul>
 	<li>API proxies</li>
+	<li>Trace sessions</li>
 	<li>API products</li>
 	<li>Developer apps</li>
 	<li>Developers</li>
@@ -19,12 +20,12 @@
 <p>In Apigee Edge, user roles form the basis of role-based access, meaning that you can control what functions a person can access by assigning them a role (or roles). Here are a few things you need to know about roles:</p>
 <ul>
 	<li>When you create your own Apigee Edge account, your role is set automatically to <strong>organization administrator</strong> in your organization. If you add users to your organization, you set the user role (or roles) at the time that you add them.</li>
-	<li>When an org admin adds <strong>you</strong> to an org, your role (or roles) are determined by the administrator. The organization administrator can later change your role(s) if necessary. See "<a href="#AddMultipleRoles">Adding roles to a user</a>" below.&nbsp;</li>
-	<li>Users can be assigned more than one role. If a user has multiple roles assigned, the greater permission takes precedence. For example, if one role doesn't allow the user to create API proxies, but another role does, then the user can create API proxies. In general, it is not a common use case to assign users multiple roles. See "<a href="#AddMultipleRoles">Adding roles to a user</a>" below.&nbsp;</li>
+	<li>When an org admin adds <strong>you</strong> to an org, your role (or roles) are determined by the administrator. The organization administrator can later change your role(s) if necessary. See <a href="#AddMultipleRoles">Assigning roles to a user</a>&nbsp;below.&nbsp;</li>
+	<li>Users can be assigned more than one role. If a user has multiple roles assigned, the greater permission takes precedence. For example, if one role doesn't allow the user to create API proxies, but another role does, then the user can create API proxies. In general, it is not a common use case to assign users multiple roles. See <a href="#AddMultipleRoles">Assigning roles to a user</a>&nbsp;below.&nbsp;</li>
 	<li>By default, all users associated with an organization can view details about other organization users, such as email address, first name, and last name.</li>
 </ul>
 <p>It's important to understand that user roles are specific to the organization in which they were assigned. An Apigee Edge user can belong to multiple organizations, but roles are organization-specific. For example, a user can be have the organization administrator role in one org and only the user role in another.</p>
-<h2><a id="AddMultipleRoles" name="AddMultipleRoles"></a>Adding roles to users</h2>
+<h2><a id="AddMultipleRoles" name="AddMultipleRoles"></a>Assigning roles to a user</h2>
 <p>You can add one or more roles to a user when you create a new user or if you edit an existing user. Details about each role are explained in <a href="#defaultroles">Default role permissions</a>.&nbsp;</p>
 <div class="note">
 	<p>If a user has multiple roles assigned, the greater permission takes precedence. For example, if one role doesn't allow the user to create API proxies, but another role does, then the user can create API proxies. In general, it is not a common use case to assign users multiple roles.</p>
@@ -37,7 +38,7 @@
 	<li>Repeat steps 3 and 4 to add additional roles to the user if you want.</li>
 </ol>
 <p><img alt="" src="sites/docs/files/add-multiple-roles.png" style="height: 176px; width: 700px; border-width: 1px; border-style: solid; margin: 5px;" /></p>
-<h3>Adding roles to users with the Edge API</h3>
+<h3>Assigning roles to users with the Edge API</h3>
 <p>You can use the Edge API to assign users to a role. The following example uses the <a href="http://docs.apigee.com/node/18931">http://docs.apigee.com/node/18931</a> API to add the user to the Operations Administrator role:</p>
 <pre>
 curl -X POST -H "Content-Type:application/x-www-form-urlencoded" \
@@ -81,7 +82,7 @@ curl -X POST -H "Content-Type:application/x-www-form-urlencoded" \
 </ul>
 <p><!--changed heading level to remove this from the TOC link menu per BugHerd issue
 <h3>About roles with script automation</h3>
-<p>When you run scripts against APIs for automation, the resource endpoints being invoked require role-based access. So the scriptsâ€”acting as a clientâ€”require the same role-based permissions that human users need when performing similar tasks, either in the UI or with an API. The access difference between automation clients and human users is that automation clients don't have access to the user interface; that is, if you create an automation client, a human user can't log into Apigee Enterprise with automation client credentials. For information on how to create clients for automation, see <a href="http://docs.apigee.com/node/9906">http://docs.apigee.com/node/9906</a>.</p>
+<p>When you run scripts against APIs for automation, the resource endpoints being invoked require role-based access. So the scripts—acting as a client—require the same role-based permissions that human users need when performing similar tasks, either in the UI or with an API. The access difference between automation clients and human users is that automation clients don't have access to the user interface; that is, if you create an automation client, a human user can't log into Apigee Enterprise with automation client credentials. For information on how to create clients for automation, see <a href="http://docs.apigee.com/node/9906">http://docs.apigee.com/node/9906</a>.</p>
 --></p>
 <h2>Creating custom roles</h2>
 <p>Custom roles let you apply fine-grained permissions to these Apigee Edge entities such as API proxies, products, developer apps, developers, and custom reports.</p>

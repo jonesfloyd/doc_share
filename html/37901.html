@@ -1,0 +1,32 @@
+<h1> Error creating trace session </h1>
+<h2>Error text</h2>
+<pre>
+Error creating trace session for API proxy [Proxy Name], revision [Number], environment [Env Name]. 
+[Description]</pre>
+<p>where [Description] is a string that describes the cause of the error.</p>
+<h2>Example</h2>
+<pre>
+Error creating trace session for API proxy reviews, revision 3, environment test. 
+No message processors are wired with the environment(test) of the organization(streetcarts) </pre>
+<p>or</p>
+<pre>
+Error creating trace session for API proxy reviews, revision 3, environment test. 
+Failed to create DebugSession 1486295133165</pre>
+<h2>Cause</h2>
+<p>This error usually indicates that one of the <a href="https://docs.apigee.com/private-cloud/latest/overview#onpremisesdeployment">Message Processors</a> is down, a Message Processor is being restarted, a proxy was incompletely deployed to a Message Processor, or a Message Processor cannot communicate with the <a href="https://docs.apigee.com/private-cloud/latest/overview#onpremisesdeployment">Management Server</a>.</p>
+<h3>Are you using a version of Edge Cloud that includes customer support?</h3>
+<p>Although you may need to contact Apigee support to resolve this error, you might first try the steps described above in the <a href="#troubleshooting">Troubleshooting</a>. If the problem persists, contact <a href="http://support.apigee.com">Apigee Support</a>.See also <a href="https://docs.apigee.com/troubleshooting/content/what-include-if-you-contact-tech-support-or-community">What to include when you contact Tech Support or the Community</a>.</p>
+<h3>Are you using Edge Private cloud?</h3>
+<p>In a <strong>Private Cloud installation</strong>, try the troubleshooting steps discussed the section: "Deployment? ?Error:? ?Call? ?timed? ?out;? ?either? ?server? ?is? ?down or? ?server? ?is? ?not? ?reachable" in the <a href="https://docs-apis.apigee.io/files/ApigeeEdgeTroubleshootingGuide.pdf">Apigee Edge Troubleshooting Guide</a>. These steps will help you diagnose and possibly correct a problem with an individual Message Processor.</p>
+<h3>Are you using a free evaluation version of Apigee Edge?</h3>
+<p>Although you may need to post your issue to the <a href="https://community.apigee.com/index.html">Apigee Community</a> to resolve this error, you might first try the steps described above in the <a href="#troubleshooting">Troubleshooting</a> section.</p>
+<h2><a id="troubleshooting" name="troubleshooting"></a>Troubleshooting</h2>
+<h3>For Cloud customers, check the Apigee status page for outages</h3>
+<p>Deployment errors can occur when there is an outage in Edge for the Cloud. Use the following URL to check the current Edge status to see if there is an outage: &nbsp;<a href="https://status.apigee.com/">https://status.apigee.com</a></p>
+<h3>Force undeploy and redeploy of the proxy</h3>
+<p>In some cases, undeploying and redeploying the proxy revision will correct the problem. Apigee recommends that you do a <strong>forced undeploy</strong> using the <a href="https://docs.apigee.com/management/apis/post/organizations/%7Borg_name%7D/apis/%7Bapi_name%7D/revisions/%7Brevision_number%7D/deployments">Deployments</a> API with the parameter <strong>force=true</strong>. If the forced undeploy works, try redeploying the proxy. If the issue is not resolved, contact <a href="http://support.apigee.com">Apigee Support</a>.</p>
+<h3>Create a new proxy revision</h3>
+<p>If undeploy/redeploy does not work, try deploying the proxy as a new revision. Sometimes if you delete certain policies from a proxy and then redeploy as the same revision, you can get a deployment error. See <a href="https://docs.apigee.com/api-services/content/deploying-proxies-ui#deploymentoptions-aboutrevisions">About revisions</a>. If the issue is not resolved, contact <a href="http://support.apigee.com">Apigee Support</a>. See also <a href="https://docs.apigee.com/troubleshooting/content/what-include-if-you-contact-tech-support-or-community">What to include when you contact Tech Support or the Community</a>.</p>
+<h3>Check the deployment status of your proxy</h3>
+<p>Use the <a href="https://docs.apigee.com/management/apis/get/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/apis/%7Bapi_name%7D/deployments">Deployments</a> API to check the deployment status of your proxy to the Message Processors and routers in your environment. This step can indicate the source of the problem. For example, it'll show you which Message Processors or routers have errors.</p>
+If necessary, you can include the response information when you contact <a href="http://support.apigee.com">Apigee Support</a>. See also <a href="https://docs.apigee.com/troubleshooting/content/what-include-if-you-contact-tech-support-or-community">What to include when you contact Tech Support or the Community</a>.

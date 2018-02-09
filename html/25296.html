@@ -1,7 +1,7 @@
 <h1> Setting up and configuring Edge Microgateway </h1>
 <em style="text-align: right;">Edge Microgateway v.&nbsp;2.3.x</em>
 <h2>Overview</h2>
-<div class="paid">
+<div class="note">
 	<p>You can only use Edge Microgateway with paid accounts for Edge Public Cloud. If you're using Edge Private Cloud, you can use Edge Microgateway with both paid and free trial accounts. See the&nbsp;<a href="http://apigee.com/about/pricing/apigee-edge-pricing-features" target="_blank">Edge pricing features page</a>&nbsp;for more details.</p>
 </div>
 <p>This tutorial walks you through the steps required to get an instance of Edge Microgateway up and running.</p>
@@ -23,7 +23,7 @@
 <h2><a id="Part1" name="Part1"></a>Part 1: Configure Edge Microgateway</h2>
 <p>In this part you'll use a command-line interface (CLI) command to configure Edge Microgateway to communicate with Apigee Edge. If you are using Apigee Edge Cloud, then follow the&nbsp;<a href="#Cloud config">Apigee Edge Cloud configuration steps</a>. If you are on Apigee Private Cloud, follow the&nbsp;<a href="#Private config">steps for Apigee Edge Private Cloud</a>.</p>
 <div class="note">
-	<p>Why does Edge Microgateway need to communicate with Edge? See "Dependency on Apigee Edge" in <a href="http://docs.apigee.com/node/25286">http://docs.apigee.com/node/25286</a></p>
+	<p>Why does Edge Microgateway need to communicate with Edge? See <a href="/microgateway/v2.3.x/overview-edge-microgateway-v2.3.x#whatyouneedtoknowaboutedgemicrogateway-dependencyonapigeeedge">Dependency on Apigee Edge</a>.</p>
 </div>
 <h3><a id="Cloud config" name="Cloud config"></a>Apigee Edge Cloud configuration steps</h3>
 <p>Follow these steps to use Edge Microgateway with Apigee Edge Cloud:</p>
@@ -189,7 +189,7 @@ edgemicro configuration complete!
 <p>&nbsp;</p>
 <h3>About the configuration</h3>
 <p>All of the configuration done so far allows Edge Microgateway to bootstrap itself to Apigee Edge. After the bootstrapping succeeds, Edge Microgateway retrieves a payload of additional configuration information from Apigee Edge.</p>
-<p>What is this configuration information used for? As we'll discover in the next part of this tutorial, when Edge Microgateway starts, it needs to receive a list of special Edge Microgateway-aware API proxies from Apigee Edge. In the next part of this tutorial, you will create a Microgateway-aware proxy. Edge Microgateway restricts clients to calling only the APIs fronted by these Microgateway-aware API proxies, and clients will be required (by default) to present a valid security token for each call. To read more about these proxies, see "What you need to know about Edge Microgateway-aware proxies in the <a href="http://docs.apigee.com/node/25286">http://docs.apigee.com/node/25286</a>.</p>
+<p>What is this configuration information used for? As we'll discover in the next part of this tutorial, when Edge Microgateway starts, it needs to receive a list of special Edge Microgateway-aware API proxies from Apigee Edge. In the next part of this tutorial, you will create a Microgateway-aware proxy. Edge Microgateway restricts clients to calling only the APIs fronted by these Microgateway-aware API proxies, and clients will be required (by default) to present a valid security token for each call. To read more about these proxies, see "What you need to know about Edge Microgateway-aware proxies in the <a href="http://docs.apigee.com/node/25406">http://docs.apigee.com/node/25406</a>.</p>
 <p>As an Edge org admin, you'll be interested to know that Edge Microgateway-aware proxies can be added to Edge products, just like any other proxies. Through the use of products and developer apps, you can generate client-specific security tokens to control access to APIs called through Edge Microgateway. Again, the patterns involved are identical to working with any API proxies, products, and developer apps on Apigee Edge. If you'd like to read up on products, start with <a href="http://docs.apigee.com/node/14759">http://docs.apigee.com/node/14759</a> in the Edge documentation.</p>
 <p>Next we'll walk through how to create Edge Microgateway-aware proxies, and after that, we'll start Edge Microgateway and test the setup.</p>
 <p>&nbsp;</p>
@@ -202,7 +202,7 @@ edgemicro configuration complete!
 		&nbsp;</li>
 	<li><strong>A product, developer, and developer app</strong>&nbsp;- Edge Microgateway uses products, developers, and developer apps to enable OAuth2 access token or API key security. When Edge Microgateway starts, it downloads all of the product configurations from your Apigee Edge organization. It uses this information to verify API calls made through Edge Microgateway with API keys or OAuth2 access tokens.</li>
 </ul>
-<p><strong>Read more:</strong>&nbsp;See also "What you need to know about Edge Microgateway-aware proxies" in the <a href="http://docs.apigee.com/node/25286">http://docs.apigee.com/node/25286</a>.</p>
+<p><strong>Read more:</strong>&nbsp;See also "What you need to know about Edge Microgateway-aware proxies" in the <a href="http://docs.apigee.com/node/25406">http://docs.apigee.com/node/25406</a>.</p>
 <h3>1. Create an Edge Microgateway-aware API proxy on Edge</h3>
 <div class="note">
 	<p>These instructions are based on the Classic Edge user interface. After you log in to Edge, click&nbsp;<strong>Switch to Classic</strong>&nbsp;and then follow the steps in this section.</p>

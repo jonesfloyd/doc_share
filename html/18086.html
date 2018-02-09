@@ -95,7 +95,7 @@ http://&lt;routerIP&gt;:&lt;port&gt;/{proxy-base-path}/{resource-path}<span styl
 <p>Typically, you do not publish your APIs to customers with an IP address and port number. Instead, you define a DNS entry for the Router and port. For example:</p>
 <pre>
 http://api.myCompany.com/{proxy-base-path}/{resource-path}
-​https://api.myCompany.com/{proxy-base-path}/{resource-path}</pre>
+?https://api.myCompany.com/{proxy-base-path}/{resource-path}</pre>
 <p>If you define the DNS entry, then you must create a <em>host alias</em> for the virtual host that matches the domain name of the DNS entry. The host alias must match the string that the client passes in the <span style="font-family:courier new,courier,monospace;">Host</span> header. From the example above, you would specify a host alias of <span style="font-family:courier new,courier,monospace;">api.myCompany.com</span>.&nbsp;</p>
 <pre>
 &lt;VirtualHost name="myVHost"&gt;
@@ -196,7 +196,7 @@ conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!D
 		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.server.ssl.protocols=TLSv1.2</span><br />
 		<span style="font-family:courier new,courier,monospace;">conf_load_balancing_load.balancing.driver.server.ssl.ciphers=HIGH:!aNULL:!MD5:!DH+3DES:!RSA+3DES:!PSK</span></li>
 	<li>Ensure that the <span style="font-family:courier new,courier,monospace;">router.properties</span>&nbsp;file is owned by apigee:<br />
-		<span style="font-family:courier new,courier,monospace;">​&gt; chown apigee:apigee ​/opt/apigee/customer/application/router.properties</span></li>
+		<span style="font-family:courier new,courier,monospace;">?&gt; chown apigee:apigee ?/opt/apigee/customer/application/router.properties</span></li>
 	<li>Restart the Edge Router:<br />
 		<span style="font-family:courier new,courier,monospace;">&gt; /opt/apigee/apigee-service/bin/apigee-service edge-router restart</span></li>
 	<li>Check the value of the token:<br />

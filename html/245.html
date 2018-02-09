@@ -24,14 +24,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -40,14 +40,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -75,7 +75,7 @@
 <ul class="nav nav-tabs" id="myTab">
 	<li class="active"><a data-toggle="tab" href="#tab_1">Rewrite the target URL</a></li>
 	<li><a data-toggle="tab" href="#properties">Retrieve property value from JavaScript</a></li>
-    <li><a data-toggle="tab" href="#errors">Handling errors</a></li>
+	<li><a data-toggle="tab" href="#errors">Handling errors</a></li>
 </ul>
 <!-- End tab list --><!-- Begin tabbed region -->
 <div class="tab-content active"><!-- Tab 1 begin. -->
@@ -149,12 +149,11 @@ context.setVariable("response.header.x-target-response-code", value);</pre>
 			</li>
 		</ul>
 	</div>
-    <!-- Tab 1 end. --><!--Tab 2 begin. -->
+	<!-- Tab 1 end. --><!--Tab 2 begin. -->
 	<div class="tab-pane" id="errors">
-		<p>For examples and a discussion of error handling techniques that you can use in a JavaScript callout, see <a href="https://community.apigee.com/questions/11381/correct-way-to-return-error-from-javascript-policy.html">this post in the Apigee Community</a>. Suggestions offered in the Apigee Community are for information only and do not necessarily represent best practices recommended by Apigee.  </p>
-  </div>
-	<!-- Tab 2 end. --><!--Tab 3 begin. -->
-	<!-- Tab 2 end. --><!--Tab 3 begin. --></div>
+		<p>For examples and a discussion of error handling techniques that you can use in a JavaScript callout, see <a href="https://community.apigee.com/questions/11381/correct-way-to-return-error-from-javascript-policy.html">this post in the Apigee Community</a>. Suggestions offered in the Apigee Community are for information only and do not necessarily represent best practices recommended by Apigee.</p>
+	</div>
+	<!-- Tab 2 end. --><!--Tab 3 begin. --><!-- Tab 2 end. --><!--Tab 3 begin. --></div>
 <!-- End tabbed region. -->
 <hr />
 <h2>Element reference</h2>
@@ -294,7 +293,7 @@ context.setVariable("response.header.x-target-response-code", value);</pre>
 <h2 id="usage">Usage notes</h2>
 <p>A JavaScript policy contains no actual code. Instead, a JavaScript policy references a JavaScript 'resource' and defines the Step in the API flow where the JavaScript executes. You can upload your script through the Management UI proxy editor, or you can include it in the <code>/resources/jsc</code> directory in API proxies that you develop locally.</p>
 <div class="warning">
-	<p>System calls, for example network I/O, filesystem read/writes, current user info, process list, and CPU/memory utilization are not permitted by the security model. Although some such calls may be functional, they are unsupported and liable to be actively disabled at any time. For forward compatibility, you should avoid making such calls in your code.</p>
+	<p>System calls are not permitted by the security model.&nbsp;For example: internal file system reads or writes, or getting current user info, the process list, or CPU/memory utilization. Although some such calls may be functional, they are unsupported and liable to be actively disabled at any time. For forward compatibility, you should avoid making such calls in your code.</p>
 </div>
 <h2 id="flowvariables">Flow Variables</h2>
 <p>This policy does not populate any variables by default; however, you can set (and get) flow variables in your JavaScript code by calling methods on the context object. A typical pattern looks like this:</p>

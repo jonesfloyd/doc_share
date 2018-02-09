@@ -1,7 +1,7 @@
 <h1> LDAP policy </h1>
 <img src="sites/docs/files/icon_policy_security.jpg" />
 <h3>What</h3>
-<p>Use the LDAP Policy when access to protected resources should be limited to users in your LDAP provider‚Äîsuch as your admin users, organization users, and developers‚Äîespecially when OAuth token access is either unnecessary or too heavyweight. The policy is also designed for retrieving DN metadata for use in API proxy flows.</p>
+<p>Use the LDAP Policy when access to protected resources should be limited to users in your LDAP providerósuch as your admin users, organization users, and developersóespecially when OAuth token access is either unnecessary or too heavyweight. The policy is also designed for retrieving DN metadata for use in API proxy flows.</p>
 <p>For example you can have an API call execute only when a user is successfully authenticated against LDAP; and then optionally retrieve DN attributes for the user after authentication succeeds.</p>
 <div class="opdk">
 	<p>This policy is available only in Apigee Edge for Private Cloud.</p>
@@ -28,14 +28,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -44,14 +44,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -82,8 +82,8 @@
 &lt;Ldap name="4GLdapPolicy"&gt;
    &lt;LdapResource&gt;ldap1&lt;/LdapResource&gt;
    &lt;Authentication&gt;
-       &lt;UserName ref=‚Äùrequest.header.username‚Äù/&gt;
-       &lt;Password ref=‚Äùrequest.header.password‚Äù/&gt;
+       &lt;UserName ref=îrequest.header.usernameî/&gt;
+       &lt;Password ref=îrequest.header.passwordî/&gt;
        &lt;Scope&gt;subtree&lt;/Scope&gt;
        &lt;BaseDN&gt;&lt;/BaseDN&gt; &lt;!-- default is dc=apigee,dc=com --&gt;
     &lt;/Authentication&gt;
@@ -96,13 +96,13 @@
 &lt;Ldap name="LdapPolicy"&gt;
    &lt;LdapResource&gt;ldap1&lt;/LdapResource&gt;
    &lt;Authentication&gt;
-       &lt;Password ref=‚Äùrequest.header.password‚Äù/&gt;
+       &lt;Password ref=îrequest.header.passwordî/&gt;
        &lt;SearchQuery&gt;mail={request.header.mail}&lt;/SearchQuery&gt;
        &lt;Scope&gt;subtree&lt;/Scope&gt;
        &lt;BaseDN&gt;&lt;/BaseDN&gt; &lt;!-- default is dc=apigee,dc=com --&gt;
     &lt;/Authentication&gt;
  &lt;/Ldap&gt;</pre>
-		<p>This policy gets the user‚Äôs DN with the email in the request header, then authenticates the user against LDAP with the password provided in the request header.</p>
+		<p>This policy gets the userís DN with the email in the request header, then authenticates the user against LDAP with the password provided in the request header.</p>
 		<div class="note">
 			<p>Notice that in the Authentication block there is no UserName, which is not allowed when using SearchQuery to retrieve another DN attribute for authentication.&nbsp;</p>
 		</div>
@@ -122,10 +122,10 @@
             &lt;Attribute&gt;phone&lt;/Attribute&gt;
             &lt;Attribute&gt;title&lt;/Attribute&gt;
         &lt;/Attributes&gt;
-        &lt;Scope&gt;&lt;/Scope&gt; &lt;!-- default is ‚Äòsubtree‚Äô --&gt;
+        &lt;Scope&gt;&lt;/Scope&gt; &lt;!-- default is ësubtreeí --&gt;
     &lt;/Search&gt;
 &lt;/Ldap&gt;</pre>
-		<p>This policy references a custom LDAP provider. It uses the email address in the request header to identify the user, then retrieves the user‚Äôs address, phone, and title from LDAP. The retrieved DN attributes are stored in a variable. See "Policy-specific variables".</p>
+		<p>This policy references a custom LDAP provider. It uses the email address in the request header to identify the user, then retrieves the userís address, phone, and title from LDAP. The retrieved DN attributes are stored in a variable. See "Policy-specific variables".</p>
 		<p>To search LDAP and retrieve DN attributes, the request must include administrator credentials.</p>
 	</div>
 	<!-- Tab 3 end. --></div>
@@ -161,7 +161,7 @@
 				<p><code>LdapConnectorClass</code></p>
 			</td>
 			<td>
-				<p>When using the LDAP Policy with a <a href="#customldapprovider">custom LDAP provider</a> (not provided by Apigee), specify the fully qualified LDAP connector class. That‚Äôs the class in which you implemented Apigee‚Äôs <code>ExternalLdapConProvider</code> interface.</p>
+				<p>When using the LDAP Policy with a <a href="#customldapprovider">custom LDAP provider</a> (not provided by Apigee), specify the fully qualified LDAP connector class. Thatís the class in which you implemented Apigeeís <code>ExternalLdapConProvider</code> interface.</p>
 			</td>
 		</tr>
 		<tr>
@@ -177,7 +177,7 @@
 				<p><code>BaseDN</code></p>
 			</td>
 			<td>
-				<p>The base level of LDAP under which all of your data exists. For example, in Apigee‚Äôs LDAP provider, all data are under<code> dc=apigee,dc=com</code>.</p>
+				<p>The base level of LDAP under which all of your data exists. For example, in Apigeeís LDAP provider, all data are under<code> dc=apigee,dc=com</code>.</p>
 			</td>
 		</tr>
 		<tr>
@@ -257,7 +257,7 @@
 				<p><code>SearchQuery</code></p>
 			</td>
 			<td>
-				<p>By identifying the user with metadata in the request or response, you can use this element to retrieve additional DN attributes for the user from LDAP. For example, if the request contains the user email, and your LDAP defines a ‚Äúmail‚Äù attribute for storing user email addresses, you‚Äôd use the following setting:</p>
+				<p>By identifying the user with metadata in the request or response, you can use this element to retrieve additional DN attributes for the user from LDAP. For example, if the request contains the user email, and your LDAP defines a ìmailî attribute for storing user email addresses, youíd use the following setting:</p>
 				<p><code>&lt;SearchQuery&gt;mail={request.header.mail}&lt;/SearchQuery&gt;</code></p>
 				<p>This query searches LDAP for an email matching the email in the request, and the policy can now retrieve additional DN attributes for that user with the Attributes element.</p>
 			</td>
@@ -268,7 +268,7 @@
 			</td>
 			<td>
 				<p>Use one or more <span style="font-family:courier new,courier,monospace;">&lt;Attribute&gt;</span> elements to identify the DN metadata you want to retrieve for the user. At least one attribute is required.</p>
-				<p>For example, after the <span style="font-family:courier new,courier,monospace;">SearchQuery</span> identifies the user, the policy can now retrieve DN attributes for the user such as address, phone number, and the user‚Äôs title, as shown in the following example.</p>
+				<p>For example, after the <span style="font-family:courier new,courier,monospace;">SearchQuery</span> identifies the user, the policy can now retrieve DN attributes for the user such as address, phone number, and the userís title, as shown in the following example.</p>
 				<p>Attribute values are the DN attribute names defined in your LDAP.</p>
 				<pre>
 &lt;Attributes&gt;
@@ -281,7 +281,7 @@
 	</tbody>
 </table>
 <h2 id="usage">Usage notes</h2>
-<p>Apigee Edge for Private Cloud lets you leverage an LDAP provider in API calls. With the LDAP Policy, applications can authenticate credentials against users stored in LDAP, and you can retrieve distinguished names (DNs) from LDAP‚Äîthe metadata, or attributes, associated with each user, such as email, address, and phone number. The returned DN is stored in a variable for further use by the API proxy.</p>
+<p>Apigee Edge for Private Cloud lets you leverage an LDAP provider in API calls. With the LDAP Policy, applications can authenticate credentials against users stored in LDAP, and you can retrieve distinguished names (DNs) from LDAPóthe metadata, or attributes, associated with each user, such as email, address, and phone number. The returned DN is stored in a variable for further use by the API proxy.</p>
 <p>The LDAP Policy provides:</p>
 <ul>
 	<li><strong>Authentication</strong>: User credentials supplied in the request are validated against credentials in the LDAP provider. The LDAP policy gives you a lot of flexibility with authentication, letting you use any DN value along with the password, even if that DN value you want isn't in the request. For example, say you need to use email / password for authentication. The following options are possible:
@@ -395,7 +395,7 @@ public interface ExternalLdapConProvider {
 	<li value="2">In the <span style="font-family:courier new,courier,monospace;">&lt;LdapConnectorClass&gt;</span> of the policy configuration (next sections), add the fully qualified class name of your custom LDAP provider.</li>
 	<li>Download this file:&nbsp;<a href="http://docs.apigee.com/sites/docs/files/custom-ldap.jar_.zip">http://docs.apigee.com/sites/docs/files/custom-ldap.jar_.zip</a>. (You might have to right-click and select <strong>Save As</strong>.)</li>
 	<li>Unzip it.</li>
-	<li value="3">Add the&nbsp;custom-ldap.jar file to your environment and ensure that it‚Äôs in your classpath.</li>
+	<li value="3">Add the&nbsp;custom-ldap.jar file to your environment and ensure that itís in your classpath.</li>
 	<li>Create an environment resource for your LDAP provider. You'll use the environment resource name in the <code>&lt;LdapResource&gt;</code> element of the LDAP policy.</li>
 </ol>
 <h3>Using the UnboundID LDAP SDK for Java</h3>
@@ -432,15 +432,15 @@ public interface ExternalLdapConProvider {
 				<p>&nbsp;</p>
 			</td>
 			<td>
-				<p>The flexible format of this variable‚Äîthe ‚Äúindex‚Äù in particular‚Äîaccounts for multiple attributes, as well as attributes with multiple values. Index is a number that starts at 1. If no index number is provided, the default index number is 1.</p>
+				<p>The flexible format of this variableóthe ìindexî in particularóaccounts for multiple attributes, as well as attributes with multiple values. Index is a number that starts at 1. If no index number is provided, the default index number is 1.</p>
 				<p>If the policy returns address, phone, and email, you can retrieve the first attribute and value using these variables:</p>
 				<p><strong>ldap.&lt;policyName&gt;.search.result.attribute.address</strong></p>
 				<p><strong>ldap.&lt;policyName&gt;.search.result.attribute.phone</strong></p>
 				<p><strong>ldap.&lt;policyName&gt;.search.result.attribute.email</strong></p>
-				<p>If you wanted to retrieve the third address attribute in the search results, you‚Äôd use this:</p>
+				<p>If you wanted to retrieve the third address attribute in the search results, youíd use this:</p>
 				<p><strong>ldap.&lt;policyName&gt;.search.result[3].attribute.<br />
 					address</strong></p>
-				<p>If an attribute had multiple values (for example, if a user has multiple email addresses), you‚Äôd retrieve the second email address from the results like this:</p>
+				<p>If an attribute had multiple values (for example, if a user has multiple email addresses), youíd retrieve the second email address from the results like this:</p>
 				<p><strong>ldap.&lt;policyName&gt;.search.result.attribute.mail[2]</strong></p>
 			</td>
 		</tr>

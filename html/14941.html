@@ -46,10 +46,8 @@
 &lt;/TargetEndpoint&gt;
 
 </pre>
-<p>The only parameter to &lt;ScriptTarget&gt; is &lt;ResourceURL&gt;. The &lt;ResourceURL&gt; parameter must always be prefixed with&nbsp;<code>node://</code>, followed by the name of the main Node.js script. And, as noted previously, Node.js resources must reside in <code>/apiproxy/resources/node</code> at the API proxy scope.</p>
-<div class="note">
-	<p>A TargetEndpoint can define either an HTTPTargetConnection or a ScriptTarget, but not both.</p>
-</div>
+<p>The &lt;ResourceURL&gt; parameter must always be prefixed with&nbsp;<code>node://</code>, followed by the name of the main Node.js script. And, as noted previously, Node.js resources must reside in <code>/apiproxy/resources/node</code> at the API proxy scope.</p>
+<p>You can set additional parameters in ScriptTarget. For details, see <a href="http://docs.apigee.com/api-services/content/understanding-edge-support-nodejs-modules#advancedscripttargetconfiguration">Advanced ScriptTarget configuration</a>.&nbsp;</p>
 <div class="note">
 	<p>The main script is the name of the script that you'd normally pass to the <code>node</code> command. As long as the main Node.js script uses the <code>http</code> module to listen for incoming requests, it will respond whenever an API call is routed to the target.&nbsp;</p>
 </div>

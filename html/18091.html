@@ -26,10 +26,6 @@
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;Description/&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;FaultRules/&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;Flows/&gt;</span></div>
-		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;HTTPTargetConnection&gt;</span></div>
-		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Properties/&gt;</span></div>
-		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;URL&gt;https://mocktarget.apigee.net&lt;/URL&gt;</span></div>
-		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/HTTPTargetConnection&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;PreFlow name="PreFlow"&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Request/&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Response/&gt;</span></div>
@@ -37,7 +33,11 @@
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;PostFlow name="PostFlow"&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Request/&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Response/&gt;</span></div>
-		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/PostFlow&gt;</span></div>
+		<div><span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/PostFlow&gt;<br />
+			&nbsp; &nbsp; &lt;HTTPTargetConnection&gt;</span></div>
+		<div><span style="font-family: &quot;courier new&quot;, courier, monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;Properties/&gt;</span></div>
+		<div><span style="font-family: &quot;courier new&quot;, courier, monospace;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;URL&gt;https://mocktarget.apigee.net&lt;/URL&gt;</span></div>
+		<div><span style="font-family: &quot;courier new&quot;, courier, monospace;">&nbsp; &nbsp; &lt;/HTTPTargetConnection&gt;</span></div>
 		<div><span style="font-family:courier new,courier,monospace;">&lt;/TargetEndpoint&gt;</span></div>
 	</li>
 	<li>Make any changes and save the proxy. If the API proxy has been deployed, saving it redeploys it with the new setting.</li>
@@ -67,21 +67,23 @@
 <p>See <a href="http://docs.apigee.com/node/14726">http://docs.apigee.com/node/14726</a> for more.</p>
 <h2>Using a reference to a keystore or&nbsp;truststore&nbsp;in a&nbsp;TargetEndpoint or TargetServer</h2>
 <p>Many of the example below shown&nbsp;how to configure a TargetEndpoint or TargetServer to support TLS. As part of configuring TLS, you might have to specify a keystore or truststore&nbsp;as part of&nbsp;a TargetEndpoint or TargetServer definition.</p>
-<p>One option is to specify the literal name of the keystore and truststore in the TargetEndpoints or TargetServer&nbsp;definition. With this type of configuration, you have to restart the Message Processors when you update the cert in the keystore or truststore. See <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a> for more. &nbsp;&nbsp;</p>
-<p>As an alternative, Apigee reccomends that you use a&nbsp;<em>reference</em>&nbsp;to the&nbsp;keystore and truststore in the&nbsp;TargetEndpoints&nbsp;or&nbsp;TargetServer&nbsp;definition.&nbsp;The advantage to using a reference is that you can update the reference to point to a different keystore or truststore to update the TLS cert without having to restart the Message Processor.</p>
+<p>Apigee <strong>strongly</strong> recommends that you use a reference to the keystore and truststore in the TargetEndpoints or TargetServer definition. The advantage to using a reference is that you only have to update the reference to point to a different keystore or truststore to update the TLS cert.</p>
 <p>References to&nbsp;keystores and truststores in the&nbsp;TargetEndpoints&nbsp;or&nbsp;TargetServer&nbsp;definition work the same way as they do for virtual hosts. See&nbsp;<a href="http://docs.apigee.com/api-services/content/creating-virtual-host#usingreferencestoakeystoreortruststore">Using references to a keystore or truststore</a>&nbsp;to create an use a reference.</p>
+<div class="warning">
+	<p>Another option is to specify the literal name of the keystore and truststore in the TargetEndpoints or TargetServer definition. With literal names, depending on the configuration, you might have to redeploy proxies, contact Apigee Support (Cloud), or restart Message Processors (Private Cloud). See <a href="http://docs.apigee.com/node/20041">http://docs.apigee.com/node/20041</a> for more. &nbsp;&nbsp;</p>
+</div>
 <h2>Configuring one-way TLS to the backend server</h2>
 <p>When using a TargetEndpoint definition, configuring one-way TLS access from Edge (TLS client) to the backend server (TLS server) does not require any additional configuration on Edge. It is up to the backend server to configure TLS correctly. You only need to make sure that the <span style="font-family: 'courier new', courier, monospace;">&lt;URL&gt;</span> element in the TargetEndpoint definition&nbsp;references the backend service by the HTTPS protocol and that you enable TLS:</p>
 <pre>
 &lt;TargetEndpoint name="default"&gt;
- â€¦
+ …
  &lt;HTTPTargetConnection&gt;
 <strong>   &lt;SSLInfo&gt;
        &lt;Enabled&gt;true&lt;/Enabled&gt;
    &lt;/SSLInfo&gt;
 </strong>   &lt;URL&gt;https://myservice.com&lt;/URL&gt;
  &lt;/HTTPTargetConnection&gt;
- â€¦
+ …
 &lt;/TargetEndpoint&gt;</pre>
 <p>If you are using a TargetServer&nbsp;to define the backend service, then you must enable TLS in the TargetServer definition:</p>
 <pre>
@@ -96,7 +98,7 @@
 <p>If the backend server uses a self-signed certificate, or a certificate that is not signed by a trusted CA, then you have to create a truststore on Edge and upload the server's certificate and certificate chain. You then specify the truststore in the TargetEndpoint definition:</p>
 <pre>
 &lt;TargetEndpoint name="default"&gt;
- â€¦
+ …
  &lt;HTTPTargetConnection&gt;
 <strong>   &lt;SSLInfo&gt;
        &lt;Enabled&gt;true&lt;/Enabled&gt;
@@ -104,7 +106,7 @@
    &lt;/SSLInfo&gt;
 </strong>   &lt;URL&gt;https://myservice.com&lt;/URL&gt;
  &lt;/HTTPTargetConnection&gt;
- â€¦
+ …
 &lt;/TargetEndpoint&gt;</pre>
 <p>Or in the TargetServer definition:</p>
 <pre>
@@ -125,7 +127,7 @@
 	<li>Update the TargetEndpoint of any API proxies that reference the backend server to configure TLS access.&nbsp;</li>
 </ul>
 <div class="note">
-	<p>Apigee provides all Cloud customers with a cert when they create an account so that the customer can get up and running quickly with Edge. All Cloud customers get a copy of the same Apigee-provided cert. If you are doing two-way TLS to the backend, you should not use the Apigee-provided cert because it cannot be used to uniquely identify the owner of the API proxy connecting to the backend. Instead, you should obtain your own cert for your organization.</p>
+	<p>Apigee provides all Cloud customers with a cert when they create an account so that the customer can get up and running quickly with Edge. All Cloud customers get a copy of the same Apigee-provided cert. If you are doing two-way TLS to the backend, you cannot use the Apigee-provided cert because it cannot be used to uniquely identify the owner of the API proxy connecting to the backend. Instead, you should obtain your own cert for your organization.</p>
 </div>
 <p>Use the following procedure to configure two-way TLS:</p>
 <ol>
@@ -167,7 +169,7 @@ curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.co
 			<li>In the code area, edit the <span style="font-family:courier new,courier,monospace;">&lt;HTTPTargetConnection&gt;</span> element to add the <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> element. Make sure to specify the correct keystore and key alias and set both the <span style="font-family:courier new,courier,monospace;">&lt;Enabled&gt;</span> and <span style="font-family:courier new,courier,monospace;">&lt;ClientAuthEnabled&gt;</span> elements to true:<br />
 				<br />
 				<span style="font-family:courier new,courier,monospace;">&lt;TargetEndpoint name="default"&gt;<br />
-				&nbsp; â€¦<br />
+				&nbsp; …<br />
 				&nbsp; &lt;HTTPTargetConnection&gt;<br />
 				&nbsp; &nbsp; <strong>&lt;SSLInfo&gt;<br />
 				&nbsp; &nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;<br />
@@ -177,13 +179,13 @@ curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.co
 				<span style="font-family:courier new,courier,monospace;"><strong>&nbsp; &nbsp; &lt;/SSLInfo&gt;</strong><br />
 				&nbsp; &nbsp; &lt;URL&gt;https://myservice.com&lt;/URL&gt;<br />
 				&nbsp; &lt;/HTTPTargetConnection&gt;<br />
-				&nbsp; â€¦<br />
+				&nbsp; …<br />
 				&lt;/TargetEndpoint&gt;</span>
 				<div class="note">
 					<p>If you had to create a truststore, include it in&nbsp;the&nbsp;<span style="font-family: 'courier new', courier, monospace;">&lt;HTTPTargetConnection&gt;</span>&nbsp;element:<br />
 						&nbsp;<br />
 						<span style="font-family:courier new,courier,monospace;">&lt;TargetEndpoint name="default"&gt;<br />
-						&nbsp; â€¦<br />
+						&nbsp; …<br />
 						&nbsp; &lt;HTTPTargetConnection&gt;<br />
 						&nbsp; &nbsp; &lt;SSLInfo&gt;<br />
 						&nbsp; &nbsp; &nbsp; &lt;Enabled&gt;true&lt;/Enabled&gt;<br />
@@ -194,7 +196,7 @@ curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.co
 					<span style="font-family:courier new,courier,monospace;">&nbsp; &nbsp; &lt;/SSLInfo&gt;<br />
 					&nbsp; &nbsp; &lt;URL&gt;https://myservice.com&lt;/URL&gt;<br />
 					&nbsp; &lt;/HTTPTargetConnection&gt;<br />
-					&nbsp; â€¦<br />
+					&nbsp; …<br />
 					&lt;/TargetEndpoint&gt;</span><br />
 					<br />
 					If your TargetEndpoint references a TargetServer instead of a specific URL, update the TargetServer definition to reference the new keystore and key alias. For example:<br />
@@ -231,11 +233,5 @@ curl -X POST  -H "Content-Type:application/xml" https://api.enterprise.apigee.co
 </ol>
 <p>For more information on the options available in the TargetEndpoint, including using variables to supply TargetEndpoint <span style="font-family:courier new,courier,monospace;">&lt;SSLInfo&gt;</span> values, see <a href="http://docs.apigee.com/node/8407">http://docs.apigee.com/node/8407</a>.&nbsp;</p>
 <h2>Enabling SNI</h2>
-<p>Edge supports the use of Server Name Indication (SNI) from message processors to target endpoints in Apigee Edge for Cloud and for Private Cloud deployments. If you want to use SNI in the Cloud, contact <a href="http://community.apigee.com/content/apigee-customer-support">Apigee Support</a>.</p>
-<div class="note">
-	<p>SNI is not available to Edge Free customers.</p>
-</div>
-<div class="note">
-	<p>Java 1.7 or later is required.</p>
-</div>
+<p>Edge supports the use of Server Name Indication (SNI) from Message Processors to target endpoints in Apigee Edge for Cloud and for Private Cloud deployments.&nbsp;</p>
 <p>For Edge for the Private Cloud, to be backward compatible with your existing target backends, Apigee disabled&nbsp;SNI&nbsp;by default. If your target backend is configured to support SNI, you can enable this feature. See <a href="http://docs.apigee.com/node/22096">http://docs.apigee.com/node/22096</a> for more.</p>

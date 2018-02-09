@@ -33,7 +33,7 @@
 	<li><code>cascade</code>&nbsp;(optional, boolean, default: true) The primary use of this attribute is to revoke a refresh token without revoking its associated access token. Consider these cases:
 		<ul>
 			<li>Revoke a refresh token only and do not revoke its associated access token. To do this, set the &lt;Token&gt; type to <code>refreshtoken</code> and set cascade to <code>false</code>.</li>
-			<li>​Revoke both the access token and the refresh token. To do this, set the &lt;Token&gt; type to <code>accesstoken</code>. The value of cascade can be either <code>true</code> (the default) or <code>false</code>. If you set it to <code>true</code>, then both the access token and the refresh token are revoked. If you set it to <code>false</code>, the access token is revoked, and the refresh token is unusable. See the Note below for more explanation.&nbsp;</li>
+			<li>?Revoke both the access token and the refresh token. To do this, set the &lt;Token&gt; type to <code>accesstoken</code>. The value of cascade can be either <code>true</code> (the default) or <code>false</code>. If you set it to <code>true</code>, then both the access token and the refresh token are revoked. If you set it to <code>false</code>, the access token is revoked, and the refresh token is unusable. See the Note below for more explanation.&nbsp;</li>
 			<li>Revoke an access token and do not revoke its associated refresh token. Not supported.&nbsp;See the Note below for more explanation.&nbsp;</li>
 		</ul>
 	</li>

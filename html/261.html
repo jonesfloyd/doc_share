@@ -27,14 +27,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -43,14 +43,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -119,6 +119,83 @@
 </div>
 <!-- End tabbed region. -->
 <hr />
+<h2 id="usagenotes">About the&nbsp;Regular Expression Protection policy</h2>
+<p>Apigee Edge enables you to configure&nbsp;<em>regular expressions</em>&nbsp;that can be evaluated against API traffic at runtime to identify common content-level threats that follow certain patterns.</p>
+<p>A&nbsp;<em>regular expression</em>, or&nbsp;<em>regex</em>&nbsp;for short, is a set of strings that specify a pattern in a string. Regular expressions enable content to be programmatically evaluated for patterns. Regular expressions can be used, for example, to evaluate entered a properly structured email address. For more information, see&nbsp;<a href="http://docs.oracle.com/javase/tutorial/essential/regex/intro.html">Regular Expressions</a>&nbsp;in the Java Tutorials.</p>
+<p>The most common usage of RegularExpressionProtection is the evaluation of JSON and XML payloads for malicious content.</p>
+<p>No regular expression can eliminate all content-based attacks, and multiple mechanisms should be combined to enable defense-in-depth. With this in mind, some recommended patterns for blacklisting content:</p>
+<h3>Example blacklist patterns</h3>
+<p>Regular expressions must be XML-encoded in the policy's XML configuration file.</p>
+<table border="1" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
+	<thead>
+		<tr>
+			<th style="text-align: left;">Name</th>
+			<th style="text-align: left;">Regular Expression</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>SQL Injection</td>
+			<td>
+				<pre>
+[\s]*((delete)|(exec)|(drop\s*table)|(insert)|(shutdown)|(update)|(\bor\b))</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>Server-Side Include Injection</td>
+			<td>
+				<pre>
+&lt;!--#(include|exec|echo|config|printenv)\s+.*</pre>
+				<p>XML encoded:</p>
+				<p><code>&amp;lt;!--#(include|exec|echo|config|printenv)\s+.*</code></p>
+			</td>
+		</tr>
+		<tr>
+			<td>XPath Abbreviated Syntax Injection</td>
+			<td>
+				<pre>
+(/(@?[\w_?\w:\*]+(\[[^]]+\])*)?)+</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>XPath Expanded Syntax Injection</td>
+			<td>
+				<pre>
+/?(ancestor(-or-self)?|descendant(-or-self)?|following(-sibling))</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>JavaScript Injection</td>
+			<td>
+				<pre>
+&lt;\s*script\b[^&gt;]*&gt;[^&lt;]+&lt;\s*/\s*script\s*&gt;</pre>
+				<p>XML encoded:&nbsp;<code>&amp;lt;\s*script\b[^&amp;gt;]*&amp;gt;[^&amp;lt;]+&amp;lt;\s*/\s*script\s*&amp;gt;</code></p>
+				<p>See also&nbsp;<a href="https://community.apigee.com/questions/27198/xss-threat-protection-patterns.html#answer-27465">this community post</a>&nbsp;on XSS threat protection patterns.&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Java Exception Injection</td>
+			<td>
+				<pre>
+.*Exception in thread.*</pre>
+				<div>&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3>Setting the Content-type header in a request with an XML or JSON payload</h3>
+<p>The payload of the Regular Expression Protection policy can include the following elements:&nbsp;</p>
+<ul>
+	<li><span style="font-family:courier new,courier,monospace;">&lt;XMLPayload&gt;</span> element - Specifies that information needs to be extracted from an XML payload and evaluated against the regular expression provided.&nbsp;<br />
+		<br />
+		<p>If you&nbsp;use&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">&lt;XMLPayload&gt;</span>&nbsp;in the policy, the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">Content-type</span>&nbsp;header of the request must an XML content-type such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">application/xml</span>&nbsp;or&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">text/xml</span>.&nbsp;</p>
+	</li>
+	<li><span style="font-family:courier new,courier,monospace;">&lt;JSONPayload&gt;</span> element - Specifies that information needs to be extracted from a JSON payload and evaluated against the regular expression provided.<br />
+		<br />
+		<p>If you&nbsp;use&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">&lt;JSONPayload&gt;</span>&nbsp;in the policy, the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">Content-type</span>&nbsp;header of the request must an XML content-type such as&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">application/json</span>.&nbsp;</p>
+	</li>
+</ul>
+<p>Typically you design an API to accept either XML or JSON. However, there could be a scenario where the API accepted both. You could then define a&nbsp;Regular Expression Protection policy that uses both the&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">&lt;XMLPayload&gt;</span>&nbsp;and&nbsp;<span style="font-family: &quot;courier new&quot;, courier, monospace;">&lt;JSONPayload&gt;</span>&nbsp;elements. Only one element would apply for a specific request based on the value of the <span style="font-family:courier new,courier,monospace;">Content-type</span> header.&nbsp;&nbsp;</p>
 <h2 id="elementreference">Element reference</h2>
 <p>The element reference describes the elements and attributes of the RegularExpressionProtection policy.</p>
 <div class="note">
@@ -715,70 +792,7 @@ Specifies the datatype.<br />
 		</tr>
 	</tbody>
 </table>
-<h2 id="usagenotes">Usage notes</h2>
-<p>Apigee Edge enables you to configure <em>regular expressions</em> that can be evaluated against API traffic at runtime to identify common content-level threats that follow certain patterns.</p>
-<p>A <em>regular expression</em>, or <em>regex</em> for short, is a set of strings that specify a pattern in a string. Regular expressions enable content to be programmatically evaluated for patterns. Regular expressions can be used, for example, to evaluate entered a properly structured email address. For more information, see <a href="http://docs.oracle.com/javase/tutorial/essential/regex/intro.html">Regular Expressions</a> in the Java Tutorials.</p>
-<p>The most common usage of RegularExpressionProtection is the evaluation of JSON and XML payloads for malicious content.</p>
-<p>No regular expression can eliminate all content-based attacks, and multiple mechanisms should be combined to enable defense-in-depth. With this in mind, some recommended patterns for blacklisting content:</p>
-<h3>Example blacklist patterns</h3>
-<p>Regular expressions must be XML-encoded in the policy's XML configuration file.</p>
-<table border="1" cellpadding="1" cellspacing="1" class="table" style="width: 690px;">
-	<thead>
-		<tr>
-			<th style="text-align: left;">Name</th>
-			<th style="text-align: left;">Regular Expression</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>SQL Injection</td>
-			<td>
-				<pre>
-[\s]*((delete)|(exec)|(drop\s*table)|(insert)|(shutdown)|(update)|(\bor\b))</pre>
-			</td>
-		</tr>
-		<tr>
-			<td>Server-Side Include Injection</td>
-			<td>
-				<pre>
-&lt;!--#(include|exec|echo|config|printenv)\s+.*</pre>
-				<p>XML encoded:</p>
-				<p><code>&amp;lt;!--#(include|exec|echo|config|printenv)\s+.*</code></p>
-			</td>
-		</tr>
-		<tr>
-			<td>XPath Abbreviated Syntax Injection</td>
-			<td>
-				<pre>
-(/(@?[\w_?\w:\*]+(\[[^]]+\])*)?)+</pre>
-			</td>
-		</tr>
-		<tr>
-			<td>XPath Expanded Syntax Injection</td>
-			<td>
-				<pre>
-/?(ancestor(-or-self)?|descendant(-or-self)?|following(-sibling))</pre>
-			</td>
-		</tr>
-		<tr>
-			<td>JavaScript Injection</td>
-			<td>
-				<pre>
-&lt;\s*script\b[^&gt;]*&gt;[^&lt;]+&lt;\s*/\s*script\s*&gt;</pre>
-				<p>XML encoded: <code>&amp;lt;\s*script\b[^&amp;gt;]*&amp;gt;[^&amp;lt;]+&amp;lt;\s*/\s*script\s*&amp;gt;</code></p>
-				<p>See also <a href="https://community.apigee.com/questions/27198/xss-threat-protection-patterns.html#answer-27465">this community post</a> on XSS threat protection patterns.&nbsp;</p>
-			</td>
-		</tr>
-		<tr>
-			<td>Java Exception Injection</td>
-			<td>
-				<pre>
-.*Exception in thread.*</pre>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<h2 id="errorcodes">Error codes</h2>
+<h2 id="usagenotes">Error codes</h2>
 <p>Errors returned from Edge policies follow a consistent format as described in the <a href="http://docs.apigee.com/api-services/content/error-code-reference">Error code reference</a>.</p>
 <p><a href="http://docs.apigee.com/node/21396">Content to be inserted here</a></p>
 <h2 id="schemas">Schemas</h2>

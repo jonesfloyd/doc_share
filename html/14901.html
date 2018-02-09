@@ -25,14 +25,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -41,14 +41,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -84,7 +84,7 @@
 &lt;/GetOAuthV2Info&gt;</pre>
 		<p>You can then access the variables using JavaScript or another means. For example, to retrieve the scope(s) associated with an access token using JavaScript:</p>
 		<pre>
-var scope = context.getVariable(‚Äòoauthv2accesstoken.GetTokenAttributes.scope‚Äô);</pre>
+var scope = context.getVariable(ëoauthv2accesstoken.GetTokenAttributes.scopeí);</pre>
 	</div>
 	<!-- Tab 1 end. --><!--Tab 2 begin. -->
 	<div class="tab-pane active" id="tab_2">
@@ -346,14 +346,15 @@ oauthv2accesstoken.{policy_name}.api_product_list
 
 oauthv2accesstoken.{policy_name}.access_token
 oauthv2accesstoken.{policy_name}.scope
-oauthv2accesstoken.{policy_name}.expires_in
+oauthv2accesstoken.{policy_name}.expires_in //in seconds
 oauthv2accesstoken.{policy_name}.status
 oauthv2accesstoken.{policy_name}.client_id
 oauthv2accesstoken.{policy_name}.accesstoken.{custom_attribute_name}
 
 oauthv2accesstoken.{policy_name}.refresh_token
 oauthv2accesstoken.{policy_name}.refresh_token_status
-oauthv2accesstoken.{policy_name}.refresh_token_expires_in
+oauthv2accesstoken.{policy_name}.refresh_token_expires_in //in seconds
+
 oauthv2accesstoken.{policy_name}.refresh_count
 oauthv2accesstoken.{policy_name}.refresh_token_issued_at</pre>
 <h3>Authorization code variables</h3>
@@ -376,14 +377,16 @@ oauthv2refreshtoken.{policy_name}.api_product_list
 
 oauthv2refreshtoken.{policy_name}.access_token
 oauthv2refreshtoken.{policy_name}.scope
-oauthv2refreshtoken.{policy_name}.expires_in
+oauthv2refreshtoken.{policy_name}.expires_in //in seconds
+
 oauthv2refreshtoken.{policy_name}.status
 oauthv2refreshtoken.{policy_name}.client_id
 oauthv2refreshtoken.{policy_name}.accesstoken.{custom_attribute_name}
 
 oauthv2refreshtoken.{policy_name}.refresh_token
 oauthv2refreshtoken.{policy_name}.refresh_token_status
-oauthv2refreshtoken.{policy_name}.refresh_token_expires_in
+oauthv2refreshtoken.{policy_name}.refresh_token_expires_in //in seconds
+
 oauthv2refreshtoken.{policy_name}.refresh_count
 oauthv2refreshtoken.{policy_name}.refresh_token_issued_at</pre>
 <h2 id="schema">Schema</h2>

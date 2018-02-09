@@ -13,7 +13,7 @@
 <p>For example:</p>
 <pre>
 &lt;Condition&gt;request.verb = "GET"&lt;/Condition&gt;</pre>
-<p>Conditions can be chained. For example, the following condition evaluates to true only if the URI of the request matches <code>/statuses/user_timeline.json</code> and the HTTP verb of the request is <code>GET</code>.</p>
+<p>Conditions can be chained. For example, the following condition evaluates to true only if the URI of the request matches <code>/statuses</code>&nbsp;and the HTTP verb of the request is <code>GET</code>.</p>
 <pre>
 &lt;Condition&gt;(proxy.pathsuffix MatchesPath "/statuses") and (request.verb = "GET")&lt;/Condition&gt;</pre>
 <p>Or:</p>

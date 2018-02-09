@@ -13,7 +13,7 @@
 </ul>
 <div class="note">
 	<h3>Object size limit in cache</h3>
-	<p>The maximum size of each cached object is <strong>512 kb</strong>. For more information, see <a href="#cachelimits">Managing cache limits</a>.</p>
+	<p>The maximum size of each cached object is <strong>512 KB</strong>. For more information, see <a href="#cachelimits">Managing cache limits</a>.</p>
 </div>
 <h2>In-memory and persistent cache levels</h2>
 <p>Both the shared and environment caches are built on a two-level system made up of an in-memory level and a persistent level. Policies interact with both levels as a combined framework. The relationship between the levels is managed by the system.</p>
@@ -44,7 +44,7 @@
 	<li>When a policy <strong>writes a new entry</strong> to the cache (PopulateCache or ResponseCache policy):
 		<ol>
 			<li>The entry is written to the in-memory L1 cache on only the message processor that handled the request. If the memory limits on the message processor are reached before the entry expires, the entry is removed from L1 cache.</li>
-			<li>The entry is also written to L2 cache, as long as it is no larger than 512 kb. Any entry larger than that is not written to L2 cache.</li>
+			<li>The entry is also written to L2 cache, as long as it is no larger than 512 KB. Any entry larger than that is not written to L2 cache.</li>
 		</ol>
 	</li>
 	<li>When a policy <strong>reads</strong> from the cache (LookupCache or ResponseCache policy):
@@ -73,12 +73,12 @@
 </ul>
 <h2 id="cachelimits">Managing cache limits</h2>
 <p>Through configuration, you can manage some aspects of the cache.</p>
-<div class="note">The in-memory overall maximum is limited by system resources, and is not configurable. The overall capacity of the persistent cache is effectively unlimited, though the maximum size for each cached object is <strong>512 kb</strong>. (While you can add an object larger than 512 kb to in-memory L1 cache, that object won't be added to the more persistent L2 database cache.)</div>
+<div class="note">The in-memory overall maximum is limited by system resources, and is not configurable. The overall capacity of the persistent cache is effectively unlimited, though the maximum size for each cached object is <strong>512 KB</strong>. (While you can add an object larger than 512 KB to in-memory L1 cache, that object won't be added to the more persistent L2 database cache.)</div>
 <ul>
 	<li><b>In-memory (L1) cache.</b> Memory limits for your cache are not configurable. Limits are set by Apigee for each message processor that hosts caches for multiple customers.
 		<p>In a hosted environment*, where in-memory caches for all customer deployments are hosted across multiple shared message processors, each processor features an Apigee-configurable memory percentage threshold to ensure that caching does not consume all of the application's memory. As the threshold is crossed for a given message processor, cache entries are evicted from memory on a least-recently-used basis. Entries evicted from memory remain in L2 cache until they expire or are invalidated.</p>
 	</li>
-	<li><b>Persistent (L2) cache.</b> There are no limits on the number of entries in the cache, though the size of each object is limited to 512 kb. Entries evicted from the in-memory cache remain in the persistent cache in keeping with configurable time-to-live settings.</li>
+	<li><b>Persistent (L2) cache.</b> There are no limits on the number of entries in the cache, though the size of each object is limited to 512 KB. Entries evicted from the in-memory cache remain in the persistent cache in keeping with configurable time-to-live settings.</li>
 </ul>
 <div class="opdk">* In Edge for Private Cloud, you have finer-grained control over memory used for caching, including the maximum amount available. Although the settings can be changed, it's typically not necessary to alter the default configuration.</div>
 <h3>Configurable optimizations</h3>
@@ -100,7 +100,7 @@
 		<tr>
 			<td>Skip if element size in KB exceeds</td>
 			<td>If an entry exceeds the specified size, it will be skipped (not cached).</td>
-			<td>This helps prevent caching overly large entries. The maximimum size for a cached object is 512 kb.</td>
+			<td>This helps prevent caching overly large entries. The maximimum size for a cached object is 512 KB.</td>
 		</tr>
 		<tr>
 			<td>Expiration</td>

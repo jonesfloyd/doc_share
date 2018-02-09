@@ -161,7 +161,7 @@ curl -v -u {user}:{password} -H "Content-Type: multipart/form-data" \
 <div class="note">
 	<p><strong>Node.js</strong>: One exception to the following information is Node.js, which requires the scripts to be stored at the API proxy scope. See <a href="#node">Node.js resource guidelines</a></p>
 </div>
-<p>Let's say that you have populated the same resource in two different repositories â€” the organization and the environment:</p>
+<p>Let's say that you have populated the same resource in two different repositories — the organization and the environment:</p>
 <pre class="terminal">
 $ curl -X POST -H "Content-type:application/octet-stream" -d \
 'request.headers["RequestPath"] = context.getVariable("proxy.basepath");' \

@@ -6,6 +6,20 @@
 <div class="note">
 	<p>This policy does not enforce Basic Authentication on a request to an API proxy. Instead, you use it to Base64 encode/decode credentials, typically when connecting to a backend server or using a service callout policy, such as the <a href="http://docs.apigee.com/node/156">http://docs.apigee.com/node/156</a>, that requires Basic Authentication.</p>
 </div>
+<div class="video">
+	<p><strong>Video:</strong>&nbsp;This video demonstrates how to base64-encode a username and password using the Basic Authentication policy.</p>
+	<div class="collapse" id="encode">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/Xlxdg6pf-QQ" width="854"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#encode">Show/Hide Video</a></div>
+</div>
+<div class="video">
+	<p><strong>Video:</strong> This video demonstrates how to decode a base64-encoded username and password using the Basic Authentication policy.</p>
+	<div class="collapse" id="decode">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="480" src="https://www.youtube.com/embed/JMV6_01IelE" width="854"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#decode">Show/Hide Video</a></div>
+</div>
 <h3>Where</h3>
 <p>This policy can be attached in the following locations.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
@@ -28,14 +42,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -44,14 +58,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -201,11 +215,11 @@
 	<tbody>
 		<tr>
 			<td class="pd-td-left">Default:</td>
-			<td class="pd-td-right">N/A</td>
+			<td class="pd-td-right">true</td>
 		</tr>
 		<tr>
 			<td class="pd-td-left">Presence:</td>
-			<td class="pd-td-right">Required</td>
+			<td class="pd-td-right">Optional</td>
 		</tr>
 		<tr>
 			<td class="pd-td-left">Type:</td>

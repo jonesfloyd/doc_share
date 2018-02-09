@@ -1,22 +1,25 @@
-node_url,url_alias,title,content_type,created,Added to Gitlab for SAP user guide,Notes
-http://docs.apigee.com/node/25141,apigee-labs/about-apigee-labs,About Apigee Labs,article,2017-04-19 12:34:37,,Apigee Test is no longer supported by Apigee Support. It’s in “Apigee Labs” now.
-http://docs.apigee.com/node/25186,whats-new-docs,What's new in the docs,article,2017-05-02 17:01:57,x,Lists notable updates to the docs over two-week periods
-http://docs.apigee.com/node/25191,developer-services/content/working-acquia,Working with Acquia,article,2017-05-03 10:17:48,x,For Drupal portal customers
-http://docs.apigee.com/node/25291,microgateway/v2.3.x/installing-edge-microgateway-v2.3.x,Installing Edge Microgateway,article,2017-05-17 10:55:28,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25296,microgateway/v2.3.x/setting-and-configuring-edge-microgateway-v2.3.x,Setting up and configuring Edge Microgateway,article,2017-05-17 10:57:22,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25301,microgateway/v2.3.x/operation-and-configuration-reference-edge-microgateway-v2.3.x,Operation and configuration reference for Edge Microgateway,article,2017-05-17 10:59:20,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25306,microgateway/v2.3.x/cli-reference-edge-microgateway-v2.3.x,CLI reference for Edge Microgateway,article,2017-05-17 11:00:43,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25311,microgateway/v2.3.x/use-plugins-v2.3.x,Use plugins,article,2017-05-17 11:02:09,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25316,microgateway/v2.3.x/develop-custom-plugins-v2.3.x,Develop custom plugins,article,2017-05-17 11:04:08,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25361,api-services/content/how-use-properties-java-callout,How to use properties in a Java callout,article,2017-05-30 15:24:00,x,New topic for API Proxy Cookbook section
-http://docs.apigee.com/node/25381,sense/content/getting-started-apigee-sense,Getting started with the Apigee Sense Console,article,2017-06-01 07:22:31,,New topic for Apigee Sense product
-http://docs.apigee.com/node/25406,microgateway/v2.3.x/overview-edge-microgateway-v2.3.x,Overview of Edge Microgateway,article,2017-06-11 10:07:30,x,Microgateway has new 2.4 version; this topic captures the old 2.3 content
-http://docs.apigee.com/node/25441,api-services/content/how-handle-java-callout-errors,How to handle Java Callout errors,article,2017-06-15 09:42:45,x,New topic for API Proxy Cookbook section
-http://docs.apigee.com/node/25456,api-services/content/apigee-edge-command-line-tools,Command-line tools for Apigee Edge,article,2017-06-21 08:47:16,x,New topic targeted to developers
-http://docs.apigee.com/node/25466,api-services/content/attaching-and-configuring-policies-xml-files,Attaching and configuring policies in XML files,article,2017-06-21 12:47:16,x,New topic to support minor doc reorg to better support developers
-http://docs.apigee.com/node/25471,api-services/content/attaching-policy-proxyendpoint-or-targetendpoint-flow,Attaching a policy to a ProxyEndpoint or TargetEndpoint Flow,article,2017-06-21 12:48:20,x,New topic to support minor doc reorg to better support developers
-http://docs.apigee.com/node/25481,api-services/content/structure-api-proxies,Key points of API proxy development,article,2017-06-26 13:32:39,x,New topic to support minor doc reorg to better support developers
-http://docs.apigee.com/node/25491,api-services/content/hipaa-configuration-guide-edge-public-cloud,HIPAA Configuration Guide for Edge Public Cloud,article,2017-06-29 11:31:52,x,Guidance for HIPAA customers
-http://docs.apigee.com/node/25496,api-services/content/pci-configuration-guide-edge-public-cloud,PCI Configuration Guide for Edge Public CLoud,article,2017-06-29 11:43:17,x,Guidance for PCI customers
-http://docs.apigee.com/node/25521,microgateway/content/edge-microgateway-videos,Edge Microgateway videos,article,2017-07-19 13:57:17,x,New videos section for Edge Microgateway
-http://docs.apigee.com/node/33601,api-services/content/incorporating-procedural-code-api-proxy,Incorporating procedural code,article,2017-08-01 13:45:15,x,New topic to support minor doc reorg to better support developers
+node_url,url_alias,title,created,Notes
+http://docs.apigee.com/node/37641,microgateway/v2.4.x/overview-edge-microgateway-v2.4.x,Overview of Edge Microgateway,2017-10-05 13:57:21,New version of Edge Microgateway
+http://docs.apigee.com/node/37646,microgateway/v2.4.x/installing-edge-microgateway-v2.4.x,Installing Edge Microgateway,2017-10-05 14:55:21,New version of Edge Microgateway
+http://docs.apigee.com/node/37651,microgateway/v2.4.x/setting-and-configuring-edge-microgateway-v2.4.x,Setting up and configuring Edge Microgateway,2017-10-05 14:56:40,New version of Edge Microgateway
+http://docs.apigee.com/node/37656,microgateway/v2.4.x/operation-and-configuration-reference-edge-microgateway-v2.4.x,Operation and configuration reference for Edge Microgateway,2017-10-05 14:58:10,New version of Edge Microgateway
+http://docs.apigee.com/node/37661,microgateway/v2.4.x/cli-reference-edge-microgateway-v2.4.x,CLI reference for Edge Microgateway,2017-10-05 14:59:38,New version of Edge Microgateway
+http://docs.apigee.com/node/37666,microgateway/v2.4.x/using-plugins-v2.4.x,Using plugins,2017-10-05 15:19:53,New version of Edge Microgateway
+http://docs.apigee.com/node/37671,microgateway/v2.4.x/developing-custom-plugins-v2.4.x,Developing custom plugins,2017-10-05 15:21:07,New version of Edge Microgateway
+http://docs.apigee.com/node/37791,faq/performance-testing,Performance testing,2017-11-03 15:00:28,Edge network & security FAQ
+http://docs.apigee.com/node/37796,faq/edge-network-design-firewalls,Edge network design and firewalls,2017-11-03 15:13:33,Edge network & security FAQ
+http://docs.apigee.com/node/37801,faq/customer-security-testing-requests,Customer security testing requests,2017-11-03 15:50:39,Edge network & security FAQ
+http://docs.apigee.com/node/37806,faq/reporting-vulnerabilities-edge,Reporting vulnerabilities in Edge,2017-11-03 15:56:38,Edge network & security FAQ
+http://docs.apigee.com/node/37811,faq/business-continuity-planning-disaster-recovery,Business Continuity Planning and Disaster Recovery,2017-11-08 13:09:00,Edge network & security FAQ
+http://docs.apigee.com/node/37816,faq/ddos-defense-edge,DDoS defense in Edge,2017-11-08 13:51:45,Edge network & security FAQ
+http://docs.apigee.com/node/37821,faq/apigee-edge-backups,Apigee Edge backups,2017-11-08 14:00:54,Edge network & security FAQ
+http://docs.apigee.com/node/37826,faq/anti-malware-apigee-edge-cloud,Anti-malware and Apigee Edge Cloud,2017-11-08 14:09:06,Edge network & security FAQ
+http://docs.apigee.com/node/37831,faq/faq_home,Apigee Edge frequently asked questions,2017-11-08 15:09:55,Edge network & security FAQ
+http://docs.apigee.com/node/37861,troubleshooting/content/insufficient-permissions-errors,Insufficient Permissions Errors,2017-11-15 11:30:04,New self-service troubleshooting topics
+http://docs.apigee.com/node/37866,troubleshooting/content/what-include-if-you-contact-tech-support-or-community,What to include if you contact Tech Support or the Community,2017-11-15 11:35:52,New self-service troubleshooting topics
+http://docs.apigee.com/node/37871,troubleshooting/content/forbidden-errors,Forbidden Errors,2017-11-15 11:46:43,New self-service troubleshooting topics
+http://docs.apigee.com/node/37881,troubleshooting/content/call-timed-out-either-server-down-or-server-not-reachable,Call timed out; either server is down or server is not reachable,2017-11-16 16:43:45,New self-service troubleshooting topics
+http://docs.apigee.com/node/37886,troubleshooting/content/unexpected-error-occurred-while-processing-updates,Unexpected error occurred while processing the updates,2017-11-17 10:16:07,New self-service troubleshooting topics
+http://docs.apigee.com/node/37891,troubleshooting/content/error-while-fetching-children-path,Error while fetching children for path,2017-11-17 10:24:18,New self-service troubleshooting topics
+http://docs.apigee.com/node/37896,troubleshooting/content/error-while-accessing-datastore,Error while accessing datastore,2017-11-17 10:29:29,New self-service troubleshooting topics
+http://docs.apigee.com/node/37901,troubleshooting/content/error-creating-trace-session,Error creating trace session,2017-11-17 10:38:16,New self-service troubleshooting topics

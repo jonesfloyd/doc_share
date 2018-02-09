@@ -67,10 +67,14 @@
 <p><strong>Deactivate a developer with the management API</strong></p>
 <p>See <a href="http://docs.apigee.com/node/18846">http://docs.apigee.com/node/18846</a> to set the developer's status to <code>inactive</code>.</p>
 <p>You can re-activate a developer by editing the developer in the management UI and clicking <strong>Activate</strong>, or by using the management API and setting the developer's status to <code>active</code>. Again, it may take a few minutes for the change to be recognized by all message processors.</p>
-<h2>Deleting a developer using the Edge management UI</h2>
+<h2>Deleting a developer</h2>
 <div class="note">
 	<p>If you use the Developer Services portal, Apigee recommends that you create, edit, and delete developers on the portal itself, not in the Edge management UI. For more information, see <a href="http://docs.apigee.com/node/291">http://docs.apigee.com/node/291</a>.</p>
 </div>
+<div class="warning">
+	<p>Deleting developers completely removes them and their related artifacts (such as apps and API keys) from your organization. To avoid permanently deleting developers and their artifacts, consider <a href="#deactivatingadeveloper">deactivating developers</a> instead.</p>
+</div>
+<h3>Deleting a developer with the management UI</h3>
 <ol>
 	<li>Login to the Edge management UI at <a href="https://enterprise.apigee.com">https://enterprise.apigee.com</a>.</li>
 	<li>Click&nbsp;<strong>Publish</strong> &gt; <strong>Developers&nbsp;</strong>in the menu.</li>
@@ -91,6 +95,8 @@
 	</li>
 	<li>If you are using the Developer Services portal, synchronize the portal with the changes to Edge as described below.</li>
 </ol>
+<h3>Deleting a developer with the management API</h3>
+<p>See <a href="http://docs.apigee.com/node/18841">http://docs.apigee.com/node/18841</a>.</p>
 <h2>Synchronizing the portal with developers modified using the Edge UI</h2>
 <p>If you are using a Developer Services portal to publish your APIs, changes made to developers through the Edge UI are not pushed down to the portal. Therefore, you must log into the portal as a portal administrator and synchronize the portal with Edge for those changes to appear on the portal.</p>
 <div class="note">

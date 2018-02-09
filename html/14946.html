@@ -235,12 +235,14 @@ Use the following table to determine which standard Node.js modules are included
 	<li>The Node.js runtime flags such as "harmony-proxies" are not supported.&nbsp;</li>
 </ul>
 <h2>Setting IP connection restrictions on Edge for Private Cloud</h2>
-<p>By default, Edge for Private Cloud restricts Node.js code from accessing IP addresses&nbsp;starting with â€œ10.", "192.168", and localhost. If you attempt to access these IP addresses, you will see an error in the form:</p>
+<p>Edge for Private Cloud can restrict Node.js code from accessing IP addresses&nbsp;starting with “10.", "192.168", and localhost. If you attempt to access these IP addresses, you will see an error in the form:</p>
 <pre>
 { [Error: connect EINVAL] message: 'connect EINVAL', code: 'EINVAL', errno: 'EINVAL', syscall: 'connect' }</pre>
 <p>You can modify these restrictions&nbsp;by setting the&nbsp;<span style="font-family:courier new,courier,monospace;">conf_nodejs_connect.ranges.denied</span> property in the <span style="font-family:courier new,courier,monospace;">message-processors.properties</span> file for each Message Processor. By default, this property has the value:</p>
-<pre>
-conf_nodejs_connect.ranges.denied=10.0.0.0/8,192.168.0.0/16,127.0.0.1/32</pre>
+<ul>
+	<li><strong>Edge 4.17.05 and earlier</strong>: <span style="font-family:courier new,courier,monospace;">conf_nodejs_connect.ranges.denied=10.0.0.0/8,192.168.0.0/16,127.0.0.1/32</span></li>
+	<li><strong>Edge 4.17.09 and later</strong>:&nbsp;<span style="font-family:courier new,courier,monospace;">conf_nodejs_connect.ranges.denied=</span> (meaning no restrictions)</li>
+</ul>
 <p>To set this property:</p>
 <ol>
 	<li>Open the&nbsp;<span style="font-family:courier new,courier,monospace;">message-processor.properties</span> file in an editor. If the file does not exist, create it:<br />

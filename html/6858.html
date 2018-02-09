@@ -72,7 +72,7 @@
 		<tr>
 			<td><code>use.proxy.tunneling</code></td>
 			<td>true</td>
-			<td>If this is set to true, and proxy configurations are specified in <code>http.properties</code>&nbsp;(on-premises deployments only),&nbsp;then target connections are set to use the specified via tunnel. If the target uses TLS/SSL, then this property is ignored, and the message is always sent via a tunnel.</td>
+			<td>If this is set to true, and proxy configurations are specified in <code>http.properties</code>&nbsp;(on-premises deployments only),&nbsp;then target connections are set to use the specified tunnel. If the target uses TLS/SSL, then this property is ignored, and the message is always sent via a tunnel.</td>
 		</tr>
 		<tr>
 			<td><code>enable.method.override</code></td>
@@ -229,4 +229,10 @@
 		</tr>
 	</tbody>
 </table>
+<h2>About ScriptTarget for Node.js applications</h2>
+<p>The ScriptTarget element is used to integrate a Node.js application into your proxy. For information on using Node.js and ScriptTarget, see:</p>
+<ul>
+	<li><a href="http://docs.apigee.com/api-services/content/adding-nodejs-existing-api-proxy#specifythenodejstargetwithscripttarget">Specify the Node.js target with ScriptTarget</a></li>
+	<li><a href="http://docs.apigee.com/api-services/content/understanding-edge-support-nodejs-modules#advancedscripttargetconfiguration">Advanced ScriptTarget configuration</a></li>
+</ul>
 <p>&nbsp;</p>

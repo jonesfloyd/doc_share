@@ -87,10 +87,14 @@ javac -version</pre>
 		<pre>
 javac -d . -classpath ./lib/expressions-1.0.0.jar:./lib/message-flow-1.0.0.jar:. callout/src/main/java/JavaProperties.java</pre>
 	</li>
+	<li>Create a JAR file:<br />
+		<br />
+		<code>jar -cvf edge-custom-policy-java-properties.jar ./com/apigeesample/JavaProperties.class</code><br />
+		&nbsp;</li>
 	<li>Copy the JAR file to the apiproxy/resources/java directory. This is the required location for JAR files that you wish to deploy with a proxy.<br />
 		<br />
 		<pre>
-cp com/apigeesample/JavaProperties.class apiproxy/resources/java</pre>
+cp edge-custom-policy-java-properties.jar apiproxy/resources/java</pre>
 	</li>
 </ol>
 <h3>Deploy and call the proxy</h3>

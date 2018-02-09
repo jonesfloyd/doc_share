@@ -11,7 +11,7 @@
 <p>API proxies define&nbsp;<i>request</i>&nbsp;and&nbsp;<i>response</i>&nbsp;flows that are executed in a specific order. The order allows you to apply logic and behavior at specific points in the API proxy execution. The request and response flows are subdivided into proxy and target segments. Each segment is subdivided into the following flow 'stages':</p>
 <ul>
 	<li><strong>PreFlow</strong>: Always executes before any conditional flows.</li>
-	<li><strong>Conditional flows</strong>: One or more flows, each of which has an associated condition. Conditional flows tell Edge, "When you see this, perform this logic." For example, when an API call is a <code>GET</code> on the <code>/movies</code> resource (the condition), transform the response to JSON (through a policy attached to the conditional flow). Only one flow executes per transactionâ€”the first flow whose condition evaluates to true.<br />
+	<li><strong>Conditional flows</strong>: One or more flows, each of which has an associated condition. Conditional flows tell Edge, "When you see this, perform this logic." For example, when an API call is a <code>GET</code> on the <code>/movies</code> resource (the condition), transform the response to JSON (through a policy attached to the conditional flow). Only one flow executes per transaction—the first flow whose condition evaluates to true.<br />
 		<br />
 		In a conditional flow, the condition is evaluated in both the request and response. You cannot have separate conditions for request and response.</li>
 	<li><strong>PostFlow</strong>: Always executes after any conditional flows.&nbsp;</li>

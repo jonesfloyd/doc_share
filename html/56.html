@@ -35,9 +35,9 @@
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
 			<!-- 0x2192 is rightwards arrow -->
-			<td class="bbl" style="text-align:center; font-size:16px">→&nbsp;</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?&nbsp;</td>
 			<!-- Start request dots. Option+8 for dot. or 0x2022 (bullet) -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">�</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bblbrl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
@@ -58,7 +58,7 @@
 			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
 			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
 			<!-- End response dots --><!-- 0x2190 is leftwards arrow -->
-			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -133,7 +133,7 @@
 &lt;/Quota&gt;</pre>
 		<p>Dynamic quotas enable you to configure a single Quota policy that enforces different Quota settings based on information passed to the Quota policy. Another term for Quota settings in this context is "Service Plan". The dynamic Quota checks the apps' "Service Plan" and then enforces those settings.</p>
 		<p><strong>Note</strong>: If you specify both a value and a&nbsp;reference for an element, then reference gets the priority. If reference does not resolve at runtime, then the value is used.</p>
-		<p>For example, when you create an API product, you can optionally set the allowed quota limit, time unit, and interval. However, setting these value on the API product does not enforce their use in an API proxy. You must also add a Quota policy to the API proxy that reads these values. See <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a> for more.</p>
+		<p>For example, when you create an API product, you can optionally set the allowed quota limit, time unit, and interval. However, setting these value on the API product does not enforce their use in an API proxy. You must also add a Quota policy to the API proxy that reads these values. See <a href="http://docs.apigee.com/node/36696">http://docs.apigee.com/node/36696</a> for more.</p>
 		<p>In the example above, the API proxy containing the Quota policy uses a VerifyAPIKey policy, named <code>verify-api-key</code>, to validate the API key passed in a request. The Quota policy then accesses the flow variables from the VerifyAPIKey policy to read the quota values set on the API product. For more on VerifyAPIKey&nbsp;flow variables, see <a href="http://docs.apigee.com/node/3977">http://docs.apigee.com/node/3977</a>.</p>
 		<p>Another option is to set custom attributes on individual developers or apps, and then read those values in the Quota policy. For example, you want to set different quota values per developer. In this case, you set custom attributes on the developer containing the limit, time unit, and interval. You then reference these values in the Quota policy as shown below:</p>
 		<pre>
@@ -336,7 +336,7 @@
 	<li>You can make runtime changes to the quota setting on an API product, and quota policies that reference the value automatically have updated quota values.</li>
 </ul>
 <p>For more information on using quota settings from an API product, see the "Dynamic Quota" example above.<a href="https://community.apigee.com/questions/1488/how-do-the-quota-settings-on-an-api-product-intera.html">.</a></p>
-<p>For info on configuring API products with quota limits, see <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a>.</p>
+<p>For info on configuring API products with quota limits, see <a href="http://docs.apigee.com/node/36696">http://docs.apigee.com/node/36696</a>.</p>
 <h2 id="elements">Element reference</h2>
 <p>Following are elements and attributes you can configure on this policy. Note that some element combinations are mutually exclusive or not required. See the samples for specific usage. The <code>verifyapikey.VerifyAPIKey.apiproduct.*</code> variables below are available by default when a Verify API Key policy called "VerifyAPIKey" is used to check the app's API key in the request. The variable values come from the quota settings on the API product that the key is associated with, as described in <a href="#product">Getting quota settings from the API product configuration</a>.</p>
 <pre>
@@ -377,7 +377,7 @@
 			<td>type</td>
 			<td>
 				<p>Use to set when the quota counter starts counting usage. See the table above for more information.</p>
-				<p>If you omit a <code><code>type</code></code> value, the default counter begins when the first request message is received from an app.&nbsp;</p>
+				<p>If you omit a <code><code>type</code></code> value, the counter begins when the first request message is received from an app.&nbsp;</p>
 				<p>Valid values include:</p>
 				<ul>
 					<li><code>calendar</code>: Configure a quota based on an explicit start time. The Quota counter for each app is refreshed based on the <code>&lt;StartTime&gt;</code>,&nbsp;<code>&lt;Interval&gt;,&nbsp;</code>and <code>&lt;TimeUnit&gt;</code> values that you set.&nbsp;</li>
@@ -873,37 +873,37 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.allowed.count</td>
+			<td>ratelimit.{policy_name}.allowed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the allowed quota count</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.used.count</td>
+			<td>ratelimit.{policy_name}.used.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the current quota used within a quota interval</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.available.count</td>
+			<td>ratelimit.{policy_name}.available.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the available quota count in the quota interval</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.exceed.count</td>
+			<td>ratelimit.{policy_name}.exceed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the count of requests that exceeds the limit in the current quota interval</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.total.exceed.count</td>
+			<td>ratelimit.{policy_name}.total.exceed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the total number of requests that exceeded the quota across all intervals, so it is the sum of <code>ratelimit.exceed.count</code>&nbsp;for all quota intervals.</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.expiry.time</td>
+			<td>ratelimit.{policy_name}.expiry.time</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>
@@ -912,43 +912,43 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.identifier</td>
+			<td>ratelimit.{policy_name}.identifier</td>
 			<td>String</td>
 			<td>Read-Only</td>
 			<td>Returns the (client) identifier reference attached to the policy</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.class</td>
+			<td>ratelimit.{policy_name}.class</td>
 			<td>String</td>
 			<td>Read-Only</td>
 			<td>Returns the class associated with the client identifier</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.class.allowed.count</td>
+			<td>ratelimit.{policy_name}.class.allowed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the allowed quota count defined in the class</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.class.used.count</td>
+			<td>ratelimit.{policy_name}.class.used.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the used quota within a class</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.class.available.count</td>
+			<td>ratelimit.{policy_name}.class.available.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the available quota count in the class</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.class.exceed.count</td>
+			<td>ratelimit.{policy_name}.class.exceed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the count of requests that exceeds the limit in the class in the current&nbsp;quota interval</td>
 		</tr>
 		<tr>
-			<td class="rteleft">ratelimit.{policy_name}.class.total.exceed.count</td>
+			<td>ratelimit.{policy_name}.class.total.exceed.count</td>
 			<td>Long</td>
 			<td>Read-Only</td>
 			<td>Returns the total count of requests that exceeds the limit in the class across all quota intervals,&nbsp;so it is the sum of&nbsp;<code>class.exceed.count</code>&nbsp;for all quota intervals.</td>
@@ -964,12 +964,13 @@
 	</tbody>
 </table>
 <h2 id="errors">Error reference</h2>
-<p><code><a href="http://docs.apigee.com/node/21381">Content to be inserted here</a></code></p>
+<a href="http://docs.apigee.com/node/21381">Content to be inserted here</a>
 <div class="note">
-	<p>Currently, the Quota policy returns a status code of 500 when it enforces a rate limit. Apigee will soon modify the behavior of the policy so that it returns HTTP Status of 429 in that case. If you use the Apigee-managed Edge service, and you would like to have your Quota policy return 429, contact <a href="https://community.apigee.com/content/apigee-customer-support" target="_blank">Apigee Support</a> to have the <code>features.isHTTPStatusTooManyRequestEnabled</code> property enabled. See <a href="https://community.apigee.com/content/kbentry/23852/http-429-as-default-status-code-for-quota-policy-v.html">this community article</a> for guidance on the upcoming change.</p>
+	<p>Currently, the Quota policy returns a status code of 500 when it enforces a rate limit. If you use the Apigee-managed Edge service, and you would like to have your Quota policy return 429, contact <a href="https://community.apigee.com/content/apigee-customer-support" target="_blank">Apigee Support</a> to have the <code>features.isHTTPStatusTooManyRequestEnabled</code> property enabled. See <a href="https://community.apigee.com/content/kbentry/23852/http-429-as-default-status-code-for-quota-policy-v.html">this community article</a> for additional details.</p>
 </div>
 <div class="opdk">
 	<p>If you're an Edge for Private Cloud customer, you can set this property with the following API call:</p>
+	<p><b>Note</b>: When updating properties, you must pass all existing properties to the API, even if they are not being changed. If you omit properties in the payload, the properties are removed.</p>
 	<pre>
 curl -u email:password -X POST -H "Content-type:application/xml" \
   http://edge-management-server:8080/v1/o/myorg \

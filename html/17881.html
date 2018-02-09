@@ -381,6 +381,9 @@ oauthv2authcode.GenerateAuthorizationCode.scope
 oauthv2authcode.GenerateAuthorizationCode.redirect_uri  
 oauthv2authcode.GenerateAuthorizationCode.client_id
 </pre>
+<div class="note">
+	<p>You can also set custom attributes in the OAuthV2 policy. Custom attributes will be returned in the same format pattern as the other variables: <code>oauthv2.{policy_name}.{attribute_name}</code>. When you generate an access token from the auth code, the access token will inherit any custom variables set in the auth code. See also <a href="http://docs.apigee.com/node/17761">http://docs.apigee.com/node/17761</a>.</p>
+</div>
 <h2>Refreshing an access token</h2>
 <p>A refresh token is a credential you use to obtain an access token, typically after the access token has expired or becomes invalid. A refresh token is returned in the response when you receive an access token.</p>
 <p>To request a new access token using a refresh token:</p>

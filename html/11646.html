@@ -7,7 +7,7 @@
 	<p>Use of the Concurrent Rate Limit policy is known to impact performance and will result in lower throughputs.</p>
 </div>
 <h3>Where</h3>
-<p>This policy has specific placement requirements. It must be attached in the on <strong>both</strong> the Request and Response flows in the <strong>Target Endpoint</strong>. In addition, it is recommended that you place it in a DefaultFaultRule (this ensures that, in the event of an error, the rate limit counters are maintained correctly). A validation error will be thrown at deployment time if the policy is attached to any flows in the Proxy Endpoint. For details, see <a href="#usagenotes">Usage notes</a>.</p>
+<p>This policy has specific placement requirements. It must be attached in the on <strong>both</strong> the Request and Response flows in the <strong>Target Endpoint</strong>, and it must be placed in the <a href="/api-services/content/fault-handling">DefaultFaultRule</a> to ensure that the rate limit counters are maintained correctly in the event of an error. A validation error is thrown at deployment time if the policy is attached to any flows in the Proxy Endpoint, or if the policy is not included in the DefaultFaultRule. For details, see <a href="#usagenotes">Usage notes</a>.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
 	<tbody>
 		<tr bgcolor="#e5e5e5" style="font-size:13px; line-height:20px" valign="middle">
@@ -28,12 +28,12 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">→</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bblbrl" style="text-align: center; color: #7DD31F">&nbsp;</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">•</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">�</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="bbl" style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<!-- End request dots -->
@@ -47,11 +47,11 @@
 			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td style="text-align: center; color: #7DD31F">&nbsp;</td>
 			<td class="brl" style="text-align: center; color: #7DD31F">&nbsp;</td>
-			<td style="text-align: center; color: #7DD31F;">•</td>
+			<td style="text-align: center; color: #7DD31F;">�</td>
 			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
 			<td style="text-align: center; color: #7DD31F;">&nbsp;</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">←</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -111,7 +111,7 @@
 		</tr>
 		<tr>
 			<td class="pd-td-left">Presence:</td>
-			<td class="pd-td-right">Optional</td>
+			<td class="pd-td-right">Required</td>
 		</tr>
 		<tr>
 			<td class="pd-td-left">Type:</td>
@@ -132,7 +132,7 @@
 			<td>count</td>
 			<td>Specifies the number of concurrent connections between Apigee Edge and a backend service that are allowed at any given time.</td>
 			<td>N/A</td>
-			<td style="width: 50px;">Optional</td>
+			<td style="width: 50px;">Required</td>
 		</tr>
 		<tr>
 			<td>ttl</td>
@@ -140,7 +140,7 @@
 				<p>Include to automatically decrement the counter after the number of seconds specified. This can help to clean up any connections that were not decremented properly in the response path.&nbsp;</p>
 			</td>
 			<td>N/A</td>
-			<td style="width: 50px;">Optional</td>
+			<td style="width: 50px;">Required</td>
 		</tr>
 	</tbody>
 </table>
@@ -248,23 +248,23 @@
 <p>When the number of requests being processed by Apigee Edge exceeds the connection limit configured in the policy, Apigee Edge will return the HTTP response code 503: Service Unavailable.</p>
 <h3>Policy attachment details</h3>
 <p>The ConcurrentRatelimit policy must be attached as a Step to three Flows on a TargetEndpoint: request, response, and DefaultFaultRule. (A validation error will be thrown at deployment time if the policy is attached to any other Flows, including any ProxyEndpoint Flows.) See also this <a href="https://community.apigee.com/questions/4366/why-concurrent-rate-limit-policy-in-response-pre-f.html">Apigee Community post</a>.&nbsp;</p>
-<p>For example to attach a ConcurrentRatelimit policy called ConnectionThrottler to a TargetEndpoint called MyTargetEndpoint, create the following TargetEndpoint configuration:</p>
+<p>For example to attach a ConcurrentRatelimit policy called ConnectionThrottler to a TargetEndpoint called MyTargetEndpoint, create the following TargetEndpoint configuration. Note that the policy must also be included in the DefaultFaultRule to ensure that the rate limit counters are maintained correctly in the event of an error.</p>
 <pre>
 &lt;TargetEndpoint name="MyTargetEndpoint"&gt;
   &lt;DefaultFaultRule name="DefaultFaultRule"&gt;
     &lt;Step&gt;&lt;Name&gt;ConnectionThrottler&lt;/Name&gt;&lt;/Step&gt;
     &lt;AlwaysEnforce&gt;true&lt;/AlwaysEnforce&gt;
   &lt;/DefaultFaultRule&gt;
-  &lt;PostFlow name="PostFlow"&gt;
-    &lt;Response&gt;
-      &lt;Step&gt;&lt;Name&gt;ConnectionThrottler&lt;/Name&gt;&lt;/Step&gt;
-    &lt;/Response&gt;
-  &lt;/PostFlow&gt;
   &lt;PreFlow name="PreFlow"&gt;
     &lt;Request&gt;
       &lt;Step&gt;&lt;Name&gt;ConnectionThrottler&lt;/Name&gt;&lt;/Step&gt;
     &lt;/Request&gt;
   &lt;/PreFlow&gt;
+  &lt;PostFlow name="PostFlow"&gt;
+    &lt;Response&gt;
+      &lt;Step&gt;&lt;Name&gt;ConnectionThrottler&lt;/Name&gt;&lt;/Step&gt;
+    &lt;/Response&gt;
+  &lt;/PostFlow&gt;
   &lt;HTTPTargetConnection&gt;
     &lt;URL&gt;http://api.mybackend.service.com&lt;/URL&gt;
   &lt;/HTTPTargetConnection&gt;

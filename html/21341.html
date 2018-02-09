@@ -125,7 +125,7 @@
 			<td>401</td>
 			<td>
 				<p>The API proxy is not in the Product associated with the access token.</p>
-				<p><strong>Tips:</strong> Be sure that the product assoicated with the access token is configured correctly. For example, if you use wildcards in resource paths, be sure the wildcards are being used correctly. See <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a> for details.</p>
+				<p><strong>Tips:</strong> Be sure that the product assoicated with the access token is configured correctly. For example, if you use wildcards in resource paths, be sure the wildcards are being used correctly. See <a href="http://docs.apigee.com/node/36696">http://docs.apigee.com/node/36696</a> for details.</p>
 				<p>See also&nbsp;<a href="https://community.apigee.com/articles/6831/oauth20-access-token-verification-throws-invalid-a.html">this Apigee Community post</a>&nbsp;for more guidance on causes for this error.&nbsp;</p>
 			</td>
 			<td>VerifyAccessToken</td>
@@ -140,7 +140,10 @@
 			<td><code>access_token_expired</code></td>
 			<td>401</td>
 			<td>The access token is expired.</td>
-			<td>VerifyAccessToken</td>
+			<td>
+				<p>VerifyAccessToken<br />
+					InvalidateToken</p>
+			</td>
 		</tr>
 		<tr>
 			<td><code>access_token_not_approved</code></td>

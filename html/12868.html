@@ -1,6 +1,7 @@
 <h1> Best practices for API proxy design and development </h1>
 <p>[toc]</p>
 <p>The purpose of this document is to provide a set of standards and best practices for developing with Apigee Edge. The topics that are covered here include design, coding, policy use, monitoring, and debugging. The information has been gathered by the experience of developers working with Apigee to implement successful API programs. This is a living document and will be updated from time to time.</p>
+<p>In addition to the guidelines here, you might also find the <a href="https://community.apigee.com/articles/44662/the-book-of-apigee-edge-antipatterns.html" target="_blank">Apigee Edge Antipatterns</a> Community post useful.</p>
 <h2>Development standards</h2>
 <h3>Comments and Documentation</h3>
 <ul>
@@ -18,7 +19,7 @@
 <ul>
 	<li>The Policy <code>name</code> attribute and the XML policy file name must be identical.</li>
 	<li>The Script and ServiceCallout policy <code>name</code> attribute and the name of the resource file should be identical.</li>
-	<li><code>DisplayName</code> should accurately describe the policy‚Äôs function to someone who has never worked with that API proxy before..</li>
+	<li><code>DisplayName</code> should accurately describe the policyís function to someone who has never worked with that API proxy before..</li>
 	<li>Name policies according to their function, for example <code>AssignTargetAuthHeader</code> or <code>AssignMessage.TargetAuthHeader</code>, <code>RaiseFault.InvalidUser</code>.</li>
 	<li>Use proper extensions for resource files, <code>.js</code> for JavaScript, <code>.py</code> for python, and <code>.jar</code> for Java JAR files.</li>
 	<li>Variable names should be consistent. If you choose a style, such as camelCase or under_score, use it throughout the API proxy.</li>
@@ -85,7 +86,7 @@
 <p>See <a href="http://docs.apigee.com/node/249">http://docs.apigee.com/node/249</a>.</p>
 <h3>Response Caching</h3>
 <ul>
-	<li>Do not populate the response cache if the response is not successful or if the request is not a GET. Creates, updates, and deletes should not be cached. &lt;SkipCachePopulation&gt;response.status.code != 200 or request.verb != ‚ÄúGET‚Äù&lt;/SkipCachePopulation&gt;</li>
+	<li>Do not populate the response cache if the response is not successful or if the request is not a GET. Creates, updates, and deletes should not be cached. &lt;SkipCachePopulation&gt;response.status.code != 200 or request.verb != ìGETî&lt;/SkipCachePopulation&gt;</li>
 	<li>Populate cache with a single consistent content type (for example, XML or JSON). After retrieving a responseCache entry, then convert to the needed content type with JSONtoXML or XMLToJSON. This will prevent storing double, triple, or more data.</li>
 	<li>Ensure that the cache key is sufficient to the caching requirement. In many cases, the <code>request.querystring</code> can be used as the unique identifier.</li>
 	<li>Do not include the API key (<code>client_id</code>) in the cache key, unless explicitly required. Most often, APIs secured only by a key will return the same data to all clients for a given request. It is inefficient to store the same value for a number of entries based on the API key.</li>
@@ -111,7 +112,7 @@
 </ul>
 <h3>JavaScript</h3>
 <ul>
-	<li>Use JavaScript if it‚Äôs more intuitive than Apigee policies (for example, when setting <xode>target.url</xode> for many different URI combinations).</li>
+	<li>Use JavaScript if itís more intuitive than Apigee policies (for example, when setting <xode>target.url</xode> for many different URI combinations).</li>
 	<li>Complex payload parsing such as iterating through a JSON object and Base64 encoding/decoding.</li>
 	<li>JavaScript policy has a time limit, so infinite loops are blocked.</li>
 	<li>Always use JavaScript Steps and put files in <code>jsc</code>&nbsp;resources folder. JavaScript Policy type pre-compiles the code at deployment time.</li>
@@ -179,9 +180,9 @@
 <ul>
 	<li>Use a common syslog policy across bundles and within the same bundle. This will keep a consistent logging format.</li>
 </ul>
-<p>See <a href="http://docs.apigee.com/node/187">http://docs.apigee.com/node/187</a>.</p>
+<p>See <a href="http://docs.apigee.com/node/18">http://docs.apigee.com/node/18</a>.</p>
 <h2>Monitoring</h2>
-<p>Cloud customers are not required to check individual components of &nbsp;Apigee Edge (Routers, Message Processors, etc.). Apigee‚Äôs Global Operations team is thoroughly monitoring all of the components, along with API health checks, given health check requests by the customer.</p>
+<p>Cloud customers are not required to check individual components of &nbsp;Apigee Edge (Routers, Message Processors, etc.). Apigeeís Global Operations team is thoroughly monitoring all of the components, along with API health checks, given health check requests by the customer.</p>
 <h3>Apigee Analytics</h3>
 <p>Analytics can provide non-critical API monitoring as error percentages are measured.</p>
 <p>See <a href="http://docs.apigee.com/node/17">http://docs.apigee.com/node/17</a>.</p>

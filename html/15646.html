@@ -117,7 +117,7 @@ cache.put('key4', 'Hello, World!', function(err) {
 			<li>
 				<p>error - An Error object. If there is an error while retrieving from the cache, then an Error object will be set here. Otherwise this parameter will be set to "undefined".</p>
 			</li>
-			<li>​data - The data retrieved, if any. It will be one of four values:
+			<li>?data - The data retrieved, if any. It will be one of four values:
 				<ul>
 					<li>If a string was inserted, it will be a string.</li>
 					<li>If a Buffer was inserted, it will be a Buffer.</li>
@@ -150,7 +150,7 @@ cache.get('key', function(err, data) {
 		<p>For cache entries put to the cache from an Apigee Edge policy (such as <a href="http://docs.apigee.com/node/15596">http://docs.apigee.com/node/15596</a>), you will need to construct the cache key by inferring from the specific way the policy creates keys for entries. To do this, you'll need to know how the policy is configured. While <a href="http://docs.apigee.com/node/15591">http://docs.apigee.com/node/15591</a> describes how cache keys are created by policies, keep in mind that you shouldn't specify string values related to scope; in calls from Node.js, scope is already part of the context.</p>
 	</li>
 	<li>
-		<p><strong><em><code>callback</code></em></strong> (Required): A callback function that will be called åwith an Error object as the first parameter if there is an error.</p>
+		<p><strong><em><code>callback</code></em></strong> (Required): A callback function that will be called �with an Error object as the first parameter if there is an error.</p>
 	</li>
 </ul>
 <p><strong>Example:</strong></p>

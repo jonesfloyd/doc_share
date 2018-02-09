@@ -2,6 +2,13 @@
 <p><img src="sites/docs/files/icon_policy_security.jpg" /></p>
 <h3>What</h3>
 <p>The Access Control policy lets you allow or deny access to your APIs by specific IP addresses.</p>
+<div class="video">
+	<p><strong>Video:</strong> Watch a short video to learn more about how the to allow or deny access to your APIs by specific IP addresses.</p>
+	<div class="collapse" id="demo1">
+		<div style="text-align: left; margin:15px"><iframe allowfullscreen="" frameborder="0" height="380" scrolling="no" src="https://www.youtube.com/embed/wlCFA8maquk" width="600"></iframe></div>
+	</div>
+	<div id="collapsible_1"><a class="btn" data-toggle="collapse" href="#demo1">Show/Hide Video</a></div>
+</div>
 <h3>Where</h3>
 <p>This policy can be attached in the following locations.</p>
 <table cellspacing="0" style="margin:20px 20px 20px 0px" width="650">
@@ -24,14 +31,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -40,14 +47,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -256,7 +263,7 @@ curl -u email:password -X POST -H "Content-type:application/xml" http://host:808
 <p>IPv6: 16, 32, 48, 64, 80, 96, 112, 128</p>
 <p>However, you can user other numbers for finer-grained control, which involves a little binary calculation. Here's an example using a mask of 22:</p>
 <p><img alt="" src="sites/docs/files/cidr_2.png" style="width: 454px; height: 213px;" /></p>
-<p>Here it gets a litle tricky: keep the first 22 bits and allow anything in the rest‚Äî<em>per group</em>. For example, as shown above, groups 1 and 2 can be any number 0-255. But because group 3 gets truncated by the CIDR notation, it means keep the first 6 bits, and the last two can vary. When you translate the binary, it means there are four possible combinations (00, 01, 10, 11) that can be added onto the leading 000111, which must stay as is. In other words, these binary combinations are possible:</p>
+<p>Here it gets a litle tricky: keep the first 22 bits and allow anything in the restó<em>per group</em>. For example, as shown above, groups 1 and 2 can be any number 0-255. But because group 3 gets truncated by the CIDR notation, it means keep the first 6 bits, and the last two can vary. When you translate the binary, it means there are four possible combinations (00, 01, 10, 11) that can be added onto the leading 000111, which must stay as is. In other words, these binary combinations are possible:</p>
 <ul>
 	<li>000111<strong>00</strong> = 28</li>
 	<li>000111<strong>01</strong> = 29</li>

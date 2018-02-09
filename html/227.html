@@ -29,14 +29,14 @@
 		</tr>
 		<tr style="font-size:36px; line-height:24px" valign="middle">
 			<td class="bbl" style="text-align: right; font-size:13px; font-style:italic">Request</td>
-			<td class="bbl" style="text-align:center; font-size:16px">‚Üí</td>
+			<td class="bbl" style="text-align:center; font-size:16px">?</td>
 			<!-- Start request dots. Option+8 for dot. Third dot is bblbrl class. -->
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bblbrl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="bbl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bblbrl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
+			<td class="bbl" style="text-align: center; color: #7DD31F">ï</td>
 			<!-- End request dots -->
 			<td class="bbl">&nbsp;</td>
 			<td class="bbl">&nbsp;</td>
@@ -45,14 +45,14 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<!-- Start response dots. Option+8 for dot. Third dot is brl class. -->
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td class="brl" style="text-align: center; color: #7DD31F">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
-			<td style="text-align: center; color: #7DD31F;">‚Ä¢</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F">ï</td>
+			<td class="brl" style="text-align: center; color: #7DD31F">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
+			<td style="text-align: center; color: #7DD31F;">ï</td>
 			<!-- End response dots -->
-			<td style="text-align:center; font-size:16px">‚Üê</td>
+			<td style="text-align:center; font-size:16px">?</td>
 			<td style="text-align: left; font-size:13px; font-style:italic">Response</td>
 		</tr>
 		<tr bgcolor="#f4f4f4" style="font-size:12px; line-height:20px" valign="middle">
@@ -181,7 +181,7 @@
    &lt;VariablePrefix&gt;queryinfo&lt;/VariablePrefix&gt;
  &lt;IgnoreUnresolvedVariables&gt;true&lt;/IgnoreUnresolvedVariables&gt;
 &lt;/ExtractVariables&gt;</pre>
-		<p>Suppose your API design allows you to specify multiple query parameters with the same name. You can use this policy to extract the value of multiple instances of the query parameter "w".&nbsp;‚ÄãTo reference these query parameters in the Extract Variables policy, you use indexes, where the first instance of the query parameter has no index, the second is at index 2, the third at index 3, etc.</p>
+		<p>Suppose your API design allows you to specify multiple query parameters with the same name. You can use this policy to extract the value of multiple instances of the query parameter "w".&nbsp;?To reference these query parameters in the Extract Variables policy, you use indexes, where the first instance of the query parameter has no index, the second is at index 2, the third at index 3, etc.</p>
 		<p>Consider the sample policy code above working with the following incoming request:</p>
 		<p><code>GET http://org1-test.apigee.net/weather?w=Boston&amp;w=Chicago</code></p>
 		<p>When Apigee Edge applies the Extract Variables policy code above to this incoming request, it sets the variable <code>queryinfo.firstWeather</code> to <code>Boston</code> and the variable <code>queryInfo.secondWeather</code> to <code>Chicago</code>.&nbsp;</p>
@@ -988,7 +988,7 @@ http://myCo.com/basepath/v1/a/b/c/d?w=1&amp;w=2</pre>
 	</tbody>
 </table>
 <h2>&lt;XMLPayload&gt; element</h2>
-<p>(Optional, but see the Presence row in the table below for more information.) Specifies the XML-formatted message from which the value of the variable will be extracted. &nbsp;XML payloads are extracted only when the&nbsp;<code>Content-Type</code>&nbsp;header of the message is&nbsp;<font class="font7"><code>text/xml</code></font>&nbsp;<font class="font0">,&nbsp;</font><font class="font7"><code>application/xml</code></font>&nbsp;<font class="font0">, or&nbsp;</font><font class="font7"><code>application/*+xml</code></font><font class="font0">.</font></p>
+<p>(Optional, but see the Presence row in the table below for more information.) Specifies the XML-formatted message from which the value of the variable will be extracted. &nbsp;XML payloads are extracted only when the&nbsp;<code>Content-Type</code>&nbsp;header of the message is&nbsp;<code>text/xml</code>,&nbsp;<code>application/xml</code>, or&nbsp;<code>application/*+xml</code>.</p>
 <div class="sample-github">
 	<p><strong>Learn by doing!</strong></p>
 	<p>Check out <a href="https://github.com/apigee/api-platform-samples/tree/master/learn-edge/extract-xml-payload">this Learn Edge example</a> that show you how to extract data from an XML response payload. Just follow the instructions in the README.</p>
@@ -1196,7 +1196,7 @@ http://myCo.com/basepath/v1/a/b/c/d?w=1&amp;w=2</pre>
 <div class="note">
 	<p>Using <code>parent</code>, <code>ancestor</code>, <code>following</code>, and <code>preceding</code> in XPath expressions is not supported in Edge. To get the same matching results, try explicit node name matching or indexing. For example:</p>
 	<ul>
-		<li><code>&lt;XPath&gt;/Attributes/Attribute[@Name=‚Äôfoo_attribute']/Value&lt;/XPath&gt;</code><br />
+		<li><code>&lt;XPath&gt;/Attributes/Attribute[@Name=ífoo_attribute']/Value&lt;/XPath&gt;</code><br />
 			gets the value of <code>foo_attribute</code>.</li>
 		<li><code>&lt;XPath&gt;/Attributes/Attribute[4]/Value&lt;/XPath&gt;</code><br />
 			gets the value of the 4th attribute.</li>

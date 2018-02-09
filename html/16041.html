@@ -3,7 +3,7 @@
 <h2>What does this dashboard tell me?</h2>
 <p>The Error Code Analysis dashboard tells you about error rates for API proxies and targets.</p>
 <p><strong><span style="font-size: 12px;">The Error Code Analysis dashboard (partially shown)</span></strong></p>
-<p><img alt="" src="sites/docs/files/error-code-analysis.png" style="width: 700px; height: 390px; border-width: 1px; border-style: solid;" /></p>
+<p><img alt="" src="sites/docs/files/error-code-analysis2.png" style="width: 850px; height: 504px; border-width: 1px; border-style: solid;" /></p>
 <p><a href="http://docs.apigee.com/node/22041">Content to be inserted here</a></p>
 <h2>What does this dashboard measure?</h2>
 <ul>
@@ -12,6 +12,8 @@
 	<li><a href="#targeterrors">Target Errors</a></li>
 	<li><a href="#errorsbyproxy">Errors by Proxy</a></li>
 	<li><a href="#errorsbytarget">Errors by Target</a></li>
+	<li><a href="#proxybyresponsecode">Proxy Errors by Response Code</a></li>
+	<li><a href="#targetbyresponsecode">Target Errors by Response Code</a></li>
 </ul>
 <h3><a id="errorcomposition" name="errorcomposition"></a>Error Composition</h3>
 <table class="table" width="600px">
@@ -104,6 +106,36 @@
 			<td>
 				<p>The total number of target errors seen in an Apigee Edge organization in the specified time <strong>for each individual target</strong>. The number of error calls that did not reach any target are listed in the Target Not Contacted column. &nbsp;Hover over the bars to see the number of errors that came from the each proxy response flow and from the target response flow, respectively.&nbsp;</p>
 				<p>Target errors are measured between the time an entire request is sent by Apigee Edge to a backend target and the time the response is returned to the client app.&nbsp;The chart shows the number of errors that came from the proxy response flow and from the target response flow, respectively.&nbsp;</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3><a id="proxybyresponsecode" name="proxybyresponsecode"></a>Proxy Errors by Response Code</h3>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td width="230"><strong>Metric</strong></td>
+			<td width="358"><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td><strong>&lt;<em>Response Code</em>&gt;</strong></td>
+			<td>
+				<p>The total number of proxy errors seen in an Apigee Edge organization in the specified time <strong>that returned each response code</strong>.&nbsp;Hover over the bars to see the number of errors that returned each response code.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h3><a id="targetbyresponsecode" name="targetbyresponsecode"></a>Target Errors by Response Code</h3>
+<table class="table" width="600px">
+	<tbody>
+		<tr>
+			<td width="230"><strong>Metric</strong></td>
+			<td width="358"><strong>Description</strong></td>
+		</tr>
+		<tr>
+			<td><strong>&lt;<em>Response Code</em>&gt;</strong></td>
+			<td>
+				<p>The total number of target errors seen in an Apigee Edge organization in the specified time <strong>that returned each response code</strong>.&nbsp;Hover over the bars to see the number of errors that returned each response code.</p>
 			</td>
 		</tr>
 	</tbody>

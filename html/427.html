@@ -1,8 +1,8 @@
 <h1> Using the Edge management API to Publish APIs </h1>
 <p>[toc]</p>
 <p>This topic covers the definition of API products. API products enable developers to register apps that consume APIs using API keys and OAuth access tokens. API products are designed to enable you to 'bundle' API resources and then publish those bundles to different groups of developers. For example, you may need to publish one set of API resources to your partner developers, while you publish another bundle to external developers. API products enable you to perform this bundling on-the-fly, without requiring any changes to your APIs themselves. An additional benefit is that developer access can 'upgraded' and 'downgraded' without requiring developers to obtain new consumer keys for their apps.</p>
-<div class="counterpart"><strong>Using the UI instead</strong><br />
-	This topic demonstrates provisioning API products, apps, and developers using the Apigee Edge management API. You can also provision API products, developers, and apps using the Apigee Edge <a href="http://enterprise.apigee.com">management UI</a>. For instructions on using the Edge management UI, see <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a>.</div>
+<p><strong>Using the UI instead</strong><br />
+	This topic demonstrates provisioning API products, apps, and developers using the Apigee Edge management API. You can also provision API products, developers, and apps using the Apigee Edge <a href="http://enterprise.apigee.com">management UI</a>. For instructions on using the Edge management UI, see <a href="http://docs.apigee.com/node/36696">http://docs.apigee.com/node/36696</a>.</p>
 <h2>Configuring API products</h2>
 <p>You can configure API products using the Edge management UI or the Edge management API. The API enables you to create and manage API products programmatically.</p>
 <p>To set up a minimal API product using the Apigee Edge management API, POST a payload to the <code>/apiproducts</code> resource in your organization using the <a href="http://docs.apigee.com/node/16121">http://docs.apigee.com/node/16121</a> API.</p>
@@ -58,7 +58,7 @@ https://api.enterprise.apigee.com/v1/o/{org_name}/apiproducts \
 				<p>By default, the resource paths are mapped from the <code>proxy.pathsuffix</code> variable. The proxy path suffix is defined as the URI fragment following the ProxyEndpoint base path. For example, in the sample API product below, the <code>apiResources</code> element is defined to be <code>/forecastrss</code>. Since the Base Path defined for this API proxy is <code>/weather</code>, that means that only requests to <code>/weather/forecastrss</code> are permitted by this API product.</p>
 				<p>You can select a specific path, or you can select all subpaths with a wildcard. Wildcards (/** and /*) are supported. The double asterisk wildcard indicates that all sub-URIs are included. A single asterisk indicates that only URIs one level down are included.<br />
 					<br />
-					By default,<strong> '</strong>/' supports the same resources as '/**' as well as the Base Path defined by the API proxy. For example, if the Base Path of the API proxy is <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey</span>, then the API product supports requests to <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey</span> and to any sub-URIs, such as <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey/forecastrss</span>, <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey/region/CA</span>, etc. See <a href="http://docs.apigee.com/node/9">http://docs.apigee.com/node/9</a> for information on changing the behavior of this default.</p>
+					By default,<strong> '</strong>/' supports the same resources as '/**' as well as the Base Path defined by the API proxy. For example, if the Base Path of the API proxy is <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey</span>, then the API product supports requests to <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey</span> and to any sub-URIs, such as <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey/forecastrss</span>, <span style="font-family:courier new,courier,monospace;">/v1/weatherapikey/region/CA</span>, etc. See <a href="http://docs.apigee.com/node/36696">http://docs.apigee.com/node/36696</a> for information on changing the behavior of this default.</p>
 			</td>
 			<td>N/A</td>
 			<td>No</td>
@@ -371,7 +371,7 @@ https://api.enterprise.apigee.com/v1/o/{org_name}/developers/ntesla@theremin.com
  "issuedAt": 1411491156464,
  "scopes": [],
  "status": "approved"
-‚Äã}</pre>
+?}</pre>
 <h3>Approving consumer keys</h3>
 <p>Setting approval type to <span style="font-family:courier new,courier,monospace;">manual</span> enables you to control which developers can access the resources protected by API products. When API products have key approval set to <code>manual</code>, consumer keys must be explicitly approved. Keys can be explicitly approved using the <strong>Approve or Revoke Specific Key of Developer App </strong>API:</p>
 <pre class="terminal">
@@ -392,7 +392,7 @@ https://api.enterprise.apigee.com/v1/o/{org_name}/developers/ntesla@theremin.com
 }</pre>
 <p>See <a href="http://docs.apigee.com/node/16656">http://docs.apigee.com/node/16656</a> for more.</p>
 <h3>Approving API products for consumer keys</h3>
-<p>The association of an API product with a consumer key also has a status. For API access to be successful, the consumer key must be approved, <i>and</i> the consumer key must be approved for the appropriate API product. The association of a consumer key with an API product can be approved by using the ‚Äã<strong>Approve or Revoke API Product for a Key for a Developer App </strong>API:</p>
+<p>The association of an API product with a consumer key also has a status. For API access to be successful, the consumer key must be approved, <i>and</i> the consumer key must be approved for the appropriate API product. The association of a consumer key with an API product can be approved by using the ?<strong>Approve or Revoke API Product for a Key for a Developer App </strong>API:</p>
 <pre class="terminal">
 $ curl -X POST -H "Content-type:application/octet-stream" \ 
 https://api.enterprise.apigee.com/v1/o/{org_name}/developers/ntesla@theremin.com/apps/weatherapp/keys/HQg0nCZ54adKobpqEJaE8FefGkdKFc2J/apiproducts/weather_free?"action=approve" \
@@ -413,8 +413,8 @@ https://api.enterprise.apigee.com/v1/o/{org_name}/developers/ntesla@theremin.com
 <p>For API products to be enforced, one of the following policy types must be attached to the API proxy flow:</p>
 <ul>
 	<li>VerifyAPIKey: Takes a reference to an API key, verifies that it represents a valid app, and matches the API product. See <a href="http://docs.apigee.com/node/3977">http://docs.apigee.com/node/3977</a> for more.</li>
-	<li>OAuthV1, ‚ÄúVerifyAccessToken‚Äù operation: Verifies the signature, validates an OAuth 1.0a access token and ‚Äúconsumer key‚Äù, and matches the app to the API product. See <a href="http://docs.apigee.com/node/212">http://docs.apigee.com/node/212</a> for more.</li>
-	<li>OAuthV2, ‚ÄúVerifyAccessToken‚Äù operation: Verifies that the OAuth 2.0 access token is valid, matches the token to the app, verifies that the app is valid, and then matches the app to an API product. See <a href="http://docs.apigee.com/node/33">http://docs.apigee.com/node/33</a> for more.</li>
+	<li>OAuthV1, ìVerifyAccessTokenî operation: Verifies the signature, validates an OAuth 1.0a access token and ìconsumer keyî, and matches the app to the API product. See <a href="http://docs.apigee.com/node/212">http://docs.apigee.com/node/212</a> for more.</li>
+	<li>OAuthV2, ìVerifyAccessTokenî operation: Verifies that the OAuth 2.0 access token is valid, matches the token to the app, verifies that the app is valid, and then matches the app to an API product. See <a href="http://docs.apigee.com/node/33">http://docs.apigee.com/node/33</a> for more.</li>
 </ul>
 <p>Once policies and API products are configured, the following process is executed by Apigee Edge:</p>
 <ol>
